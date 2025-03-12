@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::DASHBOARD;
+    protected $redirectTo;
 
     /**
      * Create a new controller instance.
@@ -37,37 +36,26 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        if(Auth::check() && Auth::user()->role == 'OWNER') {
+            $this->redirectTo = route('main.index');
+        } elseif (Auth::check() && Auth::user()->role == "MANAJER") {
+            $this->redirectTo = route('main.index');
+        } elseif (Auth::check() && Auth::user()->role == "STAF") {
+            $this->redirectTo = route('main.index');
+        }
         $this->middleware('guest')->except('logout');
     }
-    protected function authenticated(Request $request, $user)
+
+    public function username()
     {
-        session()->flash('success', $user->name .' berhasil login');
-        return redirect($this->redirectTo);
-    }
-    protected function attemptLogin(Request $request)
-{
-    $credentials = $this->credentials($request);
-
-    if (Auth::attempt($credentials)) {
-        return true;
+        return 'username';
     }
 
-    // Pengecekan apakah email benar
-    $user = Auth::getProvider()->retrieveByCredentials($credentials);
-
-    if ($user) {
-        // Pengecekan apakah password yang dimasukkan benar atau salah
-        if (!Auth::getProvider()->validateCredentials($user, $credentials)) {
-            session()->flash('error', 'Password salah.');
-        } else {
-            session()->flash('error', 'Email atau Password salah.');
-        }
-    } else {
-        session()->flash('error', 'Email dan Password invalid');
+    protected function validateLogin(Request $request){
+        $this->validate($request, [
+            $this->username() => 'required',
+            'password' => 'required',
+            // new rules here
+        ]);
     }
-
-    return false;
-}
-
-    
 }

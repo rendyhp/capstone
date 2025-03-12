@@ -17,14 +17,13 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $primaryKey = 'id';
-    protected $table = 'users';
-    public $incrementing = false;
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
-        'unit',
+        'role',
+        'boolean_delete',
     ];
 
     /**
@@ -44,15 +43,5 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
-    public function trans()
-    {
-        return $this->hasMany('App\Models\ULP', 'trans_id', 'id');
-    }
-    public function up()
-    {
-        return $this->belongsTo(UP::class, 'unit', 'id');
-    }
-    
 }

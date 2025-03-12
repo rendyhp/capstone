@@ -62,3 +62,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Route user
 Route::get('/beranda', [TransaksiController::class, 'trans'])->name('beranda');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
