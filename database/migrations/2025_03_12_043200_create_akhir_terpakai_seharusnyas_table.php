@@ -13,16 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('history_inputs', function (Blueprint $table) {
+        Schema::create('akhir_terpakai_seharusnyas', function (Blueprint $table) {
             $table->id();
             $table->date('date');
             $table->unsignedBigInteger('bahan_id'); 
             $table->foreign('bahan_id')->references('id')->on('bahans'); 
             $table->integer('jumlah');
-            $table->unsignedBigInteger('satuan_id'); 
-            $table->foreign('satuan_id')->references('id')->on('satuans'); 
             
-
             $table->string('slug')->unique();
 
             $table->timestamps();

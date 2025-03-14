@@ -18,8 +18,9 @@ return new class extends Migration
             $table->date('date');
             $table->unsignedBigInteger('menu_id'); 
             $table->foreign('menu_id')->references('id')->on('menus');
+            $table->integer('jumlah');
             $table->timestamps();
-            
+            $table->softDeletes();
         });
     }
 

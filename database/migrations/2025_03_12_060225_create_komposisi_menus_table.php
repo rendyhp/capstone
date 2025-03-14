@@ -21,11 +21,11 @@ return new class extends Migration
             $table->foreign('bahan_id')->references('id')->on('bahans');
 
             $table->integer('jumlah');
-            $table->unsignedBigInteger('satuan_id'); 
-            $table->foreign('satuan_id')->references('id')->on('satuans'); 
+            
             $table->string('image');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

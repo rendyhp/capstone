@@ -19,12 +19,16 @@ return new class extends Migration
 
             $table->id();
             $table->unsignedBigInteger('user_id'); 
-            $table->string('subject');
-            $table->string('url');
             $table->string('method');
+            $table->unsignedBigInteger('tag_log_activity_id'); 
+            $table->foreign('tag_log_activity_id')->references('id')->on('tag_log_activities');
+            $table->string('subject');
+
+            $table->string('url');
             $table->string('ip');
             $table->string('agent')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

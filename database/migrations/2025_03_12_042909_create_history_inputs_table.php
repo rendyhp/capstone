@@ -21,9 +21,6 @@ return new class extends Migration
             $table->unsignedBigInteger('bahan_id'); 
             $table->foreign('bahan_id')->references('id')->on('bahans'); 
             $table->integer('jumlah');
-            $table->unsignedBigInteger('satuan_id'); 
-            $table->foreign('satuan_id')->references('id')->on('satuans'); 
-            
 
             $table->string('slug')->unique();
 

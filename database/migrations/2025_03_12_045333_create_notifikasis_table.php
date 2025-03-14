@@ -19,12 +19,14 @@ return new class extends Migration
 
             $table->id();
             $table->unsignedBigInteger('user_id'); 
-            $table->foreign('user_id')->references('id')->on('users'); 
+            $table->foreign('user_id')->references('id')->on('users');
+            
             $table->unsignedBigInteger('tag_notifikasi_id'); 
             $table->foreign('tag_notifikasi_id')->references('id')->on('tag_notifikasis');
-            $table->string('subject');
-            $table->date('date');
+            $table->string('description');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

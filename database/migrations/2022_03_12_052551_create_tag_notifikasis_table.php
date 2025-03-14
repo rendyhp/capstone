@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tag_log_activities', function (Blueprint $table) {
+        Schema::create('tag_notifikasis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); 
             $table->foreign('user_id')->references('id')->on('users'); 
 
             $table->string('name');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tag_log_activities');
+        Schema::dropIfExists('tag_notifikasis');
     }
 };
