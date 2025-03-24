@@ -332,6 +332,45 @@
             toggleInput('txtminimum', 'toggleMinimum2', 'iconMinimum2'); // Perbaikan ID ikon
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let bahanIndex = 1;
+            const bahanDropdownHtml = document.querySelector(".bahan-dropdown").innerHTML; // Simpan daftar bahan untuk cloning
+
+            document.querySelector(".addBahan").addEventListener("click", function () {
+                let container = document.getElementById("bahanContainer");
+                let newBahan = document.createElement("div");
+                newBahan.classList.add("input-group", "mb-2", "bahan-item");
+
+                newBahan.innerHTML = `
+            <select name="bahan[${bahanIndex}][id]" class="form-select bahan-dropdown" required>
+                ${bahanDropdownHtml}  <!-- Gunakan dropdown yang sudah dibuat -->
+            </select>
+            <input type="number" name="bahan[${bahanIndex}][jumlah]" class="form-control" placeholder="Jumlah" required>
+            <input type="text" name="bahan[${bahanIndex}][satuan]" class="form-control satuan-input" placeholder="Satuan" required disabled>
+            <button type="button" class="btn btn-danger removeBahan">x</button>
+        `;
+                container.appendChild(newBahan);
+                bahanIndex++;
+            });
+
+            document.getElementById("bahanContainer").addEventListener("click", function (event) {
+                if (event.target.classList.contains("removeBahan")) {
+                    event.target.parentElement.remove();
+                }
+            });
+
+            // Otomatis set satuan saat bahan dipilih
+            document.getElementById("bahanContainer").addEventListener("change", function (event) {
+                if (event.target.classList.contains("bahan-dropdown")) {
+                    let selectedOption = event.target.options[event.target.selectedIndex];
+                    let satuanInput = event.target.parentElement.querySelector(".satuan-input");
+                    satuanInput.value = selectedOption.dataset.satuan || "";
+                }
+            });
+        });
+
+    </script>
     <script type="text/javascript">
         $(document).on('click', '.btn_editUP', function (e) {
             var id = $(this).data('id');

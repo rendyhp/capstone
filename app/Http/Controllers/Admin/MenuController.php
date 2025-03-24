@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bahan;
 use App\Models\Barang;
 use App\Models\KomposisiMenu;
 use App\Models\Menu;
@@ -26,6 +27,7 @@ class MenuController extends Controller
         $role = $user->role;
 
         $query = Menu::with('komposisi.bahan.satuan');
+        $bahans = Bahan::all();
 
         // $barangs = Barang::orderBy('name', 'asc')
         //     ->whereNull('deleted_at')
@@ -47,51 +49,45 @@ class MenuController extends Controller
         if ($role === 'OWNER') {
             $menus = $query->paginate(20);
 
-            return view('daftar-menu.index', ['menus' => $menus]);
+            return view('daftar-menu.index', ['menus' => $menus, 'bahans' => $bahans]);
         }
     }
 
     public function create()
     {
 
-        return view('pages.admin.dataset.create', compact('tags'));
+        return view('menu');
     }
 
     public function store(Request $request)
     {
 
-        Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'nullable',
-
-            'bahan_id' => 'required',
-            'jumlah' => 'required',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
         ]);
-
         $user = Auth::user()->id;
 
         // Penanganan file (pastikan folder upload/barang masih ada)
         $imageName = $this->handleFile($request->image);
 
-        // Simpan data dataset ke database
-        Menu::create([
+        $menu = Menu::create([
             'user_id' => $user,
             'name' => $request->name,
             'description' => $request->description,
-            'image' => $imageName,
+            'image' => $this->handleFile($request->image),
         ]);
+        // Simpan data dataset ke database
+        foreach ($request->bahan as $bahan) {
+            KomposisiMenu::create([
+                'menu_id' => $menu->id,
+                'bahan_id' => $bahan['id'],
+                'jumlah' => $bahan['jumlah'],
+            ]);
+        }
 
-        KomposisiMenu::create([
-            'bahan_id' => $request->bahan_id,
-            'jumlah' => $request->jumlah,
-            'satuan_id' => $request->satuan_id,
-        ]);
-
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Create Menu "' . $request->name . '"');
-
-        return redirect()->route('admin.dataset')->with('success', 'Barang "' . $request->name . '" berhasil ditambahkan');
+        return redirect('/daftar-menu')->with('success', 'Menu "' . $request->name . '" berhasil ditambahkan');
     }
 
     public function tmpUpload(Request $request)
