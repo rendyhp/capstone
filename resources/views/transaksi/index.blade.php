@@ -77,11 +77,11 @@
                             </div>
                                 <thead class="table-primary">
                                     <tr>
-                                        <th>Kode Trans</th>
+                                        <th>No.</th>
                                         <th>Tanggal Transaksi</th> 
-                                        <th>Jenis Transaksi</th>
-                                        <th>UP</th>
-                                        <th>ULP</th> 
+                                        <th>Nama menu</th>
+                                        <th>Jumlah</th>
+                                        <th>Bahan Terpakai</th> 
                                         <th>Aksi</th>  
                                     </tr>
                                 </thead>

@@ -7,9 +7,9 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6 pt-5 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
-          <h1 data-aos="fade-up">Stock Opname</h1>
-          <h2 data-aos="fade-up" data-aos-delay="400">Stock opname adalah proses menghitung fisik barang 
-            yang kami miliki dan memastikan data dalam sistem sesuai.</h2>
+          <h1 data-aos="fade-up">BdiM's Stock</h1>
+          <h2 data-aos="fade-up" data-aos-delay="400">BdiM’s Stock adalah aplikasi monitoring stok
+untuk memantau Stok Barang dan Bahan di Kafe BdiM.</h2>
           <div data-aos="fade-up" data-aos-delay="800">
             <ul class="btn-get-started scrollto">
                         @auth
@@ -44,21 +44,19 @@
         <div class="row content">
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="150">
             <p>
-            Stock opname memiliki peran yang krusial dalam operasional perusahaan kami. Beberapa alasan mengapa stock opname penting:
+            Manfaat monitoring stok:
             </p>
             <ul>
               <li><i class="ri-check-double-line"></i> Akurasi Persediaan</li>
-              <li><i class="ri-check-double-line"></i> Deteksi Kehilangan atau Kehilangan Barang</li>
+              <li><i class="ri-check-double-line"></i> Deteksi Kehilangan Barang</li>
               <li><i class="ri-check-double-line"></i> Perencanaan dan Pengelolaan Persediaan yang Lebih Baik</li>
             </ul>
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0" data-aos="fade-up" data-aos-delay="300">
             <p>
-            Stock opname merupakan proses penghitungan, pemeriksaan, dan pencatatan jumlah fisik dari semua barang atau produk yang terdapat di perusahaan
-            pada suatu waktu tertentu. Tujuannya adalah untuk membandingkan jumlah fisik dengan catatan pada sistem informasi atau 
-            catatan lainnya, untuk memastikan keakuratan pencatatan pada sistem informasi kami.
+            BdiM’s Stock bertujuan untuk membandingkan jumlah fisik bahan dengan catatan pada aplikasi.
             </p>
-            <a href="#" class="btn-learn-more">Learn More</a>
+            <!-- <a href="#" class="btn-learn-more">Learn More</a> -->
           </div>
         </div>
 

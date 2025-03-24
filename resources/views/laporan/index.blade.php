@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('Report','active')
+@section('Laporan','active')
 @section('container')
 
 <h3 class="mt-4"><center>Laporan Data Stok Opname</center></h3>
@@ -14,7 +14,7 @@
             <label for="" class="fw-bold">Filter Tanggal</label>
         </div>
         <div class="col-md-3">
-            <form action="{{ route('dashboard.filter') }}" method="POST">
+            <form action="{{ route('dashboard.laporan.filter') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <input type="text" name="tglawal" class="form-control datepicker-date" placeholder="Tanggal Awal">
@@ -52,21 +52,11 @@
                     <th>Barang Keluar</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach ($dashboards as $dashboard)
-                <tr>
-                    <td>{{$dashboard->tanggal_trans}}</td>
-                    <td>{{$dashboard->barang_nama}}</td>
-                    <td>{{$dashboard->barang_merk}}</td>
-                    <td>{{$dashboard->barang_masuk}}</td>
-                    <td>{{$dashboard->barang_keluar}}</td>
-                </tr>
-                @endforeach
-            </tbody>
+            
         </table>
     </div>
     <div class="d-flex align-items-center justify-content-between mb-2 mt-4">
-        <div class="text-dark">Stok Tersedia : {{array_sum($stokTersedia)}}</div>
+        <div class="text-dark">Stok Tersedia : 0</div>
     </div>
     <div class="table-responsive">
         <table class="table text-start align-middle table-bordered table-hover mb-5">
@@ -82,24 +72,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($Barangs as $barang)
-                <tr>
-                    <td>{{$barang->barang_code}}</td>
-                    <td>{{ $barang->barang_nama }}</td>
-                    <td>{{ $barang->barang_merk }}</td>
-                    <td>{{ $barang->barang_jenis }}</td>
-                    <td>{{ $barang->barang_tipe }}</td>
-                    <td>{{ $barang->barang_satuan }}</td>
-                    <td>{{$stokTersedia[$barang->barang_nama]}}</td>
-                </tr>
-                @endforeach
+                
             </tbody>
         </table>
     </div>
 </div>
 <div class="p-4">
     <div style="text-align: right;" class="pt-4">
-        <footer class="fs-6">MSB STI OPRS. SUMBAR</footer>
+        <footer class="fs-6">BdiM Cafe</footer>
     </div>
 </div>
 @endsection

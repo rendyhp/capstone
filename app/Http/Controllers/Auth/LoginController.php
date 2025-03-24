@@ -37,37 +37,57 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        if (Auth::check() && Auth::user()->role == 'OWNER') {
+            $this->redirectTo = route('main.index');
+        } elseif (Auth::check() && Auth::user()->role == "MANAJER") {
+            $this->redirectTo = route('main.index');
+        } elseif (Auth::check() && Auth::user()->role == "STAF") {
+            $this->redirectTo = route('main.index');
+        }
         $this->middleware('guest')->except('logout');
     }
+
+    // public function username()
+    // {
+    //     return 'username';
+    // }
+
+    // protected function validateLogin(Request $request){
+    //     $this->validate($request, [
+    //         $this->username() => 'required',
+    //         'password' => 'required',
+    //         // new rules here
+    //     ]);
+    // }
+
+
     protected function authenticated(Request $request, $user)
     {
-        session()->flash('success', $user->name .' berhasil login');
+        session()->flash('success', $user->name . ' berhasil login');
         return redirect($this->redirectTo);
     }
     protected function attemptLogin(Request $request)
-{
-    $credentials = $this->credentials($request);
+    {
+        $credentials = $this->credentials($request);
 
-    if (Auth::attempt($credentials)) {
-        return true;
-    }
-
-    // Pengecekan apakah email benar
-    $user = Auth::getProvider()->retrieveByCredentials($credentials);
-
-    if ($user) {
-        // Pengecekan apakah password yang dimasukkan benar atau salah
-        if (!Auth::getProvider()->validateCredentials($user, $credentials)) {
-            session()->flash('error', 'Password salah.');
-        } else {
-            session()->flash('error', 'Email atau Password salah.');
+        if (Auth::attempt($credentials)) {
+            return true;
         }
-    } else {
-        session()->flash('error', 'Email dan Password invalid');
+
+        // Pengecekan apakah email benar
+        $user = Auth::getProvider()->retrieveByCredentials($credentials);
+
+        if ($user) {
+            // Pengecekan apakah password yang dimasukkan benar atau salah
+            if (!Auth::getProvider()->validateCredentials($user, $credentials)) {
+                session()->flash('error', 'Password salah.');
+            } else {
+                session()->flash('error', 'Email atau Password salah.');
+            }
+        } else {
+            session()->flash('error', 'Email dan Password invalid');
+        }
+
+        return false;
     }
-
-    return false;
-}
-
-    
 }
