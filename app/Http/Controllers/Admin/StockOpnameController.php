@@ -33,7 +33,7 @@ class StockOpnameController extends Controller
             ->join('bahans', 'bahan_akhirs.bahan_id', '=', 'bahans.id')
             ->whereNull('bahan_akhirs.deleted_at')
             ->with(['bahan.satuan'])
-            ->orderBy('bahans.name', 'asc');
+            ->orderBy('date', 'desc');
 
         // Filter pencarian jika ada input search
         if ($search = $request->input('search')) {
@@ -62,7 +62,9 @@ class StockOpnameController extends Controller
             'bahanAkhir' => function ($query) {
                 $query->latest('date'); // Ambil stok akhir terbaru
             }
-        ])->orderBy('name', 'asc')->get();
+        ])->orderBy('name', 'asc')
+            ->whereNull('deleted_at')
+            ->get();
 
         return view('stock-opname.stock-opname', compact('stockOpnames'));
     }

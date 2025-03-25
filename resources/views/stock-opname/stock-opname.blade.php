@@ -80,13 +80,18 @@
                                 {{ $bahan->name }}
                             </td>
                             <td>
-                                <input type="number" name="jumlah[]" class="form-control text-center"
-                                    value="{{ optional($bahan->bahanAkhir)->jumlah ?? 0 }}" required>
+                                <div class="input-group">
+                                    <input type="number" id="number0" name="jumlah[]" class="form-control text-center jumlah-input number0"
+                                        value="{{ optional($bahan->bahanAkhir)->jumlah ?? 0 }}" required readonly>
+                                    <button type="button" class="btn btn-primary ms-2 toggle-jumlah">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                </div>
                             </td>
                             <td>{{ $bahan->satuan->name }}</td>
-                            <td>
-                                <button type="button" class="btn btn-success btn-konfirmasi">
-                                    <i class="fa fa-check"></i>
+                            <td width="200px">
+                                <button type="button" class="btn btn-primary btn-konfirmasi">
+                                    Konfirmasi
                                 </button>
                             </td>
                         </tr>
@@ -95,7 +100,8 @@
             </table>
 
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-success">Simpan</button>
+                <button type="submit" id="submitBtn" class="btn btn-danger" disabled>Simpan</button>
             </div>
+
         </form>
 @endsection

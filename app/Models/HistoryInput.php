@@ -10,6 +10,10 @@ class HistoryInput extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'jumlah' => 'decimal:3',
+    ];
+
     protected $fillable = [
         'user_id',
         'date',

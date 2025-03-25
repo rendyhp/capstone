@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('date');
             $table->unsignedBigInteger('bahan_id'); 
             $table->foreign('bahan_id')->references('id')->on('bahans'); 
-            $table->integer('jumlah');
+            $table->decimal('jumlah', 12, 3);
 
             $table->timestamps();
             $table->softDeletes();

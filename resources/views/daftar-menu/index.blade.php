@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('menu', 'active')
+@section('DaftarMenu', 'active')
 @section('container')
 
     <div class="container">
@@ -93,10 +93,13 @@
 
                                                         <td>
                                                             <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary btn-sm btn_editbarang"
-                                                                data-id="{{ $menu->id }}">
+                                                            <button type="button" class="btn btn-primary btn-sm btn_editmenu"
+                                                                data-id="{{ $menu->id }}" data-name="{{ $menu->name }}"
+                                                                data-description="{{ $menu->description }}"
+                                                                data-komposisi="{{ htmlspecialchars(json_encode($menu->komposisi), ENT_QUOTES, 'UTF-8') }}">
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
+
 
                                                             <form action="/daftar-menu/{{ $menu->id }}" class="d-inline"
                                                                 method="post">
@@ -141,8 +144,10 @@
                                 <input type="text" class="form-control" id="description" name="description"
                                     placeholder="Input Deskripsi Barang">
                             </div>
-                            <div id="bahanContainer">
+                            <div id="bahanContainer" class="mb-3">
+                                <label for="bahan" class="form-label text-dark fw-bold">Bahan</label>
                                 <div class="input-group mb-2 bahan-item">
+
                                     <select name="bahan[0][id]" class="form-select bahan-dropdown" required>
                                         <option value="">Pilih Bahan</option>
                                         @foreach ($bahans as $bahan)
@@ -151,8 +156,8 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <input type="number" name="bahan[0][jumlah]" class="form-control" placeholder="Jumlah"
-                                        required>
+                                    <input type="number" step="0.001" name="bahan[0][jumlah]" class="form-control"
+                                        placeholder="Jumlah" required>
                                     <input type="text" name="bahan[0][satuan]" class="form-control satuan-input"
                                         placeholder="Satuan" required disabled>
                                     <button type="button" class="btn btn-success addBahan">+</button>
@@ -166,6 +171,47 @@
                 </form>
             </div>
         </div>
+
+        <!-- Modal Edit Menu -->
+        <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Menu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editMenuForm" method="POST" action="/daftar-menu/edit" enctype="multipart/form-data">
+                            @method('PUT')
+                            @csrf
+                            <input type="hidden" id="editMenuId" name="id">
+
+                            <div class="mb-3">
+                                <label for="editMenuName" class="form-label text-dark fw-bold">Nama Menu</label>
+                                <input type="text" class="form-control" id="editMenuName" name="name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editMenuDescription" class="form-label text-dark fw-bold">Deskripsi</label>
+                                <textarea class="form-control" id="editMenuDescription" name="description"></textarea>
+                            </div>
+
+                            <div id="editBahanContainer" class="mb-3">
+                                <label for="editMenuDescription" class="form-label text-dark fw-bold">Bahan</label>
+                                <!-- Komposisi menu akan diisi dengan JavaScript -->
+                            </div>
+
+
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 

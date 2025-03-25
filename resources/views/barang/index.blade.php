@@ -6,12 +6,12 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Data Barang</h2>
+                    <h2 class="pageheader-title ">Stok Barang</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Data Barang</li>
+                                <li class="breadcrumb-item active" aria-current="page">Stok Barang</li>
                             </ol>
                         </nav>
                     </div>
@@ -78,9 +78,15 @@
                                             @else
                                                 @foreach ($barangs as $barang)
                                                     <tr>
-                                                        <td>{{ $barang->id }}</td>
+                                                        <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $barang->name }}</td>
-                                                        <td>{{ $barang->jumlah }}</td>
+                                                        <td>
+                                                            @if (strpos($barang->jumlah, '.') === false)
+                                                                {{ intval($barang->jumlah) }}
+                                                            @else
+                                                                {{ rtrim(rtrim($barang->jumlah, '0'), '.') }}
+                                                            @endif
+                                                        </td>
                                                         <td>{{ $barang->satuan }}</td>
 
                                                         <td>
@@ -122,7 +128,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Data Tambah Barang</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Barang</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -130,23 +136,24 @@
                         @csrf
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
-                            <input type="text" required class="form-control" id="name" name="name"
-                                placeholder="Input Nama Barang">
+                            <input type="text" required autocomplete="off" class="form-control" id="name" name="name"
+                                placeholder="Ketik nama barang">
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
-                            <input type="text" class="form-control" id="description" name="description"
-                                placeholder="Input Deskripsi Barang">
+                            <textarea class="form-control" required id="description" name="description" rows="4"
+                                autocomplete="off" placeholder="Ketik deskripsi barang"></textarea>
+
                         </div>
                         <div class="mb-3">
                             <label for="jumlah" class="form-label text-dark fw-bold">Stok</label>
-                            <input type="number" required class="form-control" id="jumlah" name="jumlah"
-                                placeholder="Input Stok Barang">
+                            <input type="number" step="0.001" required autocomplete="off" class="form-control number0" id="jumlah" name="jumlah"
+                                placeholder="Ketik jumlah stok">
                         </div>
                         <div class="mb-3">
                             <label for="satuan" class="form-label text-dark fw-bold">Satuan</label>
-                            <input type="text" class="form-control" id="satuan" name="satuan"
-                                placeholder="Input Satuan Barang">
+                            <input type="text" required autocomplete="off" class="form-control" id="satuan" name="satuan"
+                                placeholder="Ketik satuan">
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label text-dark fw-bold">Gambar Barang</label>
@@ -176,29 +183,30 @@
                         <div class="mb-3">
                             <input hidden type="text" name="id" id="txtid">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
-                            <input type="text" required class="form-control @error('name') is-invalid @enderror"
-                                id="txtname" name="name">
+                            <input type="text" required autocomplete="off"
+                                class="form-control @error('name') is-invalid @enderror" id="txtname" name="name">
                             @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
-                            <input type="text" class="form-control @error('description') is-invalid @enderror"
-                                id="txtdescription" name="description">
+                            <textarea class="form-control @error('description') is-invalid @enderror" autocomplete="off"
+                                id="txtdescription" required name="description" rows="4"
+                                placeholder="Ketik deskripsi barang"></textarea>
                             @error('description') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="jumlah" class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="number" required class="form-control @error('jumlah') is-invalid @enderror"
-                                id="txtjumlah" name="jumlah">
+                            <label for="jumlah" class="form-label text-dark fw-bold">Stok</label>
+                            <input type="number" step="0.001" required autocomplete="off"
+                                class="form-control number0 @error('jumlah') is-invalid @enderror" id="txtjumlah" name="jumlah">
                             @error('jumlah') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="satuan" class="form-label text-dark fw-bold">Satuan</label>
-                            <input type="text" class="form-control @error('satuan') is-invalid @enderror" id="txtsatuan"
-                                name="satuan">
+                            <input type="text" required autocomplete="off"
+                                class="form-control @error('satuan') is-invalid @enderror" id="txtsatuan" name="satuan">
                             @error('satuan') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
 

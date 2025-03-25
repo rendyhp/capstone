@@ -12,6 +12,10 @@ class BahanAkhir extends Model
 
     protected $table = 'bahan_akhirs';
 
+    protected $casts = [
+        'jumlah' => 'decimal:3',
+    ];
+
     protected $fillable = [
         'user_id',
         'date',

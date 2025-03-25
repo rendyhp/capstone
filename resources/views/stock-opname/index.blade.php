@@ -79,10 +79,18 @@
                                             @else
                                                 @foreach ($bahan_akhirs as $bahan_akhir)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ ($bahan_akhirs->currentPage() - 1) * $bahan_akhirs->perPage() + $loop->iteration }}
+                                                        </td>
+
                                                         <td>{{ $bahan_akhir->date }}</td>
                                                         <td>{{ $bahan_akhir->bahan->name }}</td>
-                                                        <td>{{ $bahan_akhir->jumlah }}</td>
+                                                        <td>
+                                                            @if (strpos($bahan_akhir->jumlah, '.') === false)
+                                                                {{ intval($bahan_akhir->jumlah) }}
+                                                            @else
+                                                                {{ rtrim(rtrim($bahan_akhir->jumlah, '0'), '.') }}
+                                                            @endif
+                                                        </td>
                                                         <td>{{ $bahan_akhir->bahan->satuan->name }}</td>
 
                                                         <td>

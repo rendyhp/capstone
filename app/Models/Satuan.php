@@ -11,6 +11,9 @@ class Satuan extends Model
     use HasFactory;
 
     protected $table = 'satuans';
+    protected $casts = [
+        'jumlah' => 'decimal:3',
+    ];
 
     protected $fillable = [
         'user_id',

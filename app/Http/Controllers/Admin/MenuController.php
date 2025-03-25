@@ -27,7 +27,7 @@ class MenuController extends Controller
         $role = $user->role;
 
         $query = Menu::with('komposisi.bahan.satuan');
-        $bahans = Bahan::all();
+        $bahans = Bahan::all()->whereNull('deleted_at');
 
         // $barangs = Barang::orderBy('name', 'asc')
         //     ->whereNull('deleted_at')
@@ -157,47 +157,44 @@ class MenuController extends Controller
         ]);
     }
 
-    public function edit($slug)
+    public function edit(KomposisiMenu $menu)
     {
-        $barangs = DB::table('menus')->where('slug', $slug)
-            ->first();
-
-        return view('pages.admin.dataset.edit', ['barangs' => $barangs]);
+    
+        return view('daftar-menu.index');
     }
 
-    public function update(Request $request, Barangs $barangs)
+    public function update(Request $request, $id)
     {
-        Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'jumlah' => 'required',
-            'satuan_id' => 'required',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
         ]);
 
-        $user = Auth::user()->id;
+        $menu = Menu::findOrFail($id);
 
-        // Cari dataset berdasarkan slug
-        $barangs = Barangs::where('slug', $request->slug)->first();
+        // Penanganan file (jika ada gambar baru)
 
-        // Panggil (pastikan folder upload/barang masih ada)
-        $imageName = $this->handleFile($request->image);
-
-        // Simpan barang ke database
-        $barangs->update([
-            'user_id' => $user,
+        // Update data menu
+        $menu->update([
             'name' => $request->name,
             'description' => $request->description,
-            'satuan_id' => $request->satuan_id,
-            'image' => $imageName,
         ]);
 
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Update Barang "' . $request->title . '"');
+        // Update komposisi menu
+        KomposisiMenu::where('menu_id', $id)->delete(); // Hapus komposisi lama
 
-        return redirect()->route('admin.dataset')
-            ->with('update', 'Barang berhasil diperbarui');
+        foreach ($request->bahan as $bahan) {
+            KomposisiMenu::create([
+                'menu_id' => $menu->id,
+                'bahan_id' => $bahan['id'],
+                'jumlah' => $bahan['jumlah'],
+            ]);
+        }
+
+        return redirect('/daftar-menu')->with('success', 'Menu "' . $request->name . '" berhasil diperbarui');
     }
+
 
     public function deletePermanent(Request $request)
     {

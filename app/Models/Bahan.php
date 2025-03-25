@@ -12,6 +12,10 @@ class Bahan extends Model
 
     protected $table = 'bahans';
 
+    protected $casts = [
+        'minimum' => 'decimal:3',
+    ];
+
     protected $fillable = [
         'user_id',
         'name',

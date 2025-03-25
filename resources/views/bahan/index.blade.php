@@ -54,7 +54,7 @@
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                                         data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Bahan
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
                                     </button>
                                     <div class="col-sm-2 float-end mt-3">
                                         <form action="/data-bahan" method="get" class="form-inline" onsubmit="">
@@ -80,7 +80,13 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $bahan->name }}</td>
-                                                        <td>{{ $bahan->minimum }}</td>
+                                                        <td>
+                                                            @if (strpos($bahan->minimum, '.') === false)
+                                                                {{ intval($bahan->minimum) }}
+                                                            @else
+                                                                {{ rtrim(rtrim($bahan->minimum, '0'), '.') }}
+                                                            @endif
+                                                        </td>
                                                         <td>{{ $bahan->satuan->name ?? '-' }}</td>
 
                                                         <td>
@@ -121,7 +127,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Data Tambah Bahan</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Bahan</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -133,22 +139,22 @@
                                 placeholder="Contoh: Kopi Arabica" autocomplete="off">
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label text-dark fw-bold">Deskripsi Bahan</label>
-                            <textarea class="form-control" id="description" name="description" rows="4"
-                                placeholder="Deskripsi bahan baku"></textarea>
+                            <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
+                            <textarea class="form-control" required autocomplete="off" id="description" name="description"
+                                rows="4" placeholder="Deskripsi bahan baku"></textarea>
 
                         </div>
                         <div class="mb-3 d-flex align-items-center">
                             <label for="minimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
-                            <input type="number" required class="form-control" id="minimum" name="minimum" value="0"
-                                readonly style="max-width: 150px;">
+                            <input type="number" step="0.001" required autocomplete="off" class="form-control number0" id="minimum"
+                                name="minimum" value="0" readonly style="max-width: 150px;">
                             <button type="button" class="btn btn-primary ms-2" id="toggleMinimum">
                                 <i id="iconMinimum1" class="fa fa-edit" aria-hidden="true"></i>
                             </button>
                         </div>
                         <div class="mb-3">
-                            <label for="satuan_id" class="form-label text-dark fw-bold">Satuan Bahan</label>
-                            <select class="form-control" required id="satuan_id" name="satuan_id">
+                            <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
+                            <select class="form-control" required autocomplete="off" id="satuan_id" name="satuan_id">
                                 <option value="">-- Pilih Satuan --</option>
                                 @foreach ($satuans as $satuan)
                                     <option value="{{ $satuan->id }}">{{ $satuan->name }}</option>
@@ -170,19 +176,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Form Edit Data Bahan
+                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Edit Data Bahan
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="/data-bahan/edit">
+                    <form method="post" action="/d/edit">
                         @method('PUT')
                         @csrf
                         <div class="mb-3">
                             <input hidden type="text" name="id" id="txtid">
-                            <label for="name" class="form-label text-dark fw-bold">Nama Bahan</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="txtname"
-                                name="name">
+                            <label for="name" class="form-label text-dark fw-bold">Nama Bahan Baku</label>
+                            <input type="text" autocomplete="off" required
+                                class="form-control @error('name') is-invalid @enderror" id="txtname" name="name">
                             @error('name')
                                 <div class="alert alert-danger">
                                     {{ $message }}
@@ -190,9 +196,9 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label text-dark fw-bold">Deskripsi Bahan</label>
+                            <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="txtdescription"
-                                name="description" rows="4" placeholder="Deskripsi bahan baku"></textarea>
+                                name="description" rows="4" autocomplete="off" required placeholder="Deskripsi bahan baku"></textarea>
                             @error('description')
                                 <div class="alert alert-danger">
                                     {{ $message }}
@@ -201,7 +207,7 @@
                         </div>
                         <div class="mb-3 d-flex align-items-center">
                             <label for="txtminimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
-                            <input type="text" required class="form-control @error('minimum') is-invalid @enderror"
+                            <input type="number" step="0.001" autocomplete="off" required class="form-control number0 @error('minimum') is-invalid @enderror"
                                 id="txtminimum" name="minimum" readonly style="max-width: 150px;">
                             <button type="button" class="btn btn-primary ms-2" id="toggleMinimum2">
                                 <i id="iconMinimum2" class="fa fa-edit" aria-hidden="true"></i>
@@ -214,7 +220,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
-                            <select class="form-control select2" id="txtsatuan_id" name="satuan_id">
+                            <select class="form-control select2" id="txtsatuan_id" required autocomplete="off" name="satuan_id">
                                 <option value="">-- Pilih Satuan --</option>
                                 @foreach ($satuans as $satuan)
                                     <option value="{{ $satuan->id }}" {{ old('tsatuan_id', $bahan->satuan_id ?? '') == $satuan->id ? 'selected' : '' }}>

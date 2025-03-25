@@ -9,6 +9,10 @@ class KomposisiMenu extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'jumlah' => 'decimal:3',
+    ];
+
     protected $fillable = [
         'menu_id',
         'bahan_id',

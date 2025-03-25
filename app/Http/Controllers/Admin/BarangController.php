@@ -23,10 +23,8 @@ class BarangController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        // Ambil data barang yang tidak dihapus
         $query = DB::table('barangs')->whereNull('deleted_at');
 
-        // Filter pencarian jika ada input search
         if ($search = $request->input('search')) {
             $query->where('name', 'like', '%' . $search . '%');
         }
@@ -58,10 +56,10 @@ class BarangController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:30',
             'description' => 'nullable|string',
             'jumlah' => 'required|integer|max:20',
-            'satuan' => 'nullable|string|max:255',
+            'satuan' => 'nullable|string|max:12',
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
         ]);
 

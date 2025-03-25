@@ -9,6 +9,9 @@ use Cviebrock\EloquentSluggable\Sluggable;
 class AkhirTerpakaiSeharusnya extends Model
 {
     use HasFactory;
+    protected $casts = [
+        'jumlah' => 'decimal:3',
+    ];
 
     protected $fillable = [
         'date',

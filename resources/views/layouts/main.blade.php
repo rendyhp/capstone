@@ -232,6 +232,19 @@
             });
         });
     </script>
+    <script>
+        document.querySelectorAll("#jumlah, #txtjumlah, #txtminimum, #minimum").forEach(function (input) {
+            input.addEventListener("keydown", function (e) {
+                if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    this.value = (parseFloat(this.value) || 0) + 1;
+                } else if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    this.value = (parseFloat(this.value) || 0) - 1;
+                }
+            });
+        });
+    </script>
     <script type="text/javascript">
         $(document).on('click', '.btn_editbarang', function (e) {
             var id = $(this).data('id');
@@ -242,11 +255,13 @@
             var image = $(this).data('image');
 
             console.log(id, name, description, jumlah, satuan, image);
-            // Set nilai ke input field
+
+            var formattedJumlah = (jumlah % 1 === 0) ? parseInt(jumlah) : jumlah;
+
             $("#txtid").val(id);
             $("#txtname").val(name);
             $("#txtdescription").val(description);
-            $("#txtjumlah").val(jumlah);
+            $("#txtjumlah").val(formattedJumlah);
             $("#txtsatuan").val(satuan);
             // Tampilkan preview gambar jika ada
             if (image) {
@@ -257,7 +272,6 @@
             // Tampilkan modal
             $("#editBarangModal").modal('toggle');
         });
-
     </script>
     <script type="text/javascript">
         $(document).on('click', '.btn_editbahan', function (e) {
@@ -272,11 +286,13 @@
             }
 
             console.log(id, name, description, minimum, satuan_id);
+
+            var formattedMinimum = (minimum % 1 === 0) ? parseInt(minimum) : minimum;
             // Set nilai ke input field
             $("#txtid").val(id);
             $("#txtname").val(name);
             $("#txtdescription").val(description);
-            $("#txtminimum").val(minimum);
+            $("#txtminimum").val(formattedMinimum);
             $("#txtsatuan_id").val(satuan_id);
 
 
@@ -288,18 +304,17 @@
     <script type="text/javascript">
         $(document).on('click', '.btn_editbahan_akhir', function (e) {
             var id = $(this).data('id');
-            var name = $(this).data('name');
-            var description = $(this).data('description');
-            var minimum = $(this).data('minimum');
-            var satuan_id = $(this).data('satuan_id');
+            var date = $(this).data('date');
+            var bahan_id = $(this).data('bahan_id');
+            var jumlah = $(this).data('jumlah');
 
             console.log(id, name, description, minimum, satuan_id);
+            var formattedJumlah = (jumlah % 1 === 0) ? parseInt(jumlah) : jumlah;
             // Set nilai ke input field
             $("#txtid").val(id);
-            $("#txtname").val(name);
-            $("#txtdescription").val(description);
-            $("#txtminimum").val(minimum);
-            $("#txtsatuan_id").val(satuan_id);
+            $("#txtdate").val(date);
+            $("#txtbahan_id").val(bahan_id);
+            $("#txtjumlah").val(formattedJumlah);
 
             // Tampilkan modal
             $("#editBarangModal").modal('toggle');
@@ -307,29 +322,91 @@
 
     </script>
     <script>
-        function toggleInput(inputId, buttonId, elementId) {
+        $(document).on('click', '.btn_editmenu', function () {
+            let id = $(this).data('id');
+            let name = $(this).data('name');
+            let description = $(this).data('description') || "-";
+            let komposisi = $(this).data('komposisi'); // Ambil daftar bahan dalam JSON
+
+            // Pastikan komposisi adalah objek, bukan string
+            if (typeof komposisi === 'string') {
+                komposisi = JSON.parse(komposisi);
+            }
+
+            $("#editMenuId").val(id);
+            $("#editMenuName").val(name);
+            $("#editMenuDescription").val(description);
+
+            let bahanContainer = $("#editBahanContainer");
+            bahanContainer.empty();
+
+            komposisi.forEach((item, index) => {
+                let bahanHtml = `
+                    <div class="input-group mb-2">
+                        <select name="bahan[${index}][id]" class="form-select bahan-dropdown" required>
+                            <option value="${item.bahan_id}" selected>${item.bahan.name}</option>
+                        </select>
+                        <input type="number" step="0.001" name="bahan[${index}][jumlah]" class="form-control" value="${item.jumlah}" required>
+                    </div>
+                `;
+                bahanContainer.append(bahanHtml); // Ini harus ada!
+            });
+
+
+            $("#editBarangModal").modal("show");
+        });
+
+
+    </script>
+    <script>
+        function toggleInput(inputId, buttonId) {
             let inputField = document.getElementById(inputId);
             let button = document.getElementById(buttonId);
-            let icon = document.getElementById(elementId); // Perbaikan typo
 
             if (inputField.readOnly) {
                 inputField.readOnly = false; // Aktifkan input
-                icon.classList.remove('fa-edit'); // Hapus ikon edit
-                icon.classList.add('fa-check'); // Tambahkan ikon centang
-                inputField.focus();
-            } else {
-                inputField.readOnly = true; // Kunci kembali input
-                icon.classList.remove('fa-check'); // Hapus ikon centang
-                icon.classList.add('fa-edit'); // Kembalikan ikon edit
+
+                button.style.display = "none"; // Sembunyikan tombol edit
+                inputField.focus(); // Fokus ke input
+                inputField.select(); // Blok langsung isi input agar mudah diubah
+
+                // Tambahkan event listener untuk mengunci kembali saat kehilangan fokus
+                inputField.addEventListener('focusout', function lockInput() {
+                    inputField.readOnly = true; // Kunci kembali input
+
+                    button.style.display = "inline"; // Tampilkan kembali tombol edit
+
+                    // Hapus event listener agar tidak menumpuk setiap kali tombol diklik
+                    inputField.removeEventListener('focusout', lockInput);
+                });
             }
         }
 
+        // Event untuk tombol pertama
         document.getElementById('toggleMinimum').addEventListener('click', function () {
-            toggleInput('minimum', 'toggleMinimum', 'iconMinimum1'); // Perbaikan ID ikon
+            toggleInput('minimum', 'toggleMinimum');
         });
 
+        // Event untuk tombol kedua
         document.getElementById('toggleMinimum2').addEventListener('click', function () {
-            toggleInput('txtminimum', 'toggleMinimum2', 'iconMinimum2'); // Perbaikan ID ikon
+            toggleInput('txtminimum', 'toggleMinimum2');
+        });
+
+
+    </script>
+    <script>
+        document.querySelectorAll('input[type="number"].number0').forEach(function (input) {
+            input.addEventListener("focusout", function () {
+                if (this.value.trim() === "") {
+                    this.value = "0"; // Setel kembali ke 0 jika kosong
+                }
+            });
+        });
+
+        document.querySelectorAll(".number0").forEach(function (inputField) {
+            inputField.addEventListener("focus", function () {
+                this.select(); // Memilih semua teks dalam input saat difokuskan
+            });
         });
     </script>
     <script>
@@ -346,7 +423,7 @@
             <select name="bahan[${bahanIndex}][id]" class="form-select bahan-dropdown" required>
                 ${bahanDropdownHtml}  <!-- Gunakan dropdown yang sudah dibuat -->
             </select>
-            <input type="number" name="bahan[${bahanIndex}][jumlah]" class="form-control" placeholder="Jumlah" required>
+            <input type="number" step="0.001" name="bahan[${bahanIndex}][jumlah]" class="form-control" placeholder="Jumlah" required>
             <input type="text" name="bahan[${bahanIndex}][satuan]" class="form-control satuan-input" placeholder="Satuan" required disabled>
             <button type="button" class="btn btn-danger removeBahan">x</button>
         `;
@@ -370,6 +447,101 @@
             });
         });
 
+    </script>
+
+    <script>
+        document.querySelectorAll(".toggle-jumlah").forEach(function (button) {
+            button.addEventListener("click", function () {
+                let inputField = this.parentElement.querySelector(".jumlah-input");
+                let editButton = this.parentElement.querySelector(".toggle-jumlah"); // Cari tombol dalam parent yang sama
+
+                if (inputField.readOnly) {
+                    inputField.readOnly = false; // Aktifkan input
+                    editButton.style.display = "none"; // Sembunyikan tombol edit
+                    inputField.focus(); // Fokus ke input
+                    inputField.select(); // Blok teks untuk langsung diubah
+
+                    // Kunci kembali saat kehilangan fokus
+                    inputField.addEventListener("focusout", function lockInput() {
+                        inputField.readOnly = true; // Kunci input lagi
+                        editButton.style.display = "inline"; // Tampilkan kembali tombol edit
+
+                        // Hapus event listener agar tidak terus bertambah
+                        inputField.removeEventListener("focusout", lockInput);
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById("submitBtn");
+            const allConfirmed = [...document.querySelectorAll(".btn-konfirmasi")].every(button =>
+                button.classList.contains("btn-success")
+            );
+
+            if (allConfirmed) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove("btn-danger");
+                submitBtn.classList.add("btn-primary");
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.remove("btn-primary");
+                submitBtn.classList.add("btn-danger");
+            }
+        }
+
+        // Event Listener untuk tombol Konfirmasi
+        document.querySelectorAll(".btn-konfirmasi").forEach(function (button) {
+            button.addEventListener("click", function () {
+                let row = this.closest("tr");
+                let editButton = row.querySelector(".toggle-jumlah");
+
+                if (this.classList.contains("btn-primary")) {
+                    // Tombol berubah jadi loading saat diklik pertama kali
+                    this.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+                    this.disabled = true;
+
+                    setTimeout(() => {
+                        // Setelah loading, ubah jadi checklist
+                        this.innerHTML = '<i class="fa fa-check"></i>';
+                        this.classList.remove("btn-primary");
+                        this.classList.add("btn-success");
+                        this.disabled = false;
+                        if (editButton) editButton.style.display = "none"; // Sembunyikan tombol edit
+                        updateSubmitButton();
+                    }, 500); // Simulasi loading 0.5 detik
+                } else {
+                    // Jika checklist diklik lagi, ubah kembali ke tombol konfirmasi
+                    this.innerHTML = "Konfirmasi";
+                    this.classList.remove("btn-success");
+                    this.classList.add("btn-primary");
+                    if (editButton) editButton.style.display = "inline-block"; // Tampilkan kembali tombol edit
+                    updateSubmitButton();
+                }
+            });
+        });
+
+        // Event Listener untuk tombol Edit
+        document.querySelectorAll(".toggle-jumlah").forEach(function (editButton) {
+            editButton.addEventListener("click", function () {
+                let inputField = this.previousElementSibling;
+
+                if (inputField.readOnly) {
+                    inputField.readOnly = false;
+                    inputField.focus();
+                    inputField.select(); // Blok teks agar mudah diedit
+
+                    // Kunci kembali saat kehilangan fokus
+                    inputField.addEventListener("focusout", function lockInput() {
+                        inputField.readOnly = true;
+                        inputField.removeEventListener("focusout", lockInput);
+                    });
+                }
+            });
+        });
+
+        updateSubmitButton(); // Periksa status saat halaman dimuat
     </script>
     <script type="text/javascript">
         $(document).on('click', '.btn_editUP', function (e) {

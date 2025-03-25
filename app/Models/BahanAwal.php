@@ -11,6 +11,9 @@ class BahanAwal extends Model
     use HasFactory;
 
     protected $table = 'bahan_awals';
+    protected $casts = [
+        'jumlah' => 'decimal:3',
+    ];
 
     protected $fillable = [
         
