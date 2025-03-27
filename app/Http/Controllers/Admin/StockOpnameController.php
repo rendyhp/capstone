@@ -10,6 +10,7 @@ use App\Models\BahanAwal;
 
 use App\Models\Barang;
 use App\Models\HistoryInput;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
@@ -25,31 +26,38 @@ use App\Helpers\LogActivity;
 class StockOpnameController extends Controller
 {
     public function index(Request $request)
-    {
-        $user = Auth::user();
-        $role = $user->role;
+{
+    $user = Auth::user();
+    $role = $user->role;
 
-        $query = BahanAkhir::select('bahan_akhirs.*')
-            ->join('bahans', 'bahan_akhirs.bahan_id', '=', 'bahans.id')
-            ->whereNull('bahan_akhirs.deleted_at')
-            ->with(['bahan.satuan'])
-            ->orderBy('date', 'desc');
+    $query = BahanAkhir::select('bahan_akhirs.*')
+        ->join('bahans', 'bahan_akhirs.bahan_id', '=', 'bahans.id')
+        ->whereNull('bahan_akhirs.deleted_at')
+        ->with(['bahan.satuan'])
+        ->orderBy('date', 'desc');
 
-        // Filter pencarian jika ada input search
-        if ($search = $request->input('search')) {
-            $query->where('bahans.name', 'like', '%' . $search . '%');
-        }
+    // Jika tidak ada input date, set default ke hari ini
+    $date = $request->input('date', Carbon::today()->toDateString());
 
-        $bahan_akhirs = $query->paginate(20);
-
-        if ($role === 'OWNER') {
-            return view('stock-opname.index', compact('bahan_akhirs'));
-        } elseif ($role === 'user') {
-            return view('user.barang', compact('bahan_akhirs'));
-        } else {
-            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
+    // Filter berdasarkan search (jika ada)
+    if ($search = $request->input('search')) {
+        $query->where('bahans.name', 'like', '%' . $search . '%');
     }
+
+    // Filter berdasarkan tanggal (gunakan nilai default jika tidak ada input)
+    $query->whereDate('bahan_akhirs.date', $date);
+
+    $bahan_akhirs = $query->paginate(20)->appends($request->query());
+
+    if ($role === 'OWNER') {
+        return view('stock-opname.index', compact('bahan_akhirs', 'date'));
+    } elseif ($role === 'user') {
+        return view('user.barang', compact('bahan_akhirs', 'date'));
+    } else {
+        return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+    }
+}
+
 
     public function simpan(Request $request)
     {
