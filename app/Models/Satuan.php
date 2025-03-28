@@ -20,4 +20,13 @@ class Satuan extends Model
         'name',
     ];
 
+    public function bahan()
+    {
+        return $this->hasMany(Bahan::class, 'satuan_id');
+    }
+    public function transaksiDetail()
+    {
+        return $this->hasMany(TransaksiDetail::class, 'satuan_id');
+    }
+
 }

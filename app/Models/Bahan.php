@@ -44,6 +44,11 @@ class Bahan extends Model
     {
         return $this->hasMany(KomposisiMenu::class, 'bahan_id');
     }
+
+    public function transaksiDetail()
+    {
+        return $this->hasMany(TransaksiDetail::class, 'bahan_id');
+    }
 }
 
 

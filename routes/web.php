@@ -44,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
     //coba
     // routes/web.php
     Route::get('/search/satuan', [SearchController::class, 'searchSatuan'])->name('search.satuan');
-    
+
 
     //endcoba
 
@@ -69,16 +69,22 @@ Route::middleware(['auth'])->group(function () {
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
+    Route::post('/transaksi/import', [TransaksiController::class, 'import'])->name('transaksi.import');
+    Route::get('/transaksi/{id}/edit', [TransaksiController::class, 'edit']);
+    Route::put('/transaksi/{id}', [TransaksiController::class, 'update']);
+    Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
+
 
     // Lainnya
     Route::get('/log-activities', [LogActivityController::class, 'index'])->name('log-activities');
     Route::get('/user-data', [UserController::class, 'index'])->name('user-data');
 
+
     // Transaksi routes
     Route::get('trans/input', [TransaksiController::class, 'input'])->name('transaksi.input');
     Route::post('trans/input', [TransaksiController::class, 'caribarangmasuk'])->name('transaksi.inputPost');
     Route::get('trans/detail/{trans_id}', [TransaksiController::class, 'detail'])->name('transaksi.detail');
-    Route::resource('transaksi', TransaksiController::class);
+
     Route::post('/simpandatamasuk', [TransaksiController::class, 'simpanDataMasuk'])->name('transaksi.simpanmasuk');
     Route::get('trans/keluar', [TransaksiController::class, 'keluar'])->name('transaksi.keluar');
     Route::post('trans/keluar', [TransaksiController::class, 'caribarangkeluar'])->name('transaksi.keluarPost');
@@ -98,6 +104,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/data-bahan', \App\Http\Controllers\Admin\BahanController::class);
     Route::resource('/stock-opname', \App\Http\Controllers\Admin\StockOpnameController::class);
     Route::resource('/daftar-menu', \App\Http\Controllers\Admin\MenuController::class);
+    Route::resource('/transaksi', \App\Http\Controllers\Admin\TransaksiController::class);
     Route::resource('/user', \App\Http\Controllers\UserController::class);
 });
 
