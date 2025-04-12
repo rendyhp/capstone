@@ -62,14 +62,24 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/data-bahan', [BahanController::class, 'index'])->name('data-bahan');
     Route::put('/data-bahan/delete/{id}', [BahanController::class, 'delete'])->name('data-bahan.delete');
+    Route::get('/data-bahan/historyInput/{id}', [BahanController::class, 'indexHistory'])->name('data-bahan.historyBahan');
+
     Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');
     Route::get('/stock-opname/simpan', [StockOpnameController::class, 'simpan'])->name('stock-opname.simpan');
     Route::post('/stock-opname/simpan/store', [StockOpnameController::class, 'simpanDataBaru'])->name('stock-opname.simpan.store');
 
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');
+    Route::put('/daftar-menu/delete/{id}', [MenuController::class, 'delete'])->name('daftar-menu.delete');
+
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
     Route::post('/transaksi/import', [TransaksiController::class, 'import'])->name('transaksi.import');
+    Route::get('/transaksi/preview', [TransaksiController::class, 'preview'])->name('transaksi.preview');
+    Route::delete('/transaksi/temp-delete', [TransaksiController::class, 'deleteTemp'])->name('transaksi.tempDelete');
+
+
+
+
     Route::get('/transaksi/{id}/edit', [TransaksiController::class, 'edit']);
     Route::put('/transaksi/{id}', [TransaksiController::class, 'update']);
     Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');

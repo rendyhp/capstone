@@ -321,43 +321,42 @@
         });
 
     </script>
-    <script>
-        $(document).on('click', '.btn_editmenu', function () {
-            let id = $(this).data('id');
-            let name = $(this).data('name');
-            let description = $(this).data('description') || "-";
-            let komposisi = $(this).data('komposisi'); // Ambil daftar bahan dalam JSON
-
-            // Pastikan komposisi adalah objek, bukan string
+    <!-- <script>
+        $('.btn_editmenu').on('click', function () {
+            const id = $(this).data('id');
+            const name = $(this).data('name');
+            const description = $(this).data('description');
+            const komposisi = $(this).data('komposisi');
             if (typeof komposisi === 'string') {
                 komposisi = JSON.parse(komposisi);
             }
+            $('#editMenuId').val(id);
+            $('#editMenuName').val(name);
+            $('#editMenuDescription').val(description);
 
-            $("#editMenuId").val(id);
-            $("#editMenuName").val(name);
-            $("#editMenuDescription").val(description);
-
-            let bahanContainer = $("#editBahanContainer");
+            const bahanContainer = $('#editBahanContainer');
             bahanContainer.empty();
 
             komposisi.forEach((item, index) => {
-                let bahanHtml = `
-                    <div class="input-group mb-2">
-                        <select name="bahan[${index}][id]" class="form-select bahan-dropdown" required>
+                const satuan = item.bahan.satuan.name;
+                const html = `
+            <div class="input-group mb-2">
+                <input type="hidden" name="bahan[${index}][id]" value="${item.bahan_id}">
+                 <select name="bahan[${index}][id]" class="form-select bahan-dropdown" required>
                             <option value="${item.bahan_id}" selected>${item.bahan.name}</option>
                         </select>
-                        <input type="number" step="0.001" name="bahan[${index}][jumlah]" class="form-control" value="${item.jumlah}" required>
-                    </div>
-                `;
-                bahanContainer.append(bahanHtml); // Ini harus ada!
+                <input type="number" step="0.001" name="bahan[${index}][jumlah]" class="form-control" value="${item.jumlah}" required>
+                <input type="text" class="form-control" value="${satuan}" disabled>
+            </div>
+        `;
+                bahanContainer.append(html);
             });
 
-
-            $("#editBarangModal").modal("show");
+            $('#editBarangModal').modal('show');
         });
 
+    </script> -->
 
-    </script>
     <script>
         function toggleInput(inputId, buttonId) {
             let inputField = document.getElementById(inputId);
@@ -410,43 +409,121 @@
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let bahanIndex = 1;
-            const bahanDropdownHtml = document.querySelector(".bahan-dropdown").innerHTML; // Simpan daftar bahan untuk cloning
+        $(document).ready(function () {
+            const bahanOptionsHtml = $('#bahanOptions select').html();
 
-            document.querySelector(".addBahan").addEventListener("click", function () {
-                let container = document.getElementById("bahanContainer");
-                let newBahan = document.createElement("div");
-                newBahan.classList.add("input-group", "mb-2", "bahan-item");
+            function renderBahanRow(index, selectedBahanId = '', jumlah = '', satuan = '') {
+                const bahanOptionsTemplate = document.querySelector('#bahanOptions select');
+                const bahanSelect = bahanOptionsTemplate.cloneNode(true);
+                bahanSelect.name = `bahan[${index}][id]`;
+                bahanSelect.classList.add('bahan-dropdown');
 
-                newBahan.innerHTML = `
-            <select name="bahan[${bahanIndex}][id]" class="form-select bahan-dropdown" required>
-                ${bahanDropdownHtml}  <!-- Gunakan dropdown yang sudah dibuat -->
-            </select>
-            <input type="number" step="0.001" name="bahan[${bahanIndex}][jumlah]" class="form-control" placeholder="Jumlah" required>
-            <input type="text" name="bahan[${bahanIndex}][satuan]" class="form-control satuan-input" placeholder="Satuan" required disabled>
-            <button type="button" class="btn btn-danger removeBahan">x</button>
-        `;
-                container.appendChild(newBahan);
-                bahanIndex++;
-            });
-
-            document.getElementById("bahanContainer").addEventListener("click", function (event) {
-                if (event.target.classList.contains("removeBahan")) {
-                    event.target.parentElement.remove();
+                // Set selected option
+                if (selectedBahanId) {
+                    Array.from(bahanSelect.options).forEach(option => {
+                        if (option.value == selectedBahanId) {
+                            option.selected = true;
+                        }
+                    });
                 }
+
+                function formatJumlah(jumlah) {
+                    if (!jumlah) return ''; // handle null atau undefined
+                    const num = parseFloat(jumlah);
+                    return Number.isInteger(num) ? num.toString() : num.toFixed(3).replace(/\.?0+$/, '');
+                }
+
+                const jumlahInput = document.createElement('input');
+                jumlahInput.type = 'number';
+                jumlahInput.name = `bahan[${index}][jumlah]`;
+                jumlahInput.placeholder = 'Jumlah';
+                jumlahInput.required = true;
+                jumlahInput.step = '0.001';
+                jumlahInput.className = 'form-control';
+                jumlahInput.value = formatJumlah(jumlah);
+
+                const satuanInput = document.createElement('input');
+                satuanInput.type = 'text';
+                satuanInput.name = `bahan[${index}][satuan]`;
+                satuanInput.placeholder = 'Satuan';
+                satuanInput.className = 'form-control satuan-input';
+                satuanInput.required = true;
+                satuanInput.disabled = true;
+                satuanInput.value = satuan;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-danger removeBahan';
+                removeBtn.textContent = '-';
+
+                const row = document.createElement('div');
+                row.className = 'input-group mb-2 bahan-item';
+                row.appendChild(bahanSelect);
+                row.appendChild(jumlahInput);
+                row.appendChild(satuanInput);
+                row.appendChild(removeBtn);
+
+                return row;
+            }
+
+            function refreshSatuan($container) {
+                $container.on('change', '.bahan-dropdown', function () {
+                    const satuan = $(this).find('option:selected').data('satuan') || '';
+                    $(this).closest('.bahan-item').find('.satuan-input').val(satuan);
+                });
+
+                $container.on('click', '.removeBahan', function () {
+                    $(this).closest('.bahan-item').remove();
+                });
+            }
+
+            // Add bahan (untuk tambah baru)
+            $('#addBahan').on('click', function () {
+                const container = $('#bahanContainer');
+                const index = container.find('.bahan-item').length;
+                container.append(renderBahanRow(index));
             });
 
-            // Otomatis set satuan saat bahan dipilih
-            document.getElementById("bahanContainer").addEventListener("change", function (event) {
-                if (event.target.classList.contains("bahan-dropdown")) {
-                    let selectedOption = event.target.options[event.target.selectedIndex];
-                    let satuanInput = event.target.parentElement.querySelector(".satuan-input");
-                    satuanInput.value = selectedOption.dataset.satuan || "";
-                }
+            // Event listener for edit button
+            $('.btn_editmenu').on('click', function () {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const description = $(this).data('description');
+                let komposisi = $(this).data('komposisi');
+
+                if (typeof komposisi === 'string') komposisi = JSON.parse(komposisi);
+                $('#editMenuForm').attr('action', '/daftar-menu/' + id);
+                $('#editMenuId').val(id);
+                $('#editMenuName').val(name);
+                $('#editMenuDescription').val(description);
+
+                const container = $('#editBahanContainer');
+                container.empty();
+
+                komposisi.forEach((item, index) => {
+                    const selectedBahanId = item.bahan_id;
+                    const jumlah = item.jumlah;
+                    const satuan = item.bahan?.satuan?.name || '';
+
+                    const row = renderBahanRow(index, selectedBahanId, jumlah, satuan);
+                    container.append(row);
+                });
+
+
+                $('#editBarangModal').modal('show');
             });
+
+            // Tambah bahan di form edit
+            $('#addEditBahan').on('click', function () {
+                const container = $('#editBahanContainer');
+                const index = container.find('.bahan-item').length;
+                container.append(renderBahanRow(index));
+            });
+
+            // Aktifkan listener untuk container add & edit
+            refreshSatuan($('#bahanContainer'));
+            refreshSatuan($('#editBahanContainer'));
         });
-
     </script>
 
     <script>
@@ -543,6 +620,37 @@
 
         updateSubmitButton(); // Periksa status saat halaman dimuat
     </script>
+    <script>
+        const menuSelect = document.getElementById('menu_id');
+        const jumlahInput = document.getElementById('jumlah');
+        const komposisiPreview = document.getElementById('komposisiPreview');
+
+        function formatJumlah(jumlah) {
+            return jumlah % 1 === 0 ? jumlah : parseFloat(jumlah.toFixed(3));
+        }
+
+        function updateKomposisi() {
+            const selectedOption = menuSelect.options[menuSelect.selectedIndex];
+            const komposisiData = selectedOption.getAttribute('data-komposisi');
+            const jumlahPesanan = parseInt(jumlahInput.value) || 1;
+
+            komposisiPreview.innerHTML = ''; // clear preview
+
+            if (komposisiData) {
+                const komposisi = JSON.parse(komposisiData);
+                komposisi.forEach(item => {
+                    const totalJumlah = item.jumlah * jumlahPesanan;
+                    const li = document.createElement('li');
+                    li.textContent = `${item.bahan.name} - ${formatJumlah(totalJumlah)} ${item.bahan.satuan.name}`;
+                    komposisiPreview.appendChild(li);
+                });
+            }
+        }
+
+        menuSelect.addEventListener('change', updateKomposisi);
+        jumlahInput.addEventListener('input', updateKomposisi);
+    </script>
+
     <script type="text/javascript">
         $(document).on('click', '.btn_editUP', function (e) {
             var id = $(this).data('id');

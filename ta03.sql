@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 27, 2025 at 06:36 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Waktu pembuatan: 10 Apr 2025 pada 07.55
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `akhir_terpakai_seharusnyas`
+-- Struktur dari tabel `akhir_terpakai_seharusnyas`
 --
 
 CREATE TABLE `akhir_terpakai_seharusnyas` (
@@ -40,7 +40,7 @@ CREATE TABLE `akhir_terpakai_seharusnyas` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bahans`
+-- Struktur dari tabel `bahans`
 --
 
 CREATE TABLE `bahans` (
@@ -56,7 +56,7 @@ CREATE TABLE `bahans` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `bahans`
+-- Dumping data untuk tabel `bahans`
 --
 
 INSERT INTO `bahans` (`id`, `user_id`, `name`, `description`, `minimum`, `satuan_id`, `created_at`, `updated_at`, `deleted_at`) VALUES
@@ -69,12 +69,12 @@ INSERT INTO `bahans` (`id`, `user_id`, `name`, `description`, `minimum`, `satuan
 (11, 1, 'Cokelat Bubuk', '-', 100.000, 2, '2025-03-24 06:19:40', '2025-03-24 06:19:40', NULL),
 (12, 1, 'Mangga Cengkir', 'Mangga segar dari Probolinggo', 3.000, 1, '2025-03-24 20:06:44', '2025-03-24 20:07:07', NULL),
 (13, 1, 'TEST', 'SAS', 0.000, 2, '2025-03-24 20:27:44', '2025-03-24 20:35:59', '2025-03-24 20:35:59'),
-(14, 1, 'TEST', 'des', 7.522, 1, '2025-03-24 21:10:26', '2025-03-24 22:51:06', NULL);
+(14, 1, 'TEST', 'des', 7.522, 1, '2025-03-24 21:10:26', '2025-03-24 22:51:06', '2025-04-10 03:22:26');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bahan_akhirs`
+-- Struktur dari tabel `bahan_akhirs`
 --
 
 CREATE TABLE `bahan_akhirs` (
@@ -89,7 +89,7 @@ CREATE TABLE `bahan_akhirs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `bahan_akhirs`
+-- Dumping data untuk tabel `bahan_akhirs`
 --
 
 INSERT INTO `bahan_akhirs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
@@ -164,12 +164,21 @@ INSERT INTO `bahan_akhirs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `crea
 (92, 1, '2025-03-27', 12, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL),
 (93, 1, '2025-03-27', 10, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL),
 (94, 1, '2025-03-27', 9, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL),
-(95, 1, '2025-03-27', 14, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL);
+(95, 1, '2025-03-27', 14, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL),
+(96, 1, '2025-04-10', 2, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(97, 1, '2025-04-10', 11, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(98, 1, '2025-04-10', 5, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(99, 1, '2025-04-10', 6, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(100, 1, '2025-04-10', 1, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(101, 1, '2025-04-10', 12, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(102, 1, '2025-04-10', 10, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(103, 1, '2025-04-10', 9, 59.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(104, 1, '2025-04-10', 14, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bahan_awals`
+-- Struktur dari tabel `bahan_awals`
 --
 
 CREATE TABLE `bahan_awals` (
@@ -183,7 +192,7 @@ CREATE TABLE `bahan_awals` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `bahan_awals`
+-- Dumping data untuk tabel `bahan_awals`
 --
 
 INSERT INTO `bahan_awals` (`id`, `date`, `bahan_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
@@ -258,12 +267,21 @@ INSERT INTO `bahan_awals` (`id`, `date`, `bahan_id`, `jumlah`, `created_at`, `up
 (91, '2025-03-28', 12, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL),
 (92, '2025-03-28', 10, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL),
 (93, '2025-03-28', 9, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL),
-(94, '2025-03-28', 14, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL);
+(94, '2025-03-28', 14, 0.000, '2025-03-26 22:03:10', '2025-03-26 22:03:10', NULL),
+(95, '2025-04-11', 2, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(96, '2025-04-11', 11, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(97, '2025-04-11', 5, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(98, '2025-04-11', 6, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(99, '2025-04-11', 1, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(100, '2025-04-11', 12, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(101, '2025-04-11', 10, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(102, '2025-04-11', 9, 59.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(103, '2025-04-11', 14, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `barangs`
+-- Struktur dari tabel `barangs`
 --
 
 CREATE TABLE `barangs` (
@@ -280,20 +298,21 @@ CREATE TABLE `barangs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `barangs`
+-- Dumping data untuk tabel `barangs`
 --
 
 INSERT INTO `barangs` (`id`, `user_id`, `name`, `description`, `jumlah`, `satuan`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'Gelas', 'AW', -56.750, 'Pcs', NULL, '2025-03-21 19:56:40', '2025-03-24 20:30:57', NULL),
+(1, 1, 'Gelas 2', 'AW', -56.750, 'Pcs', NULL, '2025-03-21 19:56:40', '2025-04-09 22:43:46', NULL),
 (4, 1, 'Setrika', '-', 2.000, '-', NULL, '2025-03-21 20:04:59', '2025-03-24 19:51:09', NULL),
 (5, 1, 'Piring', '-', 22.000, '-', NULL, '2025-03-21 20:57:32', '2025-03-21 20:57:32', NULL),
-(6, 1, 'Kursi indoor', '-', 15.500, '-', NULL, '2025-03-24 19:46:51', '2025-03-24 19:46:51', NULL),
-(7, 1, 'Meja', '-', 2.043, '-', NULL, '2025-03-24 20:50:43', '2025-03-24 20:51:35', NULL);
+(6, 1, 'Kursi indoor 2', '-', 15.500, '-', NULL, '2025-03-24 19:46:51', '2025-04-09 22:43:52', NULL),
+(7, 1, 'Meja', '-', 2.043, '-', NULL, '2025-03-24 20:50:43', '2025-03-24 20:51:35', NULL),
+(10, 1, 'Test', '-', 5.000, 'Pcs', '[Kusonime] Rikei ga Koi ni Ochita no de Shoumei shitemita BD - 04.mkv_snapshot_21.22.693.png', '2025-04-09 20:15:14', '2025-04-09 20:15:14', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `deleted_items`
+-- Struktur dari tabel `deleted_items`
 --
 
 CREATE TABLE `deleted_items` (
@@ -305,7 +324,7 @@ CREATE TABLE `deleted_items` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `failed_jobs`
+-- Struktur dari tabel `failed_jobs`
 --
 
 CREATE TABLE `failed_jobs` (
@@ -321,7 +340,7 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `history_inputs`
+-- Struktur dari tabel `history_inputs`
 --
 
 CREATE TABLE `history_inputs` (
@@ -338,7 +357,7 @@ CREATE TABLE `history_inputs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `komposisi_menus`
+-- Struktur dari tabel `komposisi_menus`
 --
 
 CREATE TABLE `komposisi_menus` (
@@ -352,20 +371,21 @@ CREATE TABLE `komposisi_menus` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `komposisi_menus`
+-- Dumping data untuk tabel `komposisi_menus`
 --
 
 INSERT INTO `komposisi_menus` (`id`, `menu_id`, `bahan_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 1, 50.000, '2025-03-24 05:34:17', '2025-03-24 05:34:17', NULL),
-(2, 1, 2, 200.000, '2025-03-24 05:34:17', '2025-03-24 05:34:17', NULL),
-(4, 5, 11, 50.000, '2025-03-23 23:45:29', '2025-03-23 23:45:29', NULL),
-(5, 5, 9, 180.000, '2025-03-23 23:45:29', '2025-03-23 23:45:29', NULL),
-(6, 5, 5, 15.000, '2025-03-23 23:45:29', '2025-03-23 23:45:29', NULL);
+(50, 2, 1, 8.000, '2025-04-09 22:51:40', '2025-04-09 22:51:40', NULL),
+(54, 1, 6, 66.000, '2025-04-09 22:54:26', '2025-04-09 22:54:26', NULL),
+(55, 1, 5, 6.000, '2025-04-09 22:54:26', '2025-04-09 22:54:26', NULL),
+(56, 5, 11, 50.000, '2025-04-09 22:54:38', '2025-04-09 22:54:38', NULL),
+(57, 5, 9, 200.000, '2025-04-09 22:54:38', '2025-04-09 22:54:38', NULL),
+(58, 5, 5, 15.000, '2025-04-09 22:54:38', '2025-04-09 22:54:38', NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `log_activities`
+-- Struktur dari tabel `log_activities`
 --
 
 CREATE TABLE `log_activities` (
@@ -384,7 +404,7 @@ CREATE TABLE `log_activities` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `menus`
+-- Struktur dari tabel `menus`
 --
 
 CREATE TABLE `menus` (
@@ -399,19 +419,20 @@ CREATE TABLE `menus` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `menus`
+-- Dumping data untuk tabel `menus`
 --
 
 INSERT INTO `menus` (`id`, `user_id`, `name`, `description`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 'Espresso Ice', NULL, NULL, '2025-03-24 05:30:41', NULL, NULL),
 (2, 1, 'Cappucino', NULL, NULL, '2025-03-24 05:31:25', '2025-03-24 05:31:25', NULL),
 (3, 1, 'Caramel Latte', NULL, NULL, '2025-03-24 05:31:45', '2025-03-24 05:31:45', NULL),
-(5, 1, 'Hot Chocolate', '-', NULL, '2025-03-23 23:45:29', '2025-03-23 23:45:29', NULL);
+(5, 1, 'Hot Chocolate', '-', NULL, '2025-03-23 23:45:29', '2025-03-23 23:45:29', NULL),
+(9, 1, 'Test 23', 'd', NULL, '2025-04-09 22:51:32', '2025-04-09 22:54:01', '2025-04-09 22:54:01');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `migrations`
+-- Struktur dari tabel `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -421,7 +442,7 @@ CREATE TABLE `migrations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `migrations`
+-- Dumping data untuk tabel `migrations`
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
@@ -441,15 +462,16 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (14, '2025_03_12_045314_create_temporary_files_table', 1),
 (15, '2025_03_12_045324_create_log_activities_table', 2),
 (16, '2025_03_12_045333_create_notifikasis_table', 2),
-(17, '2025_03_12_045403_create_transaksis_table', 2),
 (18, '2025_03_12_060225_create_komposisi_menus_table', 2),
 (19, '2025_03_12_070515_create_deleted_items_table', 2),
-(20, '2025_03_22_021220_create_bahan_akhirs_table', 2);
+(20, '2025_03_22_021220_create_bahan_akhirs_table', 2),
+(21, '2025_03_12_045403_create_transaksis_table', 3),
+(22, '2025_03_28_091206_create_transaksi_details_table', 3);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notifikasis`
+-- Struktur dari tabel `notifikasis`
 --
 
 CREATE TABLE `notifikasis` (
@@ -465,7 +487,7 @@ CREATE TABLE `notifikasis` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_resets`
+-- Struktur dari tabel `password_resets`
 --
 
 CREATE TABLE `password_resets` (
@@ -477,7 +499,7 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `password_reset_tokens`
+-- Struktur dari tabel `password_reset_tokens`
 --
 
 CREATE TABLE `password_reset_tokens` (
@@ -489,7 +511,7 @@ CREATE TABLE `password_reset_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `personal_access_tokens`
+-- Struktur dari tabel `personal_access_tokens`
 --
 
 CREATE TABLE `personal_access_tokens` (
@@ -508,7 +530,7 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `satuans`
+-- Struktur dari tabel `satuans`
 --
 
 CREATE TABLE `satuans` (
@@ -521,7 +543,7 @@ CREATE TABLE `satuans` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `satuans`
+-- Dumping data untuk tabel `satuans`
 --
 
 INSERT INTO `satuans` (`id`, `user_id`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
@@ -532,7 +554,7 @@ INSERT INTO `satuans` (`id`, `user_id`, `name`, `created_at`, `updated_at`, `del
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tag_notifikasis`
+-- Struktur dari tabel `tag_notifikasis`
 --
 
 CREATE TABLE `tag_notifikasis` (
@@ -547,7 +569,7 @@ CREATE TABLE `tag_notifikasis` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `temporary_files`
+-- Struktur dari tabel `temporary_files`
 --
 
 CREATE TABLE `temporary_files` (
@@ -561,24 +583,62 @@ CREATE TABLE `temporary_files` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transaksis`
+-- Struktur dari tabel `transaksis`
 --
 
 CREATE TABLE `transaksis` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `date` date NOT NULL,
-  `menu` varchar(255) NOT NULL,
+  `menu_name` varchar(255) DEFAULT NULL,
+  `menu_id` bigint(20) UNSIGNED DEFAULT NULL,
   `jumlah` decimal(12,3) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data untuk tabel `transaksis`
+--
+
+INSERT INTO `transaksis` (`id`, `user_id`, `date`, `menu_name`, `menu_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, '2025-04-10', NULL, 5, 10.000, '2025-04-09 22:02:40', '2025-04-09 22:02:40', NULL),
+(2, 1, '2025-04-10', NULL, 6, 8.000, '2025-04-09 22:29:23', '2025-04-09 22:29:23', NULL);
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `transaksi_details`
+--
+
+CREATE TABLE `transaksi_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `transaksi_id` bigint(20) UNSIGNED NOT NULL,
+  `bahan_id` bigint(20) UNSIGNED NOT NULL,
+  `jumlah` decimal(12,3) NOT NULL,
+  `satuan_id` bigint(20) UNSIGNED NOT NULL,
+  `catatan` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `transaksi_details`
+--
+
+INSERT INTO `transaksi_details` (`id`, `transaksi_id`, `bahan_id`, `jumlah`, `satuan_id`, `catatan`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 11, 500.000, 2, NULL, '2025-04-09 22:02:40', '2025-04-09 22:02:40', NULL),
+(2, 1, 9, 1800.000, 3, NULL, '2025-04-09 22:02:40', '2025-04-09 22:02:40', NULL),
+(3, 1, 5, 150.000, 2, NULL, '2025-04-09 22:02:40', '2025-04-09 22:02:40', NULL),
+(4, 2, 5, 4400.000, 2, NULL, '2025-04-09 22:29:23', '2025-04-09 22:29:23', NULL),
+(5, 2, 1, 0.000, 2, NULL, '2025-04-09 22:29:23', '2025-04-09 22:29:23', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `users`
 --
 
 CREATE TABLE `users` (
@@ -596,7 +656,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
@@ -607,14 +667,14 @@ INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `pa
 --
 
 --
--- Indexes for table `akhir_terpakai_seharusnyas`
+-- Indeks untuk tabel `akhir_terpakai_seharusnyas`
 --
 ALTER TABLE `akhir_terpakai_seharusnyas`
   ADD PRIMARY KEY (`id`),
   ADD KEY `akhir_terpakai_seharusnyas_bahan_id_foreign` (`bahan_id`);
 
 --
--- Indexes for table `bahans`
+-- Indeks untuk tabel `bahans`
 --
 ALTER TABLE `bahans`
   ADD PRIMARY KEY (`id`),
@@ -622,7 +682,7 @@ ALTER TABLE `bahans`
   ADD KEY `bahans_satuan_id_foreign` (`satuan_id`);
 
 --
--- Indexes for table `bahan_akhirs`
+-- Indeks untuk tabel `bahan_akhirs`
 --
 ALTER TABLE `bahan_akhirs`
   ADD PRIMARY KEY (`id`),
@@ -630,34 +690,34 @@ ALTER TABLE `bahan_akhirs`
   ADD KEY `bahan_akhirs_bahan_id_foreign` (`bahan_id`);
 
 --
--- Indexes for table `bahan_awals`
+-- Indeks untuk tabel `bahan_awals`
 --
 ALTER TABLE `bahan_awals`
   ADD PRIMARY KEY (`id`),
   ADD KEY `bahan_awals_bahan_id_foreign` (`bahan_id`);
 
 --
--- Indexes for table `barangs`
+-- Indeks untuk tabel `barangs`
 --
 ALTER TABLE `barangs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `barangs_user_id_foreign` (`user_id`);
 
 --
--- Indexes for table `deleted_items`
+-- Indeks untuk tabel `deleted_items`
 --
 ALTER TABLE `deleted_items`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `failed_jobs`
+-- Indeks untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
--- Indexes for table `history_inputs`
+-- Indeks untuk tabel `history_inputs`
 --
 ALTER TABLE `history_inputs`
   ADD PRIMARY KEY (`id`),
@@ -665,7 +725,7 @@ ALTER TABLE `history_inputs`
   ADD KEY `history_inputs_bahan_id_foreign` (`bahan_id`);
 
 --
--- Indexes for table `komposisi_menus`
+-- Indeks untuk tabel `komposisi_menus`
 --
 ALTER TABLE `komposisi_menus`
   ADD PRIMARY KEY (`id`),
@@ -673,26 +733,26 @@ ALTER TABLE `komposisi_menus`
   ADD KEY `komposisi_menus_bahan_id_foreign` (`bahan_id`);
 
 --
--- Indexes for table `log_activities`
+-- Indeks untuk tabel `log_activities`
 --
 ALTER TABLE `log_activities`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `menus`
+-- Indeks untuk tabel `menus`
 --
 ALTER TABLE `menus`
   ADD PRIMARY KEY (`id`),
   ADD KEY `menus_user_id_foreign` (`user_id`);
 
 --
--- Indexes for table `migrations`
+-- Indeks untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `notifikasis`
+-- Indeks untuk tabel `notifikasis`
 --
 ALTER TABLE `notifikasis`
   ADD PRIMARY KEY (`id`),
@@ -700,19 +760,19 @@ ALTER TABLE `notifikasis`
   ADD KEY `notifikasis_tag_notifikasi_id_foreign` (`tag_notifikasi_id`);
 
 --
--- Indexes for table `password_resets`
+-- Indeks untuk tabel `password_resets`
 --
 ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
--- Indexes for table `password_reset_tokens`
+-- Indeks untuk tabel `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
   ADD PRIMARY KEY (`email`);
 
 --
--- Indexes for table `personal_access_tokens`
+-- Indeks untuk tabel `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   ADD PRIMARY KEY (`id`),
@@ -720,34 +780,44 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indexes for table `satuans`
+-- Indeks untuk tabel `satuans`
 --
 ALTER TABLE `satuans`
   ADD PRIMARY KEY (`id`),
   ADD KEY `satuans_user_id_foreign` (`user_id`);
 
 --
--- Indexes for table `tag_notifikasis`
+-- Indeks untuk tabel `tag_notifikasis`
 --
 ALTER TABLE `tag_notifikasis`
   ADD PRIMARY KEY (`id`),
   ADD KEY `tag_notifikasis_user_id_foreign` (`user_id`);
 
 --
--- Indexes for table `temporary_files`
+-- Indeks untuk tabel `temporary_files`
 --
 ALTER TABLE `temporary_files`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `transaksis`
+-- Indeks untuk tabel `transaksis`
 --
 ALTER TABLE `transaksis`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `transaksis_user_id_foreign` (`user_id`);
+  ADD KEY `transaksis_user_id_foreign` (`user_id`),
+  ADD KEY `transaksis_menu_id_foreign` (`menu_id`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `transaksi_details`
+--
+ALTER TABLE `transaksi_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transaksi_details_transaksi_id_foreign` (`transaksi_id`),
+  ADD KEY `transaksi_details_bahan_id_foreign` (`bahan_id`),
+  ADD KEY `transaksi_details_satuan_id_foreign` (`satuan_id`);
+
+--
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
@@ -755,203 +825,218 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `akhir_terpakai_seharusnyas`
+-- AUTO_INCREMENT untuk tabel `akhir_terpakai_seharusnyas`
 --
 ALTER TABLE `akhir_terpakai_seharusnyas`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `bahans`
+-- AUTO_INCREMENT untuk tabel `bahans`
 --
 ALTER TABLE `bahans`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `bahan_akhirs`
+-- AUTO_INCREMENT untuk tabel `bahan_akhirs`
 --
 ALTER TABLE `bahan_akhirs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
--- AUTO_INCREMENT for table `bahan_awals`
+-- AUTO_INCREMENT untuk tabel `bahan_awals`
 --
 ALTER TABLE `bahan_awals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
--- AUTO_INCREMENT for table `barangs`
+-- AUTO_INCREMENT untuk tabel `barangs`
 --
 ALTER TABLE `barangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `deleted_items`
+-- AUTO_INCREMENT untuk tabel `deleted_items`
 --
 ALTER TABLE `deleted_items`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `failed_jobs`
+-- AUTO_INCREMENT untuk tabel `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `history_inputs`
+-- AUTO_INCREMENT untuk tabel `history_inputs`
 --
 ALTER TABLE `history_inputs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `komposisi_menus`
+-- AUTO_INCREMENT untuk tabel `komposisi_menus`
 --
 ALTER TABLE `komposisi_menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
--- AUTO_INCREMENT for table `log_activities`
+-- AUTO_INCREMENT untuk tabel `log_activities`
 --
 ALTER TABLE `log_activities`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `menus`
+-- AUTO_INCREMENT untuk tabel `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `migrations`
+-- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
--- AUTO_INCREMENT for table `notifikasis`
+-- AUTO_INCREMENT untuk tabel `notifikasis`
 --
 ALTER TABLE `notifikasis`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `personal_access_tokens`
+-- AUTO_INCREMENT untuk tabel `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `satuans`
+-- AUTO_INCREMENT untuk tabel `satuans`
 --
 ALTER TABLE `satuans`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `tag_notifikasis`
+-- AUTO_INCREMENT untuk tabel `tag_notifikasis`
 --
 ALTER TABLE `tag_notifikasis`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `temporary_files`
+-- AUTO_INCREMENT untuk tabel `temporary_files`
 --
 ALTER TABLE `temporary_files`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `transaksis`
+-- AUTO_INCREMENT untuk tabel `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `transaksi_details`
+--
+ALTER TABLE `transaksi_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- Constraints for dumped tables
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
 
 --
--- Constraints for table `akhir_terpakai_seharusnyas`
+-- Ketidakleluasaan untuk tabel `akhir_terpakai_seharusnyas`
 --
 ALTER TABLE `akhir_terpakai_seharusnyas`
   ADD CONSTRAINT `akhir_terpakai_seharusnyas_bahan_id_foreign` FOREIGN KEY (`bahan_id`) REFERENCES `bahans` (`id`);
 
 --
--- Constraints for table `bahans`
+-- Ketidakleluasaan untuk tabel `bahans`
 --
 ALTER TABLE `bahans`
   ADD CONSTRAINT `bahans_satuan_id_foreign` FOREIGN KEY (`satuan_id`) REFERENCES `satuans` (`id`),
   ADD CONSTRAINT `bahans_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `bahan_akhirs`
+-- Ketidakleluasaan untuk tabel `bahan_akhirs`
 --
 ALTER TABLE `bahan_akhirs`
   ADD CONSTRAINT `bahan_akhirs_bahan_id_foreign` FOREIGN KEY (`bahan_id`) REFERENCES `bahans` (`id`),
   ADD CONSTRAINT `bahan_akhirs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `bahan_awals`
+-- Ketidakleluasaan untuk tabel `bahan_awals`
 --
 ALTER TABLE `bahan_awals`
   ADD CONSTRAINT `bahan_awals_bahan_id_foreign` FOREIGN KEY (`bahan_id`) REFERENCES `bahans` (`id`);
 
 --
--- Constraints for table `barangs`
+-- Ketidakleluasaan untuk tabel `barangs`
 --
 ALTER TABLE `barangs`
   ADD CONSTRAINT `barangs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `history_inputs`
+-- Ketidakleluasaan untuk tabel `history_inputs`
 --
 ALTER TABLE `history_inputs`
   ADD CONSTRAINT `history_inputs_bahan_id_foreign` FOREIGN KEY (`bahan_id`) REFERENCES `bahans` (`id`),
   ADD CONSTRAINT `history_inputs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `komposisi_menus`
+-- Ketidakleluasaan untuk tabel `komposisi_menus`
 --
 ALTER TABLE `komposisi_menus`
   ADD CONSTRAINT `komposisi_menus_bahan_id_foreign` FOREIGN KEY (`bahan_id`) REFERENCES `bahans` (`id`),
   ADD CONSTRAINT `komposisi_menus_menu_id_foreign` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`);
 
 --
--- Constraints for table `menus`
+-- Ketidakleluasaan untuk tabel `menus`
 --
 ALTER TABLE `menus`
   ADD CONSTRAINT `menus_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `notifikasis`
+-- Ketidakleluasaan untuk tabel `notifikasis`
 --
 ALTER TABLE `notifikasis`
   ADD CONSTRAINT `notifikasis_tag_notifikasi_id_foreign` FOREIGN KEY (`tag_notifikasi_id`) REFERENCES `tag_notifikasis` (`id`),
   ADD CONSTRAINT `notifikasis_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `satuans`
+-- Ketidakleluasaan untuk tabel `satuans`
 --
 ALTER TABLE `satuans`
   ADD CONSTRAINT `satuans_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `tag_notifikasis`
+-- Ketidakleluasaan untuk tabel `tag_notifikasis`
 --
 ALTER TABLE `tag_notifikasis`
   ADD CONSTRAINT `tag_notifikasis_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `transaksis`
+-- Ketidakleluasaan untuk tabel `transaksis`
 --
 ALTER TABLE `transaksis`
+  ADD CONSTRAINT `transaksis_menu_id_foreign` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`),
   ADD CONSTRAINT `transaksis_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `transaksi_details`
+--
+ALTER TABLE `transaksi_details`
+  ADD CONSTRAINT `transaksi_details_bahan_id_foreign` FOREIGN KEY (`bahan_id`) REFERENCES `bahans` (`id`),
+  ADD CONSTRAINT `transaksi_details_satuan_id_foreign` FOREIGN KEY (`satuan_id`) REFERENCES `satuans` (`id`),
+  ADD CONSTRAINT `transaksi_details_transaksi_id_foreign` FOREIGN KEY (`transaksi_id`) REFERENCES `transaksis` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

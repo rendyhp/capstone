@@ -56,7 +56,7 @@
 
             <div class="mb-3 row">
                 <label for="tanggaltransmasuk" class="col-sm-2 col-form-label">Tanggal</label>
-                <div class="col-sm-10">
+                <div class="col-sm-2">
                     <input type="date" class="form-control" id="tanggaltransmasuk" name="tanggaltransmasuk" required>
                 </div>
             </div>

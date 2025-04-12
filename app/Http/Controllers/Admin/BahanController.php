@@ -60,6 +60,46 @@ class BahanController extends Controller
         }
     }
 
+    public function indexHistory(Request $request {{id}})
+    {
+
+        $user = Auth::user();
+        $role = $user->role;
+
+
+        $tanggalDipilih = request(now()->format('Y-m-d')); // Pastikan ini format 'Y-m-d' misalnya '2025-03-21'
+        $query = HistoryInput::with('satuan')
+            ->orderBy('name', 'asc')
+            ->whereNull('deleted_at')
+            ->whereDate('date', $tanggalDipilih);
+        
+
+        // $query = Bahan::orderBy('name', 'asc')
+        //     ->whereNull('deleted_at')
+        //     // ->whereDate('date', $tanggalDipilih)
+        //     ->get();
+        
+
+        $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
+
+        // Filter pencarian jika ada input search
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        if ($role === 'OWNER') {
+            $historyInputs = $query->paginate(20);
+
+            return view('bahan.historyInput', [
+                
+                'historyInputs' => $historyInputs,
+                'satuans' => $satuans
+            ]);
+        }
+    }
+
+
+
 
     public function create()
     {

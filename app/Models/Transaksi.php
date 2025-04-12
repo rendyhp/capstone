@@ -19,6 +19,7 @@ class Transaksi extends Model
         'menu_id', // Mengubah dari 'menu' ke 'menu_id'
         'date',
         'jumlah',
+        'catatan'
     ];
 
     public function menu()

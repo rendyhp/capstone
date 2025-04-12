@@ -12,59 +12,99 @@ use App\Models\KomposisiMenu;
 use App\Models\Bahan;
 use App\Models\TransaksiDetail;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class TransaksiController extends Controller
 {
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $role = $user->role;
+
+        // Ambil tanggal dari request, default ke hari ini
+        $date = $request->input('date', Carbon::today()->toDateString());
+
+        // Query transaksi dengan relasi menu dan bahan
+        $query = Transaksi::with(['menu', 'menu.komposisi.bahan.satuan'])
+            ->whereDate('date', $date)
+            ->orderBy('date', 'desc');
+
+        // Ambil data menu lengkap untuk digunakan di view
+        $menus = Menu::with('komposisi.bahan.satuan')->get();
+
+        // Filter berdasarkan pencarian nama menu
+        if ($search = $request->input('search')) {
+            $query->whereHas('menu', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Paginasi hasil query
+        $transaksis = $query->paginate(20)->appends($request->query());
+
+        // Routing ke view sesuai role
+        if ($role === 'OWNER') {
+            return view('transaksi.index', compact('transaksis', 'date', 'menus'));
+        } elseif ($role === 'user') {
+            return view('user.transaksi', compact('transaksis', 'date', 'menus'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+    }
+
+
     public function import(Request $request)
     {
-        // Validasi apakah ada file yang diunggah
-        if (!$request->hasFile('file')) {
-            return response()->json(['error' => 'Tidak ada file yang diunggah.'], 400);
-        }
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv'
+        ]);
 
         $file = $request->file('file');
-        $extension = $file->getClientOriginalExtension();
+        $filename = 'temp_import_' . time() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('temp', $filename);
 
-        // Validasi format file (CSV atau XLSX)
-        if (!in_array($extension, ['csv', 'xlsx', 'xls'])) {
-            return response()->json(['error' => 'Format file harus CSV atau Excel (XLSX, XLS).'], 400);
+        session(['temp_excel' => $path]);
+
+        return redirect()->route('transaksi.preview')->with('success', 'File berhasil diupload.');
+    }
+
+    public function preview()
+    {
+        $path = session('temp_excel');
+
+        if (!$path || !Storage::exists($path)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
         }
 
-        try {
-            // Baca file dengan PhpSpreadsheet
-            $spreadsheet = IOFactory::load($file->getPathname());
-            $sheet = $spreadsheet->getActiveSheet();
-            $data = $sheet->toArray();
+        $data = Excel::toCollection(null, storage_path('app/' . $path))->first();
+        $previewData = [];
 
-            // Iterasi data (skip header row)
-            foreach ($data as $index => $row) {
-                if ($index == 0)
-                    continue; // Lewati header
-
-                $menuName = trim($row[0]); // Nama Menu ada di kolom pertama
-                $jumlah = intval($row[2]); // Jumlah ada di kolom ke-3
-
-                // Cek apakah menu ada di database
-                $menu = Menu::where('name', $menuName)->first();
-
-                // Simpan transaksi
-                $transaksi = Transaksi::create([
-                    'user_id' => Auth::id(),
-                    'menu_id' => $menu ? $menu->id : null,
-                    'date' => now(),
-                    'jumlah' => $jumlah,
-                ]);
-
-                // Jika menu ditemukan, hitung bahan terpakai
-                if ($menu) {
-                    $this->hitungBahanTerpakai($transaksi);
-                }
+        foreach ($data as $row) {
+            if (!empty($row[0]) && !empty($row[2])) {
+                $previewData[] = [
+                    'menu' => $row[0],
+                    'jumlah' => intval($row[2]),
+                ];
             }
-
-            return response()->json(['success' => 'Data berhasil diimpor!']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Terjadi kesalahan saat memproses file: ' . $e->getMessage()], 500);
         }
+
+        return view('transaksi.preview', compact('previewData'));
+    }
+
+    public function deleteTemp()
+    {
+        $path = session('temp_excel');
+
+        if ($path && Storage::exists($path)) {
+            Storage::delete($path);
+        }
+
+        session()->forget('temp_excel');
+
+        return redirect()->back()->with('success', 'File sementara dihapus.');
     }
 
 
@@ -109,37 +149,38 @@ class TransaksiController extends Controller
         }
     }
 
-    public function index(Request $request)
+
+
+    public function edit($id)
     {
-        $user = Auth::user();
-        $role = $user->role;
+        $transaksi = Transaksi::findOrFail($id);
+        $menus = Menu::all(); // untuk pilihan menu
+        return view('transaksi.edit', compact('transaksi', 'menus'));
+    }
 
-        // Ambil tanggal dari request, default ke hari ini
-        $date = $request->input('date', Carbon::today()->toDateString());
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'menu_id' => 'required|exists:menus,id',
+            'jumlah' => 'required|numeric|min:1',
+            'date' => 'required|date',
+            'catatan' => 'nullable|string'
+        ]);
 
-        // Query transaksi dengan relasi menu dan bahan
-        $query = Transaksi::with(['menu', 'menu.komposisi.bahan.satuan'])
-            ->whereDate('date', $date)
-            ->orderBy('date', 'desc');
+        $transaksi = Transaksi::findOrFail($id);
 
-        // Filter berdasarkan pencarian (misalnya nama menu)
-        if ($search = $request->input('search')) {
-            $query->whereHas('menu', function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%');
-            });
-        }
+        $transaksi->update([
+            'menu_id' => $request->menu_id,
+            'jumlah' => $request->jumlah,
+            'date' => $request->date,
+            'catatan' => $request->catatan,
+        ]);
 
-        // Paginasi hasil query
-        $transaksis = $query->paginate(20)->appends($request->query());
+        // Hapus dan hitung ulang transaksi_detail
+        $transaksi->transaksiDetail()->delete();
+        $this->hitungBahanTerpakai($transaksi);
 
-        // Akses berdasarkan role
-        if ($role === 'OWNER') {
-            return view('transaksi.index', compact('transaksis', 'date'));
-        } elseif ($role === 'user') {
-            return view('user.transaksi', compact('transaksis', 'date'));
-        } else {
-            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
     }
 
 

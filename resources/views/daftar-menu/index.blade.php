@@ -84,7 +84,11 @@
                                                             <ul>
                                                                 @foreach($menu->komposisi as $komposisi)
                                                                     <li>{{ $komposisi->bahan->name }} -
-                                                                        {{ $komposisi->jumlah }}
+                                                                        @if (strpos($komposisi->jumlah, '.') === false)
+                                                                            {{ intval($komposisi->jumlah) }}
+                                                                        @else
+                                                                            {{ rtrim(rtrim($komposisi->jumlah, '0'), '.') }}
+                                                                        @endif
                                                                         {{ $komposisi->bahan->satuan->name }}
                                                                     </li>
                                                                 @endforeach
@@ -92,21 +96,23 @@
                                                         </td>
 
                                                         <td>
-                                                            <!-- Button trigger modal -->
+
+
                                                             <button type="button" class="btn btn-primary btn-sm btn_editmenu"
                                                                 data-id="{{ $menu->id }}" data-name="{{ $menu->name }}"
                                                                 data-description="{{ $menu->description }}"
-                                                                data-komposisi="{{ htmlspecialchars(json_encode($menu->komposisi), ENT_QUOTES, 'UTF-8') }}">
+                                                                data-komposisi='@json($menu->komposisi)'>
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
 
-                                                            <form action="/daftar-menu/{{ $menu->id }}" class="d-inline"
+
+                                                            <form action="/daftar-menu/delete/{{ $menu->id }}" class="d-inline"
                                                                 method="post">
-                                                                @method('DELETE')
+                                                                @method('put')
                                                                 @csrf
                                                                 <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin akan Mendelete Data?')"><i
+                                                                    onclick="return confirm('Yakin akan Mendelete Menu?')"><i
                                                                         class="fa fa-trash"></i></button>
                                                             </form>
                                                         </td>
@@ -121,6 +127,18 @@
                 </div>
             </div>
         </div>
+
+        <!-- Hidden HTML untuk bahan dropdown -->
+        <div id="bahanOptions" class="d-none">
+            <select class="form-select">
+                @foreach($bahans as $bahan)
+                    <option value="{{ $bahan->id }}" data-satuan="{{ $bahan->satuan->name }}">
+                        {{ $bahan->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
 
         <!-- Modal Tambah Barang-->
 
@@ -144,25 +162,14 @@
                                 <input type="text" class="form-control" id="description" name="description"
                                     placeholder="Input Deskripsi Barang">
                             </div>
-                            <div id="bahanContainer" class="mb-3">
-                                <label for="bahan" class="form-label text-dark fw-bold">Bahan</label>
-                                <div class="input-group mb-2 bahan-item">
-
-                                    <select name="bahan[0][id]" class="form-select bahan-dropdown" required>
-                                        <option value="">Pilih Bahan</option>
-                                        @foreach ($bahans as $bahan)
-                                            <option value="{{ $bahan->id }}" data-satuan="{{ $bahan->satuan->name }}">
-                                                {{ $bahan->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <input type="number" step="0.001" name="bahan[0][jumlah]" class="form-control"
-                                        placeholder="Jumlah" required>
-                                    <input type="text" name="bahan[0][satuan]" class="form-control satuan-input"
-                                        placeholder="Satuan" required disabled>
-                                    <button type="button" class="btn btn-success addBahan">+</button>
+                            <div class="mb-3">
+                                <label class="form-label text-dark fw-bold">Bahan</label>
+                                <div id="bahanContainer">
+                                    <!-- Akan diisi dinamis lewat JS -->
                                 </div>
+                                <button type="button" class="btn btn-success" id="addBahan">+ Tambah Bahan</button>
                             </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Simpan</button>
@@ -181,8 +188,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="editMenuForm" method="POST" action="/daftar-menu/edit" enctype="multipart/form-data">
+                        <form id="editMenuForm" method="POST">
+
                             @method('PUT')
+
                             @csrf
                             <input type="hidden" id="editMenuId" name="id">
 
@@ -200,6 +209,7 @@
                                 <label for="editMenuDescription" class="form-label text-dark fw-bold">Bahan</label>
                                 <!-- Komposisi menu akan diisi dengan JavaScript -->
                             </div>
+                            <button type="button" class="btn btn-success" id="addEditBahan">+ Tambah Bahan</button>
 
 
 

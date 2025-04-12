@@ -141,7 +141,7 @@ class BarangController extends Controller
         if ($tmp_file) {
             $fileName = public_path('upload/tmp/' . $tmp_file->folder . '/' . $tmp_file->file);
             $fileContents = file_get_contents($fileName);
-            $newFilePath = public_path('upload/publication/' . $tmp_file->file);
+            $newFilePath = public_path('upload/img/barang/' . $tmp_file->file);
             file_put_contents($newFilePath, $fileContents);
             $tmpLocation = 'upload/publication/' . $tmp_file->file;
             File::cleanDirectory(public_path('upload/tmp/' . $tmp_file->folder));

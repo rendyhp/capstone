@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id'); 
             $table->foreign('user_id')->references('id')->on('users'); 
             $table->date('date');
-            $table->string('menu_name');
-            $table->unsignedBigInteger('menu_id'); 
+            $table->string('menu_name')->nullable();
+            $table->unsignedBigInteger('menu_id')->nullable(); 
             $table->foreign('menu_id')->references('id')->on('menus');
             $table->decimal('jumlah', 12, 3);
             $table->timestamps();

@@ -41,9 +41,8 @@
                 <h5 class="card-title">Tabel Transaksi</h5>
             </div>
             <div class="card-body">
-                <button type="button" class="btn btn-success mb-3"
-                    onclick="window.location.href='{{ url('/transaksi/create') }}'">
-                    Tambah Transaksi
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#barangModal">
+                    <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah menu
                 </button>
 
                 <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#uploadModal">
@@ -107,59 +106,85 @@
             </div>
         </div>
 
-        <!-- Modal Upload CSV -->
-        <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <!-- Modal Upload Excel -->
+        <div class="modal fade" id="uploadExcelModal" tabindex="-1" aria-labelledby="uploadExcelModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
+                <form method="POST" action="{{ route('transaksi.import') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="uploadExcelModalLabel">Upload File Excel / CSV</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+
+                        <div class="modal-body">
+                            <input type="file" class="form-control" name="file" accept=".csv,.xlsx" required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="container modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="uploadModalLabel">Impor Data Transaksi</h5>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Transaksi</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+
                     <div class="modal-body">
-                        <form id="fileForm" action="{{ route('transaksi.import') }}" method="POST"
-                            enctype="multipart/form-data">
+                        <form method="POST" action='/transaksi'>
                             @csrf
-                            <input type="file" id="fileInput" name="file" class="form-control mb-3"
-                                accept=".csv,.xls,.xlsx">
-                            <button type="submit" class="btn btn-primary">Upload</button>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Tanggal</label>
+                                <input type="date" class="form-control" name="date" id="date" value="{{ date('Y-m-d') }}"
+                                    required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="menu_id" class="form-label text-dark fw-bold">Nama Menu</label>
+                                <select class="form-control" required id="menu_id" name="menu_id">
+                                    <option value="">-- Pilih Menu --</option>
+                                    @foreach ($menus as $menu)
+                                        <option value="{{ $menu->id }}" data-komposisi='@json($menu->komposisi)'>
+                                            {{ $menu->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="mb-3 d-flex align-items-center">
+                                <label for="jumlah" class="form-label text-dark fw-bold me-2">Jumlah</label>
+                                <input type="number" step="1" min="1" required class="form-control number0" id="jumlah"
+                                    name="jumlah" value="1" style="max-width: 150px;">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-dark fw-bold">Komposisi</label>
+                                <div class="mb-3">
+                                    <ul id="komposisiPreview" class="list-group small"></ul>
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary text-white" name="SaveButton">Simpan</button>
+                            </div>
                         </form>
-                        <div id="uploadMessage" class="mt-3"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <script>
-            document.getElementById('fileForm').addEventListener('submit', function (event) {
-                event.preventDefault();
+        
 
-                let formData = new FormData(this);
-                let uploadMessage = document.getElementById('uploadMessage');
-
-                uploadMessage.innerHTML = "<span class='text-info'>Uploading...</span>";
-
-                fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            uploadMessage.innerHTML = "<span class='text-success'>Data berhasil diimpor!</span>";
-                            setTimeout(() => location.reload(), 1500); // Refresh halaman setelah upload
-                        } else {
-                            uploadMessage.innerHTML = "<span class='text-danger'>" + data.error + "</span>";
-                        }
-                    })
-                    .catch(error => {
-                        uploadMessage.innerHTML = "<span class='text-danger'>Terjadi kesalahan saat mengupload!</span>";
-                    });
-            });
-
-        </script>
 
 
         <!-- Modal Edit -->
@@ -184,6 +209,8 @@
                 </div>
             </div>
         </div>
+
+
 
         <script>
             document.getElementById('uploadForm').addEventListener('submit', function (e) {

@@ -26,8 +26,9 @@ class MenuController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        $query = Menu::with('komposisi.bahan.satuan');
+        $query = Menu::with('komposisi.bahan.satuan')->whereNull('deleted_at');
         $bahans = Bahan::all()->whereNull('deleted_at');
+
 
         // $barangs = Barang::orderBy('name', 'asc')
         //     ->whereNull('deleted_at')
@@ -159,7 +160,7 @@ class MenuController extends Controller
 
     public function edit(KomposisiMenu $menu)
     {
-    
+
         return view('daftar-menu.index');
     }
 
@@ -184,7 +185,7 @@ class MenuController extends Controller
         // Update komposisi menu
         KomposisiMenu::where('menu_id', $id)->delete(); // Hapus komposisi lama
 
-        foreach ($request->bahan as $bahan) {
+        foreach ($request->input('bahan', []) as $bahan) {
             KomposisiMenu::create([
                 'menu_id' => $menu->id,
                 'bahan_id' => $bahan['id'],
@@ -192,9 +193,21 @@ class MenuController extends Controller
             ]);
         }
 
+
         return redirect('/daftar-menu')->with('success', 'Menu "' . $request->name . '" berhasil diperbarui');
     }
 
+
+    public function delete(Request $request)
+    {
+        $id = $request->id;
+        $barang = Menu::findOrFail($id);
+
+        $barang->deleted_at = now();
+        $barang->save();
+
+        return redirect('/daftar-menu')->with('success', 'Menu Berhasil Dihapus');
+    }
 
     public function deletePermanent(Request $request)
     {
