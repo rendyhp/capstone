@@ -18,4 +18,8 @@ class AkhirTerpakaiSeharusnya extends Model
         'bahan_id',
         'jumlah',
     ];
+    public function bahan()
+    {
+        return $this->belongsTo(Bahan::class, 'bahan_id');
+    }
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 10 Apr 2025 pada 07.55
+-- Waktu pembuatan: 14 Apr 2025 pada 06.59
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -173,7 +173,23 @@ INSERT INTO `bahan_akhirs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `crea
 (101, 1, '2025-04-10', 12, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
 (102, 1, '2025-04-10', 10, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
 (103, 1, '2025-04-10', 9, 59.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
-(104, 1, '2025-04-10', 14, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL);
+(104, 1, '2025-04-10', 14, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(105, 1, '2025-04-14', 2, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(106, 1, '2025-04-14', 11, 1000.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(107, 1, '2025-04-14', 5, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(108, 1, '2025-04-14', 6, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(109, 1, '2025-04-14', 1, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(110, 1, '2025-04-14', 12, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(111, 1, '2025-04-14', 10, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(112, 1, '2025-04-14', 9, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(113, 1, '2025-04-14', 2, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(114, 1, '2025-04-14', 11, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(115, 1, '2025-04-14', 5, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(116, 1, '2025-04-14', 6, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(117, 1, '2025-04-14', 1, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(118, 1, '2025-04-14', 12, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(119, 1, '2025-04-14', 10, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(120, 1, '2025-04-14', 9, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL);
 
 -- --------------------------------------------------------
 
@@ -276,7 +292,23 @@ INSERT INTO `bahan_awals` (`id`, `date`, `bahan_id`, `jumlah`, `created_at`, `up
 (100, '2025-04-11', 12, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
 (101, '2025-04-11', 10, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
 (102, '2025-04-11', 9, 59.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
-(103, '2025-04-11', 14, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL);
+(103, '2025-04-11', 14, 0.000, '2025-04-09 20:22:11', '2025-04-09 20:22:11', NULL),
+(104, '2025-04-15', 2, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(105, '2025-04-15', 11, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(106, '2025-04-15', 5, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(107, '2025-04-15', 6, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(108, '2025-04-15', 1, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(109, '2025-04-15', 12, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(110, '2025-04-15', 10, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(111, '2025-04-15', 9, 0.000, '2025-04-13 21:00:31', '2025-04-13 21:00:31', NULL),
+(112, '2025-04-15', 2, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(113, '2025-04-15', 11, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(114, '2025-04-15', 5, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(115, '2025-04-15', 6, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(116, '2025-04-15', 1, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(117, '2025-04-15', 12, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(118, '2025-04-15', 10, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL),
+(119, '2025-04-15', 9, 50000.000, '2025-04-13 21:57:34', '2025-04-13 21:57:34', NULL);
 
 -- --------------------------------------------------------
 
@@ -289,8 +321,8 @@ CREATE TABLE `barangs` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
-  `jumlah` decimal(12,3) NOT NULL,
-  `satuan` varchar(255) DEFAULT NULL,
+  `jumlah` int(12) NOT NULL,
+  `satuan_id` bigint(20) UNSIGNED NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -301,13 +333,10 @@ CREATE TABLE `barangs` (
 -- Dumping data untuk tabel `barangs`
 --
 
-INSERT INTO `barangs` (`id`, `user_id`, `name`, `description`, `jumlah`, `satuan`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'Gelas 2', 'AW', -56.750, 'Pcs', NULL, '2025-03-21 19:56:40', '2025-04-09 22:43:46', NULL),
-(4, 1, 'Setrika', '-', 2.000, '-', NULL, '2025-03-21 20:04:59', '2025-03-24 19:51:09', NULL),
-(5, 1, 'Piring', '-', 22.000, '-', NULL, '2025-03-21 20:57:32', '2025-03-21 20:57:32', NULL),
-(6, 1, 'Kursi indoor 2', '-', 15.500, '-', NULL, '2025-03-24 19:46:51', '2025-04-09 22:43:52', NULL),
-(7, 1, 'Meja', '-', 2.043, '-', NULL, '2025-03-24 20:50:43', '2025-03-24 20:51:35', NULL),
-(10, 1, 'Test', '-', 5.000, 'Pcs', '[Kusonime] Rikei ga Koi ni Ochita no de Shoumei shitemita BD - 04.mkv_snapshot_21.22.693.png', '2025-04-09 20:15:14', '2025-04-09 20:15:14', NULL);
+INSERT INTO `barangs` (`id`, `user_id`, `name`, `description`, `jumlah`, `satuan_id`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 'Gelas', '-', 60, 2, NULL, '2025-04-14 02:47:29', '2025-04-13 20:06:01', NULL),
+(2, 1, 'Piring', '-', 60, 2, NULL, '2025-04-14 02:47:29', '2025-04-14 02:47:29', NULL),
+(3, 1, 'Meja 1', '-', 10, 1, NULL, '2025-04-13 20:06:25', '2025-04-13 20:06:25', NULL);
 
 -- --------------------------------------------------------
 
@@ -353,6 +382,14 @@ CREATE TABLE `history_inputs` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `history_inputs`
+--
+
+INSERT INTO `history_inputs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, '2025-04-17', 11, 10.000, '2025-04-13 20:43:45', '2025-04-13 20:43:45', NULL),
+(2, 1, '2025-04-13', 11, 10000.000, '2025-04-13 20:48:18', '2025-04-13 20:48:18', NULL);
 
 -- --------------------------------------------------------
 
@@ -453,7 +490,6 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (5, '2022_03_12_052551_create_tag_notifikasis_table', 1),
 (6, '2023_11_09_063757_create_password_reset_tokens_table', 1),
 (7, '2023_11_09_064003_create_failed_jobs_table', 1),
-(8, '2025_03_12_042720_create_barangs_table', 1),
 (9, '2025_03_12_042747_create_bahans_table', 1),
 (10, '2025_03_12_042837_create_bahan_awals_table', 1),
 (11, '2025_03_12_042909_create_history_inputs_table', 1),
@@ -466,7 +502,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (19, '2025_03_12_070515_create_deleted_items_table', 2),
 (20, '2025_03_22_021220_create_bahan_akhirs_table', 2),
 (21, '2025_03_12_045403_create_transaksis_table', 3),
-(22, '2025_03_28_091206_create_transaksi_details_table', 3);
+(22, '2025_03_28_091206_create_transaksi_details_table', 3),
+(23, '2025_04_14_022715_create_satuan_barangs_table', 4),
+(24, '2025_04_14_022716_create_barangs_table', 5);
 
 -- --------------------------------------------------------
 
@@ -550,6 +588,29 @@ INSERT INTO `satuans` (`id`, `user_id`, `name`, `created_at`, `updated_at`, `del
 (1, 1, 'Kg', '2025-03-22 04:22:08', '2025-03-22 04:22:08', NULL),
 (2, 1, 'gram', '2025-03-22 04:28:30', '2025-03-22 04:28:30', NULL),
 (3, 1, 'mL', '2025-03-22 04:29:32', '2025-03-22 04:29:32', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `satuan_barangs`
+--
+
+CREATE TABLE `satuan_barangs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `satuan_barangs`
+--
+
+INSERT INTO `satuan_barangs` (`id`, `user_id`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, '-', '2025-04-14 02:45:49', '2025-04-14 02:45:49', NULL),
+(2, 1, 'Pcs', '2025-04-14 02:45:49', '2025-04-14 02:45:49', NULL);
 
 -- --------------------------------------------------------
 
@@ -701,7 +762,8 @@ ALTER TABLE `bahan_awals`
 --
 ALTER TABLE `barangs`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `barangs_user_id_foreign` (`user_id`);
+  ADD KEY `barangs_user_id_foreign` (`user_id`),
+  ADD KEY `barangs_satuan_id_foreign` (`satuan_id`);
 
 --
 -- Indeks untuk tabel `deleted_items`
@@ -787,6 +849,13 @@ ALTER TABLE `satuans`
   ADD KEY `satuans_user_id_foreign` (`user_id`);
 
 --
+-- Indeks untuk tabel `satuan_barangs`
+--
+ALTER TABLE `satuan_barangs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `satuan_barangs_user_id_foreign` (`user_id`);
+
+--
 -- Indeks untuk tabel `tag_notifikasis`
 --
 ALTER TABLE `tag_notifikasis`
@@ -844,19 +913,19 @@ ALTER TABLE `bahans`
 -- AUTO_INCREMENT untuk tabel `bahan_akhirs`
 --
 ALTER TABLE `bahan_akhirs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 
 --
 -- AUTO_INCREMENT untuk tabel `bahan_awals`
 --
 ALTER TABLE `bahan_awals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT untuk tabel `barangs`
 --
 ALTER TABLE `barangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `deleted_items`
@@ -874,7 +943,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT untuk tabel `history_inputs`
 --
 ALTER TABLE `history_inputs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `komposisi_menus`
@@ -898,7 +967,7 @@ ALTER TABLE `menus`
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT untuk tabel `notifikasis`
@@ -917,6 +986,12 @@ ALTER TABLE `personal_access_tokens`
 --
 ALTER TABLE `satuans`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT untuk tabel `satuan_barangs`
+--
+ALTER TABLE `satuan_barangs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `tag_notifikasis`
@@ -982,6 +1057,7 @@ ALTER TABLE `bahan_awals`
 -- Ketidakleluasaan untuk tabel `barangs`
 --
 ALTER TABLE `barangs`
+  ADD CONSTRAINT `barangs_satuan_id_foreign` FOREIGN KEY (`satuan_id`) REFERENCES `satuan_barangs` (`id`),
   ADD CONSTRAINT `barangs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
@@ -1018,17 +1094,16 @@ ALTER TABLE `satuans`
   ADD CONSTRAINT `satuans_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
+-- Ketidakleluasaan untuk tabel `satuan_barangs`
+--
+ALTER TABLE `satuan_barangs`
+  ADD CONSTRAINT `satuan_barangs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
 -- Ketidakleluasaan untuk tabel `tag_notifikasis`
 --
 ALTER TABLE `tag_notifikasis`
   ADD CONSTRAINT `tag_notifikasis_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
-
---
--- Ketidakleluasaan untuk tabel `transaksis`
---
-ALTER TABLE `transaksis`
-  ADD CONSTRAINT `transaksis_menu_id_foreign` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`),
-  ADD CONSTRAINT `transaksis_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Ketidakleluasaan untuk tabel `transaksi_details`

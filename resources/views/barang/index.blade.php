@@ -78,7 +78,8 @@
                                             @else
                                                 @foreach ($barangs as $barang)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
+                                                        </td>
                                                         <td>{{ $barang->name }}</td>
                                                         <td>
                                                             @if (strpos($barang->jumlah, '.') === false)
@@ -87,7 +88,7 @@
                                                                 {{ rtrim(rtrim($barang->jumlah, '0'), '.') }}
                                                             @endif
                                                         </td>
-                                                        <td>{{ $barang->satuan }}</td>
+                                                        <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
 
                                                         <td>
                                                             <!-- Button trigger modal -->
@@ -147,13 +148,17 @@
                         </div>
                         <div class="mb-3">
                             <label for="jumlah" class="form-label text-dark fw-bold">Stok</label>
-                            <input type="number" step="0.001" required autocomplete="off" class="form-control number0" id="jumlah" name="jumlah"
-                                placeholder="Ketik jumlah stok">
+                            <input type="number" required autocomplete="off" class="form-control number0" id="jumlah"
+                                name="jumlah" value="0" placeholder="Ketik jumlah stok">
                         </div>
                         <div class="mb-3">
-                            <label for="satuan" class="form-label text-dark fw-bold">Satuan</label>
-                            <input type="text" required autocomplete="off" class="form-control" id="satuan" name="satuan"
-                                placeholder="Ketik satuan">
+                            <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
+                            <select class="form-control" required autocomplete="off" id="satuan_id" name="satuan_id">
+                                <option value="">-- Pilih Satuan --</option>
+                                @foreach ($satuanBarangs as $satuan)
+                                    <option value="{{ $satuan->id }}">{{ $satuan->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label text-dark fw-bold">Gambar Barang</label>
@@ -198,16 +203,23 @@
 
                         <div class="mb-3">
                             <label for="jumlah" class="form-label text-dark fw-bold">Stok</label>
-                            <input type="number" step="0.001" required autocomplete="off"
-                                class="form-control number0 @error('jumlah') is-invalid @enderror" id="txtjumlah" name="jumlah">
+                            <input type="number" value="0" required autocomplete="off"
+                                class="form-control number0 @error('jumlah') is-invalid @enderror" id="txtjumlah"
+                                name="jumlah">
                             @error('jumlah') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="satuan" class="form-label text-dark fw-bold">Satuan</label>
-                            <input type="text" required autocomplete="off"
-                                class="form-control @error('satuan') is-invalid @enderror" id="txtsatuan" name="satuan">
-                            @error('satuan') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                            <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
+                            <select class="form-control select2" id="txtsatuan_id" required autocomplete="off"
+                                name="satuan_id">
+                                <option value="">-- Pilih Satuan --</option>
+                                @foreach ($satuanBarangs as $satuan)
+                                    <option value="{{ $satuan->id }}" {{ old('tsatuan_id', $bahan->satuan_id ?? '') == $satuan->id ? 'selected' : '' }}>
+                                        {{ $satuan->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="mb-3">

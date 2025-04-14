@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Barang;
+use App\Models\SatuanBarang;
 use Illuminate\Http\Request;
 
 
@@ -23,24 +24,28 @@ class BarangController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        $query = DB::table('barangs')->whereNull('deleted_at');
+        $query = Barang::select('barangs.*')
+        ->join('satuan_barangs', 'barangs.satuan_id', '=', 'satuan_barangs.id')
+        ->whereNull('barangs.deleted_at')
+        ->orderBy('name', 'asc');
 
         if ($search = $request->input('search')) {
             $query->where('name', 'like', '%' . $search . '%');
         }
 
         $query->orderBy('name', 'asc');
+        $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
         // Paginate hasil query
-        $barangs = $query->paginate(20);
+        $barangs = $query->paginate(20)->appends($request->query());
 
         
 
         // Cek role pengguna dan tampilkan view yang sesuai
         if ($role === 'OWNER') {
-            return view('barang.index', compact('barangs'));
+            return view('barang.index', compact('barangs', 'satuanBarangs'));
         } elseif ($role === 'user') {
-            return view('user.barang', compact('barangs'));
+            return view('user.barang', compact('barangs', 'satuanBarangs'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
@@ -59,7 +64,7 @@ class BarangController extends Controller
             'name' => 'required|string|max:30',
             'description' => 'nullable|string',
             'jumlah' => 'required|integer|max:20',
-            'satuan' => 'nullable|string|max:12',
+            'satuan_id' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
         ]);
 
@@ -74,7 +79,7 @@ class BarangController extends Controller
             $Barang->name = $request->input('name');
             $Barang->description = $request->input('description' ?: '-');
             $Barang->jumlah = $request->input('jumlah' ?: 0);
-            $Barang->satuan = $request->input('satuan' ?: '-');
+            $Barang->satuan_id = $request->input('satuan_id' ?: '-');
             $Barang->image = $request->input('image') ?: null;
             $Barang->save();
 
@@ -170,7 +175,7 @@ class BarangController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'jumlah' => 'required|integer|max:10',
-            'satuan' => 'nullable|string|max:255',
+            'satuan_id' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
         ]);
 
@@ -182,7 +187,7 @@ class BarangController extends Controller
             $Barang->name = $request->input('name');
             $Barang->description = $request->input('description' ?: '-');
             $Barang->jumlah = $request->input('jumlah' ?: 0);
-            $Barang->satuan = $request->input('satuan' ?: '-');
+            $Barang->satuan_id = $request->input('satuan_id' ?: '-');
             $Barang->image = $request->input('image') ?: null;
             $Barang->save();
 

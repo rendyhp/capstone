@@ -49,6 +49,10 @@ class Bahan extends Model
     {
         return $this->hasMany(TransaksiDetail::class, 'bahan_id');
     }
+    public function bahanTerpakai()
+    {
+        return $this->hasMany(AkhirTerpakaiSeharusnya::class, 'bahan_id');
+    }
 }
 
 

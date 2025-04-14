@@ -20,5 +20,9 @@ class HistoryInput extends Model
         'bahan_id',
         'jumlah',
     ];
+    public function bahan()
+    {
+        return $this->belongsTo(Bahan::class);
+    }
 
 }

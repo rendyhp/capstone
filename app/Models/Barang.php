@@ -9,16 +9,19 @@ use Cviebrock\EloquentSluggable\Sluggable;
 class Barang extends Model
 {
     use HasFactory;
-    protected $casts = [
-        'jumlah' => 'decimal:3',
-    ];
+    
 
     protected $fillable = [
         'user_id',
         'name',
         'description',
         'jumlah',
-        'satuan',
+        'satuan_id',
         'image',
     ];
+
+    public function satuanBarang()
+    {
+        return $this->belongsTo(SatuanBarang::class, 'satuan_id');
+    }
 }

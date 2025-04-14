@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AkhirTerpakaiSeharusnya;
 use App\Models\Bahan;
+use App\Models\BahanAkhir;
 use App\Models\BahanAwal;
 use App\Models\HistoryInput;
 use App\Models\Satuan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
@@ -60,50 +62,114 @@ class BahanController extends Controller
         }
     }
 
-    public function indexHistory(Request $request {{id}})
+    public function indexStok(Request $request)
     {
 
+        
         $user = Auth::user();
         $role = $user->role;
 
+        $date = $request->input('date', Carbon::today()->toDateString());
 
-        $tanggalDipilih = request(now()->format('Y-m-d')); // Pastikan ini format 'Y-m-d' misalnya '2025-03-21'
-        $query = HistoryInput::with('satuan')
-            ->orderBy('name', 'asc')
-            ->whereNull('deleted_at')
-            ->whereDate('date', $tanggalDipilih);
-        
+        $query = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at');
 
-        // $query = Bahan::orderBy('name', 'asc')
-        //     ->whereNull('deleted_at')
-        //     // ->whereDate('date', $tanggalDipilih)
-        //     ->get();
-        
-
-        $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
-
-        // Filter pencarian jika ada input search
         if ($search = $request->input('search')) {
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        if ($role === 'OWNER') {
-            $historyInputs = $query->paginate(20);
+        $bahans = $query->paginate(20)->appends($request->query());
 
+        foreach ($bahans as $bahan) {
+            $bahan->jumlah_awal = BahanAwal::where('bahan_id', $bahan->id)->value('jumlah') ?? 0;
+            $bahan->jumlah_masuk = HistoryInput::where('bahan_id', $bahan->id)
+                ->whereDate('date', '<=', $date)
+                ->sum('jumlah');
+            $bahan->jumlah_terpakai = AkhirTerpakaiSeharusnya::where('bahan_id', $bahan->id)
+                ->whereDate('date', '<=', $date)
+                ->sum('jumlah');
+            $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk) - $bahan->jumlah_terpakai;
+            $bahan->bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
+                ->whereDate('date', '<=', $date)
+                ->sum('jumlah');
+            $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
+
+        }
+        
+
+
+
+        return view('bahan.stokIndex', [
+
+            'bahans' => $bahans,
+            'satuans' => Satuan::whereNull('deleted_at')->orderBy('name')->get(),
+            'date' => $date,
+        ]);
+    }
+
+
+    public function indexHistory(Request $request, $id)
+    {
+        $user = Auth::user();
+        $role = $user->role;
+
+        // Ambil satuan bahan & bahan berdasarkan ID
+        $bahan = Bahan::with('satuan')->findOrFail($id);
+
+        // Query history input berdasarkan bahan_id
+        $query = HistoryInput::with(['bahan.satuan'])
+            ->where('bahan_id', $id)
+            ->whereNull('deleted_at')
+            ->orderBy('date', 'desc');
+
+        // Optional: pencarian nama bahan
+        if ($search = $request->input('search')) {
+            $query->whereHas('bahan', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%');
+            });
+        }
+
+        $historyInputs = $query->paginate(20)->appends($request->query());
+
+        $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
+
+        if ($role === 'OWNER') {
             return view('bahan.historyInput', [
-                
                 'historyInputs' => $historyInputs,
-                'satuans' => $satuans
+                'satuans' => $satuans,
+                'bahan' => $bahan,
+                
             ]);
         }
+
+        return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
     }
+
+    public function inputStore(Request $request)
+    {
+        $validated = $request->validate([
+            'bahan_id' => 'required|exists:bahans,id',
+            'date' => 'required|date',
+            'jumlah' => 'required|numeric|min:0',
+        ]);
+
+        HistoryInput::create([
+            'user_id' => Auth::id(),
+            'bahan_id' => $validated['bahan_id'],
+            'date' => $validated['date'],
+            'jumlah' => $validated['jumlah'],
+        ]);
+
+        return redirect()->back()->with('success', 'Stok berhasil ditambahkan.');
+    }
+
+
 
 
 
 
     public function create()
     {
-        
+
         return view('bahan');
     }
 
@@ -148,7 +214,7 @@ class BahanController extends Controller
 
     public function show($slug)
     {
-       
+
     }
 
     public function edit(Bahan $bahan)

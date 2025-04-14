@@ -1,19 +1,17 @@
 @extends('layouts.main')
-@section('DataBahan', 'active')
+@section('StokBahan', 'active')
 @section('container')
 
     <div class="container">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">History Input {{ $bahan->name }}</h2>
+                    <h2 class="pageheader-title ">Stok Bahan</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a class="" href="/data-bahan">Data Bahan</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">History Input - {{ $bahan->name }}
-                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">Data Bahan</li>
                             </ol>
                         </nav>
                     </div>
@@ -44,15 +42,27 @@
             </div>
         @endif
 
-        <h4>Riwayat Penambahan Stok untuk Bahan: <strong>{{ $bahan->name }}</strong></h4>
-
+        <form action="/stok-bahan" method="GET" class="d-flex align-items-center mb-3">
+            <div class="mb-3 row">
+                <label for="tanggalbahan" class="col-sm-2 col-form-label">Tanggal</label>
+                <div class="col-sm-8">
+                    <input type="date" class="form-control" id="tanggalbahan" name="date" value="{{ $date }}">
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
 
         <div class="row">
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> History Input {{ $bahan->name }} </div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bahan </div>
                     </div>
+
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
@@ -60,11 +70,10 @@
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                                         data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Stok
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
                                     </button>
                                     <div class="col-sm-2 float-end mt-3">
-                                        <form action="/data-bahan/historyInput" method="get" class="form-inline"
-                                            onsubmit="">
+                                        <form action="/data-bahan" method="get" class="form-inline" onsubmit="">
                                             <input class="form-control form-control-sm" type="text" name="search"
                                                 placeholder="Search" value="{{request('search')}}">
                                         </form>
@@ -73,38 +82,61 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th>Tanggal</th>
-                                                <th>Jumlah</th>
+                                                <th>Nama Bahan</th>
+                                                <th>Bahan Awal</th>
+                                                <th>Input Bahan</th>
+                                                <th>Bahan terpakai</th>
+                                                <th>Jumlah Akhir</th>
+                                                <th>Bahan Akhir</th>
+                                                <th>Bahan Terbuang</th>
                                                 <th>Satuan</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($historyInputs->isEmpty())
+                                            @if ($bahans->isEmpty())
                                                 <p>Tidak ada data yang ditemukan.</p>
                                             @else
-                                                @foreach ($historyInputs as $historyInput)
+                                                @foreach ($bahans as $bahan)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $historyInput->date }}</td>
+                                                        <td>{{ $bahan->name }}</td>
                                                         <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($historyInput->jumlah, 3, ',', '.'), '0'), ',') }}
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
-                                                        
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
 
-
-                                                        <td>{{ $historyInput->bahan->satuan->name ?? '-' }}</td>
+                                                        <td>{{ $bahan->satuan->name ?? '-' }}</td>
 
                                                         <td>
                                                             <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary btn-sm btn_editbahan">
+                                                            <button type="button" class="btn btn-primary btn-sm btn_editbahan"
+                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
+                                                                data-name="{{ $bahan->name ?? 'NULL' }}"
+                                                                data-description="{{ $bahan->description ?? 'NULL' }}"
+                                                                data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
+                                                                data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
 
 
-                                                            <form action="/data-bahan/delete/{{ $historyInput->id }}"
-                                                                class="d-inline" method="post">
+                                                            <form action="/data-bahan/delete/{{ $bahan->id }}" class="d-inline"
+                                                                method="post">
                                                                 @method('PUT')
                                                                 @csrf
                                                                 <button class="btn btn-danger btn-sm" type="submit"
@@ -112,56 +144,19 @@
                                                                         class="fa fa-trash"></i></button>
                                                             </form>
 
-
+                                                            <button type="button" class="btn btn-outline-success"
+                                                                onclick="window.location.href='{{ url('/data-bahan/historyInput/' . $bahan->id) }}'">
+                                                                <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                             @endif
                                         </tbody>
                             </table>
-                            {{ $historyInputs->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                            {{ $bahans->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="container modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Bahan Nama</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <form method="POST" action="{{ route('historyBahan.store') }}">
-                        @csrf
-
-                        <input type="hidden" name="bahan_id" value="{{ $bahan->id }}">
-
-                        <div class="mb-3">
-                            <label for="date" class="form-label">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="date" required>
-                        </div>
-
-                        <div class="mb-3 d-flex align-items-center">
-                            <label for="jumlah" class="form-label text-dark fw-bold me-2">Jumlah</label>
-                            <input type="number" step="0.001" min="0.001" required class="form-control" id="jumlah"
-                                name="jumlah" value="0" style="max-width: 150px;">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label text-dark fw-bold">Satuan</label>
-                            <input type="text" class="form-control" value="{{ $bahan->satuan->name }}" readonly>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary text-white">Simpan</button>
-                        </div>
-                    </form>
-
                 </div>
             </div>
         </div>

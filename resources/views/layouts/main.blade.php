@@ -101,6 +101,9 @@
                             <div class="dropdown-menu bg-transparent show border-0 ">
                                 <a href="/data-barang" class="nav-link @yield('DataBarang')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Data Barang</a>
+                                <a href="/stok-bahan" class="nav-link @yield('StokBahan')"><i
+                                        class="fa fa-file me-2"></i>Stok
+                                    Bahan</a>
                                 <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
                                         class="fa fa-file me-2"></i>Data
                                     Bahan</a>
@@ -232,6 +235,7 @@
             });
         });
     </script>
+
     <script>
         document.querySelectorAll("#jumlah, #txtjumlah, #txtminimum, #minimum").forEach(function (input) {
             input.addEventListener("keydown", function (e) {
