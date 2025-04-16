@@ -125,10 +125,12 @@
 
                                                         <td>
                                                             <button type="button" class="btn btn-outline-success"
-                                                                onclick="window.location.href='{{ url('/stok-bahan/historyInput/' . $bahan->id) }}'">
+                                                                onclick="window.location.href='{{ route('stok-bahan.historyBahan', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
                                                                 <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok
                                                             </button>
                                                         </td>
+
+
                                                     </tr>
                                                 @endforeach
                                             @endif

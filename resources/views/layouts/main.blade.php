@@ -306,6 +306,29 @@
 
     </script>
     <script type="text/javascript">
+        $(document).on('click', '.btn_editstokbahan', function (e) {
+            var id = $(this).data('id');
+            var date = $(this).data('date');
+            var jumlah = $(this).data('jumlah');
+            var satuan_name = $(this).data('satuan_name');
+
+            console.log(id, date, jumlah, satuan_name);
+
+            var formattedJumlah = (jumlah % 1 === 0) ? parseInt(jumlah) : jumlah;
+            // Set nilai ke input field
+            $("#txtid").val(id);
+            $("#txtdate").val(date);
+            $("#txtjumlah").val(formattedJumlah);
+            
+            $("#txtsatuan_name").val(satuan_name);
+
+
+            // Tampilkan modal
+            $("#editBarangModal").modal('toggle');
+        });
+
+    </script>
+    <script type="text/javascript">
         $(document).on('click', '.btn_editbahan_akhir', function (e) {
             var id = $(this).data('id');
             var date = $(this).data('date');

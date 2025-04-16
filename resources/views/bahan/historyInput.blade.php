@@ -112,27 +112,30 @@
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($historyInput->jumlah, 3, ',', '.'), '0'), ',') }}
                                                         </td>
-
-
-
                                                         <td>{{ $historyInput->bahan->satuan->name ?? '-' }}</td>
-
                                                         <td>
                                                             <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary btn-sm btn_editbahan">
+                                                            <button type="button" class="btn btn-primary btn-sm btn_editstokbahan"
+                                                                data-id="{{ $historyInput->id ?? 'NULL' }}"
+                                                                data-date="{{ $historyInput->date ?? 'NULL' }}"
+                                                                data-jumlah="{{ $historyInput->jumlah ?? 'NULL' }}"
+                                                                data-satuan_name="{{ $historyInput->bahan->satuan->name ?? 'NULL' }}">
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
 
 
-                                                            <form action="/data-bahan/delete/{{ $historyInput->id }}"
-                                                                class="d-inline" method="post">
-                                                                @method('PUT')
+                                                            <form
+                                                                action="{{ route('historyBahan.delete', Crypt::encrypt($historyInput->id)) }}"
+                                                                method="POST" class="d-inline"
+                                                                onsubmit="return confirm('Yakin akan Mendelete Data?')">
                                                                 @csrf
-                                                                <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                        class="fa fa-trash"></i></button>
+                                                                @method('PUT')
+                                                                <button class="btn btn-danger btn-sm" type="submit">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
                                                             </form>
+
 
 
                                                         </td>
@@ -161,7 +164,9 @@
                     <form method="POST" action="{{ route('historyBahan.store') }}">
                         @csrf
 
-                        <input type="hidden" name="bahan_id" value="{{ $bahan->id }}">
+                        <input type="hidden" name="bahan_id"
+                            value="{{ Hashids::encode($bahan->id) }}">
+
 
                         <div class="mb-3">
                             <label for="date" class="form-label">Tanggal</label>
@@ -184,6 +189,56 @@
                         </div>
                     </form>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit historyInput-->
+    <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Edit Data Bahan
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('historyBahan.update') }}" id="editBarangForm" method="post"
+                        enctype="multipart/form-data">
+                        @method('PUT')
+                        @csrf
+                        <div class="mb-3">
+                            <input hidden type="text" name="id" id="txtid">
+                            <label for="date" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control  @error('name') is-invalid @enderror" name="date"
+                                id="txtdate" required>
+                            @error('txtid')
+                                <div class="alert alert-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <label for="jumlah" class="form-label text-dark fw-bold me-2">Jumlah</label>
+                            <input type="number" step="0.001" min="0.001" required
+                                class="form-control  @error('name') is-invalid @enderror" id="txtjumlah" name="jumlah"
+                                value="0" style="max-width: 150px;">
+                            @error('txtid')
+                                <div class="alert alert-danger">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-dark fw-bold">Satuan</label>
+                            <input id="txtsatuan_name" type="text" class="form-control" readonly>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Ubah</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

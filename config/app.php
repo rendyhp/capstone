@@ -15,8 +15,8 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-    
-    
+
+
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
@@ -187,5 +187,8 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'LogActivity' => App\Helpers\LogActivity::class,
     ])->toArray(),
-        
+
+
+    'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
+
 ];

@@ -60,11 +60,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/data-barang', [BarangController::class, 'index'])->name('data-barang');
     Route::put('/data-barang/delete/{id}', [BarangController::class, 'delete'])->name('data-barang.delete');
     Route::get('/stok-bahan', [BahanController::class, 'indexStok'])->name('stok-bahan');
+    // Route::get('/stok-bahan/historyInput/{id}', [BahanController::class, 'indexHistory'])->name('stok-bahan.historyBahan');
+    Route::post('/stok-bahan/historyInput/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
+    Route::put('/stok-bahan/historyInput/update/', [BahanController::class, 'inputUpdate'])->name('historyBahan.update');
+    Route::put('/stok-bahan/historyInput/delete/{encryptedId}', [BahanController::class, 'inputDelete'])->name('historyBahan.delete');
+
+    Route::get('/stok-bahan/historyInput/{encryptedId}', [BahanController::class, 'indexHistory'])->name('stok-bahan.historyBahan');
 
     Route::get('/data-bahan', [BahanController::class, 'index'])->name('data-bahan');
     Route::put('/data-bahan/delete/{id}', [BahanController::class, 'delete'])->name('data-bahan.delete');
-    Route::get('/stok-bahan/historyInput/{id}', [BahanController::class, 'indexHistory'])->name('data-bahan.historyBahan');
-    Route::post('/stok-bahan/historyBahan/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
+
+
 
 
     Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');

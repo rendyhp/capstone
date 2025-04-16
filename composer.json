@@ -17,6 +17,7 @@
         "mpdf/mpdf": "^6.1",
         "phpoffice/phpspreadsheet": "^4.1",
         "ttskch/select2-bootstrap4-theme": "*",
+        "vinkla/hashids": "^11.0",
         "yajra/laravel-datatables-buttons": "9.0"
     },
     "require-dev": {
