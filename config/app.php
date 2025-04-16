@@ -186,9 +186,9 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'LogActivity' => App\Helpers\LogActivity::class,
+        'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ])->toArray(),
 
-
-    'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
 
 ];

@@ -99,8 +99,8 @@
                             <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="true">Stok</a>
                             <div class="dropdown-menu bg-transparent show border-0 ">
-                                <a href="/data-barang" class="nav-link @yield('DataBarang')"><i
-                                        class="fa fa-credit-card-alt me-2"></i>Data Barang</a>
+                                <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
+                                        class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
                                 <a href="/stok-bahan" class="nav-link @yield('StokBahan')"><i
                                         class="fa fa-file me-2"></i>Stok
                                     Bahan</a>
@@ -255,10 +255,10 @@
             var name = $(this).data('name');
             var description = $(this).data('description');
             var jumlah = $(this).data('jumlah');
-            var satuan = $(this).data('satuan');
+            var satuan_id = $(this).data('satuan_id');
             var image = $(this).data('image');
 
-            console.log(id, name, description, jumlah, satuan, image);
+            console.log(id, name, description, jumlah, satuan_id, image);
 
             var formattedJumlah = (jumlah % 1 === 0) ? parseInt(jumlah) : jumlah;
 
@@ -266,7 +266,7 @@
             $("#txtname").val(name);
             $("#txtdescription").val(description);
             $("#txtjumlah").val(formattedJumlah);
-            $("#txtsatuan").val(satuan);
+            $("#txtsatuan_id").val(satuan_id);
             // Tampilkan preview gambar jika ada
             if (image) {
                 $("#previewImage").attr("src", "/storage/" + image).show();
@@ -319,7 +319,7 @@
             $("#txtid").val(id);
             $("#txtdate").val(date);
             $("#txtjumlah").val(formattedJumlah);
-            
+
             $("#txtsatuan_name").val(satuan_name);
 
 

@@ -71,6 +71,10 @@
                                         onclick="window.location.href='{{ url('/stock-opname/simpan') }}'">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Stock Opname
                                     </button>
+                                    <button type="button" class="btn btn-outline-success"
+                                        onclick="window.location.href='{{ url('/bahan-awal') }}'">
+                                        Lihat Bahan Awal
+                                    </button>
                                     <div class="col-sm-2 float-end mt-3">
                                     <div class="d-flex gap-2">
                                             <a href="/stock-opname" class="btn btn-outline-secondary btn-sm" title="Refresh">

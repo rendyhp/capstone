@@ -56,12 +56,12 @@
                                         data-bs-target="#barangModal">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
                                     </button>
-                                    <div class="col-sm-2 float-end mt-3">
-                                    <div class="d-flex gap-2">
-                                            <a href="/data-barang" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                    <div class="col-sm-3 float-end mt-3">
+                                        <div class="d-flex gap-2">
+                                            <a href="/stok-barang" class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/data-barang" method="get" class="form-inline d-flex">
+                                            <form action="/stok-barang" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" type="text" name="search"
                                                     placeholder="Search" value="{{ request('search') }}">
                                             </form>
@@ -102,12 +102,12 @@
                                                                 data-name="{{ $barang->name ?? 'NULL' }}"
                                                                 data-description="{{ $barang->description ?? 'NULL' }}"
                                                                 data-jumlah="{{ $barang->jumlah ?? 'NULL' }}"
-                                                                data-satuan="{{ $barang->satuan ?? 'NULL' }}"
+                                                                data-satuan_id="{{ $barang->satuan_id ?? 'NULL' }}"
                                                                 data-image="{{ $barang->image ?? 'NULL' }}">
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
-                                                            <form action="/data-barang/delete/{{ $barang->id }}" class="d-inline"
+                                                            <form action="/stok-barang/delete/{{ $barang->id }}" class="d-inline"
                                                                 method="post">
                                                                 @method('PUT')
                                                                 @csrf
@@ -134,11 +134,11 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Barang</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Stok Barang</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/data-barang'>
+                    <form method="Post" action='/stok-barang'>
                         @csrf
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
@@ -187,7 +187,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/data-barang/edit" id="editBarangForm" method="post" enctype="multipart/form-data">
+                    <form action="/stok-barang/edit" id="editBarangForm" method="post" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
                         <div class="mb-3">

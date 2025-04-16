@@ -30,10 +30,10 @@ class BarangController extends Controller
         ->orderBy('name', 'asc');
 
         if ($search = $request->input('search')) {
-            $query->where('name', 'like', '%' . $search . '%');
+            $query->where('barangs.name', 'like', '%' . $search . '%');
         }
 
-        $query->orderBy('name', 'asc');
+        $query->orderBy('barangs.name', 'asc');
         $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
         // Paginate hasil query
@@ -89,12 +89,12 @@ class BarangController extends Controller
             $dataPerPage = 20;
             $data = DB::table('barangs')->paginate($dataPerPage);
             $lastPage = $data->lastPage();
-            return redirect('/data-barang?page=' . $lastPage)->with('success', 'Data Berhasil Ditambahkan');
+            return redirect('/stok-barang?page=' . $lastPage)->with('success', 'Data Berhasil Ditambahkan');
         } catch (\Illuminate\Database\QueryException $e) {
             // Check for unique constraint violation
             if ($e->errorInfo[1] == 1062) {
                 echo '<script>alert("Barang sudah ada dalam database.");</script>';
-                return redirect('data-barang')->with('error', 'Barang Gagal Ditambahkan : Nama Barang yang diinputkan sudah ada');
+                return redirect('stok-barang')->with('error', 'Barang Gagal Ditambahkan : Nama Barang yang diinputkan sudah ada');
             } else {
                 throw $e; // Rethrow the exception if it's not due to unique constraint
             }
@@ -191,12 +191,13 @@ class BarangController extends Controller
             $Barang->image = $request->input('image') ?: null;
             $Barang->save();
 
-            return redirect('/data-barang/')->with('success', 'Data Berhasil Diubah');
+            return redirect('/stok-barang')->with('success', 'Data "' . $Barang->name . '" Berhasil Diubah');
+
         } catch (\Illuminate\Database\QueryException $e) {
 
             if ($e->errorInfo[1] == 1062) {
                 echo '<script>alert("Barang sudah ada dalam database.");</script>';
-                return redirect('data-barang')->with('error', 'Barang Gagal Diubah');
+                return redirect('stok-barang')->with('error', 'Barang "' . $Barang->name . '" Gagal Diubah');
             } else {
                 throw $e;
             }
@@ -211,7 +212,7 @@ class BarangController extends Controller
         $barang->deleted_at = now();
         $barang->save();
 
-        return redirect('/data-barang')->with('success', 'Data Berhasil Dihapus');
+        return redirect('/stok-barang')->with('success', 'Data Berhasil Dihapus');
     }
 
     public function deletePermanent(Request $request)

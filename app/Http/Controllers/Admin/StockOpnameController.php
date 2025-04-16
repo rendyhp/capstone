@@ -10,6 +10,7 @@ use App\Models\BahanAwal;
 
 use App\Models\Barang;
 use App\Models\HistoryInput;
+use App\Models\Satuan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -86,6 +87,8 @@ class StockOpnameController extends Controller
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
+
+    
 
 
     public function simpan(Request $request)

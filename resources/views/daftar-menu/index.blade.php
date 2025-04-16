@@ -58,7 +58,7 @@
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah menu
                                     </button>
                                     <div class="col-sm-2 float-end mt-3">
-                                    <div class="d-flex gap-2">
+                                        <div class="d-flex gap-2">
                                             <a href="/daftar-menu" class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
@@ -85,15 +85,12 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $menu->name }}</td>
+                                               
                                                         <td>
                                                             <ul>
                                                                 @foreach($menu->komposisi as $komposisi)
                                                                     <li>{{ $komposisi->bahan->name }} -
-                                                                        @if (strpos($komposisi->jumlah, '.') === false)
-                                                                            {{ intval($komposisi->jumlah) }}
-                                                                        @else
-                                                                            {{ rtrim(rtrim($komposisi->jumlah, '0'), '.') }}
-                                                                        @endif
+                                                                        {{ rtrim(rtrim(number_format($komposisi->jumlah, 3, ',', '.'), '0'), ',') }}
                                                                         {{ $komposisi->bahan->satuan->name }}
                                                                     </li>
                                                                 @endforeach

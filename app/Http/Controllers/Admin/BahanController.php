@@ -254,17 +254,23 @@ class BahanController extends Controller
     }
     public function inputDelete($encryptedId)
     {
-        try {
-            $id = Crypt::decrypt($encryptedId);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
+
+        $decoded = $hashids->decode($encryptedId);
+        if (empty($decoded)) {
             return redirect()->back()->with('error', 'ID tidak valid.');
         }
+
+        $id = $decoded[0];
 
         $historyInput = HistoryInput::findOrFail($id);
         $historyInput->deleted_at = now();
         $historyInput->save();
 
-        return redirect()->route('stok-bahan.historyBahan', ['encryptedId' => Crypt::encrypt($historyInput->bahan_id)])
+        // Encode kembali bahan_id untuk redirect
+        $encryptedBahanId = $hashids->encode($historyInput->bahan_id);
+
+        return redirect()->route('stok-bahan.historyBahan', ['encryptedId' => $encryptedBahanId])
             ->with('success', 'Data Berhasil Dihapus');
     }
 

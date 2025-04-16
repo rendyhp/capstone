@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BahanAwal;
 use App\Models\Barang;
+use App\Models\Satuan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
 use App\Models\TemporaryFile;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -21,52 +24,71 @@ class BahanAwalController extends Controller
 {
     public function index(Request $request)
     {
-        $bahanAwals = BahanAwal::orderBy('name', 'asc')
-            ->whereNull('deleted_at')
-            ->get();
+        $user = Auth::user();
+        $role = $user->role;
 
-        if ($request->ajax()) {
-            return datatables()->of($bahanAwals)->toJson();
+        if ($role !== 'OWNER') {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
-        return view('pages.admin.dataset.index');
+        $date = $request->input('date', Carbon::today()->toDateString());
+        $search = $request->input('search');
+
+        // Query join BahanAwal -> Bahan -> Satuan
+        $query = BahanAwal::selectRaw('
+            bahan_awals.bahan_id,
+            SUM(bahan_awals.jumlah) as stok,
+            MAX(bahan_awals.date) as tanggal,
+            bahans.name as bahan_name,
+            satuans.name as satuan_name
+        ')
+            ->join('bahans', 'bahan_awals.bahan_id', '=', 'bahans.id')
+            ->join('satuans', 'bahans.satuan_id', '=', 'satuans.id')
+            ->whereNull('bahan_awals.deleted_at')
+            ->whereDate('bahan_awals.date', $date)
+            ->when($search, function ($q) use ($search) {
+                $q->where('bahans.name', 'like', '%' . $search . '%');
+            })
+            ->groupBy('bahan_awals.bahan_id', 'bahans.name', 'satuans.name')
+            ->orderBy('bahans.name', 'asc');
+
+        $allData = $query->get();
+
+        // Ambil data terbaru untuk tiap bahan_id
+        $grouped = $allData->groupBy('bahan_id')->map(function ($items) {
+            return $items->first();
+        })->values();
+
+        // Pagination manual
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 20;
+        $currentItems = $grouped->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        $bahanAwalAwals = new LengthAwarePaginator($currentItems, $grouped->count(), $perPage);
+        $bahanAwalAwals->appends($request->query());
+
+        // Data satuan untuk dropdown/modal
+        $satuans = Satuan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
+
+        return view('bahan.indexBahanAwal', [
+            'bahanAwalAwals' => $bahanAwalAwals,
+            'satuans' => $satuans,
+            'date' => $date,
+        ]);
     }
 
 
-    
+
 
     public function create()
     {
 
-        return view('pages.admin.dataset.create', compact('tags'));
+        return view('pages.admin.dataset.create');
     }
 
-    public function store(Request $request)
+    public function update()
     {
 
-        Validator::make($request->all(), [
-            'date' => 'required',
-            'jumlah' => 'required',
-        ]);
-
-        $user = Auth::user()->id;
-
-        // Penanganan file (pastikan folder upload/barang masih ada)
-        $imageName = $this->handleFile($request->image);
-
-        // Simpan data dataset ke database
-        Dataset::create([
-            'user_id' => $user,
-            'name' => $request->name,
-            'description' => $request->description,
-            'satuan_id' => $request->satuan_id,
-            'image' => $imageName,
-        ]);
-
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Create Barang "' . $request->name . '"');
-
-        return redirect()->route('admin.dataset')->with('success', 'Barang "' . $request->name . '" berhasil ditambahkan');
+        return view('bahan.indexBahanAwal');
     }
 
     public function tmpUpload(Request $request)
@@ -126,70 +148,23 @@ class BahanAwalController extends Controller
         }
     }
 
-    public function show($slug)
-    {
-        $barangs = Dataset::where('slug', $slug)
-            ->first();
 
-            return view('pages.admin.dataset.show', [
-                'barangs' => $barangs,
-            ]);
+
+
+    public function delete(Request $request)
+    {
+        $bahan_id = $request->input('bahan_id');
+        $date = $request->input('date', Carbon::today()->toDateString());
+
+        BahanAwal::where('bahan_id', $bahan_id)
+            ->whereDate('date', $date)
+            ->update(['deleted_at' => now()]);
+
+        return redirect()->route('stok-bahan-awal', ['date' => $date])
+            ->with('success', 'Data bahan berhasil dihapus.');
     }
 
-    public function edit($slug)
-    {
-        $barangs = DB::table('barangs')->where('slug', $slug)
-            ->first();
 
-        return view('pages.admin.dataset.edit', ['barangs' => $barangs]);
-    }
 
-    public function update(Request $request, Barangs $barangs)
-    {
-        Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'jumlah' => 'required',
-            'satuan_id' => 'required',
-            'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
-        ]);
 
-        $user = Auth::user()->id;
-
-        // Cari dataset berdasarkan slug
-        $barangs = Barangs::where('slug', $request->slug)->first();
-
-        // Panggil (pastikan folder upload/barang masih ada)
-        $imageName = $this->handleFile($request->image);
-
-        // Simpan barang ke database
-        $barangs->update([
-            'user_id' => $user,
-            'name' => $request->name,
-            'description' => $request->description,
-            'satuan_id' => $request->satuan_id,
-            'image' => $imageName,
-        ]);
-
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Update Barang "' . $request->title . '"');
-
-        return redirect()->route('admin.dataset')
-            ->with('update', 'Barang berhasil diperbarui');
-    }
-
-    public function deletePermanent(Request $request)
-    {
-        $slug = $request->slug;
-
-        $barang = Barangs::where('slug', $slug)->firstOrFail();
-        $name = $barang->title;
-        // Lakukan penghapusan permanen menggunakan Eloquent
-        Barang::where('slug', $slug)->forceDelete();
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Delete Permanen Barang "' . $name . '"');
-
-        // Redirect kembali ke halaman sebelumnya
-        return Redirect::back()->with('delete', 'Dataset "'  . $name . '" berhasil dihapus permanen');
-    }
 }

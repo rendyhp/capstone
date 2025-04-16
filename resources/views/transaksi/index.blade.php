@@ -49,6 +49,17 @@
                     Impor CSV
                 </button>
 
+                <form action="{{ route('transaksi.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <label for="date">Tanggal</label>
+                    <input type="date" name="date" required>
+
+                    <label for="file">File Excel</label>
+                    <input type="file" name="file" accept=".xlsx,.xls" required>
+
+                    <button type="submit">Upload</button>
+                </form>
+
                 <table class="table table-bordered">
                     <thead class="table-primary">
                         <tr>
@@ -61,37 +72,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($transaksis as $key => $transaksi)
-                            @php $isMatched = $transaksi->menu_id !== null; @endphp
-                            <tr class="{{ $isMatched ? '' : 'table-danger' }}">
+                        @forelse($paginated as $key => $transaksi)
+                            <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ optional($transaksi->menu)->name ?? $transaksi->menu_name }}</td>
-                                <td>{!! $isMatched ? '<span class="text-success">✅</span>' : '<span class="text-danger">❌</span>' !!}
-                                </td>
-                                <td>{{ $transaksi->jumlah }}</td>
+                                <td>{{ $transaksi['menu_name'] }}</td>
+                                <td><span class="text-success">✅</span></td>
+                                <td>{{ $transaksi['total_jumlah'] }}</td>
                                 <td>
-                                    @if($isMatched && optional($transaksi->menu)->komposisi)
-                                        <ul>
-                                            @foreach($transaksi->menu->komposisi as $komposisi)
-                                                @if(optional($komposisi->bahan)->name)
-                                                    <li>{{ $komposisi->bahan->name }} - {{ $komposisi->jumlah * $transaksi->jumlah }}
-                                                        {{ optional($komposisi->bahan->satuan)->name }}
-                                                    </li>
-                                                @endif
-                                            @endforeach
-                                        </ul>
-                                    @else
-                                        <span class="text-muted">Tidak ada data</span>
-                                    @endif
+                                    <ul>
+                                        @foreach($transaksi['bahans'] as $bahan)
+                                            <li>{{ $bahan['bahan_name'] }} -
+                                                {{ rtrim(rtrim(number_format($bahan['total_bahan'], 3, ',', '.'), '0'), ',') }}
+                                                {{ $bahan['satuan_name'] }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm edit-btn" data-id="{{ $transaksi->id }}">Edit</button>
-                                    <form action="{{ route('transaksi.destroy', $transaksi->id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf @method('DELETE')
-                                        <button class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
-                                    </form>
+                                    <button class="btn btn-primary btn-sm edit-btn"
+                                        data-id="{{ $transaksi['menu_id'] }}">Edit</button>
+                                    <!-- Hapus butuh id transaksi spesifik, jadi disesuaikan jika ada -->
                                 </td>
                             </tr>
                         @empty
@@ -102,7 +102,9 @@
                     </tbody>
                 </table>
 
-                {{ $transaksis->onEachSide(1)->links('pagination::bootstrap-5') }}
+
+
+                {{ $paginated->onEachSide(1)->links('pagination::bootstrap-5') }}
             </div>
         </div>
 
@@ -183,7 +185,7 @@
             </div>
         </div>
 
-        
+
 
 
 

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\TransaksiImport;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\Menu;
+use Illuminate\Pagination\LengthAwarePaginator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\KomposisiMenu;
 use App\Models\Bahan;
@@ -15,60 +18,126 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 
+use Illuminate\Support\Collection;
+
 
 
 class TransaksiController extends Controller
 {
+
+
     public function index(Request $request)
     {
         $user = Auth::user();
         $role = $user->role;
 
-        // Ambil tanggal dari request, default ke hari ini
         $date = $request->input('date', Carbon::today()->toDateString());
+        $search = $request->input('search');
 
-        // Query transaksi dengan relasi menu dan bahan
-        $query = Transaksi::with(['menu', 'menu.komposisi.bahan.satuan'])
-            ->whereDate('date', $date)
-            ->orderBy('date', 'desc');
+        // Ambil semua data transaksi dan komposisi
+        $allData = DB::table('transaksis')
+            ->selectRaw('
+            transaksis.menu_id,
+            menus.name as menu_name,
+            SUM(transaksis.jumlah) as total_jumlah,
+            bahans.name as bahan_name,
+            satuans.name as satuan_name,
+            SUM(komposisi_menus.jumlah * transaksis.jumlah) as total_bahan
+        ')
+            ->join('menus', 'transaksis.menu_id', '=', 'menus.id')
+            ->join('komposisi_menus', 'menus.id', '=', 'komposisi_menus.menu_id')
+            ->join('bahans', 'komposisi_menus.bahan_id', '=', 'bahans.id')
+            ->join('satuans', 'bahans.satuan_id', '=', 'satuans.id')
+            ->whereDate('transaksis.date', $date)
+            ->when($search, function ($q) use ($search) {
+                $q->where('menus.name', 'like', '%' . $search . '%');
+            })
+            ->groupBy('transaksis.menu_id', 'menus.name', 'bahans.name', 'satuans.name')
+            ->orderBy('menus.name', 'asc')
+            ->get();
 
-        // Ambil data menu lengkap untuk digunakan di view
+        // Grouping berdasarkan menu
+        $transaksis = $allData->groupBy('menu_id')->map(function ($items) {
+            return [
+                'menu_id' => $items->first()->menu_id,
+                'menu_name' => $items->first()->menu_name,
+                'total_jumlah' => $items->first()->total_jumlah,
+                'bahans' => $items->map(function ($item) {
+                    return [
+                        'bahan_name' => $item->bahan_name,
+                        'total_bahan' => $item->total_bahan,
+                        'satuan_name' => $item->satuan_name,
+                    ];
+                })
+            ];
+        })->values();
+
+        // Pagination manual
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 20;
+        $currentItems = $transaksis->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        $paginated = new LengthAwarePaginator($currentItems, $transaksis->count(), $perPage);
+        $paginated->appends($request->query());
+
+        // Ambil semua menu untuk modal/edit
         $menus = Menu::with('komposisi.bahan.satuan')->get();
 
-        // Filter berdasarkan pencarian nama menu
-        if ($search = $request->input('search')) {
-            $query->whereHas('menu', function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%');
-            });
-        }
-
-        // Paginasi hasil query
-        $transaksis = $query->paginate(20)->appends($request->query());
-
-        // Routing ke view sesuai role
         if ($role === 'OWNER') {
-            return view('transaksi.index', compact('transaksis', 'date', 'menus'));
+            return view('transaksi.index', compact('paginated', 'date', 'menus'));
         } elseif ($role === 'user') {
-            return view('user.transaksi', compact('transaksis', 'date', 'menus'));
+            return view('user.transaksi', compact('paginated', 'date', 'menus'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
 
 
+
+
+
+
     public function import(Request $request)
     {
+        // Ambil data user yang sedang login
+        $user = Auth::user();
+
+        // Validasi input file dan tanggal
         $request->validate([
-            'file' => 'required|file|mimes:xlsx,csv'
+            'date' => 'required|date',
+            'file' => 'required|file|mimes:xlsx,xls',
         ]);
 
+        // Ambil file dari request
         $file = $request->file('file');
-        $filename = 'temp_import_' . time() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('temp', $filename);
 
-        session(['temp_excel' => $path]);
+        // Load file Excel menggunakan PHPSpreadsheet
+        $spreadsheet = IOFactory::load($file);
 
-        return redirect()->route('transaksi.preview')->with('success', 'File berhasil diupload.');
+        // Ambil worksheet pertama
+        $worksheet = $spreadsheet->getActiveSheet();
+
+        // Loop melalui data di worksheet dan simpan ke database
+        foreach ($worksheet->getRowIterator() as $row) {
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(false); // Pastikan semua cell dilalui
+
+            $data = [];
+            foreach ($cellIterator as $cell) {
+                $data[] = $cell->getFormattedValue();
+            }
+
+            // Pastikan data yang akan dimasukkan ke dalam database sesuai dengan struktur tabel Transaksi
+            // Misalnya menu_name di kolom pertama dan jumlah di kolom kedua
+            Transaksi::create([
+                'user_id' => $user->id,   // Menggunakan user ID yang benar
+                'date' => $request->input('date'),
+                'menu_name' => $data[0],   // Nama menu di kolom pertama
+                'jumlah' => $data[1],      // Jumlah di kolom kedua
+            ]);
+        }
+
+        // Kembalikan respon sukses setelah data berhasil diimpor
+        return redirect()->back()->with('success', 'Data berhasil diimpor');
     }
 
     public function preview()

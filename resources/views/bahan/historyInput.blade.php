@@ -126,7 +126,7 @@
 
 
                                                             <form
-                                                                action="{{ route('historyBahan.delete', Crypt::encrypt($historyInput->id)) }}"
+                                                                action="{{ route('historyBahan.delete', Hashids::encode($historyInput->id)) }}"
                                                                 method="POST" class="d-inline"
                                                                 onsubmit="return confirm('Yakin akan Mendelete Data?')">
                                                                 @csrf
@@ -164,8 +164,7 @@
                     <form method="POST" action="{{ route('historyBahan.store') }}">
                         @csrf
 
-                        <input type="hidden" name="bahan_id"
-                            value="{{ Hashids::encode($bahan->id) }}">
+                        <input type="hidden" name="bahan_id" value="{{ Hashids::encode($bahan->id) }}">
 
 
                         <div class="mb-3">
