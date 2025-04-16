@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 16 Apr 2025 pada 06.51
+-- Waktu pembuatan: 16 Apr 2025 pada 10.09
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -563,11 +563,15 @@ CREATE TABLE `history_inputs` (
 INSERT INTO `history_inputs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, '2025-04-17', 11, 10.000, '2025-04-13 20:43:45', '2025-04-13 20:43:45', NULL),
 (2, 1, '2025-04-13', 11, 10000.000, '2025-04-13 20:48:18', '2025-04-13 20:48:18', NULL),
-(3, 1, '2025-04-16', 2, 600.000, '2025-04-15 20:07:15', '2025-04-15 20:07:15', NULL),
-(4, 1, '2025-04-15', 2, 70000.000, '2025-04-15 20:07:29', '2025-04-15 20:07:29', NULL),
-(5, 1, '2025-04-04', 2, 5000.000, '2025-04-15 20:46:51', '2025-04-15 20:46:51', NULL),
-(6, 1, '2025-04-16', 2, 2400.000, '2025-04-15 21:18:09', '2025-04-15 21:18:09', NULL),
-(7, 1, '2025-04-16', 17, 3000.000, '2025-04-15 21:24:07', '2025-04-15 21:24:07', NULL);
+(3, 1, '2025-04-16', 2, 600.000, '2025-04-15 20:07:15', '2025-04-16 00:24:22', NULL),
+(4, 1, '2025-04-16', 2, 1000.000, '2025-04-15 20:07:29', '2025-04-16 00:06:10', NULL),
+(5, 1, '2025-04-04', 2, 5000.000, '2025-04-15 20:46:51', '2025-04-16 00:27:34', NULL),
+(6, 1, '2025-04-16', 2, 2400.000, '2025-04-15 21:18:09', '2025-04-16 00:04:38', NULL),
+(7, 1, '2025-04-16', 17, 3000.000, '2025-04-15 21:24:07', '2025-04-15 21:24:07', NULL),
+(8, 1, '2025-04-23', 2, 350.000, '2025-04-15 23:43:58', '2025-04-16 00:27:59', NULL),
+(9, 1, '2025-04-16', 9, 700.000, '2025-04-16 00:05:13', '2025-04-16 00:05:24', NULL),
+(10, 1, '2025-04-30', 2, 50.000, '2025-04-16 00:31:54', '2025-04-16 00:32:58', NULL),
+(11, 1, '2025-04-24', 17, 323.000, '2025-04-16 01:06:45', '2025-04-16 01:06:45', NULL);
 
 -- --------------------------------------------------------
 
@@ -899,7 +903,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Rendy Hartono Putra', 'rerena12', 'rerena12@gmail.com', '2025-03-21 19:54:15', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'ZPICGeCAWeDKCVPTq0bHgH4fh0dpyVTPxkErocn8tUslNRtHduDZnIcztqK2', '2025-03-21 19:54:15', '2025-03-21 19:54:15', NULL);
+(1, 'Rendy Hartono Putra', 'rerena12', 'rerena12@gmail.com', '2025-03-21 19:54:15', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'JWhi1UD3JWFQ9hh8I9kx1rG85j7YFmXThc0xPmAKKuOqKHLA41gGpoZdWbRF', '2025-03-21 19:54:15', '2025-03-21 19:54:15', NULL);
 
 --
 -- Indexes for dumped tables
@@ -1121,7 +1125,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT untuk tabel `history_inputs`
 --
 ALTER TABLE `history_inputs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT untuk tabel `komposisi_menus`
