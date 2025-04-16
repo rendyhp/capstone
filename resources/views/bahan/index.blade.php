@@ -56,11 +56,17 @@
                                         data-bs-target="#barangModal">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
                                     </button>
-                                    <div class="col-sm-2 float-end mt-3">
-                                        <form action="/data-bahan" method="get" class="form-inline" onsubmit="">
-                                            <input class="form-control form-control-sm" type="text" name="search"
-                                                placeholder="Search" value="{{request('search')}}">
-                                        </form>
+                                    <div class="col-sm-3 float-end mt-3">
+                                        <div class="d-flex gap-2">
+                                            <a href="/data-bahan" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                            <form action="/data-bahan" method="get" class="form-inline d-flex">
+                                                <input class="form-control form-control-sm" type="text" name="search"
+                                                    placeholder="Search" value="{{ request('search') }}">
+                                            </form>
+                                        </div>
+
                                         <div>
                                         </div>
                                         <thead class="table-primary">
@@ -100,7 +106,7 @@
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
-                                                            
+
 
                                                             <form action="/data-bahan/delete/{{ $bahan->id }}" class="d-inline"
                                                                 method="post">
@@ -111,10 +117,7 @@
                                                                         class="fa fa-trash"></i></button>
                                                             </form>
 
-                                                            <button type="button" class="btn btn-outline-success"
-                                                                onclick="window.location.href='{{ url('/data-bahan/historyInput/' . $bahan->id) }}'">
-                                                                <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok
-                                                            </button>
+
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -188,7 +191,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="/d/edit">
+                    <form action="/data-bahan/edit" id="editBarangForm" method="post" enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
                         <div class="mb-3">

@@ -63,8 +63,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/data-bahan', [BahanController::class, 'index'])->name('data-bahan');
     Route::put('/data-bahan/delete/{id}', [BahanController::class, 'delete'])->name('data-bahan.delete');
-    Route::get('/data-bahan/historyInput/{id}', [BahanController::class, 'indexHistory'])->name('data-bahan.historyBahan');
-    Route::post('/data-bahan/historyBahan/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
+    Route::get('/stok-bahan/historyInput/{id}', [BahanController::class, 'indexHistory'])->name('data-bahan.historyBahan');
+    Route::post('/stok-bahan/historyBahan/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
 
 
     Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');

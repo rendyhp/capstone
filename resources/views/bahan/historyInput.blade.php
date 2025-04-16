@@ -2,6 +2,8 @@
 @section('DataBahan', 'active')
 @section('container')
 
+
+
     <div class="container">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -11,7 +13,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a class="" href="/data-bahan">Data Bahan</a></li>
+                                <li class="breadcrumb-item"><a class="" href="/stok-bahan">Stok Bahan</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">History Input - {{ $bahan->name }}
                                 </li>
                             </ol>
@@ -44,10 +46,23 @@
             </div>
         @endif
 
-        <h4>Riwayat Penambahan Stok untuk Bahan: <strong>{{ $bahan->name }}</strong></h4>
+        <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
+            <h4 class="mb-0 align-items-center justify-content-center">Riwayat Penambahan Stok untuk Bahan:
+                <strong>{{ $bahan->name }}</strong>
+            </h4>
+            <button type="button" id="backStokBahan"
+                class="btn  btn-sm d-flex align-items-center justify-content-center fw-bold"
+                style="width: 38px; height: 32px; background-color: #e0e0e0;"
+                onclick="window.location.href='{{ url('/stok-bahan') }}'">
+                X
+            </button>
+
+        </div>
 
 
-        <div class="row">
+
+
+        <div class=" row">
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
@@ -62,12 +77,19 @@
                                         data-bs-target="#barangModal">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Stok
                                     </button>
-                                    <div class="col-sm-2 float-end mt-3">
-                                        <form action="/data-bahan/historyInput" method="get" class="form-inline"
-                                            onsubmit="">
-                                            <input class="form-control form-control-sm" type="text" name="search"
-                                                placeholder="Search" value="{{request('search')}}">
-                                        </form>
+                                    <div class="col-sm-3 float-end mt-3">
+                                        <div class="d-flex gap-2">
+                                            <a href="{{ url('/stok-bahan/historyInput/' . $bahan->id) }}"
+                                                class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                            <form action="{{ url('/stok-bahan/historyInput/' . $bahan->id) }}" method="get"
+                                                class="form-inline d-flex">
+                                                <input class="form-control form-control-sm" type="text" name="search"
+                                                    placeholder="Search" value="{{ request('search') }}">
+                                            </form>
+                                        </div>
+
                                         <div>
                                         </div>
                                         <thead class="table-primary">
@@ -90,7 +112,7 @@
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($historyInput->jumlah, 3, ',', '.'), '0'), ',') }}
                                                         </td>
-                                                        
+
 
 
                                                         <td>{{ $historyInput->bahan->satuan->name ?? '-' }}</td>

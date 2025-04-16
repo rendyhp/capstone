@@ -72,10 +72,15 @@
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Stock Opname
                                     </button>
                                     <div class="col-sm-2 float-end mt-3">
-                                        <form action="/stock-opname" method="get" class="form-inline" onsubmit="">
-                                            <input class="form-control form-control-sm" type="text" name="search"
-                                                placeholder="Search" value="{{request('search')}}">
-                                        </form>
+                                    <div class="d-flex gap-2">
+                                            <a href="/stock-opname" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                            <form action="/stock-opname" method="get" class="form-inline d-flex">
+                                                <input class="form-control form-control-sm" type="text" name="search"
+                                                    placeholder="Search" value="{{ request('search') }}">
+                                            </form>
+                                        </div>
                                         <div>
                                         </div>
                                         <thead class="table-primary">
@@ -97,16 +102,16 @@
                                                         <td>{{ ($bahan_akhirs->currentPage() - 1) * $bahan_akhirs->perPage() + $loop->iteration }}
                                                         </td>
 
-                                                        <td>{{ $bahan_akhir->date }}</td>
-                                                        <td>{{ $bahan_akhir->bahan->name }}</td>
+                                                        <td>{{ $bahan_akhir->tanggal }}</td>
+                                                        <td>{{ $bahan_akhir->bahan_name }}</td>
                                                         <td>
-                                                            @if (strpos($bahan_akhir->jumlah, '.') === false)
-                                                                {{ intval($bahan_akhir->jumlah) }}
+                                                            @if (strpos($bahan_akhir->total_jumlah, '.') === false)
+                                                                {{ intval($bahan_akhir->total_jumlah) }}
                                                             @else
-                                                                {{ rtrim(rtrim($bahan_akhir->jumlah, '0'), '.') }}
+                                                                {{ rtrim(rtrim($bahan_akhir->total_jumlah, '0'), '.') }}
                                                             @endif
                                                         </td>
-                                                        <td>{{ $bahan_akhir->bahan->satuan->name }}</td>
+                                                        <td>{{ $bahan_akhir->bahan->satuan_name }}</td>
 
                                                         <td>
                                                             <!-- Button trigger modal -->

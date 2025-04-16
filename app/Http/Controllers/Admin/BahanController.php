@@ -26,22 +26,18 @@ class BahanController extends Controller
 {
     public function index(Request $request)
     {
-
         $user = Auth::user();
         $role = $user->role;
 
-        $query = Bahan::with('satuan')
-            ->orderBy('name', 'asc')
-            ->whereNull('deleted_at');
-        // $tanggalDipilih = request(now()->format('Y-m-d')); // Pastikan ini format 'Y-m-d' misalnya '2025-03-21'
+        // Default orderBy and direction
+        $orderBy = $request->input('orderBy', 'name');
+        $direction = $request->input('direction', 'asc');
 
-        // $query = Bahan::orderBy('name', 'asc')
-        //     ->whereNull('deleted_at')
-        //     // ->whereDate('date', $tanggalDipilih)
-        //     ->get();
-        $bahanAwals = BahanAwal::all();
-        $historyInputs = HistoryInput::all();
-        $akhirTerpakaiSeharusnyas = AkhirTerpakaiSeharusnya::all();
+        $query = Bahan::with('satuan')
+            ->whereNull('deleted_at');
+
+        // Apply dynamic orderBy based on the query parameters
+        $query->orderBy($orderBy, $direction);
 
         $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
@@ -55,17 +51,16 @@ class BahanController extends Controller
 
             return view('bahan.index', [
                 'bahans' => $bahans,
-                'bahanAwals' => $bahanAwals,
-                'historyInputs' => $historyInputs,
                 'satuans' => $satuans
             ]);
         }
     }
 
+
     public function indexStok(Request $request)
     {
 
-        
+
         $user = Auth::user();
         $role = $user->role;
 
@@ -80,21 +75,23 @@ class BahanController extends Controller
         $bahans = $query->paginate(20)->appends($request->query());
 
         foreach ($bahans as $bahan) {
-            $bahan->jumlah_awal = BahanAwal::where('bahan_id', $bahan->id)->value('jumlah') ?? 0;
+            $bahan->jumlah_awal = BahanAwal::where('bahan_id', $bahan->id)
+                ->whereDate('date', $date)
+                ->sum('jumlah');
             $bahan->jumlah_masuk = HistoryInput::where('bahan_id', $bahan->id)
-                ->whereDate('date', '<=', $date)
+                ->whereDate('date', $date)
                 ->sum('jumlah');
             $bahan->jumlah_terpakai = AkhirTerpakaiSeharusnya::where('bahan_id', $bahan->id)
-                ->whereDate('date', '<=', $date)
+                ->whereDate('date', $date)
                 ->sum('jumlah');
             $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk) - $bahan->jumlah_terpakai;
             $bahan->bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
-                ->whereDate('date', '<=', $date)
+                ->whereDate('date', $date)
                 ->sum('jumlah');
             $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
 
         }
-        
+
 
 
 
@@ -137,7 +134,7 @@ class BahanController extends Controller
                 'historyInputs' => $historyInputs,
                 'satuans' => $satuans,
                 'bahan' => $bahan,
-                
+
             ]);
         }
 
@@ -175,7 +172,6 @@ class BahanController extends Controller
 
     public function store(Request $request)
     {
-
         Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -194,23 +190,26 @@ class BahanController extends Controller
             $Bahan->satuan_id = $request->input('satuan_id' ?: '-');
             $Bahan->save();
 
-            // Panggil fungsi logAdd()
+            // Panggil fungsi logAdd() jika diperlukan
             // LogActivity::addToLog('Create Barang "' . $request->input('name') . '"');
 
             $dataPerPage = 20;
             $data = DB::table('bahans')->paginate($dataPerPage);
             $lastPage = $data->lastPage();
-            return redirect('/data-bahan?page=' . $lastPage)->with('success', 'Data Berhasil Ditambahkan');
+
+            // Redirect to the data-bahan page with order by id asc
+            return redirect('/data-bahan?page=' . $lastPage . '&orderBy=id&direction=asc')
+                ->with('success', 'Data "' . $Bahan->name . '" Berhasil Ditambahkan');
         } catch (\Illuminate\Database\QueryException $e) {
-            // Check for unique constraint violation
+            // Handle unique constraint violation
             if ($e->errorInfo[1] == 1062) {
-                echo '<script>alert("Bahan sudah ada dalam database.");</script>';
                 return redirect('data-bahan')->with('error', 'Bahan Gagal Ditambahkan : Nama Bahan yang diinputkan sudah ada');
             } else {
-                throw $e; // Rethrow the exception if it's not due to unique constraint
+                throw $e; // Rethrow the exception if it's not a unique constraint error
             }
         }
     }
+
 
     public function show($slug)
     {

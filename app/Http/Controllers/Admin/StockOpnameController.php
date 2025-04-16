@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 
 
 use App\Models\TemporaryFile;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -26,37 +27,65 @@ use App\Helpers\LogActivity;
 class StockOpnameController extends Controller
 {
     public function index(Request $request)
-{
-    $user = Auth::user();
-    $role = $user->role;
+    {
+        $user = Auth::user();
+        $role = $user->role;
 
-    $query = BahanAkhir::select('bahan_akhirs.*')
-        ->join('bahans', 'bahan_akhirs.bahan_id', '=', 'bahans.id')
-        ->whereNull('bahan_akhirs.deleted_at')
-        ->with(['bahan.satuan'])
-        ->orderBy('date', 'desc');
+        // Ambil inputan tanggal, default hari ini
+        $date = $request->input('date', Carbon::today()->toDateString());
+        $search = $request->input('search');
 
-    // Jika tidak ada input date, set default ke hari ini
-    $date = $request->input('date', Carbon::today()->toDateString());
+        // Ambil semua data bahan akhir untuk tanggal tertentu
+        $query = BahanAkhir::selectRaw('
+        bahan_akhirs.bahan_id,
+        SUM(bahan_akhirs.jumlah) as total_jumlah,
+        MAX(bahan_akhirs.date) as tanggal,
+        bahans.name as bahan_name,
+        satuans.name as satuan_name
+    ')
+            ->join('bahans', 'bahan_akhirs.bahan_id', '=', 'bahans.id')
+            ->join('satuans', 'bahans.satuan_id', '=', 'satuans.id')
+            ->whereNull('bahan_akhirs.deleted_at')
+            ->whereDate('bahan_akhirs.date', $date)
+            ->when($search, function ($q) use ($search) {
+                $q->where('bahans.name', 'like', '%' . $search . '%');
+            })
+            ->groupBy('bahan_akhirs.bahan_id', 'bahans.name', 'satuans.name')
+            ->orderBy('bahans.name', 'asc');
 
-    // Filter berdasarkan search (jika ada)
-    if ($search = $request->input('search')) {
-        $query->where('bahans.name', 'like', '%' . $search . '%');
+
+
+        if (!empty($search)) {
+            $query->where('bahans.name', 'like', '%' . $search . '%');
+        }
+
+        // Ambil semua data dulu
+        $allData = $query->orderByDesc('bahan_akhirs.id')->get();
+
+        // Grouping berdasarkan bahan_id, ambil entri terakhir
+        $grouped = $allData->groupBy('bahan_id')->map(function ($items) {
+            return $items->first(); // ambil yang id paling besar (terbaru)
+        })->values();
+
+        // Manual paginate
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 20;
+        $currentItems = $grouped->slice(($currentPage - 1) * $perPage, $perPage)->values();
+        $bahan_akhirs = new LengthAwarePaginator($currentItems, $grouped->count(), $perPage);
+        $bahan_akhirs->appends($request->query());
+
+        // Hitung total jumlah dari seluruh data (bukan hanya yang ditampilkan)
+        $total_jumlah = $grouped->sum('jumlah');
+
+        // Return ke view sesuai role
+        if ($role === 'OWNER') {
+            return view('stock-opname.index', compact('bahan_akhirs', 'date', 'total_jumlah'));
+        } elseif ($role === 'user') {
+            return view('user.barang', compact('bahan_akhirs', 'date', 'total_jumlah'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
-
-    // Filter berdasarkan tanggal (gunakan nilai default jika tidak ada input)
-    $query->whereDate('bahan_akhirs.date', $date);
-
-    $bahan_akhirs = $query->paginate(20)->appends($request->query());
-
-    if ($role === 'OWNER') {
-        return view('stock-opname.index', compact('bahan_akhirs', 'date'));
-    } elseif ($role === 'user') {
-        return view('user.barang', compact('bahan_akhirs', 'date'));
-    } else {
-        return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-    }
-}
 
 
     public function simpan(Request $request)
@@ -79,17 +108,18 @@ class StockOpnameController extends Controller
 
     public function simpanDataBaru(Request $request)
     {
-
         $user = Auth::user()->id;
 
         $validatedData = $request->validate([
             'tanggaltransmasuk' => 'required|date',
             'bahan_id' => 'required|array',
             'jumlah' => 'required|array',
+            'save_for_tomorrow' => 'nullable' // boleh tidak dikirim
         ]);
 
         $tanggalHariIni = $validatedData['tanggaltransmasuk'];
         $tanggalBesok = date('Y-m-d', strtotime($tanggalHariIni . ' +1 day'));
+        $saveBesok = $request->has('save_for_tomorrow');
 
         foreach ($validatedData['bahan_id'] as $index => $bahan_id) {
             $jumlah = $validatedData['jumlah'][$index];
@@ -102,16 +132,18 @@ class StockOpnameController extends Controller
                 'jumlah' => $jumlah,
             ]);
 
-            // Simpan ke BahanAwal (stok untuk hari berikutnya)
-            BahanAwal::create([
-                'date' => $tanggalBesok,
-                'bahan_id' => $bahan_id,
-                'jumlah' => $jumlah,
-            ]);
+            // Jika checkbox dicentang, simpan juga untuk besok
+            if ($saveBesok) {
+                BahanAwal::create([
+                    'date' => $tanggalBesok,
+                    'bahan_id' => $bahan_id,
+                    'jumlah' => $jumlah,
+                ]);
+            }
         }
 
-        return redirect('/stock-opname')->with('success', 'Data Stock Opname berhasil disimpan!');
-
+        return redirect()->route('stock-opname.index', ['date' => $tanggalHariIni])
+            ->with('success', 'Data Stock Opname berhasil disimpan!');
     }
 
     public function create()

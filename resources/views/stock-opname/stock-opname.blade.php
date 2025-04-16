@@ -81,7 +81,8 @@
                             </td>
                             <td>
                                 <div class="input-group">
-                                    <input type="number" id="number0" name="jumlah[]" class="form-control text-center jumlah-input number0"
+                                    <input type="number" id="number0" name="jumlah[]"
+                                        class="form-control text-center jumlah-input number0"
                                         value="{{ optional($bahan->bahanAkhir)->jumlah ?? 0 }}" required readonly>
                                     <button type="button" class="btn btn-primary ms-2 toggle-jumlah">
                                         <i class="fa fa-edit"></i>
@@ -97,6 +98,12 @@
                         </tr>
                     @endforeach
                 </tbody>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="1" id="saveForTomorrow" name="save_for_tomorrow">
+                    <label class="form-check-label fw-bold" for="saveForTomorrow">
+                        Simpan untuk data awal besok?
+                    </label>
+                </div>
             </table>
 
             <div class="d-flex justify-content-end">

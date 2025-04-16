@@ -67,16 +67,17 @@
                         <div class="table-responsive">
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                        data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
-                                    </button>
-                                    <div class="col-sm-2 float-end mt-3">
-                                        <form action="/data-bahan" method="get" class="form-inline" onsubmit="">
-                                            <input class="form-control form-control-sm" type="text" name="search"
-                                                placeholder="Search" value="{{request('search')}}">
-                                        </form>
+
+                                    <div class="col-sm-3 float-end mt-3">
+                                        <div class="d-flex gap-2">
+                                            <a href="/stok-bahan" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                            <form action="/stok-bahan" method="get" class="form-inline d-flex">
+                                                <input class="form-control form-control-sm" type="text" name="search"
+                                                    placeholder="Search" value="{{ request('search') }}">
+                                            </form>
+                                        </div>
                                         <div>
                                         </div>
                                         <thead class="table-primary">
@@ -123,29 +124,8 @@
                                                         <td>{{ $bahan->satuan->name ?? '-' }}</td>
 
                                                         <td>
-                                                            <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary btn-sm btn_editbahan"
-                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
-                                                                data-name="{{ $bahan->name ?? 'NULL' }}"
-                                                                data-description="{{ $bahan->description ?? 'NULL' }}"
-                                                                data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
-                                                                data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
-                                                                <i class="fa fa-edit" aria-hidden="true"></i>
-                                                            </button>
-
-
-
-                                                            <form action="/data-bahan/delete/{{ $bahan->id }}" class="d-inline"
-                                                                method="post">
-                                                                @method('PUT')
-                                                                @csrf
-                                                                <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                        class="fa fa-trash"></i></button>
-                                                            </form>
-
                                                             <button type="button" class="btn btn-outline-success"
-                                                                onclick="window.location.href='{{ url('/data-bahan/historyInput/' . $bahan->id) }}'">
+                                                                onclick="window.location.href='{{ url('/stok-bahan/historyInput/' . $bahan->id) }}'">
                                                                 <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok
                                                             </button>
                                                         </td>

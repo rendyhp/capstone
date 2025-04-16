@@ -57,10 +57,15 @@
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
                                     </button>
                                     <div class="col-sm-2 float-end mt-3">
-                                        <form action="/data-barang" method="get" class="form-inline" onsubmit="">
-                                            <input class="form-control form-control-sm" type="text" name="search"
-                                                placeholder="Search" value="{{request('search')}}">
-                                        </form>
+                                    <div class="d-flex gap-2">
+                                            <a href="/data-barang" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                            <form action="/data-barang" method="get" class="form-inline d-flex">
+                                                <input class="form-control form-control-sm" type="text" name="search"
+                                                    placeholder="Search" value="{{ request('search') }}">
+                                            </form>
+                                        </div>
                                         <div>
                                         </div>
                                         <thead class="table-primary">
