@@ -554,6 +554,219 @@
     </script>
 
     <script>
+        $(document).ready(function () {
+            const bahanOptionsTemplate = document.querySelector('#bahanOptions select');
+
+            function renderBahanAwalRow(index) {
+                const bahanSelect = bahanOptionsTemplate.cloneNode(true);
+                bahanSelect.name = `bahan_awal[${index}][bahan_id]`;
+                bahanSelect.classList.add('form-select', 'bahan-dropdown');
+
+                const jumlahInput = document.createElement('input');
+                jumlahInput.type = 'number';
+                jumlahInput.name = `bahan_awal[${index}][jumlah]`;
+                jumlahInput.placeholder = 'Jumlah';
+                jumlahInput.required = true;
+                jumlahInput.step = '0.001';
+                jumlahInput.min = '0.001';
+                jumlahInput.className = 'form-control mx-2';
+                jumlahInput.style.maxWidth = '120px';
+
+                const satuanInput = document.createElement('input');
+                satuanInput.type = 'text';
+                satuanInput.placeholder = 'Satuan';
+                satuanInput.className = 'form-control satuan-input';
+                satuanInput.disabled = true;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-danger removeBahanAwal';
+                removeBtn.textContent = '-';
+
+                const row = document.createElement('div');
+                row.className = 'input-group mb-2 bahan-item';
+                row.appendChild(bahanSelect);
+                row.appendChild(jumlahInput);
+                row.appendChild(satuanInput);
+                row.appendChild(removeBtn);
+
+                return row;
+            }
+
+            function refreshEventListeners($container) {
+                $container.on('change', '.bahan-dropdown', function () {
+                    const satuan = $(this).find('option:selected').data('satuan') || '';
+                    $(this).closest('.bahan-item').find('.satuan-input').val(satuan);
+                });
+
+                $container.on('click', '.removeBahanAwal', function () {
+                    $(this).closest('.bahan-item').remove();
+                });
+            }
+
+            // Tambah baris bahan awal
+            $('#addBahanAwal').on('click', function () {
+                const container = $('#bahanAwalContainer');
+                const index = container.find('.bahan-item').length;
+                container.append(renderBahanAwalRow(index));
+            });
+
+            refreshEventListeners($('#bahanAwalContainer'));
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            const bahanOptionsTemplate = document.querySelector('#bahanOptions select');
+
+            function renderBahanAkhirRow(index) {
+                const bahanSelect = bahanOptionsTemplate.cloneNode(true);
+                bahanSelect.name = `bahan_akhir[${index}][bahan_id]`;
+                bahanSelect.classList.add('form-select', 'bahan-dropdown');
+
+                const jumlahInput = document.createElement('input');
+                jumlahInput.type = 'number';
+                jumlahInput.name = `bahan_akhir[${index}][jumlah]`;
+                jumlahInput.placeholder = 'Jumlah';
+                jumlahInput.required = true;
+                jumlahInput.step = '0.001';
+                jumlahInput.min = '0.001';
+                jumlahInput.className = 'form-control mx-2';
+                jumlahInput.style.maxWidth = '120px';
+
+                const satuanInput = document.createElement('input');
+                satuanInput.type = 'text';
+                satuanInput.placeholder = 'Satuan';
+                satuanInput.className = 'form-control satuan-input';
+                satuanInput.disabled = true;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-danger removeBahanAkhir';
+                removeBtn.textContent = '-';
+
+                const row = document.createElement('div');
+                row.className = 'input-group mb-2 bahan-item';
+                row.appendChild(bahanSelect);
+                row.appendChild(jumlahInput);
+                row.appendChild(satuanInput);
+                row.appendChild(removeBtn);
+
+                return row;
+            }
+
+            function refreshEventListeners($container) {
+                $container.on('change', '.bahan-dropdown', function () {
+                    const satuan = $(this).find('option:selected').data('satuan') || '';
+                    $(this).closest('.bahan-item').find('.satuan-input').val(satuan);
+                });
+
+                $container.on('click', '.removeBahanAkhir', function () {
+                    $(this).closest('.bahan-item').remove();
+                });
+            }
+
+            // Tambah baris bahan akhir
+            $('#addBahanAkhir').on('click', function () {
+                const container = $('#bahanAkhirContainer');
+                const index = container.find('.bahan-item').length;
+                container.append(renderBahanAkhirRow(index));
+            });
+
+            refreshEventListeners($('#bahanAkhirContainer'));
+        });
+    </script>
+
+    <script>
+        // Open modal with the correct data when edit button is clicked
+        $(document).on('click', '.btn_editbahan_akhir', function () {
+            var bahanId = $(this).data('id');
+            var modal = $('#editBarangModal');
+
+            // Set the hidden ID input with the selected bahan_id
+            $('#editBahanAkhirId').val(bahanId);
+
+            // Fetch the existing Bahan Akhir data for this Bahan
+            $.ajax({
+                url: '/your-endpoint/' + bahanId, // Adjust the URL to fetch data
+                method: 'GET',
+                success: function (data) {
+                    // Populate the modal fields with existing data
+                    $('#editDate').val(data.date);
+
+                    // Clear previous data
+                    $('#editBahanAkhirContainer').empty();
+
+                    // Append ingredients to the modal
+                    data.bahans.forEach(function (bahan) {
+                        var bahanHtml = `
+                    <div class="bahan-row">
+                        <div class="mb-3">
+                            <label class="form-label text-dark fw-bold">Bahan</label>
+                            <select class="form-select bahan-select" data-id="${bahan.id}" name="bahans[]">
+                                <option value="${bahan.id}" selected>${bahan.name}</option>
+                            </select>
+                            <label class="form-label text-dark fw-bold">Jumlah</label>
+                            <input type="number" class="form-control bahan-quantity" name="quantities[]" value="${bahan.quantity}" required>
+                            <input type="hidden" name="bahanIds[]" value="${bahan.id}">
+                        </div>
+                    </div>
+                `;
+                        $('#editBahanAkhirContainer').append(bahanHtml);
+                    });
+                },
+                error: function () {
+                    alert('Error loading bahan data.');
+                }
+            });
+
+            // Show the modal
+            modal.modal('show');
+        });
+
+        // Add new bahan row dynamically
+        $('#addEditBahanAkhir').click(function () {
+            // Create a new select dropdown and quantity input
+            var newRow = `
+        <div class="bahan-row">
+            <div class="mb-3">
+                <label class="form-label text-dark fw-bold">Bahan</label>
+                <select class="form-select bahan-select" name="bahans[]">
+                    @foreach($bahans as $bahan)
+                        <option value="{{ $bahan->id }}">{{ $bahan->name }}</option>
+                    @endforeach
+                </select>
+                <label class="form-label text-dark fw-bold">Jumlah</label>
+                <input type="number" class="form-control bahan-quantity" name="quantities[]" required>
+            </div>
+        </div>
+    `;
+            $('#editBahanAkhirContainer').append(newRow);
+        });
+
+        // Submit the form to save changes
+        $('#editBahanAkhir').submit(function (e) {
+            e.preventDefault();
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: '/your-endpoint/' + $('#editBahanAkhirId').val(), // Adjust the URL to submit the form
+                method: 'PUT',
+                data: formData,
+                success: function () {
+                    alert('Bahan Akhir successfully updated.');
+                    $('#editBarangModal').modal('hide');
+                },
+                error: function () {
+                    alert('Error saving Bahan Akhir.');
+                }
+            });
+        });
+
+    </script>
+
+
+    <script>
         document.querySelectorAll(".toggle-jumlah").forEach(function (button) {
             button.addEventListener("click", function () {
                 let inputField = this.parentElement.querySelector(".jumlah-input");

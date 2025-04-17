@@ -77,10 +77,13 @@ class StockOpnameController extends Controller
 
         // Hitung total jumlah dari seluruh data (bukan hanya yang ditampilkan)
         $total_jumlah = $grouped->sum('jumlah');
+        // Data satuan untuk dropdown/modal
+        $satuans = Satuan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
+        $bahans = Bahan::whereNull('deleted_at')->with('satuan')->orderBy('name', 'asc')->get();
 
         // Return ke view sesuai role
         if ($role === 'OWNER') {
-            return view('stock-opname.index', compact('bahan_akhirs', 'date', 'total_jumlah'));
+            return view('stock-opname.index', compact('bahan_akhirs', 'date', 'total_jumlah', 'satuans', 'bahans'));
         } elseif ($role === 'user') {
             return view('user.barang', compact('bahan_akhirs', 'date', 'total_jumlah'));
         } else {
@@ -88,7 +91,7 @@ class StockOpnameController extends Controller
         }
     }
 
-    
+
 
 
     public function simpan(Request $request)
@@ -155,98 +158,86 @@ class StockOpnameController extends Controller
         return view('pages.admin.dataset.create', compact('tags'));
     }
 
-    public function store(Request $request)
+    // edit method
+    public function edit($bahan_id, Request $request)
     {
+        $entries = BahanAkhir::where('bahan_id', $bahan_id)
+            ->whereDate('date', $request->date)  // Ensure the date from request is being used
+            ->get();
 
-        Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'minimum' => 'required',
-            'satuan_id' => 'required',
+        $bahan = Bahan::find($bahan_id);
+
+        // Return the data in JSON format
+        return response()->json([
+            'id' => $bahan_id,
+            'date' => $request->date,
+            'entries' => $entries,
+            'bahan' => $bahan,
+        ]);
+    }
+
+
+
+
+    public function update($bahan_id, Request $request)
+    {
+        // Validate the input data
+        $request->validate([
+            'jumlah.*' => 'required|numeric|min:0.001',  // Ensures positive quantities
+            'date' => 'required|date',
         ]);
 
-        $user = Auth::user()->id;
+        $jumlahs = $request->input('jumlah');
+        $date = $request->input('date');
 
-        // Simpan data dataset ke database
-        Dataset::create([
-            'user_id' => $user,
-            'name' => $request->name,
-            'description' => $request->description,
-            'minimum' => $request->minimum,
-            'satuan_id' => $request->satuan_id,
-        ]);
+        DB::transaction(function () use ($jumlahs, $bahan_id, $date) {
+            // Check if there are no quantities or they are all empty
+            if (empty($jumlahs) || $this->allItemsAreEmpty($jumlahs)) {
+                // If quantities are empty, delete all related entries
+                BahanAkhir::where('bahan_id', $bahan_id)
+                    ->whereDate('date', $date)
+                    ->delete();
+            } else {
+                // Delete previous entries
+                BahanAkhir::where('bahan_id', $bahan_id)
+                    ->whereDate('date', $date)
+                    ->delete();
 
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Create Bahan "' . $request->name . '"');
+                // Insert new entries based on the quantities provided
+                foreach ($jumlahs as $jumlah) {
+                    BahanAkhir::create([
+                        'bahan_id' => $bahan_id,
+                        'jumlah' => $jumlah,
+                        'date' => $date,
+                    ]);
+                }
+            }
+        });
 
-        return redirect()->route('admin.dataset')->with('success', 'Bahan "' . $request->name . '" berhasil ditambahkan');
+        return redirect()->back()->with('success', 'Data bahan akhir berhasil diperbarui.');
     }
 
-    public function show($slug)
+    protected function allItemsAreEmpty($jumlahs)
     {
-        $bahans = Bahan::where('slug', $slug)
-            ->first();
-
-        $bahanAwal = BahanAwal::all();
-        $historyInput = HistoryInput::all();
-        $akhirTerpakaiSeharusnya = AkhirTerpakaiSeharusnya::all();
-
-        return view('pages.admin.dataset.show', [
-            'bahans' => $bahans,
-        ], compact('bahan', 'bahanAwal', 'historyInput', 'akhirTerpakaiSeharusnya'));
+        return empty(array_filter($jumlahs, function ($value) {
+            return !empty($value);
+        }));
     }
 
-    public function edit($slug)
+
+    public function delete($bahan_akhir_id)
     {
-        $barangs = DB::table('bahans')->where('slug', $slug)
-            ->first();
+        $bahan_akhir = BahanAkhir::find($bahan_akhir_id);
 
-        return view('pages.admin.dataset.edit', ['bahans' => $barangs]);
+        if ($bahan_akhir) {
+            $bahan_akhir->delete();
+            return redirect()->route('stock-opname.index')
+                ->with('success', 'Bahan Akhir berhasil dihapus.');
+        }
+
+        return redirect()->route('stock-opname.index')
+            ->with('error', 'Bahan Akhir tidak ditemukan.');
     }
 
-    public function update(Request $request, Bahans $bahans)
-    {
-        Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required',
-            'minimum' => 'required',
-            'satuan_id' => 'required',
-        ]);
 
-        $user = Auth::user()->id;
-
-        // Cari dataset berdasarkan slug
-        $bahans = Bahan::where('slug', $request->slug)->first();
-
-
-        // Simpan barang ke database
-        $bahans->update([
-            'user_id' => $user,
-            'name' => $request->name,
-            'description' => $request->description,
-            'minimum' => $request->minimum,
-            'satuan_id' => $request->satuan_id,
-        ]);
-
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Update Bahan "' . $request->title . '"');
-
-        return redirect()->route('admin.dataset')
-            ->with('update', 'Barang berhasil diperbarui');
-    }
-
-    public function deletePermanent(Request $request)
-    {
-        $slug = $request->slug;
-
-        $bahans = Bahans::where('slug', $slug)->firstOrFail();
-        $name = $bahans->title;
-        // Lakukan penghapusan permanen menggunakan Eloquent
-        Bahan::where('slug', $slug)->forceDelete();
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Delete Permanen Bahan "' . $name . '"');
-
-        // Redirect kembali ke halaman sebelumnya
-        return Redirect::back()->with('delete', 'Dataset "' . $name . '" berhasil dihapus permanen');
-    }
 }

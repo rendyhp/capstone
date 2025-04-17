@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bahan;
 use App\Models\BahanAwal;
 use App\Models\Barang;
 use App\Models\Satuan;
@@ -45,6 +46,7 @@ class BahanAwalController extends Controller
             ->join('bahans', 'bahan_awals.bahan_id', '=', 'bahans.id')
             ->join('satuans', 'bahans.satuan_id', '=', 'satuans.id')
             ->whereNull('bahan_awals.deleted_at')
+            ->whereNull('bahans.deleted_at')
             ->whereDate('bahan_awals.date', $date)
             ->when($search, function ($q) use ($search) {
                 $q->where('bahans.name', 'like', '%' . $search . '%');
@@ -68,10 +70,12 @@ class BahanAwalController extends Controller
 
         // Data satuan untuk dropdown/modal
         $satuans = Satuan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
+        $bahans = Bahan::whereNull('deleted_at')->with('satuan')->orderBy('name', 'asc')->get();
 
         return view('bahan.indexBahanAwal', [
             'bahanAwalAwals' => $bahanAwalAwals,
             'satuans' => $satuans,
+            'bahans' => $bahans,
             'date' => $date,
         ]);
     }
@@ -85,11 +89,103 @@ class BahanAwalController extends Controller
         return view('pages.admin.dataset.create');
     }
 
-    public function update()
+    public function store(Request $request)
     {
+        // Validate input fields
+        $request->validate([
+            'date' => 'required|date',
+            'bahan_awal.*.bahan_id' => 'required|exists:bahans,id',
+            'bahan_awal.*.jumlah' => 'required|numeric|min:0.001',
+        ]);
 
-        return view('bahan.indexBahanAwal');
+        // Check if bahan_awal is provided and is not empty
+        if (empty($request->bahan_awal) || !is_array($request->bahan_awal)) {
+            return redirect()->route('bahan-awal.index', ['date' => $request->date])
+                ->with('error', 'Bahan awal tidak dapat kosong.');
+
+        }
+
+        // Process each item in bahan_awal
+        foreach ($request->bahan_awal as $item) {
+            BahanAwal::create([
+                'date' => $request->date,
+                'bahan_id' => $item['bahan_id'],
+                'jumlah' => $item['jumlah'],
+            ]);
+        }
+
+        return redirect()->route('bahan-awal.index', ['date' => $request->date])
+            ->with('success', 'Bahan awal berhasil disimpan.');
     }
+
+
+    public function edit($bahan_id, Request $request)
+    {
+        $date = $request->input('date');
+        $entries = BahanAwal::where('bahan_id', $bahan_id)
+            ->whereDate('date', $date)
+            ->get();
+
+        $bahan = Bahan::with('satuan')->find($bahan_id);
+
+        return response()->json([
+            'entries' => $entries,
+            'bahan' => $bahan,
+            'date' => $date,
+        ]);
+    }
+
+
+
+    public function update($bahan_id, Request $request)
+    {
+        $request->validate([
+            'jumlah.*' => 'required|numeric|min:0.001',
+            'date' => 'required|date',
+        ]);
+
+        $jumlahs = $request->input('jumlah');
+        $date = $request->input('date');
+
+        DB::transaction(function () use ($jumlahs, $bahan_id, $date) {
+            // Jika semua jumlah bahan dihapus (jumlahnya kosong)
+            if (empty($jumlahs) || $this->allItemsAreEmpty($jumlahs)) {
+                // Hapus semua entri untuk bahan_id dan tanggal yang diberikan
+                BahanAwal::where('bahan_id', $bahan_id)
+                    ->whereDate('date', $date)
+                    ->delete();
+            } else {
+                // Jika ada jumlah yang diinputkan, lakukan update/insert
+                // Hapus semua entri yang ada untuk bahan_id dan tanggal yang diberikan
+                BahanAwal::where('bahan_id', $bahan_id)
+                    ->whereDate('date', $date)
+                    ->delete();
+
+                // Insert entri baru untuk jumlah yang diberikan
+                foreach ($jumlahs as $jumlah) {
+                    BahanAwal::create([
+                        'bahan_id' => $bahan_id,
+                        'jumlah' => $jumlah,
+                        'date' => $date,
+                    ]);
+                }
+            }
+        });
+
+        return redirect()->back()->with('success', 'Data bahan awal berhasil diperbarui.');
+    }
+
+    // Fungsi untuk memeriksa apakah semua item dalam array kosong
+    private function allItemsAreEmpty($items)
+    {
+        return count(array_filter($items, function ($value) {
+            return !empty($value); // Memastikan ada nilai yang tidak kosong
+        })) === 0;
+    }
+
+
+
+
 
     public function tmpUpload(Request $request)
     {

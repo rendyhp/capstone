@@ -77,10 +77,20 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');
+    Route::get('/stock-opname/{bahan_id}/edit', [StockOpnameController::class, 'edit']);
+    Route::put('/stock-opname/{bahan_id}/update', [StockOpnameController::class, 'update'])->name('stock-opname.update');
+    Route::put('/stock-opname/{bahan_akhir_id}/delete', [StockOpnameController::class, 'delete'])->name('stock-opname.delete');
+
+
     Route::get('/stock-opname/simpan', [StockOpnameController::class, 'simpan'])->name('stock-opname.simpan');
     Route::post('/stock-opname/simpan/store', [StockOpnameController::class, 'simpanDataBaru'])->name('stock-opname.simpan.store');
+
     Route::get('/bahan-awal', [BahanAwalController::class, 'index'])->name('stok-bahan-awal');
     Route::put('/bahan-awal/delete', [BahanAwalController::class, 'delete'])->name('stok-bahan-awal.delete');
+
+    Route::get('/bahan-awal/{bahan_id}/edit', [BahanAwalController::class, 'edit']);
+    Route::put('/bahan-awal/{bahan_id}', [BahanAwalController::class, 'update'])->name('bahan-awal.update');
+
 
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');
@@ -126,6 +136,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/laporan', [DashboardController::class, 'filter'])->name('dashboard.laporan.filter');
 
     // Resource routes
+    Route::resource('/bahan-awal', \App\Http\Controllers\Admin\BahanAwalController::class);
     Route::resource('/stok-barang', \App\Http\Controllers\Admin\BarangController::class);
     Route::resource('/data-bahan', \App\Http\Controllers\Admin\BahanController::class);
     Route::resource('/stock-opname', \App\Http\Controllers\Admin\StockOpnameController::class);

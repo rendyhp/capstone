@@ -68,7 +68,7 @@
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
 
-                                    <div class="col-sm-3 float-end mt-2">
+                                    <div class="col-sm-3 float-end">
                                         <div class="d-flex gap-2 mb-2">
                                             <a href="/stok-bahan" class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>

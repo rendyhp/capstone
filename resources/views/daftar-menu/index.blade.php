@@ -85,7 +85,7 @@
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $menu->name }}</td>
-                                               
+
                                                         <td>
                                                             <ul>
                                                                 @foreach($menu->komposisi as $komposisi)

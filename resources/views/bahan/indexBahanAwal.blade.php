@@ -42,7 +42,7 @@
             </div>
         @endif
 
-        <form action="{{ route('stok-bahan-awal') }}" method="GET" class="d-flex align-items-center mb-3">
+        <form action="/bahan-awal" method="GET" class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
                 <label for="tanggalbahan" class="col-sm-2 col-form-label">Tanggal</label>
                 <div class="col-sm-8">
@@ -101,22 +101,24 @@
                                             @else
                                                 @foreach ($bahanAwalAwals as $bahanAwal)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ ($bahanAwalAwals->currentPage() - 1) * $bahanAwalAwals->perPage() + $loop->iteration }}
+                                                        </td>
+
                                                         <td>{{ $bahanAwal->bahan_name }}</td>
-                                                        <td>{{ $bahanAwal->stok }}</td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahanAwal->stok, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
                                                         <td>{{ $bahanAwal->satuan_name }}</td>
 
 
                                                         <td>
-                                                            <!-- Button trigger modal -->
+                                                            <!-- Button trigger modal edit stok bahan awal -->
                                                             <button type="button" class="btn btn-primary btn-sm btn_editbahan"
-                                                                data-id="{{ $bahanAwal->id ?? 'NULL' }}"
-                                                                data-name="{{ $bahanAwal->name ?? 'NULL' }}"
-                                                                data-description="{{ $bahanAwal->description ?? 'NULL' }}"
-                                                                data-minimum="{{ $bahanAwal->minimum ?? 'NULL' }}"
-                                                                data-satuan_id="{{ $bahanAwal->satuan_id ?? 'NULL' }}">
+                                                                data-id="{{ $bahanAwal->bahan_id }}"
+                                                                title="Edit stok bahan ini untuk tanggal {{ $date }}">
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
+
 
 
 
@@ -149,7 +151,85 @@
             </div>
         </div>
     </div>
-    <!-- Modal Tambah Barang-->
+
+    <!-- Hidden HTML untuk opsi bahan -->
+    <div id="bahanOptions" class="d-none">
+        <select class="form-select">
+            @foreach($bahans as $bahan)
+                <option value="{{ $bahan->id }}" data-satuan="{{ $bahan->satuan->name }}">
+                    {{ $bahan->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    
+
+    <!-- Modal Tambah Bahan Awal -->
+    <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="container modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Bahan Awal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="/bahan-awal">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="date" class="form-label text-dark fw-bold">Tanggal</label>
+                            <input type="date" required class="form-control" id="date" name="date">
+                        </div>
+
+                        <div id="bahanAwalContainer">
+                            <!-- Akan diisi oleh JS -->
+                        </div>
+                        <button type="button" class="btn btn-success" id="addBahanAwal">+ Tambah Bahan</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary text-white" name="SaveButton">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Bahan Awal -->
+    <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="container modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Bahan Awal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editBahanAwalForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="editBahanAwalId" name="id">
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editDate" class="form-label text-dark fw-bold">Tanggal</label>
+                            <input type="date" required class="form-control" id="editDate" name="date">
+                        </div>
+
+                        <div id="editBahanAwalContainer">
+                            <!-- Bahan awal akan diisi dengan JS -->
+                        </div>
+                        <button type="button" class="btn btn-success" id="addEditBahanAwal">+ Tambah Bahan</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary text-white" name="SaveButton">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
+
+
+
 
 
 @endsection

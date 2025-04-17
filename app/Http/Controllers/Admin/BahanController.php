@@ -78,16 +78,20 @@ class BahanController extends Controller
         foreach ($bahans as $bahan) {
             $bahan->jumlah_awal = BahanAwal::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
+                ->whereNull('deleted_at')
                 ->sum('jumlah');
             $bahan->jumlah_masuk = HistoryInput::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
+                ->whereNull('deleted_at')
                 ->sum('jumlah');
             $bahan->jumlah_terpakai = AkhirTerpakaiSeharusnya::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
+                ->whereNull('deleted_at')
                 ->sum('jumlah');
             $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk) - $bahan->jumlah_terpakai;
             $bahan->bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
+                ->whereNull('deleted_at')
                 ->sum('jumlah');
             $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
 

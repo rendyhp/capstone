@@ -76,8 +76,9 @@
                                         Lihat Bahan Awal
                                     </button>
                                     <div class="col-sm-2 float-end mt-3">
-                                    <div class="d-flex gap-2">
-                                            <a href="/stock-opname" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                        <div class="d-flex gap-2">
+                                            <a href="/stock-opname" class="btn btn-outline-secondary btn-sm"
+                                                title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/stock-opname" method="get" class="form-inline d-flex">
@@ -108,22 +109,17 @@
 
                                                         <td>{{ $bahan_akhir->tanggal }}</td>
                                                         <td>{{ $bahan_akhir->bahan_name }}</td>
-                                                        <td>
-                                                            @if (strpos($bahan_akhir->total_jumlah, '.') === false)
-                                                                {{ intval($bahan_akhir->total_jumlah) }}
-                                                            @else
-                                                                {{ rtrim(rtrim($bahan_akhir->total_jumlah, '0'), '.') }}
-                                                            @endif
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan_akhir->total_jumlah, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                         <td>{{ $bahan_akhir->bahan->satuan_name }}</td>
 
                                                         <td>
                                                             <!-- Button trigger modal -->
                                                             <button type="button" class="btn btn-primary btn-sm btn_editbahan_akhir"
-                                                                data-id="{{ $bahan_akhir->id ?? 'NULL' }}"
-                                                                data-date="{{ $bahan_akhir->date ?? 'NULL' }}"
-                                                                data-jumlah="{{ $bahan_akhir->jumlah ?? 'NULL' }}">
-                                                                <i class="fa fa-edit" aria-hidden="true"></i>
+                                                                data-id="{{ $bahan_akhir->bahan->bahan_id }}"
+                                                                title="Edit stok bahan ini untuk tanggal {{ $date }}">
+                                                                <i class="fa fa-edit"></i>
                                                             </button>
 
                                                             <form action="/stock-opname/delete/{{ $bahan_akhir->id }}"
@@ -147,105 +143,50 @@
             </div>
         </div>
     </div>
-    <!-- Modal Tambah Barang-->
 
-    <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Hidden HTML untuk opsi bahan -->
+    <div id="bahanOptions" class="d-none">
+        <select class="form-select">
+            @foreach($bahans as $bahan)
+                <option value="{{ $bahan->id }}" data-satuan="{{ $bahan->satuan->name }}">
+                    {{ $bahan->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+
+    <!-- Modal Edit Bahan Akhir -->
+    <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Data Tambah Barang</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Bahan Akhir</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form method="Post" action='/stock-opname'>
-                        @csrf
+                <form id="editBahanAkhir" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="editBahanAkhirId" name="id">
+
+                    <div class="modal-body">
                         <div class="mb-3">
-                            <label for="date" class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" required class="form-control" id="date" name="date">
-                        </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label text-dark fw-bold">Nama Bahan</label>
-                            <input type="text" required class="form-control" id="name" name="name"
-                                placeholder="Input Nama Barang" value="Contoh nama" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="text" class="form-control" id="description" name="description"
-                                placeholder="Input Deskripsi Barang" autocomplete="off">
-                        </div>
-                        <div class="mb-3">
-                            <label for="jumlah" class="form-label text-dark fw-bold">Satuan</label>
-                            <input type="number" required class="form-control" id="jumlah" name="jumlah"
-                                placeholder="Input Stok Barang" value="gram" disabled>
+                            <label for="editDate" class="form-label text-dark fw-bold">Tanggal</label>
+                            <input type="date" required class="form-control" id="editDate" name="date">
                         </div>
 
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Simpan</button>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Edit Barang-->
-    <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Form Edit Data Barang</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="/data-barang/edit" id="editBarangForm" method="post" enctype="multipart/form-data">
-                        @method('PUT')
-                        @csrf
-                        <div class="mb-3">
-                            <input hidden type="text" name="id" id="txtid">
-                            <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
-                            <input type="text" required class="form-control @error('name') is-invalid @enderror"
-                                id="txtname" name="name">
-                            @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                        <div id="editBahanAkhirContainer">
+                            <!-- Bahan Akhir akan diisi dengan JS -->
                         </div>
 
-                        <div class="mb-3">
-                            <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
-                            <input type="text" class="form-control @error('description') is-invalid @enderror"
-                                id="txtdescription" name="description">
-                            @error('description') <div class="alert alert-danger">{{ $message }}</div> @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="jumlah" class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="number" required class="form-control @error('jumlah') is-invalid @enderror"
-                                id="txtjumlah" name="jumlah">
-                            @error('jumlah') <div class="alert alert-danger">{{ $message }}</div> @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="satuan" class="form-label text-dark fw-bold">Satuan</label>
-                            <input type="text" class="form-control @error('satuan') is-invalid @enderror" id="txtsatuan"
-                                name="satuan">
-                            @error('satuan') <div class="alert alert-danger">{{ $message }}</div> @enderror
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="image" class="form-label text-dark fw-bold">Gambar</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="txtimage"
-                                name="image">
-                            <img id="previewImage" src="" alt="Preview Gambar" class="img-thumbnail mt-2"
-                                style="display: none; width: 100px;">
-                            @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary text-white">Ubah</button>
-                        </div>
-                    </form>
-
-                </div>
+                        <button type="button" class="btn btn-success" id="addEditBahanAkhir">+ Tambah Bahan</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary text-white" name="SaveButton">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
 @endsection
