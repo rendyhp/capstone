@@ -45,8 +45,6 @@ Route::middleware(['auth'])->group(function () {
     //coba
     // routes/web.php
     Route::get('/search/satuan', [SearchController::class, 'searchSatuan'])->name('search.satuan');
-
-
     //endcoba
 
     // Buatanku
@@ -54,43 +52,34 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notification', [NotifikasiController::class, 'index'])->name('notification');
     Route::get('/report', [NotifikasiController::class, 'indexReport'])->name('report');
 
-    // Data
+    // Laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
 
     // Stok
     Route::get('/stok-barang', [BarangController::class, 'index'])->name('stok-barang');
     Route::put('/stok-barang/delete/{id}', [BarangController::class, 'delete'])->name('stok-barang.delete');
+
     Route::get('/stok-bahan', [BahanController::class, 'indexStok'])->name('stok-bahan');
-    // Route::get('/stok-bahan/historyInput/{id}', [BahanController::class, 'indexHistory'])->name('stok-bahan.historyBahan');
     Route::post('/stok-bahan/historyInput/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
     Route::put('/stok-bahan/historyInput/update/', [BahanController::class, 'inputUpdate'])->name('historyBahan.update');
     Route::put('/stok-bahan/historyInput/delete/{encryptedId}', [BahanController::class, 'inputDelete'])->name('historyBahan.delete');
-
     Route::get('/stok-bahan/historyInput/{encryptedId}', [BahanController::class, 'indexHistory'])->name('stok-bahan.historyBahan');
-
-
-
-    Route::get('/data-bahan', [BahanController::class, 'index'])->name('data-bahan');
-    Route::put('/data-bahan/delete/{id}', [BahanController::class, 'delete'])->name('data-bahan.delete');
-
-
-
 
     Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');
     Route::get('/stock-opname/{bahan_id}/edit', [StockOpnameController::class, 'edit']);
     Route::put('/stock-opname/{bahan_id}/update', [StockOpnameController::class, 'update'])->name('stock-opname.update');
     Route::put('/stock-opname/{bahan_akhir_id}/delete', [StockOpnameController::class, 'delete'])->name('stock-opname.delete');
-
-
     Route::get('/stock-opname/simpan', [StockOpnameController::class, 'simpan'])->name('stock-opname.simpan');
     Route::post('/stock-opname/simpan/store', [StockOpnameController::class, 'simpanDataBaru'])->name('stock-opname.simpan.store');
 
     Route::get('/bahan-awal', [BahanAwalController::class, 'index'])->name('stok-bahan-awal');
     Route::put('/bahan-awal/delete', [BahanAwalController::class, 'delete'])->name('stok-bahan-awal.delete');
-
     Route::get('/bahan-awal/{bahan_id}/edit', [BahanAwalController::class, 'edit']);
     Route::put('/bahan-awal/{bahan_id}', [BahanAwalController::class, 'update'])->name('bahan-awal.update');
 
+    // Data
+    Route::get('/data-bahan', [BahanController::class, 'index'])->name('data-bahan');
+    Route::put('/data-bahan/delete/{id}', [BahanController::class, 'delete'])->name('data-bahan.delete');
 
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');
@@ -101,34 +90,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaksi/preview', [TransaksiController::class, 'preview'])->name('transaksi.preview');
     Route::delete('/transaksi/temp-delete', [TransaksiController::class, 'deleteTemp'])->name('transaksi.tempDelete');
 
-
-
-
-
-
-    Route::get('/transaksi/{id}/edit', [TransaksiController::class, 'edit']);
-    Route::put('/transaksi/{id}', [TransaksiController::class, 'update']);
-    Route::delete('/transaksi/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.destroy');
-
-
     // Lainnya
     Route::get('/log-activities', [LogActivityController::class, 'index'])->name('log-activities');
     Route::get('/user-data', [UserController::class, 'index'])->name('user-data');
-
-
-    // Transaksi routes
-    Route::get('trans/input', [TransaksiController::class, 'input'])->name('transaksi.input');
-    Route::post('trans/input', [TransaksiController::class, 'caribarangmasuk'])->name('transaksi.inputPost');
-    Route::get('trans/detail/{trans_id}', [TransaksiController::class, 'detail'])->name('transaksi.detail');
-
-    Route::post('/simpandatamasuk', [TransaksiController::class, 'simpanDataMasuk'])->name('transaksi.simpanmasuk');
-    Route::get('trans/keluar', [TransaksiController::class, 'keluar'])->name('transaksi.keluar');
-    Route::post('trans/keluar', [TransaksiController::class, 'caribarangkeluar'])->name('transaksi.keluarPost');
-    Route::post('/simpandatakeluar', [TransaksiController::class, 'simpanDataKeluar'])->name('transaksi.simpankeluar');
-    Route::post('/autocomplete', [TransaksiController::class, 'autocomplete'])->name('transaksi.autocomplete');
-    Route::get('/trans/keluar/cetak-barang-keluar/{trans_id}', [TransaksiController::class, 'cetakBarangKeluar'])->name('cetak-barang-keluar');
-    Route::get('trans/barangkeluar', [TransaksiController::class, 'barangkeluar']);
-    Route::get('trans/barangmasuk', [TransaksiController::class, 'barangmasuk']);
 
     // Dashboard routes
     // Route::get('/laporan', [DashboardController::class, 'laporan'])->name('dashboard.laporan');
@@ -145,9 +109,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/user', \App\Http\Controllers\UserController::class);
 
 });
-
-// Route user
-Route::get('/beranda', [TransaksiController::class, 'trans'])->name('beranda');
 
 Auth::routes();
 

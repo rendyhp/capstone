@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 17 Apr 2025 pada 09.05
+-- Waktu pembuatan: 19 Apr 2025 pada 06.32
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -578,7 +578,8 @@ INSERT INTO `bahan_awals` (`id`, `date`, `bahan_id`, `jumlah`, `created_at`, `up
 (335, '2025-04-17', 12, 500.000, '2025-04-16 23:12:54', '2025-04-16 23:12:54', NULL),
 (337, '2025-04-16', 11, 40000.000, '2025-04-16 23:16:02', '2025-04-16 23:16:02', NULL),
 (338, '2025-04-17', 10, 500.000, '2025-04-16 23:17:02', '2025-04-16 23:17:02', NULL),
-(339, '2025-04-17', 2, 70.000, '2025-04-16 23:21:03', '2025-04-16 23:21:03', NULL);
+(339, '2025-04-17', 2, 70.000, '2025-04-16 23:21:03', '2025-04-16 23:21:03', NULL),
+(340, '2025-04-19', 2, 1000.000, '2025-04-18 21:19:47', '2025-04-18 21:19:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -671,7 +672,9 @@ INSERT INTO `history_inputs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `cr
 (9, 1, '2025-04-16', 9, 700.000, '2025-04-16 00:05:13', '2025-04-16 00:05:24', NULL),
 (10, 1, '2025-04-30', 2, 55.000, '2025-04-16 00:31:54', '2025-04-16 02:20:47', NULL),
 (11, 1, '2025-04-24', 17, 323.000, '2025-04-16 01:06:45', '2025-04-16 01:06:45', NULL),
-(12, 1, '2025-04-17', 2, 500.000, '2025-04-16 20:28:26', '2025-04-16 20:28:26', NULL);
+(12, 1, '2025-04-17', 2, 500.000, '2025-04-16 20:28:26', '2025-04-16 20:28:26', NULL),
+(13, 1, '2025-04-19', 2, 500.000, '2025-04-18 21:19:15', '2025-04-18 21:19:15', NULL),
+(14, 1, '2025-04-19', 2, 1000.000, '2025-04-18 21:20:43', '2025-04-18 21:20:43', NULL);
 
 -- --------------------------------------------------------
 
@@ -1036,7 +1039,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Rendy Hartono Putra', 'rerena12', 'rerena12@gmail.com', '2025-03-21 19:54:15', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'JWhi1UD3JWFQ9hh8I9kx1rG85j7YFmXThc0xPmAKKuOqKHLA41gGpoZdWbRF', '2025-03-21 19:54:15', '2025-03-21 19:54:15', NULL);
+(1, 'Rendy Hartono Putra', 'rerena12', 'rerena12@gmail.com', '2025-03-21 19:54:15', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'CEhRwZg3pJqHjqCvfqYXEoyNrlwOfmER5JIMbcpqF6IruurlG9gNk3WMrxWI', '2025-03-21 19:54:15', '2025-03-21 19:54:15', NULL),
+(2, 'Manajer', 'manajer12', 'manajer12@gmail.com', '2025-04-18 19:45:36', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'MANAJER', 'pwLqu0lQDdp00AurOe6wZIXJoiCs2EecKNqBP1ujFXEcfoehtL8qBr67Qr3O', '2025-04-18 19:45:36', '2025-04-18 19:45:36', NULL),
+(3, 'Staf', 'staf12', 'staf12@gmail.com', '2025-04-18 19:46:39', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', 'PHoLh2K2ResS1GlufEIkJvteeAksmIEufHTMwJW6JtHWO1VlgpUJOS5NpO3Q', '2025-04-18 19:46:39', '2025-04-18 19:46:39', NULL);
 
 --
 -- Indexes for dumped tables
@@ -1234,7 +1239,7 @@ ALTER TABLE `bahan_akhirs`
 -- AUTO_INCREMENT untuk tabel `bahan_awals`
 --
 ALTER TABLE `bahan_awals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=340;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=341;
 
 --
 -- AUTO_INCREMENT untuk tabel `barangs`
@@ -1258,7 +1263,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT untuk tabel `history_inputs`
 --
 ALTER TABLE `history_inputs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT untuk tabel `komposisi_menus`
@@ -1336,7 +1341,7 @@ ALTER TABLE `transaksi_details`
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)

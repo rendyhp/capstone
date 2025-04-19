@@ -25,9 +25,9 @@ class BarangController extends Controller
         $role = $user->role;
 
         $query = Barang::select('barangs.*')
-        ->join('satuan_barangs', 'barangs.satuan_id', '=', 'satuan_barangs.id')
-        ->whereNull('barangs.deleted_at')
-        ->orderBy('name', 'asc');
+            ->join('satuan_barangs', 'barangs.satuan_id', '=', 'satuan_barangs.id')
+            ->whereNull('barangs.deleted_at')
+            ->orderBy('name', 'asc');
 
         if ($search = $request->input('search')) {
             $query->where('barangs.name', 'like', '%' . $search . '%');
@@ -36,16 +36,14 @@ class BarangController extends Controller
         $query->orderBy('barangs.name', 'asc');
         $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
-        // Paginate hasil query
         $barangs = $query->paginate(20)->appends($request->query());
 
-        
-
-        // Cek role pengguna dan tampilkan view yang sesuai
         if ($role === 'OWNER') {
             return view('barang.index', compact('barangs', 'satuanBarangs'));
-        } elseif ($role === 'user') {
-            return view('user.barang', compact('barangs', 'satuanBarangs'));
+        } elseif ($role === 'MANAJER') {
+            return view('barang.index', compact('barangs', 'satuanBarangs'));
+        } elseif ($role === 'STAF') {
+            return view('barang.index', compact('barangs', 'satuanBarangs'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
@@ -68,37 +66,29 @@ class BarangController extends Controller
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
         ]);
 
-        try {
-            $user = Auth::user()->id;
 
-            // Penanganan file (pastikan folder upload/barang masih ada)
-            $imageName = $this->handleFile($request->image);
+        $user = Auth::user()->id;
 
-            $Barang = new Barang;
-            $Barang->user_id = $user;
-            $Barang->name = $request->input('name');
-            $Barang->description = $request->input('description' ?: '-');
-            $Barang->jumlah = $request->input('jumlah' ?: 0);
-            $Barang->satuan_id = $request->input('satuan_id' ?: '-');
-            $Barang->image = $request->input('image') ?: null;
-            $Barang->save();
+        $imageName = $this->handleFile($request->image);
 
-            // Panggil fungsi logAdd()
-            // LogActivity::addToLog('Create Barang "' . $request->input('name') . '"');
+        $Barang = new Barang;
+        $Barang->user_id = $user;
+        $Barang->name = $request->input('name');
+        $Barang->description = $request->input('description' ?: '-');
+        $Barang->jumlah = $request->input('jumlah' ?: 0);
+        $Barang->satuan_id = $request->input('satuan_id' ?: '-');
+        $Barang->image = $request->input('image') ?: null;
+        $Barang->save();
 
-            $dataPerPage = 20;
-            $data = DB::table('barangs')->paginate($dataPerPage);
-            $lastPage = $data->lastPage();
-            return redirect('/stok-barang?page=' . $lastPage)->with('success', 'Data Berhasil Ditambahkan');
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Check for unique constraint violation
-            if ($e->errorInfo[1] == 1062) {
-                echo '<script>alert("Barang sudah ada dalam database.");</script>';
-                return redirect('stok-barang')->with('error', 'Barang Gagal Ditambahkan : Nama Barang yang diinputkan sudah ada');
-            } else {
-                throw $e; // Rethrow the exception if it's not due to unique constraint
-            }
-        }
+        // Panggil fungsi logAdd()
+        // LogActivity::addToLog('Create Barang "' . $request->input('name') . '"');
+
+        $dataPerPage = 20;
+        $data = DB::table('barangs')->paginate($dataPerPage);
+        $lastPage = $data->lastPage();
+
+        return redirect('/stok-barang?page=' . $lastPage)->with('success', 'Barang "' . $Barang->name . '" Berhasil Ditambahkan');
+
     }
 
     public function tmpUpload(Request $request)
@@ -116,18 +106,6 @@ class BarangController extends Controller
         }
 
         return '';
-    }
-
-    public function tmpLoad(Request $request, $slug)
-    {
-        // Temukan file sesuai fileId (atau nama file)
-        $barangs = DB::table('barangs')->where('slug', $slug)->first();
-
-        if ($request->has('image')) {
-            $fileIMG = $request->image;
-
-            return response()->download(storage_path($fileIMG), null, [], 'inline');
-        }
     }
 
     public function tmpDelete()
@@ -160,7 +138,7 @@ class BarangController extends Controller
 
     public function show($id)
     {
-        
+
     }
 
     public function edit(Barang $barang)

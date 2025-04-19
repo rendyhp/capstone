@@ -31,19 +31,15 @@ class BahanController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        // Default orderBy and direction
         $orderBy = $request->input('orderBy', 'name');
         $direction = $request->input('direction', 'asc');
 
         $query = Bahan::with('satuan')
             ->whereNull('deleted_at');
-
-        // Apply dynamic orderBy based on the query parameters
         $query->orderBy($orderBy, $direction);
 
         $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
-        // Filter pencarian jika ada input search
         if ($search = $request->input('search')) {
             $query->where('name', 'like', '%' . $search . '%');
         }
@@ -94,11 +90,7 @@ class BahanController extends Controller
                 ->whereNull('deleted_at')
                 ->sum('jumlah');
             $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
-
         }
-
-
-
 
         return view('bahan.stokIndex', [
 
@@ -108,47 +100,8 @@ class BahanController extends Controller
         ]);
     }
 
-
-    // public function indexHistory(Request $request, $id)
-    // {
-    //     $user = Auth::user();
-    //     $role = $user->role;
-
-    //     // Ambil satuan bahan & bahan berdasarkan ID
-    //     $bahan = Bahan::with('satuan')->findOrFail($id);
-
-    //     // Query history input berdasarkan bahan_id
-    //     $query = HistoryInput::with(['bahan.satuan'])
-    //         ->where('bahan_id', $id)
-    //         ->whereNull('deleted_at')
-    //         ->orderBy('date', 'desc');
-
-    //     // Optional: pencarian nama bahan
-    //     if ($search = $request->input('search')) {
-    //         $query->whereHas('bahan', function ($q) use ($search) {
-    //             $q->where('name', 'like', '%' . $search . '%');
-    //         });
-    //     }
-
-    //     $historyInputs = $query->paginate(20)->appends($request->query());
-
-    //     $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
-
-    //     if ($role === 'OWNER') {
-    //         return view('bahan.historyInput', [
-    //             'historyInputs' => $historyInputs,
-    //             'satuans' => $satuans,
-    //             'bahan' => $bahan,
-    //         ]);
-    //     }
-
-    //     return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-    // }
-
-
     public function inputStore(Request $request)
     {
-        // Validasi awal hanya untuk format (bukan existence)
         $validated = $request->validate([
             'bahan_id' => 'required|string',
             'date' => 'required|date',
@@ -156,8 +109,8 @@ class BahanController extends Controller
         ]);
 
         try {
-            // Menggunakan Hashids untuk mendekripsi ID bahan yang diterima
-            $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32); // Panjang ID 32 karakter
+            
+            $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
             $decryptedBahanId = $hashids->decode($validated['bahan_id']);
 
             // Jika ID tidak valid atau kosong

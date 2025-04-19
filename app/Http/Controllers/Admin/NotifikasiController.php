@@ -36,10 +36,10 @@ class NotifikasiController extends Controller
             $notifikasis = $query->paginate(10);
 
             return view('notifikasi.index', ['notifikasis' => $notifikasis]);
-        } elseif ($role === 'user') {
-            $barangs = $query->paginate(10);
+        } elseif ($role === 'MANAJER') {
+            $notifikasis = $query->paginate(10);
 
-            return view('user.barang', ['barangs' => $barangs]);
+            return view('notifikasi.index', ['notifikasis' => $notifikasis]);
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
@@ -59,14 +59,10 @@ class NotifikasiController extends Controller
 
         $query->orderBy('created_at', 'desc'); // Mengurutkan berdasarkan ID secara descending
 
-        if ($role === 'OWNER') {
+        if ($role === 'STAF') {
             $notifikasis = $query->paginate(10);
 
             return view('report.index', ['notifikasis' => $notifikasis]);
-        } elseif ($role === 'user') {
-            $barangs = $query->paginate(10);
-
-            return view('user.barang', ['barangs' => $barangs]);
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }

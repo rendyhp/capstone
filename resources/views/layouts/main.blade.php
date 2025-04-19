@@ -87,35 +87,42 @@
                                 class="fa fa-tachometer-alt me-2 mb-2"></i>Dashboard</a>
                         <a href="/notification" class="nav-link @yield('Notifikasi')"><i
                                 class="fa fa-tachometer-alt me-2 mb-2"></i>Notifikasi</a>
-                        <a href="/report" class="nav-link @yield('Report')"><i
-                                class="fa fa-tachometer-alt me-2 mb-2"></i>Lapor</a>
-                        <li class="nav-header fw-bold fs-5 ms-4 mb-2">Data</li>
+
+                        <li class="nav-header fw-bold fs-5 ms-4 mb-2">Laporan</li>
                         <a href="/laporan" class="nav-link @yield('Laporan')"><i class="fa fa-file me-2"></i>
                             Laporan</a>
 
-
-
                         <div class="nav-item dropdown">
-                            <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                            <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="true">Stok</a>
-                            <div class="dropdown-menu bg-transparent show border-0 ">
+                            <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
                                 <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
                                 <a href="/stok-bahan" class="nav-link @yield('StokBahan')"><i
                                         class="fa fa-file me-2"></i>Stok
                                     Bahan</a>
-                                <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
-                                        class="fa fa-file me-2"></i>Data
-                                    Bahan</a>
                                 <a href="/stock-opname" class="nav-link @yield('StockOpname')"><i
                                         class="fa fa-file me-2"></i>Stock Opname</a>
+
                             </div>
                         </div>
 
                         <div class="nav-item dropdown">
                             <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="true">Menu & Transaksi</a>
-                            <div class="dropdown-menu bg-transparent show border-0 ">
+                                data-bs-toggle="dropdown" aria-expanded="true">Data</a>
+                            <div class="dropdown-menu bg-transparent border-0 " id="dataDropdownMenu">
+
+                                <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
+                                        class="fa fa-file me-2"></i>Data
+                                    Bahan</a>
+
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" id="menuTransaksiDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                                data-bs-toggle="dropdown" aria-expanded="false">Menu & Transaksi</a>
+                            <div class="dropdown-menu bg-transparent border-0" id="menuTransaksiDropdownMenu">
                                 <a href="/daftar-menu" class="nav-link @yield('DaftarMenu')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Daftar Menu</a>
                                 <a href="/transaksi" class="nav-link @yield('Transaksi')"><i
@@ -124,13 +131,114 @@
                         </div>
 
                         <div class="nav-item dropdown">
-                            <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="true">Lainnya</a>
-                            <div class="dropdown-menu bg-transparent show border-0 ">
+                            <a href="#" id="lainnyaDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                                data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
+                            <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
                                 <a href="/admin-only/log" class="nav-link @yield('LogActivities')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Log Aktifitas</a>
                                 <a href="/admin-only/user-data" class="nav-link @yield('UserData')"><i
                                         class="fa fa-file me-2"></i>Data User</a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(Auth::check() && Auth::user()->role == 'MANAJER')
+                        <a href="/dashboard" class="nav-link @yield('Dashboard')"><i
+                                class="fa fa-tachometer-alt me-2 mb-2"></i>Dashboard</a>
+                        <a href="/notification" class="nav-link @yield('Notifikasi')"><i
+                                class="fa fa-tachometer-alt me-2 mb-2"></i>Notifikasi</a>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                                data-bs-toggle="dropdown" aria-expanded="true">Stok</a>
+                            <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
+                                <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
+                                        class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
+                                <a href="/stok-bahan" class="nav-link @yield('StokBahan')"><i
+                                        class="fa fa-file me-2"></i>Stok
+                                    Bahan</a>
+                                <a href="/stock-opname" class="nav-link @yield('StockOpname')"><i
+                                        class="fa fa-file me-2"></i>Stock Opname</a>
+
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                                data-bs-toggle="dropdown" aria-expanded="true">Data</a>
+                            <div class="dropdown-menu bg-transparent border-0 " id="dataDropdownMenu">
+
+                                <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
+                                        class="fa fa-file me-2"></i>Data
+                                    Bahan</a>
+
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" id="menuTransaksiDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                                data-bs-toggle="dropdown" aria-expanded="false">Menu & Transaksi</a>
+                            <div class="dropdown-menu bg-transparent border-0" id="menuTransaksiDropdownMenu">
+                                <a href="/daftar-menu" class="nav-link @yield('DaftarMenu')"><i
+                                        class="fa fa-credit-card-alt me-2"></i>Daftar Menu</a>
+                                <a href="/transaksi" class="nav-link @yield('Transaksi')"><i
+                                        class="fa fa-file me-2"></i>Transaksi</a>
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" id="lainnyaDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                                data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
+                            <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
+                                <a href="/admin-only/log" class="nav-link @yield('LogActivities')"><i
+                                        class="fa fa-credit-card-alt me-2"></i>Log Aktifitas</a>
+                                <a href="/admin-only/user-data" class="nav-link @yield('UserData')"><i
+                                        class="fa fa-file me-2"></i>Data User</a>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(Auth::check() && Auth::user()->role == 'STAF')
+                        <a href="/dashboard" class="nav-link @yield('Dashboard')"><i
+                                class="fa fa-tachometer-alt me-2 mb-2"></i>Dashboard</a>
+                        <a href="/report" class="nav-link @yield('Report')"><i
+                                class="fa fa-tachometer-alt me-2 mb-2"></i>Lapor</a>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                                data-bs-toggle="dropdown" aria-expanded="true">Stok</a>
+                            <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
+                                <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
+                                        class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
+                                <a href="/stok-bahan" class="nav-link @yield('StokBahan')"><i
+                                        class="fa fa-file me-2"></i>Stok
+                                    Bahan</a>
+                                <a href="/stock-opname" class="nav-link @yield('StockOpname')"><i
+                                        class="fa fa-file me-2"></i>Stock Opname</a>
+
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                                data-bs-toggle="dropdown" aria-expanded="true">Data</a>
+                            <div class="dropdown-menu bg-transparent border-0 " id="dataDropdownMenu">
+
+                                <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
+                                        class="fa fa-file me-2"></i>Data
+                                    Bahan</a>
+
+                            </div>
+                        </div>
+
+                        <div class="nav-item dropdown">
+                            <a href="#" id="menuTransaksiDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
+                                data-bs-toggle="dropdown" aria-expanded="false">Menu & Transaksi</a>
+                            <div class="dropdown-menu bg-transparent border-0" id="menuTransaksiDropdownMenu">
+                                <a href="/daftar-menu" class="nav-link @yield('DaftarMenu')"><i
+                                        class="fa fa-credit-card-alt me-2"></i>Daftar Menu</a>
+                                <a href="/transaksi" class="nav-link @yield('Transaksi')"><i
+                                        class="fa fa-file me-2"></i>Transaksi</a>
                             </div>
                         </div>
                     @endif
@@ -223,6 +331,22 @@
     <!-- ... (other script tags) -->
 
     <script>
+        const currentUrl = window.location.pathname;
+
+        if (currentUrl.includes('/stok-barang') || currentUrl.includes('/stok-bahan') || currentUrl.includes('/stock-opname')) {
+            document.getElementById('stokDropdownMenu').classList.add('show');
+        }
+        if (currentUrl.includes('/data-bahan')) {
+            document.getElementById('dataDropdownMenu').classList.add('show');
+        }
+        if (currentUrl.includes('/daftar-menu') || currentUrl.includes('/transaksi')) {
+            document.getElementById('menuTransaksiDropdownMenu').classList.add('show');
+        }
+        if (currentUrl.includes('/admin-only/log') || currentUrl.includes('/admin-only/user-data')) {
+            document.getElementById('lainnyaDropdownMenu').classList.add('show');
+        }
+    </script>
+    <script>
         $(document).ready(function () {
             $('.select2').select2({
                 placeholder: "Cari atau pilih satuan",
@@ -231,7 +355,7 @@
 
             $(document).on('click', '.btn_editbahan', function () {
                 var satuan_id = $(this).data('satuan_id');
-                $("#satuan_id").val(satuan_id).trigger('change'); // Set nilai di Select2
+                $("#satuan_id").val(satuan_id).trigger('change'); 
             });
         });
     </script>
@@ -267,13 +391,13 @@
             $("#txtdescription").val(description);
             $("#txtjumlah").val(formattedJumlah);
             $("#txtsatuan_id").val(satuan_id);
-            // Tampilkan preview gambar jika ada
+
             if (image) {
                 $("#previewImage").attr("src", "/storage/" + image).show();
             } else {
                 $("#previewImage").hide();
             }
-            // Tampilkan modal
+
             $("#editBarangModal").modal('toggle');
         });
     </script>
@@ -292,15 +416,13 @@
             console.log(id, name, description, minimum, satuan_id);
 
             var formattedMinimum = (minimum % 1 === 0) ? parseInt(minimum) : minimum;
-            // Set nilai ke input field
+
             $("#txtid").val(id);
             $("#txtname").val(name);
             $("#txtdescription").val(description);
             $("#txtminimum").val(formattedMinimum);
             $("#txtsatuan_id").val(satuan_id);
 
-
-            // Tampilkan modal
             $("#editBarangModal").modal('toggle');
         });
 
@@ -315,15 +437,13 @@
             console.log(id, date, jumlah, satuan_name);
 
             var formattedJumlah = (jumlah % 1 === 0) ? parseInt(jumlah) : jumlah;
-            // Set nilai ke input field
+
             $("#txtid").val(id);
             $("#txtdate").val(date);
             $("#txtjumlah").val(formattedJumlah);
 
             $("#txtsatuan_name").val(satuan_name);
 
-
-            // Tampilkan modal
             $("#editBarangModal").modal('toggle');
         });
 
@@ -337,83 +457,40 @@
 
             console.log(id, name, description, minimum, satuan_id);
             var formattedJumlah = (jumlah % 1 === 0) ? parseInt(jumlah) : jumlah;
-            // Set nilai ke input field
+
             $("#txtid").val(id);
             $("#txtdate").val(date);
             $("#txtbahan_id").val(bahan_id);
             $("#txtjumlah").val(formattedJumlah);
 
-            // Tampilkan modal
             $("#editBarangModal").modal('toggle');
         });
 
     </script>
-    <!-- <script>
-        $('.btn_editmenu').on('click', function () {
-            const id = $(this).data('id');
-            const name = $(this).data('name');
-            const description = $(this).data('description');
-            const komposisi = $(this).data('komposisi');
-            if (typeof komposisi === 'string') {
-                komposisi = JSON.parse(komposisi);
-            }
-            $('#editMenuId').val(id);
-            $('#editMenuName').val(name);
-            $('#editMenuDescription').val(description);
-
-            const bahanContainer = $('#editBahanContainer');
-            bahanContainer.empty();
-
-            komposisi.forEach((item, index) => {
-                const satuan = item.bahan.satuan.name;
-                const html = `
-            <div class="input-group mb-2">
-                <input type="hidden" name="bahan[${index}][id]" value="${item.bahan_id}">
-                 <select name="bahan[${index}][id]" class="form-select bahan-dropdown" required>
-                            <option value="${item.bahan_id}" selected>${item.bahan.name}</option>
-                        </select>
-                <input type="number" step="0.001" name="bahan[${index}][jumlah]" class="form-control" value="${item.jumlah}" required>
-                <input type="text" class="form-control" value="${satuan}" disabled>
-            </div>
-        `;
-                bahanContainer.append(html);
-            });
-
-            $('#editBarangModal').modal('show');
-        });
-
-    </script> -->
-
     <script>
         function toggleInput(inputId, buttonId) {
             let inputField = document.getElementById(inputId);
             let button = document.getElementById(buttonId);
 
             if (inputField.readOnly) {
-                inputField.readOnly = false; // Aktifkan input
+                inputField.readOnly = false;
 
-                button.style.display = "none"; // Sembunyikan tombol edit
-                inputField.focus(); // Fokus ke input
-                inputField.select(); // Blok langsung isi input agar mudah diubah
-
-                // Tambahkan event listener untuk mengunci kembali saat kehilangan fokus
+                button.style.display = "none"; 
+                inputField.focus(); 
+                inputField.select();
+                
                 inputField.addEventListener('focusout', function lockInput() {
-                    inputField.readOnly = true; // Kunci kembali input
-
-                    button.style.display = "inline"; // Tampilkan kembali tombol edit
-
-                    // Hapus event listener agar tidak menumpuk setiap kali tombol diklik
+                    inputField.readOnly = true;
+                    button.style.display = "inline"; 
                     inputField.removeEventListener('focusout', lockInput);
                 });
             }
         }
 
-        // Event untuk tombol pertama
         document.getElementById('toggleMinimum').addEventListener('click', function () {
             toggleInput('minimum', 'toggleMinimum');
         });
 
-        // Event untuk tombol kedua
         document.getElementById('toggleMinimum2').addEventListener('click', function () {
             toggleInput('txtminimum', 'toggleMinimum2');
         });
@@ -424,14 +501,14 @@
         document.querySelectorAll('input[type="number"].number0').forEach(function (input) {
             input.addEventListener("focusout", function () {
                 if (this.value.trim() === "") {
-                    this.value = "0"; // Setel kembali ke 0 jika kosong
+                    this.value = "0"; 
                 }
             });
         });
 
         document.querySelectorAll(".number0").forEach(function (inputField) {
             inputField.addEventListener("focus", function () {
-                this.select(); // Memilih semua teks dalam input saat difokuskan
+                this.select(); 
             });
         });
     </script>
@@ -445,7 +522,6 @@
                 bahanSelect.name = `bahan[${index}][id]`;
                 bahanSelect.classList.add('bahan-dropdown');
 
-                // Set selected option
                 if (selectedBahanId) {
                     Array.from(bahanSelect.options).forEach(option => {
                         if (option.value == selectedBahanId) {
@@ -455,7 +531,7 @@
                 }
 
                 function formatJumlah(jumlah) {
-                    if (!jumlah) return ''; // handle null atau undefined
+                    if (!jumlah) return ''; 
                     const num = parseFloat(jumlah);
                     return Number.isInteger(num) ? num.toString() : num.toFixed(3).replace(/\.?0+$/, '');
                 }
@@ -504,14 +580,12 @@
                 });
             }
 
-            // Add bahan (untuk tambah baru)
             $('#addBahan').on('click', function () {
                 const container = $('#bahanContainer');
                 const index = container.find('.bahan-item').length;
                 container.append(renderBahanRow(index));
             });
 
-            // Event listener for edit button
             $('.btn_editmenu').on('click', function () {
                 const id = $(this).data('id');
                 const name = $(this).data('name');
@@ -540,14 +614,12 @@
                 $('#editBarangModal').modal('show');
             });
 
-            // Tambah bahan di form edit
             $('#addEditBahan').on('click', function () {
                 const container = $('#editBahanContainer');
                 const index = container.find('.bahan-item').length;
                 container.append(renderBahanRow(index));
             });
 
-            // Aktifkan listener untuk container add & edit
             refreshSatuan($('#bahanContainer'));
             refreshSatuan($('#editBahanContainer'));
         });
@@ -604,7 +676,6 @@
                 });
             }
 
-            // Tambah baris bahan awal
             $('#addBahanAwal').on('click', function () {
                 const container = $('#bahanAwalContainer');
                 const index = container.find('.bahan-item').length;
@@ -665,7 +736,6 @@
                 });
             }
 
-            // Tambah baris bahan akhir
             $('#addBahanAkhir').on('click', function () {
                 const container = $('#bahanAkhirContainer');
                 const index = container.find('.bahan-item').length;
@@ -677,40 +747,33 @@
     </script>
 
     <script>
-        // Open modal with the correct data when edit button is clicked
         $(document).on('click', '.btn_editbahan_akhir', function () {
             var bahanId = $(this).data('id');
             var modal = $('#editBarangModal');
 
-            // Set the hidden ID input with the selected bahan_id
             $('#editBahanAkhirId').val(bahanId);
 
-            // Fetch the existing Bahan Akhir data for this Bahan
             $.ajax({
-                url: '/your-endpoint/' + bahanId, // Adjust the URL to fetch data
+                url: '/your-endpoint/' + bahanId, 
                 method: 'GET',
                 success: function (data) {
-                    // Populate the modal fields with existing data
                     $('#editDate').val(data.date);
-
-                    // Clear previous data
                     $('#editBahanAkhirContainer').empty();
 
-                    // Append ingredients to the modal
                     data.bahans.forEach(function (bahan) {
                         var bahanHtml = `
-                    <div class="bahan-row">
-                        <div class="mb-3">
-                            <label class="form-label text-dark fw-bold">Bahan</label>
-                            <select class="form-select bahan-select" data-id="${bahan.id}" name="bahans[]">
-                                <option value="${bahan.id}" selected>${bahan.name}</option>
-                            </select>
-                            <label class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="number" class="form-control bahan-quantity" name="quantities[]" value="${bahan.quantity}" required>
-                            <input type="hidden" name="bahanIds[]" value="${bahan.id}">
-                        </div>
-                    </div>
-                `;
+                            <div class="bahan-row">
+                                <div class="mb-3">
+                                    <label class="form-label text-dark fw-bold">Bahan</label>
+                                    <select class="form-select bahan-select" data-id="${bahan.id}" name="bahans[]">
+                                        <option value="${bahan.id}" selected>${bahan.name}</option>
+                                    </select>
+                                    <label class="form-label text-dark fw-bold">Jumlah</label>
+                                    <input type="number" class="form-control bahan-quantity" name="quantities[]" value="${bahan.quantity}" required>
+                                    <input type="hidden" name="bahanIds[]" value="${bahan.id}">
+                                </div>
+                            </div>
+                        `;
                         $('#editBahanAkhirContainer').append(bahanHtml);
                     });
                 },
@@ -719,38 +782,32 @@
                 }
             });
 
-            // Show the modal
             modal.modal('show');
         });
 
-        // Add new bahan row dynamically
         $('#addEditBahanAkhir').click(function () {
-            // Create a new select dropdown and quantity input
             var newRow = `
-        <div class="bahan-row">
-            <div class="mb-3">
-                <label class="form-label text-dark fw-bold">Bahan</label>
-                <select class="form-select bahan-select" name="bahans[]">
-                    @foreach($bahans as $bahan)
-                        <option value="{{ $bahan->id }}">{{ $bahan->name }}</option>
-                    @endforeach
-                </select>
-                <label class="form-label text-dark fw-bold">Jumlah</label>
-                <input type="number" class="form-control bahan-quantity" name="quantities[]" required>
-            </div>
-        </div>
-    `;
+                <div class="bahan-row">
+                    <div class="mb-3">
+                        <label class="form-label text-dark fw-bold">Bahan</label>
+                        <select class="form-select bahan-select" name="bahans[]">
+                            
+                        </select>
+                        <label class="form-label text-dark fw-bold">Jumlah</label>
+                        <input type="number" class="form-control bahan-quantity" name="quantities[]" required>
+                    </div>
+                </div>
+            `;
             $('#editBahanAkhirContainer').append(newRow);
         });
 
-        // Submit the form to save changes
         $('#editBahanAkhir').submit(function (e) {
             e.preventDefault();
 
             var formData = $(this).serialize();
 
             $.ajax({
-                url: '/your-endpoint/' + $('#editBahanAkhirId').val(), // Adjust the URL to submit the form
+                url: '/your-endpoint/' + $('#editBahanAkhirId').val(),
                 method: 'PUT',
                 data: formData,
                 success: function () {
@@ -764,26 +821,21 @@
         });
 
     </script>
-
-
     <script>
         document.querySelectorAll(".toggle-jumlah").forEach(function (button) {
             button.addEventListener("click", function () {
                 let inputField = this.parentElement.querySelector(".jumlah-input");
-                let editButton = this.parentElement.querySelector(".toggle-jumlah"); // Cari tombol dalam parent yang sama
+                let editButton = this.parentElement.querySelector(".toggle-jumlah"); 
 
                 if (inputField.readOnly) {
-                    inputField.readOnly = false; // Aktifkan input
-                    editButton.style.display = "none"; // Sembunyikan tombol edit
-                    inputField.focus(); // Fokus ke input
-                    inputField.select(); // Blok teks untuk langsung diubah
+                    inputField.readOnly = false; 
+                    editButton.style.display = "none"; 
+                    inputField.focus(); 
+                    inputField.select(); 
 
-                    // Kunci kembali saat kehilangan fokus
                     inputField.addEventListener("focusout", function lockInput() {
-                        inputField.readOnly = true; // Kunci input lagi
-                        editButton.style.display = "inline"; // Tampilkan kembali tombol edit
-
-                        // Hapus event listener agar tidak terus bertambah
+                        inputField.readOnly = true;
+                        editButton.style.display = "inline";
                         inputField.removeEventListener("focusout", lockInput);
                     });
                 }
@@ -808,38 +860,34 @@
             }
         }
 
-        // Event Listener untuk tombol Konfirmasi
         document.querySelectorAll(".btn-konfirmasi").forEach(function (button) {
             button.addEventListener("click", function () {
                 let row = this.closest("tr");
                 let editButton = row.querySelector(".toggle-jumlah");
 
                 if (this.classList.contains("btn-primary")) {
-                    // Tombol berubah jadi loading saat diklik pertama kali
                     this.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
                     this.disabled = true;
 
                     setTimeout(() => {
-                        // Setelah loading, ubah jadi checklist
                         this.innerHTML = '<i class="fa fa-check"></i>';
                         this.classList.remove("btn-primary");
                         this.classList.add("btn-success");
                         this.disabled = false;
-                        if (editButton) editButton.style.display = "none"; // Sembunyikan tombol edit
+                        if (editButton) editButton.style.display = "none"; 
                         updateSubmitButton();
-                    }, 500); // Simulasi loading 0.5 detik
+                    }, 500); 
                 } else {
-                    // Jika checklist diklik lagi, ubah kembali ke tombol konfirmasi
                     this.innerHTML = "Konfirmasi";
                     this.classList.remove("btn-success");
                     this.classList.add("btn-primary");
-                    if (editButton) editButton.style.display = "inline-block"; // Tampilkan kembali tombol edit
+                    if (editButton) editButton.style.display = "inline-block";
                     updateSubmitButton();
                 }
             });
         });
 
-        // Event Listener untuk tombol Edit
+        
         document.querySelectorAll(".toggle-jumlah").forEach(function (editButton) {
             editButton.addEventListener("click", function () {
                 let inputField = this.previousElementSibling;
@@ -847,9 +895,9 @@
                 if (inputField.readOnly) {
                     inputField.readOnly = false;
                     inputField.focus();
-                    inputField.select(); // Blok teks agar mudah diedit
+                    inputField.select(); 
 
-                    // Kunci kembali saat kehilangan fokus
+                    
                     inputField.addEventListener("focusout", function lockInput() {
                         inputField.readOnly = true;
                         inputField.removeEventListener("focusout", lockInput);
@@ -858,7 +906,7 @@
             });
         });
 
-        updateSubmitButton(); // Periksa status saat halaman dimuat
+        updateSubmitButton();
     </script>
     <script>
         const menuSelect = document.getElementById('menu_id');
@@ -874,7 +922,7 @@
             const komposisiData = selectedOption.getAttribute('data-komposisi');
             const jumlahPesanan = parseInt(jumlahInput.value) || 1;
 
-            komposisiPreview.innerHTML = ''; // clear preview
+            komposisiPreview.innerHTML = '';
 
             if (komposisiData) {
                 const komposisi = JSON.parse(komposisiData);
@@ -890,228 +938,6 @@
         menuSelect.addEventListener('change', updateKomposisi);
         jumlahInput.addEventListener('input', updateKomposisi);
     </script>
-
-    <script type="text/javascript">
-        $(document).on('click', '.btn_editUP', function (e) {
-            var id = $(this).data('id');
-            var up_nama = $(this).data('nama');
-            var up_alamat = $(this).data('alamat');
-            var latitude = $(this).data('latitude');
-            var longitude = $(this).data('longitude');
-            console.log(id);
-            console.log(up_nama);
-            console.log(up_alamat);
-            console.log(latitude);
-            console.log(longitude);
-            $("#editUPModal").modal('toggle');
-            $("#txtid").val(id);
-            $("#txtnamaUP").val(up_nama);
-            $("#txtalamatUP").val(up_alamat);
-            $("#txtlatitude").val(latitude);
-            $("#txtlongitude").val(longitude);
-
-        });
-    </script>
-    <script type="text/javascript">
-        $(document).on('click', '.btn_editULP', function (e) {
-            var id = $(this).data('id');
-            var ulp_nama = $(this).data('nama');
-            var ulp_alamat = $(this).data('alamat');
-            var ulp_latitude = $(this).data('latitude');
-            var ulp_longitude = $(this).data('longitude');
-            var up_id = $(this).data('up');
-            console.log(id);
-            console.log(ulp_nama);
-            console.log(ulp_alamat);
-            console.log(ulp_latitude);
-            console.log(ulp_longitude);
-            console.log(up_id);
-            $("#editULPModal").modal('toggle');
-            $("#txtulp").val(id);
-            $("#txtnamaULP").val(ulp_nama);
-            $("#txtalamatULP").val(ulp_alamat);
-            $("#txtlatitude").val(ulp_latitude);
-            $("#txtlongitude").val(ulp_longitude);
-            $("#slcup").val(up_id);
-        });
-    </script>
-    <script type="text/javascript">
-        $(document).on('click', '.btn_edituser', function (e) {
-            var id = $(this).data('no');
-            var name = $(this).data('name');
-            var email = $(this).data('email');
-            var password = $(this).data('password');
-            var role = $(this).data('role');
-            console.log(id);
-            console.log(name);
-            console.log(email);
-            console.log(password);
-            console.log(role);
-            $("#editUserModal").modal('toggle');
-            $("#txtno").val(id);
-            $("#txtusername").val(name);
-            $("#txtemail").val(email);
-            $("#txtpassword").val(password);
-            $("#txtrole").val(role);
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            var uniqueOptions = {}; // Objek untuk melacak opsi unik
-
-            // Mendengarkan perubahan pada input pencarian
-            // $('#searchInput').on('keyup', function () {
-            //     var keyword = $(this).val();
-            //     console.log('okok');
-            //     // Hapus opsi sebelumnya
-            //    // $('#searchResults').empty();
-            //    $('#searchResults').append('<option value="ndak bapitih"></option>');
-            //     // Kirim permintaan AJAX ke controller autocomplete
-            //     if (keyword.length > 0) {
-
-            //     }
-
-            // });
-            $.ajax({
-                url: '{{ route("transaksi.autocomplete") }}', // Sesuaikan dengan route Anda
-                method: 'POST', // Sesuaikan dengan metode yang Anda gunakan di controller
-                data: {
-                    _token: "{{ csrf_token() }}",
-                },
-                success: function (data) {
-                    // Tampilkan hasil autocomplete
-                    data.forEach(function (item) {
-                        // Periksa apakah opsi sudah ditambahkan
-                        if (!uniqueOptions[item.barang_nama]) {
-                            $('#searchResults').append('<option value="' + item.barang_nama + '"></option>');
-                            uniqueOptions[item.barang_nama] = true; // Tandai opsi sebagai sudah ditambahkan
-                        }
-                        console.log(item);
-                    });
-
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-
-            // Menangani pemilihan item autocomplete
-            $('#searchResults').on('click', 'option', function () {
-                var selectedValue = $(this).val();
-                $('#searchInput').val(selectedValue);
-                $('#searchResults').empty(); // Hapus pilihan setelah memilih
-            });
-
-
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('#searchButtonKeluar').on('click', function (e) {
-                e.preventDefault();
-                var keyword = $('#searchInput').val();
-
-                $.ajax({
-                    url: '{{ route("transaksi.keluarPost") }}',
-                    method: 'POST',
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        cari: keyword
-                    },
-                    success: function (data) {
-                        console.log(data);
-                        // Replace the content of the table with the search results
-                        $('#tampilBarangKeluar').append(data);
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-
-                });
-            });
-            // Fungsi untuk menghapus baris
-            function deleteRow(button) {
-                // Dapatkan referensi ke baris yang akan dihapus (elemen <tr>)
-                var row = button.closest('tr');
-
-                // Hapus baris dari tabel
-                row.remove();
-            }
-
-            // Menambahkan event handler untuk tombol "Hapus" dalam tabel
-            $('#tampilBarangKeluar').on('click', 'button.btn-danger', function () {
-                deleteRow(this);
-            });
-            // Fungsi untuk membatasi input jumlah berdasarkan stok
-            $('#tampilBarangKeluar').on('input', 'input[name="barang_quantity[]"]', function () {
-                var input = $(this);
-                var stock = parseFloat(input.closest('tr').find('.tdStock').text());
-                var quantity = parseFloat(input.val());
-
-                if (quantity > stock) {
-                    input.val(stock); // Set nilai input menjadi stok maksimal jika melebihi stok
-                }
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            // Aktifkan semua komponen Bootstrap yang memerlukannya
-            $('.dropdown-toggle').dropdown();
-        });
-    </script>
-    <script>
-        const transaksiPerPageSelect = document.getElementById('transaksi-per-page');
-        const tabelTransaksi = document.getElementById('tabeltransaksi');
-
-        transaksiPerPageSelect.addEventListener('change', function () {
-            const selectedValue = this.value;
-
-            if (selectedValue === "-1") {
-
-                for (let i = 0; i < tabelTransaksi.rows.length; i++) {
-                    tabelTransaksi.rows[i].style.display = '';
-                }
-            } else {
-
-                const rowsToDisplay = parseInt(selectedValue);
-                for (let i = 0; i < tabelTransaksi.rows.length; i++) {
-                    if (i < rowsToDisplay) {
-                        tabelTransaksi.rows[i].style.display = '';
-                    } else {
-                        tabelTransaksi.rows[i].style.display = 'none';
-                    }
-                }
-            }
-        });
-    </script>
-    <script>
-        const tersediaPerPageSelect = document.getElementById('tersedia-per-page');
-        const tabelTersedia = document.getElementById('tabeltersedia');
-
-        tersediaPerPageSelect.addEventListener('change', function () {
-            const selectedValue = this.value;
-
-            if (selectedValue === "-1") {
-                // Tampilkan semua data
-                for (let i = 0; i < tabelTersedia.rows.length; i++) {
-                    tabelTersedia.rows[i].style.display = '';
-                }
-            } else {
-                // Tampilkan jumlah data yang dipilih
-                const rowsToDisplay = parseInt(selectedValue);
-                for (let i = 0; i < tabelTersedia.rows.length; i++) {
-                    if (i < rowsToDisplay) {
-                        tabelTersedia.rows[i].style.display = '';
-                    } else {
-                        tabelTersedia.rows[i].style.display = 'none';
-                    }
-                }
-            }
-        });
-    </script>
-
 </body>
 
 </html>

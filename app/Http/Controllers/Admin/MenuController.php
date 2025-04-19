@@ -30,17 +30,6 @@ class MenuController extends Controller
         $bahans = Bahan::all()->whereNull('deleted_at');
 
 
-        // $barangs = Barang::orderBy('name', 'asc')
-        //     ->whereNull('deleted_at')
-        //     ->get();
-
-
-
-        // if ($request->ajax()) {
-        //     return datatables()->of($barangs)->toJson();
-        // }
-
-
         if ($search = $request->input('search')) {
             $query->where('name', 'like', '%' . $search . '%');
         }
