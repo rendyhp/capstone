@@ -48,7 +48,6 @@
                 <div class="col-sm-8">
                     <input type="date" class="form-control" id="tanggalbahan" name="date"
                         value="{{ $date ?? \Carbon\Carbon::today()->toDateString() }}">
-
                 </div>
                 <div class="col-sm-2">
                     <button type="submit" class="btn btn-primary">
@@ -78,8 +77,10 @@
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/bahan-awal" method="get" class="form-inline d-flex">
-                                                <input class="form-control form-control-sm" type="text" name="search"
-                                                    placeholder="Search" value="{{ request('search') }}">
+                                                <input type="hidden" name="date"
+                                                    value="{{ request('date', now()->toDateString()) }}">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                                    name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
                                         </div>
 
@@ -118,9 +119,6 @@
                                                                 title="Edit stok bahan ini untuk tanggal {{ $date }}">
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
-
-
-
 
                                                             <form action="{{ route('stok-bahan-awal.delete') }}" method="POST"
                                                                 class="d-inline">
@@ -163,7 +161,7 @@
         </select>
     </div>
 
-    
+
 
     <!-- Modal Tambah Bahan Awal -->
     <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -225,7 +223,7 @@
             </div>
         </div>
     </div>
-    
+
 
 
 

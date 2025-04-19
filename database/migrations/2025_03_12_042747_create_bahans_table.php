@@ -20,7 +20,7 @@ return new class extends Migration
             
             $table->string('name');
             $table->text('description')->nullable();
-            $table->decimal('minimum', 12, 3);
+            $table->decimal('minimum', 15, 3);
             $table->unsignedBigInteger('satuan_id'); 
             $table->foreign('satuan_id')->references('id')->on('satuans'); 
 

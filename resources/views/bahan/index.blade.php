@@ -62,8 +62,8 @@
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/data-bahan" method="get" class="form-inline d-flex">
-                                                <input class="form-control form-control-sm" type="text" name="search"
-                                                    placeholder="Search" value="{{ request('search') }}">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                                    name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
                                         </div>
 
@@ -84,14 +84,10 @@
                                             @else
                                                 @foreach ($bahans as $bahan)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ ($bahans->currentPage() - 1) * $bahans->perPage() + $loop->iteration }}
                                                         <td>{{ $bahan->name }}</td>
-                                                        <td>
-                                                            @if (strpos($bahan->minimum, '.') === false)
-                                                                {{ intval($bahan->minimum) }}
-                                                            @else
-                                                                {{ rtrim(rtrim($bahan->minimum, '0'), '.') }}
-                                                            @endif
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                         <td>{{ $bahan->satuan->name ?? '-' }}</td>
 
@@ -156,7 +152,7 @@
                         </div>
                         <div class="mb-3 d-flex align-items-center">
                             <label for="minimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
-                            <input type="number" step="0.001" required autocomplete="off" class="form-control number0"
+                            <input type="number" step="0.001"  min="0" max="99999999999.999" required autocomplete="off" class="form-control number0"
                                 id="minimum" name="minimum" value="0" readonly style="max-width: 150px;">
                             <button type="button" class="btn btn-primary ms-2" id="toggleMinimum">
                                 <i id="iconMinimum1" class="fa fa-edit" aria-hidden="true"></i>
@@ -218,7 +214,7 @@
                         </div>
                         <div class="mb-3 d-flex align-items-center">
                             <label for="txtminimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
-                            <input type="number" step="0.001" autocomplete="off" required
+                            <input type="number" step="0.001" min="0" max="99999999999.999" autocomplete="off" required
                                 class="form-control number0 @error('minimum') is-invalid @enderror" id="txtminimum"
                                 name="minimum" readonly style="max-width: 150px;">
                             <button type="button" class="btn btn-primary ms-2" id="toggleMinimum2">

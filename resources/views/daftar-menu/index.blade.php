@@ -63,7 +63,7 @@
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/daftar-menu" method="get" class="form-inline d-flex">
-                                                <input class="form-control form-control-sm" type="text" name="search"
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text" name="search"
                                                     placeholder="Search" value="{{ request('search') }}">
                                             </form>
                                         </div>

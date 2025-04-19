@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('DataBahan', 'active')
+@section('StokBahan', 'active')
 @section('container')
 
 
@@ -77,17 +77,13 @@
                                         data-bs-target="#barangModal">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Stok
                                     </button>
-                                    <div class="col-sm-3 float-end mt-3">
+                                    <div class="col-sm-2 float-end mt-3">
                                         <div class="d-flex gap-2">
-                                            <a href="{{ url('/stok-bahan/historyInput/' . $bahan->id) }}"
+                                        <a href="{{ url('/stok-bahan/historyInput/' . Hashids::encode($bahan->id)) }}"
                                                 class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="{{ url('/stok-bahan/historyInput/' . $bahan->id) }}" method="get"
-                                                class="form-inline d-flex">
-                                                <input class="form-control form-control-sm" type="text" name="search"
-                                                    placeholder="Search" value="{{ request('search') }}">
-                                            </form>
+                                            
                                         </div>
 
                                         <div>
@@ -174,7 +170,7 @@
 
                         <div class="mb-3 d-flex align-items-center">
                             <label for="jumlah" class="form-label text-dark fw-bold me-2">Jumlah</label>
-                            <input type="number" step="0.001" min="0.001" required class="form-control" id="jumlah"
+                            <input type="number" step="0.001"  min="0" max="99999999999.999" required class="form-control" id="jumlah"
                                 name="jumlah" value="0" style="max-width: 150px;">
                         </div>
 
@@ -220,7 +216,7 @@
                         </div>
                         <div class="mb-3 d-flex align-items-center">
                             <label for="jumlah" class="form-label text-dark fw-bold me-2">Jumlah</label>
-                            <input type="number" step="0.001" min="0.001" required
+                            <input type="number" step="0.001"  min="0" max="99999999999.999" required
                                 class="form-control  @error('name') is-invalid @enderror" id="txtjumlah" name="jumlah"
                                 value="0" style="max-width: 150px;">
                             @error('txtid')

@@ -94,7 +94,7 @@
 
                         <div class="nav-item dropdown">
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="true">Stok</a>
+                                data-bs-toggle="dropdown" aria-expanded="false">Stok</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
                                 <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
@@ -109,7 +109,7 @@
 
                         <div class="nav-item dropdown">
                             <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="true">Data</a>
+                                data-bs-toggle="dropdown" aria-expanded="false">Data</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="dataDropdownMenu">
 
                                 <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
@@ -150,7 +150,7 @@
 
                         <div class="nav-item dropdown">
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="true">Stok</a>
+                                data-bs-toggle="dropdown" aria-expanded="false">Stok</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
                                 <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
@@ -165,7 +165,7 @@
 
                         <div class="nav-item dropdown">
                             <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="true">Data</a>
+                                data-bs-toggle="dropdown" aria-expanded="false">Data</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="dataDropdownMenu">
 
                                 <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
@@ -206,7 +206,7 @@
 
                         <div class="nav-item dropdown">
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="true">Stok</a>
+                                data-bs-toggle="dropdown" aria-expanded="false">Stok</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
                                 <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
@@ -221,7 +221,7 @@
 
                         <div class="nav-item dropdown">
                             <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="true">Data</a>
+                                data-bs-toggle="dropdown" aria-expanded="false">Data</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="dataDropdownMenu">
 
                                 <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
@@ -347,15 +347,42 @@
         }
     </script>
     <script>
+        const inputIds = ['txtminimum', 'minimum', 'txtjumlah', 'jumlah'];
+
+        function handleNumericInput(e) {
+            let value = e.target.value;
+            let cleaned = value.replace(/[^0-9.]/g, '');
+            let [intPart, decimalPart] = cleaned.split('.');
+
+            intPart = intPart.slice(0, 11);
+
+            if (decimalPart) {
+                decimalPart = decimalPart.slice(0, 3);
+                cleaned = intPart + '.' + decimalPart;
+            } else {
+                cleaned = intPart;
+            }
+            if (e.target.value !== cleaned) {
+                e.target.value = cleaned;
+            }
+        }
+
+        inputIds.forEach(function (id) {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', handleNumericInput);
+            }
+        });
+    </script>
+    <script>
         $(document).ready(function () {
             $('.select2').select2({
                 placeholder: "Cari atau pilih satuan",
                 allowClear: true
             });
-
             $(document).on('click', '.btn_editbahan', function () {
                 var satuan_id = $(this).data('satuan_id');
-                $("#satuan_id").val(satuan_id).trigger('change'); 
+                $("#satuan_id").val(satuan_id).trigger('change');
             });
         });
     </script>
@@ -475,13 +502,13 @@
             if (inputField.readOnly) {
                 inputField.readOnly = false;
 
-                button.style.display = "none"; 
-                inputField.focus(); 
+                button.style.display = "none";
+                inputField.focus();
                 inputField.select();
-                
+
                 inputField.addEventListener('focusout', function lockInput() {
                     inputField.readOnly = true;
-                    button.style.display = "inline"; 
+                    button.style.display = "inline";
                     inputField.removeEventListener('focusout', lockInput);
                 });
             }
@@ -501,14 +528,14 @@
         document.querySelectorAll('input[type="number"].number0').forEach(function (input) {
             input.addEventListener("focusout", function () {
                 if (this.value.trim() === "") {
-                    this.value = "0"; 
+                    this.value = "0";
                 }
             });
         });
 
         document.querySelectorAll(".number0").forEach(function (inputField) {
             inputField.addEventListener("focus", function () {
-                this.select(); 
+                this.select();
             });
         });
     </script>
@@ -531,7 +558,7 @@
                 }
 
                 function formatJumlah(jumlah) {
-                    if (!jumlah) return ''; 
+                    if (!jumlah) return '';
                     const num = parseFloat(jumlah);
                     return Number.isInteger(num) ? num.toString() : num.toFixed(3).replace(/\.?0+$/, '');
                 }
@@ -640,7 +667,8 @@
                 jumlahInput.placeholder = 'Jumlah';
                 jumlahInput.required = true;
                 jumlahInput.step = '0.001';
-                jumlahInput.min = '0.001';
+                jumlahInput.min = '0';
+                jumlahInput.max = "99999999999.999";
                 jumlahInput.className = 'form-control mx-2';
                 jumlahInput.style.maxWidth = '120px';
 
@@ -700,7 +728,8 @@
                 jumlahInput.placeholder = 'Jumlah';
                 jumlahInput.required = true;
                 jumlahInput.step = '0.001';
-                jumlahInput.min = '0.001';
+                jumlahInput.min = '0';
+                jumlahInput.max = "99999999999.999";
                 jumlahInput.className = 'form-control mx-2';
                 jumlahInput.style.maxWidth = '120px';
 
@@ -754,7 +783,7 @@
             $('#editBahanAkhirId').val(bahanId);
 
             $.ajax({
-                url: '/your-endpoint/' + bahanId, 
+                url: '/your-endpoint/' + bahanId,
                 method: 'GET',
                 success: function (data) {
                     $('#editDate').val(data.date);
@@ -825,13 +854,13 @@
         document.querySelectorAll(".toggle-jumlah").forEach(function (button) {
             button.addEventListener("click", function () {
                 let inputField = this.parentElement.querySelector(".jumlah-input");
-                let editButton = this.parentElement.querySelector(".toggle-jumlah"); 
+                let editButton = this.parentElement.querySelector(".toggle-jumlah");
 
                 if (inputField.readOnly) {
-                    inputField.readOnly = false; 
-                    editButton.style.display = "none"; 
-                    inputField.focus(); 
-                    inputField.select(); 
+                    inputField.readOnly = false;
+                    editButton.style.display = "none";
+                    inputField.focus();
+                    inputField.select();
 
                     inputField.addEventListener("focusout", function lockInput() {
                         inputField.readOnly = true;
@@ -874,9 +903,9 @@
                         this.classList.remove("btn-primary");
                         this.classList.add("btn-success");
                         this.disabled = false;
-                        if (editButton) editButton.style.display = "none"; 
+                        if (editButton) editButton.style.display = "none";
                         updateSubmitButton();
-                    }, 500); 
+                    }, 500);
                 } else {
                     this.innerHTML = "Konfirmasi";
                     this.classList.remove("btn-success");
@@ -887,7 +916,7 @@
             });
         });
 
-        
+
         document.querySelectorAll(".toggle-jumlah").forEach(function (editButton) {
             editButton.addEventListener("click", function () {
                 let inputField = this.previousElementSibling;
@@ -895,9 +924,9 @@
                 if (inputField.readOnly) {
                     inputField.readOnly = false;
                     inputField.focus();
-                    inputField.select(); 
+                    inputField.select();
 
-                    
+
                     inputField.addEventListener("focusout", function lockInput() {
                         inputField.readOnly = true;
                         inputField.removeEventListener("focusout", lockInput);

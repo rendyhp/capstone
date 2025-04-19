@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('bahan_id');
 
             $table->foreign('bahan_id')->references('id')->on('bahans');
-            $table->decimal('jumlah', 12, 3);
+            $table->decimal('jumlah', 15, 3);
             $table->unsignedBigInteger('satuan_id');
             $table->foreign('satuan_id')->references('id')->on('satuans');
             $table->text('catatan')->nullable();

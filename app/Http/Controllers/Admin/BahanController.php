@@ -44,13 +44,15 @@ class BahanController extends Controller
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        if ($role === 'OWNER') {
+        if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
             $bahans = $query->paginate(20);
 
             return view('bahan.index', [
                 'bahans' => $bahans,
                 'satuans' => $satuans
             ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
 
@@ -91,13 +93,55 @@ class BahanController extends Controller
                 ->sum('jumlah');
             $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
         }
+        if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
+            return view('bahan.stokIndex', [
 
-        return view('bahan.stokIndex', [
+                'bahans' => $bahans,
+                'satuans' => Satuan::whereNull('deleted_at')->orderBy('name')->get(),
+                'date' => $date,
+            ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+    }
 
-            'bahans' => $bahans,
-            'satuans' => Satuan::whereNull('deleted_at')->orderBy('name')->get(),
-            'date' => $date,
-        ]);
+    public function indexHistory(Request $request, $encryptedId)
+    {
+        $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
+        $id = $hashids->decode($encryptedId);
+        if (empty($id)) {
+            abort(404, 'ID tidak valid');
+        }
+
+        $user = Auth::user();
+        $role = $user->role;
+
+        $bahan = Bahan::with('satuan')->findOrFail($id[0]);
+        $query = HistoryInput::with(['bahan.satuan'])
+            ->where('bahan_id', $id[0])
+            ->whereNull('deleted_at')
+            ->orderBy('date', 'desc');
+
+        if ($search = $request->input('search')) {
+            $query->whereHas('bahan', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '% ');
+            });
+        }
+
+        $historyInputs = $query->paginate(20)->appends($request->query());
+
+        $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
+
+        if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
+            return view('bahan.historyInput', [
+                'historyInputs' => $historyInputs,
+                'satuans' => $satuans,
+                'bahan' => $bahan,
+                'encryptedId' => $hashids->encode($id[0]), // Encrypt ID kembali sebelum mengirim ke view
+            ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
 
     public function inputStore(Request $request)
@@ -109,11 +153,10 @@ class BahanController extends Controller
         ]);
 
         try {
-            
+
             $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
             $decryptedBahanId = $hashids->decode($validated['bahan_id']);
 
-            // Jika ID tidak valid atau kosong
             if (empty($decryptedBahanId)) {
                 return redirect()->back()->with('error', 'ID bahan tidak valid.');
             }
@@ -121,12 +164,12 @@ class BahanController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan dalam dekripsi ID.');
         }
 
-        // Validasi apakah ID bahan beneran ada
-        if (!\App\Models\Bahan::find($decryptedBahanId[0])) {
+        $bahan = Bahan::find($decryptedBahanId[0]);
+
+        if (!$bahan) {
             return redirect()->back()->with('error', 'Bahan tidak ditemukan.');
         }
 
-        // Simpan data HistoryInput
         HistoryInput::create([
             'user_id' => Auth::id(),
             'bahan_id' => $decryptedBahanId[0],
@@ -134,68 +177,34 @@ class BahanController extends Controller
             'jumlah' => $validated['jumlah'],
         ]);
 
-        return redirect()->back()->with('success', 'Stok berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Input stok '. $bahan->name .' pada "' . $validated['date'] . '" berhasil ditambahkan.');
     }
-
-
-    public function indexHistory(Request $request, $encryptedId)
-    {
-        // Inisialisasi Hashids dengan salt dan panjang ID
-        $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
-
-        // Dekripsi ID yang diterima dari URL
-        $id = $hashids->decode($encryptedId);  // Menggunakan decode untuk mendapatkan ID asli
-
-        // Jika ID tidak valid (Hashids decode menghasilkan array kosong)
-        if (empty($id)) {
-            abort(404, 'ID tidak valid');
-        }
-
-        // Ambil data bahan dan history berdasarkan ID
-        $user = Auth::user();
-        $role = $user->role;
-
-        // Ambil satuan bahan & bahan berdasarkan ID
-        $bahan = Bahan::with('satuan')->findOrFail($id[0]);  // ID berada pada array hasil decode
-
-        // Query history input berdasarkan bahan_id
-        $query = HistoryInput::with(['bahan.satuan'])
-            ->where('bahan_id', $id[0])
-            ->whereNull('deleted_at')
-            ->orderBy('date', 'desc');
-
-        // Optional: pencarian nama bahan
-        if ($search = $request->input('search')) {
-            $query->whereHas('bahan', function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%');
-            });
-        }
-
-        $historyInputs = $query->paginate(20)->appends($request->query());
-
-        $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
-
-        if ($role === 'OWNER') {
-            return view('bahan.historyInput', [
-                'historyInputs' => $historyInputs,
-                'satuans' => $satuans,
-                'bahan' => $bahan,
-                'encryptedId' => $hashids->encode($id[0]), // Encrypt ID kembali sebelum mengirim ke view
-            ]);
-        }
-
-        return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-    }
-
-
 
     public function inputUpdate(Request $request)
     {
         $validated = $request->validate([
             'id' => 'required|exists:history_inputs,id',
             'date' => 'required|date',
-            'jumlah' => 'required|numeric|min:0.001',
+            'jumlah' => 'required|numeric|min:0',
         ]);
+
+        try {
+
+            $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
+            $decryptedBahanId = $hashids->decode($validated['bahan_id']);
+
+            if (empty($decryptedBahanId)) {
+                return redirect()->back()->with('error', 'ID bahan tidak valid.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan dalam dekripsi ID.');
+        }
+
+        $bahan = Bahan::find($decryptedBahanId[0]);
+
+        if (!$bahan) {
+            return redirect()->back()->with('error', 'Bahan tidak ditemukan.');
+        }
 
         try {
             $historyInput = HistoryInput::findOrFail($validated['id']);
@@ -204,7 +213,7 @@ class BahanController extends Controller
                 'jumlah' => $validated['jumlah'],
             ]);
 
-            return redirect()->back()->with('success', 'Data stok berhasil diupdate.');
+            return redirect()->back()->with('success', 'Input stok '. $bahan->name .' pada "' . $validated['date'] . '" berhasil diupdate.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal mengupdate data stok: ' . $e->getMessage());
         }
@@ -220,20 +229,17 @@ class BahanController extends Controller
 
         $id = $decoded[0];
 
-        $historyInput = HistoryInput::findOrFail($id);
+        $historyInput = HistoryInput::with('bahan')->findOrFail($id);
+        $tanggalDelete = $historyInput->date;
         $historyInput->deleted_at = now();
         $historyInput->save();
 
-        // Encode kembali bahan_id untuk redirect
         $encryptedBahanId = $hashids->encode($historyInput->bahan_id);
+        $jumlahFormatted = rtrim(rtrim(number_format($historyInput->jumlah, 3, ',', '.'), '0'), ',');
 
         return redirect()->route('stok-bahan.historyBahan', ['encryptedId' => $encryptedBahanId])
-            ->with('success', 'Data Berhasil Dihapus');
+            ->with('success', 'Data input '. $historyInput->bahan->name .' pada "' . $tanggalDelete . '" sebesar ' . $jumlahFormatted  .' berhasil dihapus.');
     }
-
-
-
-
 
     public function create()
     {
@@ -306,6 +312,7 @@ class BahanController extends Controller
             $user = Auth::user()->id;
 
             $Bahan = Bahan::findOrFail($request->input('id'));
+
             $Bahan->user_id = $user;
             $Bahan->name = $request->input('name');
             $Bahan->description = $request->input('description' ?: '-');

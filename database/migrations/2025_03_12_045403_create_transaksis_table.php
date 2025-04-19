@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('menu_name')->nullable();
             $table->unsignedBigInteger('menu_id')->nullable(); 
             $table->foreign('menu_id')->references('id')->on('menus');
-            $table->decimal('jumlah', 12, 3);
+            $table->decimal('jumlah', 15, 3);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -75,14 +75,16 @@
                                         onclick="window.location.href='{{ url('/bahan-awal') }}'">
                                         Lihat Bahan Awal
                                     </button>
-                                    <div class="col-sm-2 float-end mt-3">
+                                    <div class="col-sm-3 float-end mt-3">
                                         <div class="d-flex gap-2">
                                             <a href="/stock-opname" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/stock-opname" method="get" class="form-inline d-flex">
-                                                <input class="form-control form-control-sm" type="text" name="search"
+                                                <input type="hidden" name="date"
+                                                    value="{{ request('date', now()->toDateString()) }}">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text" name="search"
                                                     placeholder="Search" value="{{ request('search') }}">
                                             </form>
                                         </div>

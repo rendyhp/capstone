@@ -117,7 +117,6 @@ class BarangController extends Controller
         }
     }
 
-    // Fungsi handleFile baru
     private function handleFile($file)
     {
         $tmp_file = TemporaryFile::where('folder', $file)->first();
@@ -157,40 +156,32 @@ class BarangController extends Controller
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
         ]);
 
-        try {
-            $user = Auth::user()->id;
 
-            $Barang = Barang::findOrFail($request->input('id'));
-            $Barang->user_id = $user;
-            $Barang->name = $request->input('name');
-            $Barang->description = $request->input('description' ?: '-');
-            $Barang->jumlah = $request->input('jumlah' ?: 0);
-            $Barang->satuan_id = $request->input('satuan_id' ?: '-');
-            $Barang->image = $request->input('image') ?: null;
-            $Barang->save();
+        $user = Auth::user()->id;
 
-            return redirect('/stok-barang')->with('success', 'Data "' . $Barang->name . '" Berhasil Diubah');
+        $Barang = Barang::findOrFail($request->input('id'));
+        $Barang->user_id = $user;
+        $Barang->name = $request->input('name');
+        $Barang->description = $request->input('description' ?: '-');
+        $Barang->jumlah = $request->input('jumlah' ?: 0);
+        $Barang->satuan_id = $request->input('satuan_id' ?: '-');
+        $Barang->image = $request->input('image') ?: null;
+        $Barang->save();
 
-        } catch (\Illuminate\Database\QueryException $e) {
+        return redirect('/stok-barang')->with('success', 'Data "' . $Barang->name . '" Berhasil Diubah');
 
-            if ($e->errorInfo[1] == 1062) {
-                echo '<script>alert("Barang sudah ada dalam database.");</script>';
-                return redirect('stok-barang')->with('error', 'Barang "' . $Barang->name . '" Gagal Diubah');
-            } else {
-                throw $e;
-            }
-        }
+
     }
 
     public function delete(Request $request)
     {
         $id = $request->id;
         $barang = Barang::findOrFail($id);
-
+        
         $barang->deleted_at = now();
         $barang->save();
 
-        return redirect('/stok-barang')->with('success', 'Data Berhasil Dihapus');
+        return redirect('/stok-barang')->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
     }
 
     public function deletePermanent(Request $request)

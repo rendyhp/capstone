@@ -62,7 +62,7 @@
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/stok-barang" method="get" class="form-inline d-flex">
-                                                <input class="form-control form-control-sm" type="text" name="search"
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text" name="search"
                                                     placeholder="Search" value="{{ request('search') }}">
                                             </form>
                                         </div>
@@ -86,12 +86,8 @@
                                                         <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
                                                         </td>
                                                         <td>{{ $barang->name }}</td>
-                                                        <td>
-                                                            @if (strpos($barang->jumlah, '.') === false)
-                                                                {{ intval($barang->jumlah) }}
-                                                            @else
-                                                                {{ rtrim(rtrim($barang->jumlah, '0'), '.') }}
-                                                            @endif
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($barang->jumlah, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                         <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
 

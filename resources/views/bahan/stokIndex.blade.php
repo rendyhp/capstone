@@ -74,8 +74,10 @@
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/stok-bahan" method="get" class="form-inline d-flex">
-                                                <input class="form-control form-control-sm" type="text" name="search"
-                                                    placeholder="Search" value="{{ request('search') }}">
+                                                <input type="hidden" name="date"
+                                                    value="{{ request('date', now()->toDateString()) }}">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                                    name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -100,7 +102,8 @@
                                             @else
                                                 @foreach ($bahans as $bahan)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ ($bahans->currentPage() - 1) * $bahans->perPage() + $loop->iteration }}
+                                                        </td>
                                                         <td>{{ $bahan->name }}</td>
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
