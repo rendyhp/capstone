@@ -9,7 +9,8 @@ class SatuanBahan extends Model
 {
     use HasFactory;
 
-    protected $table = 'satuans';
+    protected $table = 'satuan_bahans';
+
     protected $casts = [
         'jumlah' => 'decimal:3',
     ];

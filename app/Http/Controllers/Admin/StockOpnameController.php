@@ -10,7 +10,8 @@ use App\Models\BahanAwal;
 
 use App\Models\Barang;
 use App\Models\HistoryInput;
-use App\Models\Satuan;
+
+use App\Models\SatuanBahan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -42,16 +43,16 @@ class StockOpnameController extends Controller
         SUM(bahan_akhirs.jumlah) as total_jumlah,
         MAX(bahan_akhirs.date) as tanggal,
         bahans.name as bahan_name,
-        satuans.name as satuan_name
+        satuan_bahans.name as satuan_name
     ')
             ->join('bahans', 'bahan_akhirs.bahan_id', '=', 'bahans.id')
-            ->join('satuans', 'bahans.satuan_id', '=', 'satuans.id')
+            ->join('satuan_bahans', 'bahans.satuan_id', '=', 'satuan_bahans.id')
             ->whereNull('bahan_akhirs.deleted_at')
             ->whereDate('bahan_akhirs.date', $date)
             ->when($search, function ($q) use ($search) {
                 $q->where('bahans.name', 'like', '%' . $search . '%');
             })
-            ->groupBy('bahan_akhirs.bahan_id', 'bahans.name', 'satuans.name')
+            ->groupBy('bahan_akhirs.bahan_id', 'bahans.name', 'satuan_bahans.name')
             ->orderBy('bahans.name', 'asc');
 
 
@@ -75,10 +76,9 @@ class StockOpnameController extends Controller
         $bahan_akhirs = new LengthAwarePaginator($currentItems, $grouped->count(), $perPage);
         $bahan_akhirs->appends($request->query());
 
-        // Hitung total jumlah dari seluruh data (bukan hanya yang ditampilkan)
         $total_jumlah = $grouped->sum('jumlah');
-        // Data satuan untuk dropdown/modal
-        $satuans = Satuan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
+       
+        $satuans = SatuanBahan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
         $bahans = Bahan::whereNull('deleted_at')->with('satuan')->orderBy('name', 'asc')->get();
 
         // Return ke view sesuai role

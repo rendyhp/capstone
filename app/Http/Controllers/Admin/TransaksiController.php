@@ -41,18 +41,18 @@ class TransaksiController extends Controller
             menus.name as menu_name,
             SUM(transaksis.jumlah) as total_jumlah,
             bahans.name as bahan_name,
-            satuans.name as satuan_name,
+            satuan_bahans.name as satuan_name,
             SUM(komposisi_menus.jumlah * transaksis.jumlah) as total_bahan
         ')
             ->join('menus', 'transaksis.menu_id', '=', 'menus.id')
             ->join('komposisi_menus', 'menus.id', '=', 'komposisi_menus.menu_id')
             ->join('bahans', 'komposisi_menus.bahan_id', '=', 'bahans.id')
-            ->join('satuans', 'bahans.satuan_id', '=', 'satuans.id')
+            ->join('satuan_bahans', 'bahans.satuan_id', '=', 'satuan_bahans.id')
             ->whereDate('transaksis.date', $date)
             ->when($search, function ($q) use ($search) {
                 $q->where('menus.name', 'like', '%' . $search . '%');
             })
-            ->groupBy('transaksis.menu_id', 'menus.name', 'bahans.name', 'satuans.name')
+            ->groupBy('transaksis.menu_id', 'menus.name', 'bahans.name', 'satuan_bahans.name')
             ->orderBy('menus.name', 'asc')
             ->get();
 

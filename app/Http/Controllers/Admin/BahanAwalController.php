@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Bahan;
 use App\Models\BahanAwal;
 use App\Models\Barang;
-use App\Models\Satuan;
+
+use App\Models\SatuanBahan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -41,17 +42,17 @@ class BahanAwalController extends Controller
             SUM(bahan_awals.jumlah) as stok,
             MAX(bahan_awals.date) as tanggal,
             bahans.name as bahan_name,
-            satuans.name as satuan_name
+            satuan_bahans.name as satuan_name
         ')
             ->join('bahans', 'bahan_awals.bahan_id', '=', 'bahans.id')
-            ->join('satuans', 'bahans.satuan_id', '=', 'satuans.id')
+            ->join('satuan_bahans', 'bahans.satuan_id', '=', 'satuan_bahans.id')
             ->whereNull('bahan_awals.deleted_at')
             ->whereNull('bahans.deleted_at')
             ->whereDate('bahan_awals.date', $date)
             ->when($search, function ($q) use ($search) {
                 $q->where('bahans.name', 'like', '%' . $search . '%');
             })
-            ->groupBy('bahan_awals.bahan_id', 'bahans.name', 'satuans.name')
+            ->groupBy('bahan_awals.bahan_id', 'bahans.name', 'satuan_bahans.name')
             ->orderBy('bahans.name', 'asc');
 
         $allData = $query->get();
@@ -68,8 +69,8 @@ class BahanAwalController extends Controller
         $bahanAwalAwals = new LengthAwarePaginator($currentItems, $grouped->count(), $perPage);
         $bahanAwalAwals->appends($request->query());
 
-        // Data satuan untuk dropdown/modal
-        $satuans = Satuan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
+
+        $satuans = SatuanBahan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
         $bahans = Bahan::whereNull('deleted_at')->with('satuan')->orderBy('name', 'asc')->get();
 
         return view('bahan.indexBahanAwal', [

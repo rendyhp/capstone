@@ -8,7 +8,8 @@ use App\Models\Bahan;
 use App\Models\BahanAkhir;
 use App\Models\BahanAwal;
 use App\Models\HistoryInput;
-use App\Models\Satuan;
+
+use App\Models\SatuanBahan;
 use Carbon\Carbon;
 use Hashids\Hashids;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class BahanController extends Controller
             ->whereNull('deleted_at');
         $query->orderBy($orderBy, $direction);
 
-        $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
+        $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
         if ($search = $request->input('search')) {
             $query->where('name', 'like', '%' . $search . '%');
@@ -97,7 +98,7 @@ class BahanController extends Controller
             return view('bahan.stokIndex', [
 
                 'bahans' => $bahans,
-                'satuans' => Satuan::whereNull('deleted_at')->orderBy('name')->get(),
+                'satuan_bahans' => SatuanBahan::whereNull('deleted_at')->orderBy('name')->get(),
                 'date' => $date,
             ]);
         } else {
