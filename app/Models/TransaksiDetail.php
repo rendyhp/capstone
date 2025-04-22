@@ -30,6 +30,6 @@ class TransaksiDetail extends Model
     }
     public function satuan()
     {
-        return $this->belongsTo(Satuan::class);
+        return $this->belongsTo(SatuanBahan::class);
     }
 }

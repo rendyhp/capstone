@@ -27,7 +27,7 @@ class Bahan extends Model
     // Relasi ke tabel satuan
     public function satuan()
     {
-        return $this->belongsTo(Satuan::class, 'satuan_id');
+        return $this->belongsTo(SatuanBahan::class, 'satuan_id');
     }
 
     public function bahanAkhir()

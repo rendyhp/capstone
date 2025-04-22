@@ -12,19 +12,16 @@ return new class extends Migration
      * @return void
      */
     public function up()
-
     {
-
-        Schema::create('notifikasis', function (Blueprint $table) {
-
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); 
-            $table->foreign('user_id')->references('id')->on('users');
-            
-            $table->unsignedBigInteger('tag_notifikasi_id'); 
-            $table->foreign('tag_notifikasi_id')->references('id')->on('tag_notifikasis');
-            $table->string('description');
-
+            $table->string('name');
+            $table->string('username')->unique()->nullable();
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->enum('role', ['OWNER', 'MANAJER', 'STAF']);
+            $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -37,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notifikasis');
+        Schema::dropIfExists('users');
     }
 };
