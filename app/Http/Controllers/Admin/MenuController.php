@@ -26,22 +26,38 @@ class MenuController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        $query = Menu::with('komposisi.bahan.satuan')->whereNull('deleted_at');
-        $bahans = Bahan::all()->whereNull('deleted_at');
+        // Ambil parameter sorting dari URL atau pakai default
+        $orderBy = $request->input('orderBy', 'name');
+        $direction = $request->input('direction', 'asc');
 
+        // Ambil data bahan untuk komposisi
+        $bahans = Bahan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
 
+        // Siapkan query untuk daftar menu
+        $query = Menu::with('komposisi.bahan.satuan')
+            ->whereNull('deleted_at');
+
+        // Filter pencarian jika ada
         if ($search = $request->input('search')) {
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        $query->orderBy('name', 'asc'); // Mengurutkan berdasarkan ID secara ascending
+        // Urutkan berdasarkan parameter dari URL
+        $query->orderBy($orderBy, $direction);
 
-        if ($role === 'OWNER') {
-            $menus = $query->paginate(20);
+        // Pagination dan pengembalian view hanya jika rolenya cocok
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            $menus = $query->paginate(20)->withQueryString(); // biar pagination tetap bawa query parameter
 
-            return view('daftar-menu.index', ['menus' => $menus, 'bahans' => $bahans]);
+            return view('daftar-menu.index', [
+                'menus' => $menus,
+                'bahans' => $bahans
+            ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
+
 
     public function create()
     {
@@ -77,7 +93,13 @@ class MenuController extends Controller
             ]);
         }
 
-        return redirect('/daftar-menu')->with('success', 'Menu "' . $request->name . '" berhasil ditambahkan');
+        $dataPerPage = 20;
+        $data = DB::table('menus')->paginate($dataPerPage);
+        $lastPage = $data->lastPage();
+
+        return redirect('/daftar-menu?page=' . $lastPage . '&orderBy=id&direction=asc')
+            ->with('success', 'Data "' . $menu->name . '" Berhasil Ditambahkan');
+
     }
 
     public function tmpUpload(Request $request)

@@ -16,7 +16,7 @@ class BahanAwal extends Model
     ];
 
     protected $fillable = [
-        
+        'user_id',
         'date',
         'bahan_id',
         'jumlah',

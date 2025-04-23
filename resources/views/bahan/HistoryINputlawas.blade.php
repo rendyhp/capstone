@@ -79,7 +79,7 @@
                                     </button>
                                     <div class="col-sm-2 float-end mt-3">
                                         <div class="d-flex gap-2">
-                                        <a href="{{ url('/stok-bahan/historyInput/' . Hashids::encode($bahan->id)) }}"
+                                        <a href="{{ url('/stok-bahan/bahanMasuk/' . Hashids::encode($bahan->id)) }}"
                                                 class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
@@ -98,31 +98,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($historyInputs->isEmpty())
+                                            @if ($bahanMasuks->isEmpty())
                                                 <p>Tidak ada data yang ditemukan.</p>
                                             @else
-                                                @foreach ($historyInputs as $historyInput)
+                                                @foreach ($bahanMasuks as $bahanMasuk)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $historyInput->date }}</td>
+                                                        <td>{{ $bahanMasuk->date }}</td>
                                                         <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($historyInput->jumlah, 3, ',', '.'), '0'), ',') }}
+                                                            {{ rtrim(rtrim(number_format($bahanMasuk->jumlah, 3, ',', '.'), '0'), ',') }}
                                                         </td>
-                                                        <td>{{ $historyInput->bahan->satuan->name ?? '-' }}</td>
+                                                        <td>{{ $bahanMasuk->bahan->satuan->name ?? '-' }}</td>
                                                         <td>
                                                             <!-- Button trigger modal -->
                                                             <button type="button" class="btn btn-primary btn-sm btn_editstokbahan"
-                                                                data-id="{{ $historyInput->id ?? 'NULL' }}"
-                                                                data-date="{{ $historyInput->date ?? 'NULL' }}"
-                                                                data-jumlah="{{ $historyInput->jumlah ?? 'NULL' }}"
-                                                                data-satuan_name="{{ $historyInput->bahan->satuan->name ?? 'NULL' }}">
+                                                                data-id="{{ $bahanMasuk->id ?? 'NULL' }}"
+                                                                data-date="{{ $bahanMasuk->date ?? 'NULL' }}"
+                                                                data-jumlah="{{ $bahanMasuk->jumlah ?? 'NULL' }}"
+                                                                data-satuan_name="{{ $bahanMasuk->bahan->satuan->name ?? 'NULL' }}">
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
 
 
                                                             <form
-                                                                action="{{ route('historyBahan.delete', Hashids::encode($historyInput->id)) }}"
+                                                                action="{{ route('historyBahan.delete', Hashids::encode($bahanMasuk->id)) }}"
                                                                 method="POST" class="d-inline"
                                                                 onsubmit="return confirm('Yakin akan Mendelete Data?')">
                                                                 @csrf
@@ -140,7 +140,7 @@
                                             @endif
                                         </tbody>
                             </table>
-                            {{ $historyInputs->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                            {{ $bahanMasuks->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>
@@ -189,7 +189,7 @@
         </div>
     </div>
 
-    <!-- Modal Edit historyInput-->
+    <!-- Modal Edit bahanMasuk-->
     <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

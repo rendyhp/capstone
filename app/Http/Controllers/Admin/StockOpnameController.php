@@ -141,6 +141,7 @@ class StockOpnameController extends Controller
             // Jika checkbox dicentang, simpan juga untuk besok
             if ($saveBesok) {
                 BahanAwal::create([
+                    'user_id' => $user,
                     'date' => $tanggalBesok,
                     'bahan_id' => $bahan_id,
                     'jumlah' => $jumlah,

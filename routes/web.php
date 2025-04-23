@@ -56,10 +56,33 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
 
     // Stok
-    Route::get('/stok-barang', [BarangController::class, 'index'])->name('stok-barang');
-    Route::put('/stok-barang/delete/{id}', [BarangController::class, 'delete'])->name('stok-barang.delete');
+    Route::get('/barang/master', [BarangController::class, 'index'])->name('barang');
+    Route::post('/barang/master/storeM', [BarangController::class, 'storeM'])->name('barang.storeM');
+    Route::post('/barang/master/storeK', [BarangController::class, 'storeK'])->name('barang.storeK');
+    Route::get('/barang/masuk-keluar', [BarangController::class, 'indexMasukKeluar'])->name('barang.indexMasukKeluar');
+    Route::post('/barang/masuk-keluar/store', [BarangController::class, 'storeMasukKeluar'])->name('barang.storeMasukKeluar');
+    Route::put('/barang/masuk-keluar/edit', [BarangController::class, 'updateMasukKeluar'])->name('barang.updateMasukKeluar');
+    Route::get('/barang/data-barang', [BarangController::class, 'indexDataBarang'])->name('barang.indexDataBarang');
+    Route::post('/barang/data-barang/store', [BarangController::class, 'storeDataBarang'])->name('barang.storeDataBarang');
+    Route::put('/barang/data-barang/edit', [BarangController::class, 'updateDataBarang'])->name('barang.updateDataBarang');
+    Route::get('/barang/satuan', [BarangController::class, 'indexSatuan'])->name('barang.indexSatuan');
+    Route::post('/barang/satuan/store', [BarangController::class, 'storeSatuan'])->name('barang.storeSatuan');
+    Route::put('/barang/satuan/edit', [BarangController::class, 'updateSatuan'])->name('barang.updateSatuan');
+    // Route::put('/stok-barang/delete/{id}', [BarangController::class, 'delete'])->name('stok-barang.delete');
 
-    Route::get('/stok-bahan', [BahanController::class, 'indexStok'])->name('stok-bahan');
+    Route::get('/bahan/master', [BahanController::class, 'index'])->name('bahan');
+    Route::get('/bahan/masuk-keluar', [BahanController::class, 'indexMasukKeluar'])->name('bahan.indexMasukKeluar');
+    Route::get('/bahan/data-bahan', [BahanController::class, 'indexDataBahan'])->name('bahan.indexDataBahan');
+    Route::post('/bahan/data-bahan/store', [BahanController::class, 'storeDataBahan'])->name('barang.storeDataBahan');
+    Route::put('/bahan/data-bahan/edit', [BahanController::class, 'updateDataBahan'])->name('barang.updateDataBahan');
+    Route::put('/bahan/data-bahan/delete/{id}', [BahanController::class, 'deleteDataBahan'])->name('bahan.deleteDataBahan');
+    Route::get('/bahan/bahan-awal', [BahanController::class, 'indexBahanAwal'])->name('bahan.indexBahanAwal');
+    Route::get('/bahan/satuan', [BahanController::class, 'indexSatuan'])->name('bahan.indexSatuan');
+    Route::post('/bahan/satuan/store', [BahanController::class, 'storeSatuan'])->name('bahan.storeSatuan');
+    Route::put('/bahan/satuan/edit', [BahanController::class, 'updateSatuan'])->name('bahan.updateSatuan');
+    Route::get('/bahan/history', [BahanController::class, 'indexHistory'])->name('bahan.indexHistory');
+
+
     Route::post('/stok-bahan/historyInput/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
     Route::put('/stok-bahan/historyInput/update/', [BahanController::class, 'inputUpdate'])->name('historyBahan.update');
     Route::put('/stok-bahan/historyInput/delete/{encryptedId}', [BahanController::class, 'inputDelete'])->name('historyBahan.delete');
@@ -76,10 +99,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/bahan-awal/delete', [BahanAwalController::class, 'delete'])->name('stok-bahan-awal.delete');
     Route::get('/bahan-awal/{bahan_id}/edit', [BahanAwalController::class, 'edit']);
     Route::put('/bahan-awal/{bahan_id}', [BahanAwalController::class, 'update'])->name('bahan-awal.update');
-
-    // Data
-    Route::get('/data-bahan', [BahanController::class, 'index'])->name('data-bahan');
-    Route::put('/data-bahan/delete/{id}', [BahanController::class, 'delete'])->name('data-bahan.delete');
 
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');
@@ -100,9 +119,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/laporan', [DashboardController::class, 'filter'])->name('dashboard.laporan.filter');
 
     // Resource routes
-    Route::resource('/bahan-awal', \App\Http\Controllers\Admin\BahanAwalController::class);
-    Route::resource('/stok-barang', \App\Http\Controllers\Admin\BarangController::class);
-    Route::resource('/data-bahan', \App\Http\Controllers\Admin\BahanController::class);
     Route::resource('/stock-opname', \App\Http\Controllers\Admin\StockOpnameController::class);
     Route::resource('/daftar-menu', \App\Http\Controllers\Admin\MenuController::class);
     Route::resource('/transaksi', \App\Http\Controllers\Admin\TransaksiController::class);

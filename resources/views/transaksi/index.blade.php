@@ -49,16 +49,7 @@
                     Impor CSV
                 </button>
 
-                <form action="{{ route('transaksi.import') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <label for="date">Tanggal</label>
-                    <input type="date" name="date" required>
-
-                    <label for="file">File Excel</label>
-                    <input type="file" name="file" accept=".xlsx,.xls" required>
-
-                    <button type="submit">Upload</button>
-                </form>
+                
 
                 <table class="table table-bordered">
                     <thead class="table-primary">
@@ -77,7 +68,7 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $transaksi['menu_name'] }}</td>
                                 <td><span class="text-success">✅</span></td>
-                                <td>{{ $transaksi['total_jumlah'] }}</td>
+                                <td class="text-end">{{ rtrim(rtrim(number_format($transaksi['total_jumlah'], 3, ',', '.'), '0'), ',') }}</td>
                                 <td>
                                     <ul>
                                         @foreach($transaksi['bahans'] as $bahan)

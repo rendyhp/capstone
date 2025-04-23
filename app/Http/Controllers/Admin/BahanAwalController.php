@@ -92,6 +92,8 @@ class BahanAwalController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+        
         // Validate input fields
         $request->validate([
             'date' => 'required|date',
@@ -109,6 +111,7 @@ class BahanAwalController extends Controller
         // Process each item in bahan_awal
         foreach ($request->bahan_awal as $item) {
             BahanAwal::create([
+                'user_id' => $user,
                 'date' => $request->date,
                 'bahan_id' => $item['bahan_id'],
                 'jumlah' => $item['jumlah'],

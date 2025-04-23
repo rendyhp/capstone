@@ -29,6 +29,7 @@ class Bahan extends Model
     {
         return $this->belongsTo(SatuanBahan::class, 'satuan_id');
     }
+    
 
     public function bahanAkhir()
     {
@@ -38,6 +39,11 @@ class Bahan extends Model
     public function bahanAwal()
     {
         return $this->hasMany(BahanAwal::class, 'bahan_id');
+    }
+
+    public function bahanMasuk()
+    {
+        return $this->hasMany(BahanMasuk::class, 'bahan_id');
     }
 
     public function komposisiMenu()

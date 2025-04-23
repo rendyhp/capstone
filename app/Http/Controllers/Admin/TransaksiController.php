@@ -80,7 +80,7 @@ class TransaksiController extends Controller
         $paginated->appends($request->query());
 
         // Ambil semua menu untuk modal/edit
-        $menus = Menu::with('komposisi.bahan.satuan')->get();
+        $menus = Menu::with('komposisi.bahan.satuan')->whereNull('deleted_at')->orderBy('name','asc')->get();
 
         if ($role === 'OWNER') {
             return view('transaksi.index', compact('paginated', 'date', 'menus'));
@@ -209,9 +209,10 @@ class TransaksiController extends Controller
             // Simpan detail pemakaian bahan dalam transaksi_detail
             TransaksiDetail::create([
                 'transaksi_id' => $transaksi->id,
+                
                 'bahan_id' => $komposisi->bahan_id,
                 'jumlah' => $komposisi->jumlah * $transaksi->jumlah,
-                'satuan_id' => $komposisi->bahan->satuan_id,
+               
             ]);
 
 
@@ -246,7 +247,7 @@ class TransaksiController extends Controller
         ]);
 
         // Hapus dan hitung ulang transaksi_detail
-        $transaksi->transaksiDetail()->delete();
+        // $transaksi->transaksiDetail()->delete();
         $this->hitungBahanTerpakai($transaksi);
 
         return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');

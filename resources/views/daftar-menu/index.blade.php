@@ -63,8 +63,8 @@
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/daftar-menu" method="get" class="form-inline d-flex">
-                                                <input class="form-control form-control-sm" autocomplete="off" type="text" name="search"
-                                                    placeholder="Search" value="{{ request('search') }}">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                                    name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -156,13 +156,14 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="name" class="form-label text-dark fw-bold">Nama Menu</label>
+
                                 <input type="text" required class="form-control" id="name" name="name"
-                                    placeholder="Input Nama Barang">
+                                    placeholder="Input Nama Menu" autocomplete="off">
                             </div>
                             <div class="mb-3">
                                 <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
-                                <input type="text" class="form-control" id="description" name="description"
-                                    placeholder="Input Deskripsi Barang">
+                                <textarea class="form-control" required autocomplete="off" id="description"
+                                    name="description" rows="4" placeholder="Deskripsi menu"></textarea>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label text-dark fw-bold">Bahan</label>
@@ -199,12 +200,14 @@
 
                             <div class="mb-3">
                                 <label for="editMenuName" class="form-label text-dark fw-bold">Nama Menu</label>
-                                <input type="text" class="form-control" id="editMenuName" name="name" required>
+                                <input type="text" class="form-control" id="editMenuName" name="name" required
+                                    autocomplete="off">
                             </div>
 
                             <div class="mb-3">
                                 <label for="editMenuDescription" class="form-label text-dark fw-bold">Deskripsi</label>
-                                <textarea class="form-control" id="editMenuDescription" name="description"></textarea>
+                                <textarea class="form-control" id="editMenuDescription" name="description" required
+                                    autocomplete="off"></textarea>
                             </div>
 
                             <div id="editBahanContainer" class="mb-3">

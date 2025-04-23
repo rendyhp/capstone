@@ -7,15 +7,20 @@ use App\Models\AkhirTerpakaiSeharusnya;
 use App\Models\Bahan;
 use App\Models\BahanAkhir;
 use App\Models\BahanAwal;
+use App\Models\BahanKeluar;
+use App\Models\BahanMasuk;
+use App\Models\BarangMasuk;
 use App\Models\HistoryInput;
 
 use App\Models\SatuanBahan;
+use App\Models\TransaksiDetail;
 use Carbon\Carbon;
 use Hashids\Hashids;
 use Illuminate\Http\Request;
 
 
 use App\Models\TemporaryFile;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -28,37 +33,6 @@ use App\Helpers\LogActivity;
 class BahanController extends Controller
 {
     public function index(Request $request)
-    {
-        $user = Auth::user();
-        $role = $user->role;
-
-        $orderBy = $request->input('orderBy', 'name');
-        $direction = $request->input('direction', 'asc');
-
-        $query = Bahan::with('satuan')
-            ->whereNull('deleted_at');
-        $query->orderBy($orderBy, $direction);
-
-        $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
-
-        if ($search = $request->input('search')) {
-            $query->where('name', 'like', '%' . $search . '%');
-        }
-
-        if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
-            $bahans = $query->paginate(20);
-
-            return view('bahan.index', [
-                'bahans' => $bahans,
-                'satuans' => $satuans
-            ]);
-        } else {
-            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
-    }
-
-
-    public function indexStok(Request $request)
     {
 
         $user = Auth::user();
@@ -79,15 +53,21 @@ class BahanController extends Controller
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
                 ->sum('jumlah');
-            $bahan->jumlah_masuk = HistoryInput::where('bahan_id', $bahan->id)
+            $bahan->jumlah_masuk = BahanMasuk::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
                 ->sum('jumlah');
-            $bahan->jumlah_terpakai = AkhirTerpakaiSeharusnya::where('bahan_id', $bahan->id)
+            $bahan->jumlah_keluar = BahanKeluar::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
                 ->sum('jumlah');
-            $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk) - $bahan->jumlah_terpakai;
+            $bahan->jumlah_terpakai = DB::table('transaksi_details')
+                ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+                ->where('transaksi_details.bahan_id', $bahan->id)
+                ->whereDate('transaksis.date', $date)
+                ->whereNull('transaksis.deleted_at')
+                ->sum('transaksi_details.jumlah');
+            $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk - $bahan->jumlah_keluar) - $bahan->jumlah_terpakai;
             $bahan->bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
@@ -95,7 +75,7 @@ class BahanController extends Controller
             $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
         }
         if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
-            return view('bahan.stokIndex', [
+            return view('bahan.index', [
 
                 'bahans' => $bahans,
                 'satuan_bahans' => SatuanBahan::whereNull('deleted_at')->orderBy('name')->get(),
@@ -106,6 +86,67 @@ class BahanController extends Controller
         }
     }
 
+    public function indexMasukKeluar(Request $request)
+    {
+        $user = Auth::user();
+        $role = $user->role;
+
+        // Data barang masuk
+        $bahanMasuks = BahanMasuk::with(['bahan', 'user'])
+            ->whereNull('deleted_at')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'date' => $item->date,
+                    'user' => $item->user->name ?? 'Unknown',
+                    'name' => $item->bahan->name ?? '-',
+                    'tipe' => 'MASUK',
+                    'jumlah' => $item->jumlah,
+                    'satuan' => $item->bahan->satuan->name ?? '-',
+                    'created_at' => $item->created_at,
+                ];
+            });
+
+        // Data barang keluar
+        $bahanKeluars = BahanKeluar::with(['bahan', 'user'])
+            ->whereNull('deleted_at')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'date' => $item->date,
+                    'user' => $item->user->name ?? 'Unknown',
+                    'name' => $item->bahan->name ?? '-',
+                    'tipe' => 'KELUAR',
+                    'jumlah' => $item->jumlah,
+                    'satuan' => $item->bahan->satuan->name ?? '-',
+                    'created_at' => $item->created_at,
+                ];
+            });
+
+        // Gabungkan dan urutkan semua transaksi
+        $merged = $bahanMasuks->merge($bahanKeluars)->sortByDesc('created_at')->values();
+
+        // Paginate secara manual
+        $page = $request->input('page', 1);
+        $perPage = 20;
+        $offset = ($page - 1) * $perPage;
+
+        $transaksis = new LengthAwarePaginator(
+            $merged->slice($offset, $perPage),
+            $merged->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            return view('bahan.indexBahanMasukKeluar', compact('transaksis'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+    }
     public function indexHistory(Request $request, $encryptedId)
     {
         $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
@@ -118,7 +159,7 @@ class BahanController extends Controller
         $role = $user->role;
 
         $bahan = Bahan::with('satuan')->findOrFail($id[0]);
-        $query = HistoryInput::with(['bahan.satuan'])
+        $query = BahanMasuk::with(['bahan.satuan'])
             ->where('bahan_id', $id[0])
             ->whereNull('deleted_at')
             ->orderBy('date', 'desc');
@@ -129,13 +170,13 @@ class BahanController extends Controller
             });
         }
 
-        $historyInputs = $query->paginate(20)->appends($request->query());
+        $bahanMasuks = $query->paginate(20)->appends($request->query());
 
-        $satuans = Satuan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
+        $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
         if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
             return view('bahan.historyInput', [
-                'historyInputs' => $historyInputs,
+                'bahanMasuks' => $bahanMasuks,
                 'satuans' => $satuans,
                 'bahan' => $bahan,
                 'encryptedId' => $hashids->encode($id[0]), // Encrypt ID kembali sebelum mengirim ke view
@@ -144,6 +185,64 @@ class BahanController extends Controller
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
+    public function indexDataBahan(Request $request)
+    {
+        $user = Auth::user();
+        $role = $user->role;
+
+        $orderBy = $request->input('orderBy', 'name');
+        $direction = $request->input('direction', 'asc');
+
+        $query = Bahan::with('satuan')
+            ->whereNull('deleted_at');
+        $query->orderBy($orderBy, $direction);
+
+        $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
+            $bahans = $query->paginate(20);
+
+            return view('bahan.indexDataBahan', [
+                'bahans' => $bahans,
+                'satuans' => $satuans
+            ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+    }
+
+
+    public function indexSatuan(Request $request)
+    {
+        $user = Auth::user();
+        $role = $user->role;
+
+        $query = SatuanBahan::whereNull('deleted_at')
+            ->orderBy('name', 'asc');
+
+        if ($search = $request->input('search')) {
+            $query->where('satuan_bahans.name', 'like', '%' . $search . '%');
+        }
+
+        $satuans = $query->paginate(20)->appends($request->query());
+
+        if ($role === 'OWNER') {
+            return view('bahan.indexSatuan', compact('satuans'));
+        } elseif ($role === 'MANAJER') {
+            return view('bahan.indexSatuan', compact('satuans'));
+        } elseif ($role === 'STAF') {
+            return view('bahan.indexSatuan', compact('satuans'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+    }
+
+
+
 
     public function inputStore(Request $request)
     {
@@ -171,14 +270,42 @@ class BahanController extends Controller
             return redirect()->back()->with('error', 'Bahan tidak ditemukan.');
         }
 
-        HistoryInput::create([
+        BahanMasuk::create([
             'user_id' => Auth::id(),
             'bahan_id' => $decryptedBahanId[0],
             'date' => $validated['date'],
             'jumlah' => $validated['jumlah'],
         ]);
 
-        return redirect()->back()->with('success', 'Input stok '. $bahan->name .' pada "' . $validated['date'] . '" berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Input stok ' . $bahan->name . ' pada "' . $validated['date'] . '" berhasil ditambahkan.');
+    }
+
+    public function storeSatuan(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:30',
+
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        $user = Auth::user()->id;
+
+        $Satuan = new SatuanBahan();
+        $Satuan->user_id = $user;
+        $Satuan->name = $request->input('name');
+        $Satuan->save();
+
+        // Panggil fungsi logAdd()
+        // LogActivity::addToLog('Create Barang "' . $request->input('name') . '"');
+
+        $dataPerPage = 20;
+        $data = DB::table('satuan_bahans')->paginate($dataPerPage);
+        $lastPage = $data->lastPage();
+
+        return redirect('/bahan/satuan?page=' . $lastPage)->with('success', 'Satuan "' . $Satuan->name . '" Berhasil Ditambahkan');
+
     }
 
     public function inputUpdate(Request $request)
@@ -214,11 +341,31 @@ class BahanController extends Controller
                 'jumlah' => $validated['jumlah'],
             ]);
 
-            return redirect()->back()->with('success', 'Input stok '. $bahan->name .' pada "' . $validated['date'] . '" berhasil diupdate.');
+            return redirect()->back()->with('success', 'Input stok ' . $bahan->name . ' pada "' . $validated['date'] . '" berhasil diupdate.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal mengupdate data stok: ' . $e->getMessage());
         }
     }
+
+    public function updateSatuan(Request $request, SatuanBahan $satuans)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        $user = Auth::user()->id;
+
+        $Satuan = SatuanBahan::findOrFail($request->input('id'));
+        $Satuan->user_id = $user;
+        $Satuan->name = $request->input('name');
+        $Satuan->save();
+
+        return redirect('/bahan/satuan')->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
+    }
+
     public function inputDelete($encryptedId)
     {
         $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
@@ -239,7 +386,7 @@ class BahanController extends Controller
         $jumlahFormatted = rtrim(rtrim(number_format($historyInput->jumlah, 3, ',', '.'), '0'), ',');
 
         return redirect()->route('stok-bahan.historyBahan', ['encryptedId' => $encryptedBahanId])
-            ->with('success', 'Data input '. $historyInput->bahan->name .' pada "' . $tanggalDelete . '" sebesar ' . $jumlahFormatted  .' berhasil dihapus.');
+            ->with('success', 'Data input ' . $historyInput->bahan->name . ' pada "' . $tanggalDelete . '" sebesar ' . $jumlahFormatted . ' berhasil dihapus.');
     }
 
     public function create()
@@ -248,7 +395,7 @@ class BahanController extends Controller
         return view('bahan');
     }
 
-    public function store(Request $request)
+    public function storeDataBahan(Request $request)
     {
         Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -276,7 +423,7 @@ class BahanController extends Controller
             $lastPage = $data->lastPage();
 
             // Redirect to the data-bahan page with order by id asc
-            return redirect('/data-bahan?page=' . $lastPage . '&orderBy=id&direction=asc')
+            return redirect('/bahan/data-bahan?page=' . $lastPage . '&orderBy=id&direction=asc')
                 ->with('success', 'Data "' . $Bahan->name . '" Berhasil Ditambahkan');
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle unique constraint violation
@@ -300,7 +447,7 @@ class BahanController extends Controller
         return view('bahan.index', compact('Bahan'));
     }
 
-    public function update(Request $request, Bahan $bahans)
+    public function updateDataBahan(Request $request, Bahan $bahans)
     {
         Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -321,7 +468,7 @@ class BahanController extends Controller
             $Bahan->satuan_id = $request->input('satuan_id' ?: '-');
             $Bahan->save();
 
-            return redirect('/data-bahan/')->with('success', 'Data Berhasil Diubah');
+            return redirect('/bahan/data-bahan')->with('success', 'Data Berhasil Diubah');
         } catch (\Illuminate\Database\QueryException $e) {
             // Check for unique constraint violation
             if ($e->errorInfo[1] == 1062) {

@@ -11,11 +11,6 @@
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
-
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-
-
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,16 +34,9 @@
 
     <!-- Template Stylesheet -->
     <link href="{{url('css/style.css')}}" rel="stylesheet">
-    <style>
-        /* CSS untuk tampilan cetakan */
-        @media print {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-            /* Menyembunyikan elemen-elemen yang tidak perlu dicetak */
-            .hide-on-print {
-                display: none;
-            }
-        }
-    </style>
+    <link href="{{ url('css/mycss.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -94,34 +82,23 @@
 
                         <div class="nav-item dropdown">
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="false">Stok</a>
+                                data-bs-toggle="dropdown" aria-expanded="false" aria-controls="stokMasterDropdown">Stok</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
-                                <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
-                                        class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
-                                <a href="/stok-bahan" class="nav-link @yield('StokBahan')"><i
-                                        class="fa fa-file me-2"></i>Stok
-                                    Bahan</a>
+                                <a href="/barang/master" class="nav-link @yield('StokBarang')"><i
+                                        class="fa fa-credit-card-alt me-2"></i>Barang</a>
+                                <a href="/bahan/master" class="nav-link @yield('StokBahan')"><i
+                                        class="fa fa-file me-2"></i>Bahan</a>
                                 <a href="/stock-opname" class="nav-link @yield('StockOpname')"><i
                                         class="fa fa-file me-2"></i>Stock Opname</a>
 
                             </div>
                         </div>
 
-                        <div class="nav-item dropdown">
-                            <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="false">Data</a>
-                            <div class="dropdown-menu bg-transparent border-0 " id="dataDropdownMenu">
-
-                                <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
-                                        class="fa fa-file me-2"></i>Data
-                                    Bahan</a>
-
-                            </div>
-                        </div>
 
                         <div class="nav-item dropdown">
                             <a href="#" id="menuTransaksiDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="false">Menu & Transaksi</a>
+                                data-bs-toggle="dropdown" aria-expanded="false"
+                                aria-controls="menuTransaksiDropdownMenu">Menu & Transaksi</a>
                             <div class="dropdown-menu bg-transparent border-0" id="menuTransaksiDropdownMenu">
                                 <a href="/daftar-menu" class="nav-link @yield('DaftarMenu')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Daftar Menu</a>
@@ -147,37 +124,25 @@
                                 class="fa fa-tachometer-alt me-2 mb-2"></i>Dashboard</a>
                         <a href="/notification" class="nav-link @yield('Notifikasi')"><i
                                 class="fa fa-tachometer-alt me-2 mb-2"></i>Notifikasi</a>
-
                         <div class="nav-item dropdown">
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="false">Stok</a>
+                                data-bs-toggle="dropdown" aria-expanded="false" aria-controls="stokMasterDropdown">Stok</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
-                                <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
-                                        class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
-                                <a href="/stok-bahan" class="nav-link @yield('StokBahan')"><i
-                                        class="fa fa-file me-2"></i>Stok
-                                    Bahan</a>
+                                <a href="/barang/master" class="nav-link @yield('StokBarang')"><i
+                                        class="fa fa-credit-card-alt me-2"></i>Barang</a>
+                                <a href="/bahan/master" class="nav-link @yield('StokBahan')"><i
+                                        class="fa fa-file me-2"></i>Bahan</a>
                                 <a href="/stock-opname" class="nav-link @yield('StockOpname')"><i
                                         class="fa fa-file me-2"></i>Stock Opname</a>
-
                             </div>
                         </div>
 
-                        <div class="nav-item dropdown">
-                            <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="false">Data</a>
-                            <div class="dropdown-menu bg-transparent border-0 " id="dataDropdownMenu">
-
-                                <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
-                                        class="fa fa-file me-2"></i>Data
-                                    Bahan</a>
-
-                            </div>
-                        </div>
 
                         <div class="nav-item dropdown">
                             <a href="#" id="menuTransaksiDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="false">Menu & Transaksi</a>
+                                data-bs-toggle="dropdown" aria-expanded="false"
+                                aria-controls="menuTransaksiDropdownMenu">Menu & Transaksi</a>
+
                             <div class="dropdown-menu bg-transparent border-0" id="menuTransaksiDropdownMenu">
                                 <a href="/daftar-menu" class="nav-link @yield('DaftarMenu')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Daftar Menu</a>
@@ -206,34 +171,21 @@
 
                         <div class="nav-item dropdown">
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="false">Stok</a>
+                                data-bs-toggle="dropdown" aria-expanded="false" aria-controls="stokMasterDropdown">Stok</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
-                                <a href="/stok-barang" class="nav-link @yield('DataBarang')"><i
-                                        class="fa fa-credit-card-alt me-2"></i>Stok Barang</a>
-                                <a href="/stok-bahan" class="nav-link @yield('StokBahan')"><i
-                                        class="fa fa-file me-2"></i>Stok
-                                    Bahan</a>
+                                <a href="/barang/master" class="nav-link @yield('StokBarang')"><i
+                                        class="fa fa-credit-card-alt me-2"></i>Barang</a>
+                                <a href="/bahan/master" class="nav-link @yield('StokBahan')"><i
+                                        class="fa fa-file me-2"></i>Bahan</a>
                                 <a href="/stock-opname" class="nav-link @yield('StockOpname')"><i
                                         class="fa fa-file me-2"></i>Stock Opname</a>
-
-                            </div>
-                        </div>
-
-                        <div class="nav-item dropdown">
-                            <a href="#" id="dataMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="false">Data</a>
-                            <div class="dropdown-menu bg-transparent border-0 " id="dataDropdownMenu">
-
-                                <a href="/data-bahan" class="nav-link @yield('DataBahan')"><i
-                                        class="fa fa-file me-2"></i>Data
-                                    Bahan</a>
-
                             </div>
                         </div>
 
                         <div class="nav-item dropdown">
                             <a href="#" id="menuTransaksiDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
-                                data-bs-toggle="dropdown" aria-expanded="false">Menu & Transaksi</a>
+                                data-bs-toggle="dropdown" aria-expanded="false"
+                                aria-controls="menuTransaksiDropdownMenu">Menu & Transaksi</a>
                             <div class="dropdown-menu bg-transparent border-0" id="menuTransaksiDropdownMenu">
                                 <a href="/daftar-menu" class="nav-link @yield('DaftarMenu')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Daftar Menu</a>
@@ -302,9 +254,6 @@
     </div>
 
     <!-- JavaScript Libraries -->
-    <!-- jQuery (wajib sebelum DataTables) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script src="{{ url('js/jquery-3.4.1.min.js')}}"></script>
     <script src="{{ url('js/bootstrap.bundle.min.js')}}"></script>
@@ -317,656 +266,85 @@
     <script src="{{ url('lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
     <script src="{{ url('js/popper.min.js') }} "></script>
     <script src="{{ url('js/bootstrap.min.js')}}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- tambahanku -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="vendor/select2/dist/js/select2.min.js"></script>
-
-    <!-- Template Javascript -->
     <!-- Template Javascript -->
     <script src="{{ url('js/main.js')}}"></script>
-    <!-- JavaScript Libraries -->
-    <script src="{{ url('js/jquery-3.4.1.min.js')}}"></script>
     <!-- ... (other script tags) -->
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        const currentUrl = window.location.pathname;
-
-        if (currentUrl.includes('/stok-barang') || currentUrl.includes('/stok-bahan') || currentUrl.includes('/stock-opname')) {
-            document.getElementById('stokDropdownMenu').classList.add('show');
-        }
-        if (currentUrl.includes('/data-bahan')) {
-            document.getElementById('dataDropdownMenu').classList.add('show');
-        }
-        if (currentUrl.includes('/daftar-menu') || currentUrl.includes('/transaksi')) {
-            document.getElementById('menuTransaksiDropdownMenu').classList.add('show');
-        }
-        if (currentUrl.includes('/admin-only/log') || currentUrl.includes('/admin-only/user-data')) {
-            document.getElementById('lainnyaDropdownMenu').classList.add('show');
-        }
-    </script>
-    <script>
-        const inputIds = ['txtminimum', 'minimum', 'txtjumlah', 'jumlah'];
-
-        function handleNumericInput(e) {
-            let value = e.target.value;
-            let cleaned = value.replace(/[^0-9.]/g, '');
-            let [intPart, decimalPart] = cleaned.split('.');
-
-            intPart = intPart.slice(0, 11);
-
-            if (decimalPart) {
-                decimalPart = decimalPart.slice(0, 3);
-                cleaned = intPart + '.' + decimalPart;
-            } else {
-                cleaned = intPart;
-            }
-            if (e.target.value !== cleaned) {
-                e.target.value = cleaned;
-            }
-        }
-
-        inputIds.forEach(function (id) {
-            const input = document.getElementById(id);
-            if (input) {
-                input.addEventListener('input', handleNumericInput);
-            }
+        $('#editBarangModal').on('shown.bs.modal', function () {
+            // Hapus instans sebelumnya dan inisialisasi ulang select2
+            $('#id_bahan.select2-hidden-accessible').select2('destroy');
+            $('#id_bahan').select2({
+                dropdownParent: $('#editBarangModal')
+            });
         });
-    </script>
-    <script>
+
+        $('#barangModal').on('shown.bs.modal', function () {
+            // Hapus instans sebelumnya dan inisialisasi ulang select2
+            $('#satuan_id.select2-hidden-accessible').select2('destroy');
+            $('#satuan_id').select2({
+                dropdownParent: $('#barangModal')
+            });
+
+            // Fokus ke input select2 setelah muncul
+            setTimeout(() => {
+                $('.select2-container--open .select2-search__field').focus();
+            }, 100);
+        });
+
+        $('#txtsatuan_id').select2({
+            placeholder: "Cari atau pilih satuan",
+            allowClear: true,
+            dropdownParent: $('#editBarangModal')
+        });
+
+        $('#editBarangModal').on('shown.bs.modal', function () {
+            // Pastikan select2 hanya diinisialisasi setelah modal muncul
+            $('#txtsatuan_id').select2({
+                dropdownParent: $('#editBarangModal')
+            });
+
+            // Fokus ke input select2 setelah muncul
+            setTimeout(() => {
+                $('.select2-container--open .select2-search__field').focus();
+            }, 100);
+        });
+
+
+
+
         $(document).ready(function () {
+            // Inisialisasi Select2
             $('.select2').select2({
-                placeholder: "Cari atau pilih satuan",
-                allowClear: true
-            });
-            $(document).on('click', '.btn_editbahan', function () {
-                var satuan_id = $(this).data('satuan_id');
-                $("#satuan_id").val(satuan_id).trigger('change');
-            });
-        });
-    </script>
-
-    <script>
-        document.querySelectorAll("#jumlah, #txtjumlah, #txtminimum, #minimum").forEach(function (input) {
-            input.addEventListener("keydown", function (e) {
-                if (e.key === "ArrowUp") {
-                    e.preventDefault();
-                    this.value = (parseFloat(this.value) || 0) + 1;
-                } else if (e.key === "ArrowDown") {
-                    e.preventDefault();
-                    this.value = (parseFloat(this.value) || 0) - 1;
-                }
-            });
-        });
-    </script>
-    <script type="text/javascript">
-        $(document).on('click', '.btn_editbarang', function (e) {
-            var id = $(this).data('id');
-            var name = $(this).data('name');
-            var description = $(this).data('description');
-            var jumlah = $(this).data('jumlah');
-            var satuan_id = $(this).data('satuan_id');
-            var image = $(this).data('image');
-
-            console.log(id, name, description, jumlah, satuan_id, image);
-
-            var formattedJumlah = (jumlah % 1 === 0) ? parseInt(jumlah) : jumlah;
-
-            $("#txtid").val(id);
-            $("#txtname").val(name);
-            $("#txtdescription").val(description);
-            $("#txtjumlah").val(formattedJumlah);
-            $("#txtsatuan_id").val(satuan_id);
-
-            if (image) {
-                $("#previewImage").attr("src", "/storage/" + image).show();
-            } else {
-                $("#previewImage").hide();
-            }
-
-            $("#editBarangModal").modal('toggle');
-        });
-    </script>
-    <script type="text/javascript">
-        $(document).on('click', '.btn_editbahan', function (e) {
-            var id = $(this).data('id');
-            var name = $(this).data('name');
-            var description = $(this).data('description');
-            var minimum = $(this).data('minimum');
-            var satuan_id = $(this).data('satuan_id');
-
-            if (!description || description.trim() === "") {
-                description = "-";
-            }
-
-            console.log(id, name, description, minimum, satuan_id);
-
-            var formattedMinimum = (minimum % 1 === 0) ? parseInt(minimum) : minimum;
-
-            $("#txtid").val(id);
-            $("#txtname").val(name);
-            $("#txtdescription").val(description);
-            $("#txtminimum").val(formattedMinimum);
-            $("#txtsatuan_id").val(satuan_id);
-
-            $("#editBarangModal").modal('toggle');
-        });
-
-    </script>
-    <script type="text/javascript">
-        $(document).on('click', '.btn_editstokbahan', function (e) {
-            var id = $(this).data('id');
-            var date = $(this).data('date');
-            var jumlah = $(this).data('jumlah');
-            var satuan_name = $(this).data('satuan_name');
-
-            console.log(id, date, jumlah, satuan_name);
-
-            var formattedJumlah = (jumlah % 1 === 0) ? parseInt(jumlah) : jumlah;
-
-            $("#txtid").val(id);
-            $("#txtdate").val(date);
-            $("#txtjumlah").val(formattedJumlah);
-
-            $("#txtsatuan_name").val(satuan_name);
-
-            $("#editBarangModal").modal('toggle');
-        });
-
-    </script>
-    <script type="text/javascript">
-        $(document).on('click', '.btn_editbahan_akhir', function (e) {
-            var id = $(this).data('id');
-            var date = $(this).data('date');
-            var bahan_id = $(this).data('bahan_id');
-            var jumlah = $(this).data('jumlah');
-
-            console.log(id, name, description, minimum, satuan_id);
-            var formattedJumlah = (jumlah % 1 === 0) ? parseInt(jumlah) : jumlah;
-
-            $("#txtid").val(id);
-            $("#txtdate").val(date);
-            $("#txtbahan_id").val(bahan_id);
-            $("#txtjumlah").val(formattedJumlah);
-
-            $("#editBarangModal").modal('toggle');
-        });
-
-    </script>
-    <script>
-        function toggleInput(inputId, buttonId) {
-            let inputField = document.getElementById(inputId);
-            let button = document.getElementById(buttonId);
-
-            if (inputField.readOnly) {
-                inputField.readOnly = false;
-
-                button.style.display = "none";
-                inputField.focus();
-                inputField.select();
-
-                inputField.addEventListener('focusout', function lockInput() {
-                    inputField.readOnly = true;
-                    button.style.display = "inline";
-                    inputField.removeEventListener('focusout', lockInput);
-                });
-            }
-        }
-
-        document.getElementById('toggleMinimum').addEventListener('click', function () {
-            toggleInput('minimum', 'toggleMinimum');
-        });
-
-        document.getElementById('toggleMinimum2').addEventListener('click', function () {
-            toggleInput('txtminimum', 'toggleMinimum2');
-        });
-
-
-    </script>
-    <script>
-        document.querySelectorAll('input[type="number"].number0').forEach(function (input) {
-            input.addEventListener("focusout", function () {
-                if (this.value.trim() === "") {
-                    this.value = "0";
-                }
-            });
-        });
-
-        document.querySelectorAll(".number0").forEach(function (inputField) {
-            inputField.addEventListener("focus", function () {
-                this.select();
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            const bahanOptionsHtml = $('#bahanOptions select').html();
-
-            function renderBahanRow(index, selectedBahanId = '', jumlah = '', satuan = '') {
-                const bahanOptionsTemplate = document.querySelector('#bahanOptions select');
-                const bahanSelect = bahanOptionsTemplate.cloneNode(true);
-                bahanSelect.name = `bahan[${index}][id]`;
-                bahanSelect.classList.add('bahan-dropdown');
-
-                if (selectedBahanId) {
-                    Array.from(bahanSelect.options).forEach(option => {
-                        if (option.value == selectedBahanId) {
-                            option.selected = true;
-                        }
-                    });
-                }
-
-                function formatJumlah(jumlah) {
-                    if (!jumlah) return '';
-                    const num = parseFloat(jumlah);
-                    return Number.isInteger(num) ? num.toString() : num.toFixed(3).replace(/\.?0+$/, '');
-                }
-
-                const jumlahInput = document.createElement('input');
-                jumlahInput.type = 'number';
-                jumlahInput.name = `bahan[${index}][jumlah]`;
-                jumlahInput.placeholder = 'Jumlah';
-                jumlahInput.required = true;
-                jumlahInput.step = '0.001';
-                jumlahInput.className = 'form-control';
-                jumlahInput.value = formatJumlah(jumlah);
-
-                const satuanInput = document.createElement('input');
-                satuanInput.type = 'text';
-                satuanInput.name = `bahan[${index}][satuan]`;
-                satuanInput.placeholder = 'Satuan';
-                satuanInput.className = 'form-control satuan-input';
-                satuanInput.required = true;
-                satuanInput.disabled = true;
-                satuanInput.value = satuan;
-
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'btn btn-danger removeBahan';
-                removeBtn.textContent = '-';
-
-                const row = document.createElement('div');
-                row.className = 'input-group mb-2 bahan-item';
-                row.appendChild(bahanSelect);
-                row.appendChild(jumlahInput);
-                row.appendChild(satuanInput);
-                row.appendChild(removeBtn);
-
-                return row;
-            }
-
-            function refreshSatuan($container) {
-                $container.on('change', '.bahan-dropdown', function () {
-                    const satuan = $(this).find('option:selected').data('satuan') || '';
-                    $(this).closest('.bahan-item').find('.satuan-input').val(satuan);
-                });
-
-                $container.on('click', '.removeBahan', function () {
-                    $(this).closest('.bahan-item').remove();
-                });
-            }
-
-            $('#addBahan').on('click', function () {
-                const container = $('#bahanContainer');
-                const index = container.find('.bahan-item').length;
-                container.append(renderBahanRow(index));
-            });
-
-            $('.btn_editmenu').on('click', function () {
-                const id = $(this).data('id');
-                const name = $(this).data('name');
-                const description = $(this).data('description');
-                let komposisi = $(this).data('komposisi');
-
-                if (typeof komposisi === 'string') komposisi = JSON.parse(komposisi);
-                $('#editMenuForm').attr('action', '/daftar-menu/' + id);
-                $('#editMenuId').val(id);
-                $('#editMenuName').val(name);
-                $('#editMenuDescription').val(description);
-
-                const container = $('#editBahanContainer');
-                container.empty();
-
-                komposisi.forEach((item, index) => {
-                    const selectedBahanId = item.bahan_id;
-                    const jumlah = item.jumlah;
-                    const satuan = item.bahan?.satuan?.name || '';
-
-                    const row = renderBahanRow(index, selectedBahanId, jumlah, satuan);
-                    container.append(row);
-                });
-
-
-                $('#editBarangModal').modal('show');
-            });
-
-            $('#addEditBahan').on('click', function () {
-                const container = $('#editBahanContainer');
-                const index = container.find('.bahan-item').length;
-                container.append(renderBahanRow(index));
-            });
-
-            refreshSatuan($('#bahanContainer'));
-            refreshSatuan($('#editBahanContainer'));
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            const bahanOptionsTemplate = document.querySelector('#bahanOptions select');
-
-            function renderBahanAwalRow(index) {
-                const bahanSelect = bahanOptionsTemplate.cloneNode(true);
-                bahanSelect.name = `bahan_awal[${index}][bahan_id]`;
-                bahanSelect.classList.add('form-select', 'bahan-dropdown');
-
-                const jumlahInput = document.createElement('input');
-                jumlahInput.type = 'number';
-                jumlahInput.name = `bahan_awal[${index}][jumlah]`;
-                jumlahInput.placeholder = 'Jumlah';
-                jumlahInput.required = true;
-                jumlahInput.step = '0.001';
-                jumlahInput.min = '0';
-                jumlahInput.max = "99999999999.999";
-                jumlahInput.className = 'form-control mx-2';
-                jumlahInput.style.maxWidth = '120px';
-
-                const satuanInput = document.createElement('input');
-                satuanInput.type = 'text';
-                satuanInput.placeholder = 'Satuan';
-                satuanInput.className = 'form-control satuan-input';
-                satuanInput.disabled = true;
-
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'btn btn-danger removeBahanAwal';
-                removeBtn.textContent = '-';
-
-                const row = document.createElement('div');
-                row.className = 'input-group mb-2 bahan-item';
-                row.appendChild(bahanSelect);
-                row.appendChild(jumlahInput);
-                row.appendChild(satuanInput);
-                row.appendChild(removeBtn);
-
-                return row;
-            }
-
-            function refreshEventListeners($container) {
-                $container.on('change', '.bahan-dropdown', function () {
-                    const satuan = $(this).find('option:selected').data('satuan') || '';
-                    $(this).closest('.bahan-item').find('.satuan-input').val(satuan);
-                });
-
-                $container.on('click', '.removeBahanAwal', function () {
-                    $(this).closest('.bahan-item').remove();
-                });
-            }
-
-            $('#addBahanAwal').on('click', function () {
-                const container = $('#bahanAwalContainer');
-                const index = container.find('.bahan-item').length;
-                container.append(renderBahanAwalRow(index));
-            });
-
-            refreshEventListeners($('#bahanAwalContainer'));
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            const bahanOptionsTemplate = document.querySelector('#bahanOptions select');
-
-            function renderBahanAkhirRow(index) {
-                const bahanSelect = bahanOptionsTemplate.cloneNode(true);
-                bahanSelect.name = `bahan_akhir[${index}][bahan_id]`;
-                bahanSelect.classList.add('form-select', 'bahan-dropdown');
-
-                const jumlahInput = document.createElement('input');
-                jumlahInput.type = 'number';
-                jumlahInput.name = `bahan_akhir[${index}][jumlah]`;
-                jumlahInput.placeholder = 'Jumlah';
-                jumlahInput.required = true;
-                jumlahInput.step = '0.001';
-                jumlahInput.min = '0';
-                jumlahInput.max = "99999999999.999";
-                jumlahInput.className = 'form-control mx-2';
-                jumlahInput.style.maxWidth = '120px';
-
-                const satuanInput = document.createElement('input');
-                satuanInput.type = 'text';
-                satuanInput.placeholder = 'Satuan';
-                satuanInput.className = 'form-control satuan-input';
-                satuanInput.disabled = true;
-
-                const removeBtn = document.createElement('button');
-                removeBtn.type = 'button';
-                removeBtn.className = 'btn btn-danger removeBahanAkhir';
-                removeBtn.textContent = '-';
-
-                const row = document.createElement('div');
-                row.className = 'input-group mb-2 bahan-item';
-                row.appendChild(bahanSelect);
-                row.appendChild(jumlahInput);
-                row.appendChild(satuanInput);
-                row.appendChild(removeBtn);
-
-                return row;
-            }
-
-            function refreshEventListeners($container) {
-                $container.on('change', '.bahan-dropdown', function () {
-                    const satuan = $(this).find('option:selected').data('satuan') || '';
-                    $(this).closest('.bahan-item').find('.satuan-input').val(satuan);
-                });
-
-                $container.on('click', '.removeBahanAkhir', function () {
-                    $(this).closest('.bahan-item').remove();
-                });
-            }
-
-            $('#addBahanAkhir').on('click', function () {
-                const container = $('#bahanAkhirContainer');
-                const index = container.find('.bahan-item').length;
-                container.append(renderBahanAkhirRow(index));
-            });
-
-            refreshEventListeners($('#bahanAkhirContainer'));
-        });
-    </script>
-
-    <script>
-        $(document).on('click', '.btn_editbahan_akhir', function () {
-            var bahanId = $(this).data('id');
-            var modal = $('#editBarangModal');
-
-            $('#editBahanAkhirId').val(bahanId);
-
-            $.ajax({
-                url: '/your-endpoint/' + bahanId,
-                method: 'GET',
-                success: function (data) {
-                    $('#editDate').val(data.date);
-                    $('#editBahanAkhirContainer').empty();
-
-                    data.bahans.forEach(function (bahan) {
-                        var bahanHtml = `
-                            <div class="bahan-row">
-                                <div class="mb-3">
-                                    <label class="form-label text-dark fw-bold">Bahan</label>
-                                    <select class="form-select bahan-select" data-id="${bahan.id}" name="bahans[]">
-                                        <option value="${bahan.id}" selected>${bahan.name}</option>
-                                    </select>
-                                    <label class="form-label text-dark fw-bold">Jumlah</label>
-                                    <input type="number" class="form-control bahan-quantity" name="quantities[]" value="${bahan.quantity}" required>
-                                    <input type="hidden" name="bahanIds[]" value="${bahan.id}">
-                                </div>
-                            </div>
-                        `;
-                        $('#editBahanAkhirContainer').append(bahanHtml);
-                    });
+                templateResult: function (state) {
+                    if (!state.id) {
+                        return state.text; // Jika tidak ada ID, hanya teks
+                    }
+                    var $state = $(
+                        '<span><img src="' + $(state.element).data('image') + '" class="img-flag" style="width: 20px; height: 20px; margin-right: 10px;" /> ' + state.text + '</span>'
+                    );
+                    return $state;
                 },
-                error: function () {
-                    alert('Error loading bahan data.');
-                }
-            });
-
-            modal.modal('show');
-        });
-
-        $('#addEditBahanAkhir').click(function () {
-            var newRow = `
-                <div class="bahan-row">
-                    <div class="mb-3">
-                        <label class="form-label text-dark fw-bold">Bahan</label>
-                        <select class="form-select bahan-select" name="bahans[]">
-                            
-                        </select>
-                        <label class="form-label text-dark fw-bold">Jumlah</label>
-                        <input type="number" class="form-control bahan-quantity" name="quantities[]" required>
-                    </div>
-                </div>
-            `;
-            $('#editBahanAkhirContainer').append(newRow);
-        });
-
-        $('#editBahanAkhir').submit(function (e) {
-            e.preventDefault();
-
-            var formData = $(this).serialize();
-
-            $.ajax({
-                url: '/your-endpoint/' + $('#editBahanAkhirId').val(),
-                method: 'PUT',
-                data: formData,
-                success: function () {
-                    alert('Bahan Akhir successfully updated.');
-                    $('#editBarangModal').modal('hide');
-                },
-                error: function () {
-                    alert('Error saving Bahan Akhir.');
+                templateSelection: function (state) {
+                    if (!state.id) {
+                        return state.text; // Jika tidak ada ID, hanya teks
+                    }
+                    var $state = $(
+                        '<span><img src="' + $(state.element).data('image') + '" class="img-flag" style="width: 20px; height: 20px; margin-right: 10px;" /> ' + state.text + '</span>'
+                    );
+                    return $state;
                 }
             });
         });
 
     </script>
-    <script>
-        document.querySelectorAll(".toggle-jumlah").forEach(function (button) {
-            button.addEventListener("click", function () {
-                let inputField = this.parentElement.querySelector(".jumlah-input");
-                let editButton = this.parentElement.querySelector(".toggle-jumlah");
 
-                if (inputField.readOnly) {
-                    inputField.readOnly = false;
-                    editButton.style.display = "none";
-                    inputField.focus();
-                    inputField.select();
-
-                    inputField.addEventListener("focusout", function lockInput() {
-                        inputField.readOnly = true;
-                        editButton.style.display = "inline";
-                        inputField.removeEventListener("focusout", lockInput);
-                    });
-                }
-            });
-        });
-    </script>
-    <script>
-        function updateSubmitButton() {
-            const submitBtn = document.getElementById("submitBtn");
-            const allConfirmed = [...document.querySelectorAll(".btn-konfirmasi")].every(button =>
-                button.classList.contains("btn-success")
-            );
-
-            if (allConfirmed) {
-                submitBtn.disabled = false;
-                submitBtn.classList.remove("btn-danger");
-                submitBtn.classList.add("btn-primary");
-            } else {
-                submitBtn.disabled = true;
-                submitBtn.classList.remove("btn-primary");
-                submitBtn.classList.add("btn-danger");
-            }
-        }
-
-        document.querySelectorAll(".btn-konfirmasi").forEach(function (button) {
-            button.addEventListener("click", function () {
-                let row = this.closest("tr");
-                let editButton = row.querySelector(".toggle-jumlah");
-
-                if (this.classList.contains("btn-primary")) {
-                    this.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
-                    this.disabled = true;
-
-                    setTimeout(() => {
-                        this.innerHTML = '<i class="fa fa-check"></i>';
-                        this.classList.remove("btn-primary");
-                        this.classList.add("btn-success");
-                        this.disabled = false;
-                        if (editButton) editButton.style.display = "none";
-                        updateSubmitButton();
-                    }, 500);
-                } else {
-                    this.innerHTML = "Konfirmasi";
-                    this.classList.remove("btn-success");
-                    this.classList.add("btn-primary");
-                    if (editButton) editButton.style.display = "inline-block";
-                    updateSubmitButton();
-                }
-            });
-        });
-
-
-        document.querySelectorAll(".toggle-jumlah").forEach(function (editButton) {
-            editButton.addEventListener("click", function () {
-                let inputField = this.previousElementSibling;
-
-                if (inputField.readOnly) {
-                    inputField.readOnly = false;
-                    inputField.focus();
-                    inputField.select();
-
-
-                    inputField.addEventListener("focusout", function lockInput() {
-                        inputField.readOnly = true;
-                        inputField.removeEventListener("focusout", lockInput);
-                    });
-                }
-            });
-        });
-
-        updateSubmitButton();
-    </script>
-    <script>
-        const menuSelect = document.getElementById('menu_id');
-        const jumlahInput = document.getElementById('jumlah');
-        const komposisiPreview = document.getElementById('komposisiPreview');
-
-        function formatJumlah(jumlah) {
-            return jumlah % 1 === 0 ? jumlah : parseFloat(jumlah.toFixed(3));
-        }
-
-        function updateKomposisi() {
-            const selectedOption = menuSelect.options[menuSelect.selectedIndex];
-            const komposisiData = selectedOption.getAttribute('data-komposisi');
-            const jumlahPesanan = parseInt(jumlahInput.value) || 1;
-
-            komposisiPreview.innerHTML = '';
-
-            if (komposisiData) {
-                const komposisi = JSON.parse(komposisiData);
-                komposisi.forEach(item => {
-                    const totalJumlah = item.jumlah * jumlahPesanan;
-                    const li = document.createElement('li');
-                    li.textContent = `${item.bahan.name} - ${formatJumlah(totalJumlah)} ${item.bahan.satuan.name}`;
-                    komposisiPreview.appendChild(li);
-                });
-            }
-        }
-
-        menuSelect.addEventListener('change', updateKomposisi);
-        jumlahInput.addEventListener('input', updateKomposisi);
-    </script>
+    <script src="{{ url('js/myjs.js')}}"></script>
 </body>
 
 </html>

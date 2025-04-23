@@ -1,0 +1,92 @@
+.tab-trapezoid {
+    clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+    padding: 3px 20px;
+    margin-right: -4px;
+    background-color: rgb(223 223 223);
+    color: #000000;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+    font-weight: bolder;
+    text-decoration: none;
+}
+
+.tab-trapezoid:hover {
+    background-color: #cfd4da;
+}
+
+.tab-trapezoid.active {
+    background-color: #009cff;
+    color: #f7f7f7;
+}
+
+/* ////////////////////////////// */
+
+.select2-results__option img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.select2-container--open {
+    z-index: 9999 !important;
+}
+.select2-dropdown {
+    z-index: 9999 !important;
+
+}
+
+/* Styling untuk container select2 */
+.select2-container {
+    width: 100% !important;
+}
+
+/* Styling untuk tampilan input select2 */
+.select2-selection {
+    height: 60px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Hover effect untuk select2 */
+.select2-selection--single:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+}
+
+/* Fokus (focus) effect untuk select2 */
+.select2-selection--single:focus {
+    border-color: #007bff;
+    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+}
+
+/* Styling untuk dropdown list */
+.select2-dropdown {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+/* Styling item dalam dropdown */
+.select2-results__option {
+    padding: 8px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+/* Hover effect untuk item di dalam dropdown */
+.select2-results__option:hover {
+    background-color: #f0f8ff;
+    color: #007bff;
+}
+
+/* Styling untuk selected item */
+.select2-results__option[aria-selected="true"] {
+    background-color: #007bff;
+    color: #fff;
+}

@@ -16,7 +16,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Stok Barang - Master</li>
+                                <li class="breadcrumb-item active" aria-current="page">Stok Barang - Satuan</li>
                             </ol>
                         </nav>
                     </div>
@@ -85,14 +85,18 @@
                         <div class="table-responsive">
                             <table id="tableBarang" class="table table-bordered text-dark table-sm">
                                 <div class="mb-3">
-
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                        data-bs-target="#barangModal">
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Satuan
+                                    </button>
                                     <div class="col-sm-3 float-end mt-3">
                                         <div class="d-flex gap-2">
-                                            <a href="/barang/master" class="btn btn-outline-secondary btn-sm"
+                                            <a href="/barang/satuan" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/barang/master" method="get" class="form-inline d-flex">
+                                            <form action="/barang/satuan" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
                                                     name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
@@ -102,136 +106,101 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th>Nama barang</th>
-                                                <th>Stok</th>
-                                                <th>Satuan</th>
+                                                <th>Nama Satuan</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($barangs->isEmpty())
+                                            @if ($satuans->isEmpty())
                                                 <p>Tidak ada data yang ditemukan.</p>
                                             @else
-                                                @foreach ($barangs as $barang)
+                                                @foreach ($satuans as $satuan)
                                                     <tr>
-                                                        <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
+                                                        <td>{{ ($satuans->currentPage() - 1) * $satuans->perPage() + $loop->iteration }}
                                                         </td>
-                                                        <td>{{ $barang->name }}</td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($barang->stok_akhir, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
+                                                        <td>{{ $satuan->name }}</td>
 
                                                         <td>
-                                                            <!-- Tombol Tambah -->
-                                                            <button type="button" class="btn btn-outline-success btnTambahStok"
-                                                                data-id="{{ $barang->id ?? 'NULL' }}"
-                                                                data-name="{{ $barang->name ?? 'NULL'}}"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#barangModalM">
-                                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                                            </button>
-                                                             
-
-                                                            <!-- Tombol Kurangi -->
-                                                            <button type="button" class="btn btn-outline-success btnKurangStok"
-                                                                data-id="{{ $barang->id ?? 'NULL' }}"
-                                                                data-name="{{ $barang->name ?? 'NULL'}}" data-bs-toggle="modal"
-                                                                data-bs-target="#barangModalK">
-                                                                <i class="fa fa-minus " aria-hidden="true"></i>
+                                                            <!-- Button trigger modal -->
+                                                            <button type="button" class="btn btn-primary btn-sm btn_editsatuanbarang"
+                                                                data-id="{{ $satuan->id ?? 'NULL' }}"
+                                                                data-name="{{ $satuan->name ?? 'NULL' }}">
+                                                                <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
+                                                            <form action="/barang/satuan/delete/{{ $satuan->id }}" class="d-inline"
+                                                                method="post">
+                                                                @method('PUT')
+                                                                @csrf
+                                                                <button class="btn btn-danger btn-sm" type="submit"
+                                                                    onclick="return confirm('Yakin akan Mendelete Data?')"><i
+                                                                        class="fa fa-trash"></i></button>
+                                                            </form>
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                             @endif
                                         </tbody>
                             </table>
-                            {{ $barangs->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                            {{ $satuans->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-   
+    <!-- Modal Tambah Barang-->
 
-    <div class="modal fade" id="barangModalM" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Barang Masuk</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Stok Barang</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/barang/master/storeM'>
+                    <form method="Post" action='/barang/satuan/store'>
                         @csrf
-
                         <div class="mb-3">
-                            <input type="text" hidden name="id" id="stokBarangIdM">
-                            <label class="form-label fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="stokDateM" required>
-
+                            <label for="name" class="form-label text-dark fw-bold">Nama Satuan</label>
+                            <input type="text" required autocomplete="off" class="form-control" id="name" name="name"
+                                placeholder="Ketik nama satuan">
                         </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Simpan</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Edit Barang-->
+    <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Form Edit Data Barang</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/barang/satuan/edit" id="editBarangForm" method="post" enctype="multipart/form-data">
+                        @method('PUT')
+                        @csrf
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Barang</label>
-                            <input type="text" disabled class="form-control  @error('name') is-invalid @enderror"
-                                id="stokBarangNameM">
+                            <input hidden type="text" name="id" id="txtid">
+                            <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
+                            <input type="text" required autocomplete="off"
+                                class="form-control @error('name') is-invalid @enderror" id="txtname" name="name">
                             @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control" name="jumlah"required>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary text-white">Ubah</button>
                         </div>
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
-                            <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Catatan barang masuk"></textarea>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Simpan</button>
+                    </form>
+
                 </div>
             </div>
-            </form>
         </div>
     </div>
-
-    <div class="modal fade" id="barangModalK" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="container modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Barang Keluar</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="Post" action='/barang/master/storeK'>
-                        @csrf
-                        <input type="hidden" name="id" id="stokBarangIdK">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="stokDateK" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Barang</label>
-                            <input type="text" readonly class="form-control" id="stokBarangNameK">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control" name="jumlah" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
-                            <textarea class="form-control" autocomplete="off" id="stokKeteranganK" required
-                                name="keterangan" rows="4" placeholder="Catatan barang keluar"></textarea>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Simpan</button>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-
 @endsection

@@ -5,7 +5,8 @@
     @php
         $currentUrl = request()->path();
     @endphp
-    
+
+
     <div class="container">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -15,7 +16,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Data Bahan</li>
+                                <li class="breadcrumb-item active" aria-current="page">Stok Bahan - Bahan Masuk/Keluar</li>
                             </ol>
                         </nav>
                     </div>
@@ -45,20 +46,6 @@
                 </div>
             </div>
         @endif
-
-        <form action="/stok-bahan" method="GET" class="d-flex align-items-center mb-3">
-            <div class="mb-3 row">
-                <label for="tanggalbahan" class="col-sm-2 col-form-label">Tanggal</label>
-                <div class="col-sm-8">
-                    <input type="date" class="form-control" id="tanggalbahan" name="date" value="{{ $date }}">
-                </div>
-                <div class="col-sm-2">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-filter"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
 
         <div>
             <a href="/bahan/master"
@@ -95,95 +82,74 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bahan </div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bahan Masuk/Keluar</div>
                     </div>
-
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
-
-                                    <div class="col-sm-3 float-end">
-                                        <div class="d-flex gap-2 mb-2">
-                                            <a href="/stok-bahan" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                        data-bs-target="#barangModal">
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
+                                    </button>
+                                    <div class="col-sm-3 float-end mt-3">
+                                        <div class="d-flex gap-2">
+                                            <a href=" /bahan/masuk-keluar" class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/stok-bahan" method="get" class="form-inline d-flex">
+                                            <form action=" /bahan/masuk-keluar" method="get" class="form-inline d-flex">
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
                                                     name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
                                         </div>
+
                                         <div>
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th>Nama Bahan</th>
-                                                <th>Awal</th>
-                                                <th>Masuk</th>
-                                                <th>Keluar</th>
-                                                <th>Terpakai</th>
-                                                <th>Akhir Seharusnya</th>
-                                                <th>Bahan Akhir</th>
-                                                <th>Terbuang</th>
+                                                <th>Tanggal</th>
+                                                <th>Nama Barang</th>
+                                                <th>Tipe</th>
+                                                <th>Jumlah</th>
                                                 <th>Satuan</th>
-                                                <th>Aksi</th>
+                                                <th>User</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($bahans->isEmpty())
+                                            @if ($transaksis->isEmpty())
                                                 <p>Tidak ada data yang ditemukan.</p>
                                             @else
-                                                @foreach ($bahans as $bahan)
+                                                @foreach ($transaksis as $index => $trx)
                                                     <tr>
-                                                        <td>{{ ($bahans->currentPage() - 1) * $bahans->perPage() + $loop->iteration }}
+                                                        <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
                                                         </td>
-                                                        <td>{{ $bahan->name }}</td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_keluar, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
+                                                        <td>{{ $trx['date'] }}</td>
+                                                        <td>{{ $trx['name'] ?? '-' }}</td>
+                                                        <td class="text-center">
+                                                            <span
+                                                                class="badge {{ $trx['tipe'] === 'MASUK' ? 'bg-success' : 'bg-danger' }}"
+                                                                style="padding: 6px;">
+                                                                {{ $trx['tipe'] }}
+                                                            </span>
                                                         </td>
 
-                                                        <td>{{ $bahan->satuan->name ?? '-' }}</td>
-
-                                                        <td>
-                                                            <button type="button" class="btn btn-outline-success"
-                                                                onclick="window.location.href='{{ route('stok-bahan.historyBahan', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
-                                                                <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok
-                                                            </button>
-                                                        </td>
-
-
+                                                        <td class="text-end">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
+                                                        <td>{{ $trx['satuan'] }}</td>
+                                                        <td>{{ $trx['user'] }}</td>
                                                     </tr>
                                                 @endforeach
                                             @endif
                                         </tbody>
                             </table>
-                            {{ $bahans->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                            {{ $transaksis->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 @endsection
