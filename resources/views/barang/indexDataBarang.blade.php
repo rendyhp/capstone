@@ -237,10 +237,11 @@
                         </div>
                         <div class="mb-3">
                             <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
-                            <select class="form-control" id="txtsatuan_id" required autocomplete="off" name="satuan_id">
+                            <select class="form-control select2" id="txtsatuan_id" required autocomplete="off"
+                                name="satuan_id">
                                 <option value="">-- Pilih Satuan --</option>
                                 @foreach ($satuanBarangs as $satuan)
-                                    <option value="{{ $satuan->id }}" {{ old('satuan_id', $bahan->satuan_id ?? '') == $satuan->id ? 'selected' : '' }}>
+                                    <option value="{{ $satuan->id }}" {{ old('tsatuan_id', $bahan->satuan_id ?? '') == $satuan->id ? 'selected' : '' }}>
                                         {{ $satuan->name }}
                                     </option>
                                 @endforeach

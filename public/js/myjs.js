@@ -407,10 +407,16 @@ $(document).ready(function () {
             const selectedBahanId = item.bahan_id;
             const jumlah = item.jumlah;
             const satuan = item.bahan?.satuan?.name || "";
-
+        
             const row = renderBahanRow(index, selectedBahanId, jumlah, satuan);
             container.append(row);
+        
+            // Init select2 for newly added row
+            $(row).find('select').select2({
+                dropdownParent: $('#editBarangModal')
+            });
         });
+        
 
         $("#editBarangModal").modal("show");
     });
