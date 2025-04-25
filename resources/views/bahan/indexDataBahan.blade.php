@@ -93,7 +93,8 @@
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
                                         <div class="d-flex gap-2">
-                                            <a href="/bahan/data-bahan" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                            <a href="/bahan/data-bahan" class="btn btn-outline-secondary btn-sm"
+                                                title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/bahan/data-bahan" method="get" class="form-inline d-flex">
@@ -141,8 +142,8 @@
 
 
 
-                                                            <form action="/bahan/data-bahan/delete/{{ $bahan->id }}" class="d-inline"
-                                                                method="post">
+                                                            <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
+                                                                class="d-inline" method="post">
                                                                 @method('PUT')
                                                                 @csrf
                                                                 <button class="btn btn-danger btn-sm" type="submit"
@@ -198,7 +199,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
-                            <select class="form-control select2" required autocomplete="off" id="satuan_id" name="satuan_id">
+                            <select class="form-control select2" required autocomplete="off" id="satuan_id"
+                                name="satuan_id">
                                 <option value="">-- Pilih Satuan --</option>
                                 @foreach ($satuans as $satuan)
                                     <option value="{{ $satuan->id }}">{{ $satuan->name }}</option>
@@ -287,4 +289,35 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleInput(inputId, buttonId) {
+            let inputField = document.getElementById(inputId);
+            let button = document.getElementById(buttonId);
+
+            if (inputField.readOnly) {
+                inputField.readOnly = false;
+
+                button.style.display = "none";
+                inputField.focus();
+                inputField.select();
+
+                inputField.addEventListener("focusout", function lockInput() {
+                    inputField.readOnly = true;
+                    button.style.display = "inline";
+                    inputField.removeEventListener("focusout", lockInput);
+                });
+            }
+        }
+
+        document.getElementById("toggleMinimum").addEventListener("click", function () {
+            toggleInput("minimum", "toggleMinimum");
+        });
+
+        document
+            .getElementById("toggleMinimum2")
+            .addEventListener("click", function () {
+                toggleInput("txtminimum", "toggleMinimum2");
+            });
+    </script>
 @endsection

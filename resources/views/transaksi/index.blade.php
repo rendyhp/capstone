@@ -49,14 +49,13 @@
                     Impor CSV
                 </button>
 
-                
+
 
                 <table class="table table-bordered">
                     <thead class="table-primary">
                         <tr>
                             <th>No.</th>
                             <th>Nama Menu</th>
-                            <th>Check</th>
                             <th>Jumlah</th>
                             <th>Bahan</th>
                             <th>Aksi</th>
@@ -67,8 +66,9 @@
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $transaksi['menu_name'] }}</td>
-                                <td><span class="text-success">✅</span></td>
-                                <td class="text-end">{{ rtrim(rtrim(number_format($transaksi['total_jumlah'], 3, ',', '.'), '0'), ',') }}</td>
+                                <td class="text-end">
+                                    {{ rtrim(rtrim(number_format($transaksi['total_jumlah'], 3, ',', '.'), '0'), ',') }}
+                                </td>
                                 <td>
                                     <ul>
                                         @foreach($transaksi['bahans'] as $bahan)
@@ -137,13 +137,12 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="date" class="form-label">Tanggal</label>
-                                <input type="date" class="form-control" name="date" id="date" value="{{ date('Y-m-d') }}"
-                                    required>
+                                <input type="date" class="form-control" name="date" id="date" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="menu_id" class="form-label text-dark fw-bold">Nama Menu</label>
-                                <select class="form-control" required id="menu_id" name="menu_id">
+                                <select class="form-control select2" required id="menu_id" name="menu_id">
                                     <option value="">-- Pilih Menu --</option>
                                     @foreach ($menus as $menu)
                                         <option value="{{ $menu->id }}" data-komposisi='@json($menu->komposisi)'>
@@ -155,8 +154,9 @@
 
                             <div class="mb-3 d-flex align-items-center">
                                 <label for="jumlah" class="form-label text-dark fw-bold me-2">Jumlah</label>
-                                <input type="number" step="1" min="1" required class="form-control number0" id="jumlah"
+                                <input type="number" step="1" min="1" required class="form-control number0" id="jumlahMenu"
                                     name="jumlah" value="1" style="max-width: 150px;">
+
                             </div>
 
                             <div class="mb-3">

@@ -111,4 +111,68 @@
             </div>
 
         </form>
+
+        <script>function updateSubmitButton() {
+                const submitBtn = document.getElementById("submitBtn");
+                const allConfirmed = [
+                    ...document.querySelectorAll(".btn-konfirmasi"),
+                ].every((button) => button.classList.contains("btn-success"));
+
+                if (allConfirmed) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove("btn-danger");
+                    submitBtn.classList.add("btn-primary");
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.remove("btn-primary");
+                    submitBtn.classList.add("btn-danger");
+                }
+            }
+
+            document.querySelectorAll(".btn-konfirmasi").forEach(function (button) {
+                button.addEventListener("click", function () {
+                    let row = this.closest("tr");
+                    let editButton = row.querySelector(".toggle-jumlah");
+
+                    if (this.classList.contains("btn-primary")) {
+                        this.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+                        this.disabled = true;
+
+                        setTimeout(() => {
+                            this.innerHTML = '<i class="fa fa-check"></i>';
+                            this.classList.remove("btn-primary");
+                            this.classList.add("btn-success");
+                            this.disabled = false;
+                            if (editButton) editButton.style.display = "none";
+                            updateSubmitButton();
+                        }, 500);
+                    } else {
+                        this.innerHTML = "Konfirmasi";
+                        this.classList.remove("btn-success");
+                        this.classList.add("btn-primary");
+                        if (editButton) editButton.style.display = "inline-block";
+                        updateSubmitButton();
+                    }
+                });
+            });
+
+            document.querySelectorAll(".toggle-jumlah").forEach(function (editButton) {
+                editButton.addEventListener("click", function () {
+                    let inputField = this.previousElementSibling;
+
+                    if (inputField.readOnly) {
+                        inputField.readOnly = false;
+                        inputField.focus();
+                        inputField.select();
+
+                        inputField.addEventListener("focusout", function lockInput() {
+                            inputField.readOnly = true;
+                            inputField.removeEventListener("focusout", lockInput);
+                        });
+                    }
+                });
+            });
+
+            updateSubmitButton();
+        </script>
 @endsection

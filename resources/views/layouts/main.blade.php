@@ -276,73 +276,62 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        $('#editBarangModal').on('shown.bs.modal', function () {
-            // Hapus instans sebelumnya dan inisialisasi ulang select2
-            $('#id_bahan.select2-hidden-accessible').select2('destroy');
-            $('#id_bahan').select2({
-                dropdownParent: $('#editBarangModal')
-            });
+    $('#editBarangModal').on('shown.bs.modal', function () {
+        $('#id_bahan.select2-hidden-accessible').select2('destroy');
+        $('#id_bahan').select2({
+            placeholder: "Cari bahan...",
+            allowClear: true,
+            dropdownParent: $('#editBarangModal')
         });
-
-        $('#barangModal').on('shown.bs.modal', function () {
-            // Hapus instans sebelumnya dan inisialisasi ulang select2
-            $('#satuan_id.select2-hidden-accessible').select2('destroy');
-            $('#satuan_id').select2({
-                dropdownParent: $('#barangModal')
-            });
-
-            // Fokus ke input select2 setelah muncul
-            setTimeout(() => {
-                $('.select2-container--open .select2-search__field').focus();
-            }, 100);
-        });
+        
 
         $('#txtsatuan_id').select2({
-            placeholder: "Cari atau pilih satuan",
+            placeholder: "Cari atau pilih satuan...",
             allowClear: true,
             dropdownParent: $('#editBarangModal')
         });
 
-        $('#editBarangModal').on('shown.bs.modal', function () {
-            // Pastikan select2 hanya diinisialisasi setelah modal muncul
-            $('#txtsatuan_id').select2({
-                dropdownParent: $('#editBarangModal')
-            });
+        setTimeout(() => {
+            $('.select2-container--open .select2-search__field').focus();
+        }, 100);
+    });
 
-            // Fokus ke input select2 setelah muncul
-            setTimeout(() => {
-                $('.select2-container--open .select2-search__field').focus();
-            }, 100);
+    $('#barangModal').on('shown.bs.modal', function () {
+        $('#satuan_id.select2-hidden-accessible').select2('destroy');
+        $('#satuan_id').select2({
+            placeholder: "Cari atau pilih satuan...",
+            allowClear: true,
+            dropdownParent: $('#barangModal')
+        });
+        $('#menu_id').select2({
+            placeholder: "Cari atau pilih menu...",
+            allowClear: true,
+            dropdownParent: $('#barangModal')
         });
 
+        setTimeout(() => {
+            $('.select2-container--open .select2-search__field').focus();
+        }, 100);
+    });
 
-
-
-        $(document).ready(function () {
-            // Inisialisasi Select2
-            $('.select2').select2({
-                templateResult: function (state) {
-                    if (!state.id) {
-                        return state.text; // Jika tidak ada ID, hanya teks
-                    }
-                    var $state = $(
-                        '<span><img src="' + $(state.element).data('image') + '" class="img-flag" style="width: 20px; height: 20px; margin-right: 10px;" /> ' + state.text + '</span>'
-                    );
-                    return $state;
-                },
-                templateSelection: function (state) {
-                    if (!state.id) {
-                        return state.text; // Jika tidak ada ID, hanya teks
-                    }
-                    var $state = $(
-                        '<span><img src="' + $(state.element).data('image') + '" class="img-flag" style="width: 20px; height: 20px; margin-right: 10px;" /> ' + state.text + '</span>'
-                    );
-                    return $state;
-                }
-            });
+    $(document).ready(function () {
+        $('.select2').select2({
+            templateResult: function (state) {
+                if (!state.id) return state.text;
+                return $(
+                    '<span><img src="' + $(state.element).data('image') + '" class="img-flag" style="width: 20px; height: 20px; margin-right: 10px;" /> ' + state.text + '</span>'
+                );
+            },
+            templateSelection: function (state) {
+                if (!state.id) return state.text;
+                return $(
+                    '<span><img src="' + $(state.element).data('image') + '" class="img-flag" style="width: 20px; height: 20px; margin-right: 10px;" /> ' + state.text + '</span>'
+                );
+            }
         });
+    });
+</script>
 
-    </script>
 
     <script src="{{ url('js/myjs.js')}}"></script>
 </body>

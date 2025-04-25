@@ -257,37 +257,6 @@ $(document).on("click", ".btn_editbahan_akhir", function (e) {
 
 ///////////////////////////////////////////////////
 
-function toggleInput(inputId, buttonId) {
-    let inputField = document.getElementById(inputId);
-    let button = document.getElementById(buttonId);
-
-    if (inputField.readOnly) {
-        inputField.readOnly = false;
-
-        button.style.display = "none";
-        inputField.focus();
-        inputField.select();
-
-        inputField.addEventListener("focusout", function lockInput() {
-            inputField.readOnly = true;
-            button.style.display = "inline";
-            inputField.removeEventListener("focusout", lockInput);
-        });
-    }
-}
-
-document.getElementById("toggleMinimum").addEventListener("click", function () {
-    toggleInput("minimum", "toggleMinimum");
-});
-
-document
-    .getElementById("toggleMinimum2")
-    .addEventListener("click", function () {
-        toggleInput("txtminimum", "toggleMinimum2");
-    });
-
-////////////////////////////////////////////////
-
 document
     .querySelectorAll('input[type="number"].number0')
     .forEach(function (input) {
@@ -382,12 +351,6 @@ $(document).ready(function () {
         });
     }
 
-    $("#addBahan").on("click", function () {
-        const container = $("#bahanContainer");
-        const index = container.find(".bahan-item").length;
-        container.append(renderBahanRow(index));
-    });
-
     $(".btn_editmenu").on("click", function () {
         const id = $(this).data("id");
         const name = $(this).data("name");
@@ -407,24 +370,42 @@ $(document).ready(function () {
             const selectedBahanId = item.bahan_id;
             const jumlah = item.jumlah;
             const satuan = item.bahan?.satuan?.name || "";
-        
+
             const row = renderBahanRow(index, selectedBahanId, jumlah, satuan);
             container.append(row);
-        
-            // Init select2 for newly added row
-            $(row).find('select').select2({
-                dropdownParent: $('#editBarangModal')
-            });
+
+            $(row)
+                .find("select")
+                .select2({
+                    placeholder: "Cari bahan...",
+                    allowClear: true,
+                    dropdownParent: $("#editBarangModal"),
+                });
         });
-        
 
         $("#editBarangModal").modal("show");
+    });
+
+    function appendBahanRowWithSelect2(container, index, dropdownParent) {
+        const row = renderBahanRow(index);
+        container.append(row);
+        $(row).find("select").select2({
+            placeholder: "Cari bahan...",
+            allowClear: true,
+            dropdownParent: dropdownParent,
+        });
+    }
+
+    $("#addBahan").on("click", function () {
+        const container = $("#bahanContainer");
+        const index = container.find(".bahan-item").length;
+        appendBahanRowWithSelect2(container, index, $("#bahanContainer"));
     });
 
     $("#addEditBahan").on("click", function () {
         const container = $("#editBahanContainer");
         const index = container.find(".bahan-item").length;
-        container.append(renderBahanRow(index));
+        appendBahanRowWithSelect2(container, index, $("#editBarangModal"));
     });
 
     refreshSatuan($("#bahanContainer"));
@@ -630,130 +611,41 @@ $("#editBahanAkhir").submit(function (e) {
     });
 });
 
-//////////////////////////////////////////////////
-
-document.querySelectorAll(".toggle-jumlah").forEach(function (button) {
-    button.addEventListener("click", function () {
-        let inputField = this.parentElement.querySelector(".jumlah-input");
-        let editButton = this.parentElement.querySelector(".toggle-jumlah");
-
-        if (inputField.readOnly) {
-            inputField.readOnly = false;
-            editButton.style.display = "none";
-            inputField.focus();
-            inputField.select();
-
-            inputField.addEventListener("focusout", function lockInput() {
-                inputField.readOnly = true;
-                editButton.style.display = "inline";
-                inputField.removeEventListener("focusout", lockInput);
-            });
-        }
-    });
-});
-
-//////////////////////////////////////////////////
-
-function updateSubmitButton() {
-    const submitBtn = document.getElementById("submitBtn");
-    const allConfirmed = [
-        ...document.querySelectorAll(".btn-konfirmasi"),
-    ].every((button) => button.classList.contains("btn-success"));
-
-    if (allConfirmed) {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove("btn-danger");
-        submitBtn.classList.add("btn-primary");
-    } else {
-        submitBtn.disabled = true;
-        submitBtn.classList.remove("btn-primary");
-        submitBtn.classList.add("btn-danger");
-    }
-}
-
-document.querySelectorAll(".btn-konfirmasi").forEach(function (button) {
-    button.addEventListener("click", function () {
-        let row = this.closest("tr");
-        let editButton = row.querySelector(".toggle-jumlah");
-
-        if (this.classList.contains("btn-primary")) {
-            this.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
-            this.disabled = true;
-
-            setTimeout(() => {
-                this.innerHTML = '<i class="fa fa-check"></i>';
-                this.classList.remove("btn-primary");
-                this.classList.add("btn-success");
-                this.disabled = false;
-                if (editButton) editButton.style.display = "none";
-                updateSubmitButton();
-            }, 500);
-        } else {
-            this.innerHTML = "Konfirmasi";
-            this.classList.remove("btn-success");
-            this.classList.add("btn-primary");
-            if (editButton) editButton.style.display = "inline-block";
-            updateSubmitButton();
-        }
-    });
-});
-
-document.querySelectorAll(".toggle-jumlah").forEach(function (editButton) {
-    editButton.addEventListener("click", function () {
-        let inputField = this.previousElementSibling;
-
-        if (inputField.readOnly) {
-            inputField.readOnly = false;
-            inputField.focus();
-            inputField.select();
-
-            inputField.addEventListener("focusout", function lockInput() {
-                inputField.readOnly = true;
-                inputField.removeEventListener("focusout", lockInput);
-            });
-        }
-    });
-});
-
-updateSubmitButton();
-
 ////////////////////////////////////////////////////
 
-const menuSelect = document.getElementById("menu_id");
-const jumlahInput = document.getElementById("jumlah");
-const komposisiPreview = document.getElementById("komposisiPreview");
+$('#barangModal').on('shown.bs.modal', function () {
+    const menuSelect = document.getElementById("menu_id");
+    const jumlahInput = document.getElementById("jumlahMenu");
+    const komposisiPreview = document.getElementById("komposisiPreview");
 
-function formatJumlah(jumlah) {
-    return jumlah % 1 === 0 ? jumlah : parseFloat(jumlah.toFixed(3));
-}
-
-function updateKomposisi() {
-    const selectedOption = menuSelect.options[menuSelect.selectedIndex];
-    const komposisiData = selectedOption.getAttribute("data-komposisi");
-    const jumlahPesanan = parseInt(jumlahInput.value) || 1;
-
-    komposisiPreview.innerHTML = "";
-
-    if (komposisiData) {
-        const komposisi = JSON.parse(komposisiData);
-        komposisi.forEach((item) => {
-            const totalJumlah = item.jumlah * jumlahPesanan;
-            const li = document.createElement("li");
-            li.textContent = `${item.bahan.name} - ${formatJumlah(
-                totalJumlah
-            )} ${item.bahan.satuan.name}`;
-            komposisiPreview.appendChild(li);
-        });
+    function formatJumlah(jumlah) {
+        return jumlah % 1 === 0 ? jumlah : parseFloat(jumlah.toFixed(3));
     }
-}
 
-menuSelect.addEventListener("change", updateKomposisi);
-jumlahInput.addEventListener("input", updateKomposisi);
+    function updateKomposisi() {
+        const selectedOption = menuSelect.options[menuSelect.selectedIndex];
+        const komposisiData = selectedOption.getAttribute("data-komposisi");
+        const jumlahPesanan = parseInt(jumlahInput.value) || 0;
 
-//////////////////////////////////////////////////////////
+        komposisiPreview.innerHTML = "";
 
+        if (komposisiData) {
+            try {
+                const komposisi = JSON.parse(komposisiData);
+                komposisi.forEach((item) => {
+                    const totalJumlah = item.jumlah * jumlahPesanan;
+                    const li = document.createElement("li");
+                    li.textContent = `${item.bahan.name} - ${formatJumlah(totalJumlah)} ${item.bahan.satuan.name}`;
+                    komposisiPreview.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Gagal parse komposisi:", error);
+            }
+        }
+    }
 
-    
+    $(menuSelect).on("change", updateKomposisi);
+    jumlahInput.addEventListener("input", updateKomposisi);
 
-
-/////////////////////////////////////////////////
+    updateKomposisi();
+});

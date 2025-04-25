@@ -132,7 +132,8 @@
 
         <!-- Hidden HTML untuk bahan dropdown -->
         <div id="bahanOptions" class="d-none">
-            <select class="form-select">
+            <select class="form-select form-control select2">
+                <option value="">-- Pilih Satuan --</option>
                 @foreach($bahans as $bahan)
                     <option value="{{ $bahan->id }}" data-satuan="{{ $bahan->satuan->name }}">
                         {{ $bahan->name }}
