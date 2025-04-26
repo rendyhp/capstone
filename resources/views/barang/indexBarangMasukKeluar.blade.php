@@ -57,10 +57,10 @@
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/masuk-keluar') ? 'active' : '' }}">
                 Barang Masuk/Keluar
             </a>
-            <a href="/barang/data-barang"
+            <!-- <a href="/barang/data-barang"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
                 Data Barang
-            </a>
+            </a> -->
 
             <a href="/barang/satuan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/satuan') ? 'active' : '' }}">
