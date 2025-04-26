@@ -115,8 +115,6 @@ class BarangController extends Controller
         }
     }
 
-
-
     public function indexDataBarang(Request $request)
     {
         $user = Auth::user();
@@ -228,6 +226,7 @@ class BarangController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:30',
+            'date' => 'nullable|date',
             'description' => 'nullable|string',
             'jumlah' => 'required|integer|max:20',
             'satuan_id' => 'required',
@@ -244,6 +243,7 @@ class BarangController extends Controller
         $Barang = new Barang;
         $Barang->user_id = $user;
         $Barang->name = $request->input('name');
+        $Barang->date = $request->input('date')?: null;
         $Barang->description = $request->input('description' ?: '-');
         $Barang->jumlah = $request->input('jumlah' ?: 0);
         $Barang->satuan_id = $request->input('satuan_id' ?: '-');
@@ -257,7 +257,7 @@ class BarangController extends Controller
         $data = DB::table('barangs')->paginate($dataPerPage);
         $lastPage = $data->lastPage();
 
-        return redirect('/barang/data-barang?page=' . $lastPage)->with('success', 'Barang "' . $Barang->name . '" Berhasil Ditambahkan');
+        return redirect('/barang/master?page=' . $lastPage)->with('success', 'Barang "' . $Barang->name . '" Berhasil Ditambahkan');
 
     }
 

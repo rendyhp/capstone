@@ -15,6 +15,7 @@ return new class extends Migration {
         Schema::create('barangs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->date('date')->nullable();
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('jumlah');

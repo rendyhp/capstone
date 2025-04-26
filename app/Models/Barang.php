@@ -13,6 +13,7 @@ class Barang extends Model
 
     protected $fillable = [
         'user_id',
+        'date',
         'name',
         'description',
         'jumlah',
@@ -24,4 +25,28 @@ class Barang extends Model
     {
         return $this->belongsTo(SatuanBarang::class, 'satuan_id');
     }
+
+    public function barangMasuks()
+{
+    return $this->hasMany(BarangMasuk::class);
+}
+
+public function barangKeluars()
+{
+    return $this->hasMany(BarangKeluar::class);
+}
+
+public function getLastTransactionDateAttribute()
+{
+    $lastMasuk = $this->barangMasuks()->latest('date')->first();
+    $lastKeluar = $this->barangKeluars()->latest('date')->first();
+
+    $lastDates = collect([
+        optional($lastMasuk)->date,
+        optional($lastKeluar)->date,
+    ])->filter();
+
+    return $lastDates->sortDesc()->first();
+}
+
 }
