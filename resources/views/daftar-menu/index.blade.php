@@ -42,6 +42,18 @@
             </div>
         @endif
 
+        @if (session()->has('warning'))
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"></i>
+                        &nbsp{{ session()->get('warning') }}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-xl-12">
                 <div class="card custom-card">
@@ -50,9 +62,8 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="tableBarang" class="table table-bordered text-dark table-sm" style="" border="1">
+                            <table id="tableBarang" class="table table-bordered text-dark table-sm">
                                 <div class="mb-3">
-                                    <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                                         data-bs-target="#barangModal">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah menu
@@ -72,6 +83,7 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
+                                                <th>Gambar</th>
                                                 <th>Nama Menu</th>
                                                 <th>Bahan</th>
                                                 <th>Aksi</th>
@@ -83,7 +95,11 @@
                                             @else
                                                 @foreach ($menus as $menu)
                                                     <tr>
-                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
+                                                        </td>
+                                                        <td> 
+                                                            <img src="{{ asset($menu->image) }}" style="width: 120px; heigh: 120px;" alt="Img">
+                                                        </td>
                                                         <td>{{ $menu->name }}</td>
 
                                                         <td>
@@ -114,7 +130,7 @@
                                                                 @method('put')
                                                                 @csrf
                                                                 <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin akan Mendelete Menu?')"><i
+                                                                    onclick="return confirm('Yakin ingin Mendelete Menu?')"><i
                                                                         class="fa fa-trash"></i></button>
                                                             </form>
                                                         </td>
@@ -153,11 +169,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="Post" action='/daftar-menu'>
+                        <form method="Post" action='/daftar-menu' enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
+                                <label for="image" class="form-label text-dark fw-bold">Gambar</label>
+                                <input type="file" class="form-control" id="image" name="image">
+                            </div>
+                            <div class="mb-3">
                                 <label for="name" class="form-label text-dark fw-bold">Nama Menu</label>
-
                                 <input type="text" required class="form-control" id="name" name="name"
                                     placeholder="Input Nama Menu" autocomplete="off">
                             </div>
@@ -183,7 +202,6 @@
             </div>
         </div>
 
-        <!-- Modal Edit Menu -->
         <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -192,12 +210,17 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="editMenuForm" method="POST">
+                        <form id="editMenuForm" method="POST" enctype="multipart/form-data">
 
                             @method('PUT')
-
                             @csrf
                             <input type="hidden" id="editMenuId" name="id">
+
+                            <div class="mb-3">
+                                <label for="image" class="form-label text-dark fw-bold">Gambar</label>
+                                <img src="" alt="img" id="previewEditImage">
+                                <input type="file" class="form-control" id="image" name="image">
+                            </div>
 
                             <div class="mb-3">
                                 <label for="editMenuName" class="form-label text-dark fw-bold">Nama Menu</label>

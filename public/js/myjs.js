@@ -358,10 +358,12 @@ $(document).ready(function () {
         let komposisi = $(this).data("komposisi");
 
         if (typeof komposisi === "string") komposisi = JSON.parse(komposisi);
+
         $("#editMenuForm").attr("action", "/daftar-menu/" + id);
         $("#editMenuId").val(id);
         $("#editMenuName").val(name);
         $("#editMenuDescription").val(description);
+
 
         const container = $("#editBahanContainer");
         container.empty();
@@ -613,7 +615,7 @@ $("#editBahanAkhir").submit(function (e) {
 
 ////////////////////////////////////////////////////
 
-$('#barangModal').on('shown.bs.modal', function () {
+$("#barangModal").on("shown.bs.modal", function () {
     const menuSelect = document.getElementById("menu_id");
     const jumlahInput = document.getElementById("jumlahMenu");
     const komposisiPreview = document.getElementById("komposisiPreview");
@@ -635,7 +637,9 @@ $('#barangModal').on('shown.bs.modal', function () {
                 komposisi.forEach((item) => {
                     const totalJumlah = item.jumlah * jumlahPesanan;
                     const li = document.createElement("li");
-                    li.textContent = `${item.bahan.name} - ${formatJumlah(totalJumlah)} ${item.bahan.satuan.name}`;
+                    li.textContent = `${item.bahan.name} - ${formatJumlah(
+                        totalJumlah
+                    )} ${item.bahan.satuan.name}`;
                     komposisiPreview.appendChild(li);
                 });
             } catch (error) {

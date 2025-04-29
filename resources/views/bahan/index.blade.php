@@ -5,7 +5,7 @@
     @php
         $currentUrl = request()->path();
     @endphp
-    
+
     <div class="container">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -105,10 +105,10 @@
 
                                     <div class="col-sm-3 float-end">
                                         <div class="d-flex gap-2 mb-2">
-                                            <a href="/stok-bahan" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                            <a href="/bahan/master" class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/stok-bahan" method="get" class="form-inline d-flex">
+                                            <form action="/bahan/master" method="get" class="form-inline d-flex">
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"

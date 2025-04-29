@@ -26,28 +26,21 @@ class MenuController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        // Ambil parameter sorting dari URL atau pakai default
         $orderBy = $request->input('orderBy', 'name');
         $direction = $request->input('direction', 'asc');
 
-        // Ambil data bahan untuk komposisi
         $bahans = Bahan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
 
-        // Siapkan query untuk daftar menu
         $query = Menu::with('komposisi.bahan.satuan')
             ->whereNull('deleted_at');
 
-        // Filter pencarian jika ada
         if ($search = $request->input('search')) {
             $query->where('name', 'like', '%' . $search . '%');
         }
-
-        // Urutkan berdasarkan parameter dari URL
         $query->orderBy($orderBy, $direction);
 
-        // Pagination dan pengembalian view hanya jika rolenya cocok
         if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
-            $menus = $query->paginate(20)->withQueryString(); // biar pagination tetap bawa query parameter
+            $menus = $query->paginate(20)->withQueryString();
 
             return view('daftar-menu.index', [
                 'menus' => $menus,
@@ -68,30 +61,49 @@ class MenuController extends Controller
     public function store(Request $request)
     {
 
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
         ]);
         $user = Auth::user()->id;
 
-        // Penanganan file (pastikan folder upload/barang masih ada)
-        $imageName = $this->handleFile($request->image);
+        if ($request->bahan != null) {
+            if ($request->has('image')) {
+                $file = $request->file('image');
+                $extension = $file->getClientOriginalExtension();
 
-        $menu = Menu::create([
-            'user_id' => $user,
-            'name' => $request->name,
-            'description' => $request->description,
-            'image' => $this->handleFile($request->image),
-        ]);
-        // Simpan data dataset ke database
-        foreach ($request->bahan as $bahan) {
-            KomposisiMenu::create([
-                'menu_id' => $menu->id,
-                'bahan_id' => $bahan['id'],
-                'jumlah' => $bahan['jumlah'],
-            ]);
+                $filename = time() . '.' . $extension;
+
+                $path = 'upload/menu/';
+                $file->move($path, $filename);
+
+                $menu = Menu::create([
+                    'user_id' => $user,
+                    'name' => $request->name,
+                    'description' => $request->description,
+                    'image' => $path . $filename,
+                ]);
+            } else {
+                $menu = Menu::create([
+                    'user_id' => $user,
+                    'name' => $request->name,
+                    'description' => $request->description,
+                ]);
+            }
+
+            foreach ($request->bahan as $bahan) {
+                KomposisiMenu::create([
+                    'menu_id' => $menu->id,
+                    'bahan_id' => $bahan['id'],
+                    'jumlah' => $bahan['jumlah'],
+                ]);
+            }
+        } else {
+            return redirect('/daftar-menu')
+                ->with('warning', 'Bahan tidak boleh kosong!');
         }
+
 
         $dataPerPage = 20;
         $data = DB::table('menus')->paginate($dataPerPage);
@@ -102,71 +114,8 @@ class MenuController extends Controller
 
     }
 
-    public function tmpUpload(Request $request)
-    {
-        if ($request->hasFile('image')) {
-            $fileIMG = $request->file('image');
-            $imageName = $fileIMG->getClientOriginalName();
-            $folder = uniqid('post', true);
-            $fileIMG->move(public_path('upload/tmp/' . $folder), $imageName);
-            TemporaryFile::create([
-                'folder' => $folder,
-                'file' => $imageName
-            ]);
-            return $folder;
-        }
-
-        return '';
-    }
-
-    public function tmpLoad(Request $request, $slug)
-    {
-        // Temukan file sesuai fileId (atau nama file)
-        $menus = DB::table('menus')->where('slug', $slug)->first();
-
-        if ($request->has('image')) {
-            $fileIMG = $request->image;
-
-            return response()->download(storage_path($fileIMG), null, [], 'inline');
-        }
-    }
-
-    public function tmpDelete()
-    {
-        $tmp_file = TemporaryFile::where('folder', request()->getContent())->first();
-        if ($tmp_file) {
-            File::cleanDirectory(public_path('upload/tmp/' . $tmp_file->folder));
-            $tmp_file->delete();
-        }
-    }
-
-    // Fungsi handleFile baru
-    private function handleFile($file)
-    {
-        $tmp_file = TemporaryFile::where('folder', $file)->first();
-        if ($tmp_file) {
-            $fileName = public_path('upload/tmp/' . $tmp_file->folder . '/' . $tmp_file->file);
-            $fileContents = file_get_contents($fileName);
-            $newFilePath = public_path('upload/menu/' . $tmp_file->file);
-            file_put_contents($newFilePath, $fileContents);
-            $tmpLocation = 'upload/menu/' . $tmp_file->file;
-            File::cleanDirectory(public_path('upload/tmp/' . $tmp_file->folder));
-            $tmp_file->delete();
-
-            return $tmpLocation;
-        } else {
-            return null;
-        }
-    }
-
     public function show($slug)
     {
-        $menus = Dataset::where('slug', $slug)
-            ->first();
-
-        return view('pages.admin.dataset.show', [
-            'menus' => $menus,
-        ]);
     }
 
     public function edit(KomposisiMenu $menu)
@@ -177,7 +126,7 @@ class MenuController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
@@ -185,25 +134,41 @@ class MenuController extends Controller
 
         $menu = Menu::findOrFail($id);
 
-        // Penanganan file (jika ada gambar baru)
+        if ($request->bahan != null) {
+            if ($request->has('image')) {
+                $file = $request->file('image');
+                $extension = $file->getClientOriginalExtension();
 
-        // Update data menu
-        $menu->update([
-            'name' => $request->name,
-            'description' => $request->description,
-        ]);
+                $filename = time() . '.' . $extension;
 
-        // Update komposisi menu
-        KomposisiMenu::where('menu_id', $id)->delete(); // Hapus komposisi lama
+                $path = 'upload/menu/';
+                $file->move($path, $filename);
 
-        foreach ($request->input('bahan', []) as $bahan) {
-            KomposisiMenu::create([
-                'menu_id' => $menu->id,
-                'bahan_id' => $bahan['id'],
-                'jumlah' => $bahan['jumlah'],
-            ]);
+                $menu->update([
+                    'name' => $request->name,
+                    'description' => $request->description,
+                    'image' => $path . $filename,
+                ]);
+            } else {
+                $menu->update([
+                    'name' => $request->name,
+                    'description' => $request->description,
+                ]);
+            }
+
+            KomposisiMenu::where('menu_id', $id)->delete();
+
+            foreach ($request->input('bahan', []) as $bahan) {
+                KomposisiMenu::create([
+                    'menu_id' => $menu->id,
+                    'bahan_id' => $bahan['id'],
+                    'jumlah' => $bahan['jumlah'],
+                ]);
+            }
+        } else {
+            return redirect('/daftar-menu')
+                ->with('warning', 'Bahan tidak boleh kosong!');
         }
-
 
         return redirect('/daftar-menu')->with('success', 'Menu "' . $request->name . '" berhasil diperbarui');
     }
