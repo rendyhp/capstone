@@ -169,24 +169,25 @@ $(document).on("click", ".btn_editsatuanbahan", function (e) {
 $(document).on("click", ".btnTambahStok", function () {
     var id = $(this).data("id");
     var name = $(this).data("name");
+    var satuan = $(this).data("satuan")
 
-    console.log(id, name);
+    console.log(id, name, satuan);
 
     $("#stokBarangIdM").val(id);
     $("#stokBarangNameM").val(name);
-    $("#editBarangModal").modal("toggle");
+    $("#stokBarangSatuanM").val(satuan);
 });
 
 $(document).on("click", ".btnKurangStok", function () {
     var id = $(this).data("id");
     var name = $(this).data("name");
+    var satuan = $(this).data("satuan")
 
-    console.log(id, name);
+    console.log(id, name, satuan);
 
     $("#stokBarangIdK").val(id);
     $("#stokBarangNameK").val(name);
-
-    $("#editBarangModal").modal("toggle");
+    $("#stokBarangSatuanK").val(satuan);
 });
 
 ///////////////////////////////////////////////

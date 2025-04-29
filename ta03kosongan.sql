@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 22, 2025 at 06:32 AM
+-- Generation Time: Apr 29, 2025 at 10:32 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -137,11 +137,30 @@ CREATE TABLE `bahan_stoks` (
 CREATE TABLE `barangs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
+  `date` date DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `jumlah` int(11) NOT NULL,
   `satuan_id` bigint(20) UNSIGNED NOT NULL,
   `image` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barang_awals`
+--
+
+CREATE TABLE `barang_awals` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `barang_id` bigint(20) UNSIGNED NOT NULL,
+  `keterangan` text DEFAULT NULL,
+  `jumlah` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -283,29 +302,30 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '2019_12_14_000001_create_personal_access_tokens_table', 1),
 (2, '2025_04_22_000001_create_password_resets_table', 1),
 (3, '2025_04_22_000010__create_personal_access_tokens_table', 1),
-(4, '2025_04_22_000020_create_users_table', 1),
-(5, '2025_04_22_000024_create_failed_jobs_table', 1),
-(6, '2025_04_22_000025_create_password_reset_tokens_table', 1),
-(7, '2025_04_22_000030_create_satuan_bahans_table', 1),
-(8, '2025_04_22_000040_create_bahans_table', 1),
-(9, '2025_04_22_000050_create_bahan_awals_table', 1),
-(10, '2025_04_22_000060_create_bahan_masuks_table', 1),
-(11, '2025_04_22_000070_create_bahan_keluars_table', 1),
-(12, '2025_04_22_000080_create_bahan_akhirs_table', 1),
-(13, '2025_04_22_000080_create_bahan_stoks_table', 1),
-(14, '2025_04_22_000110_create_satuan_barangs_table', 1),
-(15, '2025_04_22_000120_create_barangs_table', 1),
-(16, '2025_04_22_000130_create_barang_masuks_table', 1),
-(17, '2025_04_22_000140_create_barang_keluars_table', 1),
-(18, '2025_04_22_000210_create_menus_table', 1),
-(19, '2025_04_22_000220_create_komposisi_menus_table', 1),
-(20, '2025_04_22_000310_create_transaksis_table', 1),
-(21, '2025_04_22_000320_create_transaksi_details_table', 1),
-(22, '2025_04_22_900010_create_temporary_files_table', 1),
-(23, '2025_04_22_900020_create_deleted_items_table', 1),
-(24, '2025_04_22_900029_create_tag_notifikasis_table', 1),
-(25, '2025_04_22_900030_create_notifikasis_table', 1),
-(26, '2025_04_22_900040_create_log_activities_table', 1);
+(4, '2025_04_22_000020_create_users_table', 2),
+(5, '2025_04_22_000024_create_failed_jobs_table', 2),
+(6, '2025_04_22_000025_create_password_reset_tokens_table', 2),
+(7, '2025_04_22_000030_create_satuan_bahans_table', 2),
+(8, '2025_04_22_000040_create_bahans_table', 2),
+(9, '2025_04_22_000050_create_bahan_awals_table', 2),
+(10, '2025_04_22_000060_create_bahan_masuks_table', 2),
+(11, '2025_04_22_000070_create_bahan_keluars_table', 2),
+(12, '2025_04_22_000080_create_bahan_akhirs_table', 2),
+(13, '2025_04_22_000080_create_bahan_stoks_table', 2),
+(14, '2025_04_22_000110_create_satuan_barangs_table', 2),
+(15, '2025_04_22_000120_create_barangs_table', 2),
+(16, '2025_04_22_000129_create_barang_awals_table', 2),
+(17, '2025_04_22_000130_create_barang_masuks_table', 2),
+(18, '2025_04_22_000140_create_barang_keluars_table', 2),
+(19, '2025_04_22_000210_create_menus_table', 2),
+(20, '2025_04_22_000220_create_komposisi_menus_table', 2),
+(21, '2025_04_22_000310_create_transaksis_table', 2),
+(22, '2025_04_22_000320_create_transaksi_details_table', 2),
+(23, '2025_04_22_900010_create_temporary_files_table', 2),
+(24, '2025_04_22_900020_create_deleted_items_table', 2),
+(25, '2025_04_22_900029_create_tag_notifikasis_table', 2),
+(26, '2025_04_22_900030_create_notifikasis_table', 2),
+(27, '2025_04_22_900040_create_log_activities_table', 2);
 
 -- --------------------------------------------------------
 
@@ -485,9 +505,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Rendy Hartono Putra', 'rendy12', 'rendy12@gmail.com', '2025-04-21 20:54:52', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'jvG11kQAlF0p8FoBK9t3IH16p3sZGNUUHvY9SqcX6qXV79qaZ0jOe4aUNW4T', '2025-04-21 20:54:52', '2025-04-21 20:54:52', NULL),
-(2, 'Maritza Septiarini', 'maritza12', 'maritza12@gmail.com', '2025-04-21 20:54:54', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'MANAJER', 'h7EVdIRFRQ', '2025-04-21 20:54:54', '2025-04-21 20:54:54', NULL),
-(3, 'Abida Amalia Syifa', 'abida12', 'abida12@gmail.com', '2025-04-21 20:54:56', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', 'MzBnSn7339', '2025-04-21 20:54:56', '2025-04-21 20:54:56', NULL);
+(1, 'Rendy Hartono Putra', 'rendy12', 'rendy12@gmail.com', '2025-04-21 20:54:52', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', '0Ph88ibMostAGlS8b1LmEfs7EiWcUxL7CLDmICTeAr9gRLf7kklLLUQbPMFO', '2025-04-21 20:54:52', '2025-04-21 20:54:52', NULL),
+(2, 'Maritza Septiarini', 'maritza12', 'maritza12@gmail.com', '2025-04-21 20:54:54', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'MANAJER', 'jT0MdSOWXUkkraGDrB95JQQouUYnihvx0gdKNVX4xLFKnZeJvS6nijxrPmle', '2025-04-21 20:54:54', '2025-04-21 20:54:54', NULL),
+(3, 'Abida Amalia Syifa', 'abida12', 'abida12@gmail.com', '2025-04-21 20:54:56', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', '9Fl8k5380EKhPFQznqecKxJoNrLTxFOxV5E4qqFTv7t6byTHU9tu07XA2TLo', '2025-04-21 20:54:56', '2025-04-21 20:54:56', NULL);
 
 --
 -- Indexes for dumped tables
@@ -548,6 +568,14 @@ ALTER TABLE `barangs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `barangs_user_id_foreign` (`user_id`),
   ADD KEY `barangs_satuan_id_foreign` (`satuan_id`);
+
+--
+-- Indexes for table `barang_awals`
+--
+ALTER TABLE `barang_awals`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `barang_awals_user_id_foreign` (`user_id`),
+  ADD KEY `barang_awals_barang_id_foreign` (`barang_id`);
 
 --
 -- Indexes for table `barang_keluars`
@@ -732,6 +760,12 @@ ALTER TABLE `barangs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `barang_awals`
+--
+ALTER TABLE `barang_awals`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `barang_keluars`
 --
 ALTER TABLE `barang_keluars`
@@ -777,7 +811,7 @@ ALTER TABLE `menus`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `notifikasis`
@@ -885,6 +919,13 @@ ALTER TABLE `bahan_stoks`
 ALTER TABLE `barangs`
   ADD CONSTRAINT `barangs_satuan_id_foreign` FOREIGN KEY (`satuan_id`) REFERENCES `satuan_barangs` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `barangs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `barang_awals`
+--
+ALTER TABLE `barang_awals`
+  ADD CONSTRAINT `barang_awals_barang_id_foreign` FOREIGN KEY (`barang_id`) REFERENCES `barangs` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `barang_awals_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `barang_keluars`

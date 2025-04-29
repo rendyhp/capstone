@@ -56,10 +56,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
 
     // Stok
-    Route::get('/barang/master', [BarangController::class, 'index'])->name('barang');
+    Route::get('/barang/master', [BarangController::class, 'index'])->name('barang.index');
+    Route::get('/barang/master/{encryptedId}', [BarangController::class, 'indexbyID'])->name('barang.indexbyId');
     Route::post('/barang/master/storeM', [BarangController::class, 'storeM'])->name('barang.storeM');
     Route::post('/barang/master/storeK', [BarangController::class, 'storeK'])->name('barang.storeK');
     Route::get('/barang/masuk-keluar', [BarangController::class, 'indexMasukKeluar'])->name('barang.indexMasukKeluar');
+    Route::get('/barang/masuk-keluar/{encryptedId}', [BarangController::class, 'indexBarangMKbyID'])->name('barang.indexBarangMKbyID');
     Route::post('/barang/masuk-keluar/store', [BarangController::class, 'storeMasukKeluar'])->name('barang.storeMasukKeluar');
     Route::put('/barang/masuk-keluar/edit', [BarangController::class, 'updateMasukKeluar'])->name('barang.updateMasukKeluar');
     Route::get('/barang/data-barang', [BarangController::class, 'indexDataBarang'])->name('barang.indexDataBarang');

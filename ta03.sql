@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2025 at 08:05 PM
+-- Generation Time: Apr 29, 2025 at 10:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -270,7 +270,34 @@ CREATE TABLE `barangs` (
 
 INSERT INTO `barangs` (`id`, `user_id`, `name`, `description`, `jumlah`, `satuan_id`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 'Piring', 'Piring bagus ini\r\n.', 33, 1, NULL, '2025-04-22 23:57:16', '2025-04-23 00:03:50', NULL),
-(2, 1, 'Gelas', 'Gelas bagus', 10, 1, NULL, '2025-04-23 08:20:33', '2025-04-23 11:00:36', NULL);
+(2, 1, 'Gelas', 'Gelas bagus', 10, 1, NULL, '2025-04-23 08:20:33', '2025-04-23 11:00:36', NULL),
+(3, 1, 'gh', 'hg', 0, 1, NULL, '2025-04-24 20:06:37', '2025-04-24 20:06:37', NULL),
+(4, 1, 'Garpu', 'Garpu biasa', 20, 2, 'upload/barang/1745909065.jpg', '2025-04-28 23:44:25', '2025-04-28 23:44:25', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barang_awals`
+--
+
+CREATE TABLE `barang_awals` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `date` date NOT NULL,
+  `barang_id` bigint(20) UNSIGNED NOT NULL,
+  `keterangan` text DEFAULT NULL,
+  `jumlah` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `barang_awals`
+--
+
+INSERT INTO `barang_awals` (`id`, `user_id`, `date`, `barang_id`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, '2025-04-29', 4, 'Sedia garpu', 20, '2025-04-28 23:44:25', '2025-04-28 23:44:25', NULL);
 
 -- --------------------------------------------------------
 
@@ -323,7 +350,9 @@ CREATE TABLE `barang_masuks` (
 INSERT INTO `barang_masuks` (`id`, `user_id`, `date`, `barang_id`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 2, '2025-04-23', 1, 'Beli piring baru.', 10, '2025-04-23 08:23:11', '2025-04-23 08:23:11', NULL),
 (2, 1, '2025-04-23', 1, 'Dapat piring dikasih.', 2, '2025-04-23 08:23:11', '2025-04-23 08:23:11', NULL),
-(3, 1, '2025-04-23', 2, NULL, 20, '2025-04-23 08:38:18', '2025-04-23 08:38:18', NULL);
+(3, 1, '2025-04-23', 2, NULL, 20, '2025-04-23 08:38:18', '2025-04-23 08:38:18', NULL),
+(4, 1, '2025-04-29', 4, 'Beli garpu 30', 30, '2025-04-29 00:01:11', '2025-04-29 00:01:11', NULL),
+(5, 1, '2025-04-29', 1, 'Dapat 5 piring', 5, '2025-04-29 01:05:09', '2025-04-29 01:05:09', NULL);
 
 -- --------------------------------------------------------
 
@@ -376,9 +405,6 @@ CREATE TABLE `komposisi_menus` (
 INSERT INTO `komposisi_menus` (`id`, `menu_id`, `bahan_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 1, 50.000, '2025-04-22 20:24:38', '2025-04-22 20:24:38', NULL),
 (2, 1, 14, 200.000, '2025-04-22 20:24:38', '2025-04-22 20:24:38', NULL),
-(3, 2, 1, 40.000, '2025-04-22 20:35:04', '2025-04-22 20:35:04', NULL),
-(4, 2, 3, 150.000, '2025-04-22 20:35:04', '2025-04-22 20:35:04', NULL),
-(5, 2, 4, 10.000, '2025-04-22 20:35:04', '2025-04-22 20:35:04', NULL),
 (6, 3, 1, 40.000, '2025-04-22 20:36:11', '2025-04-22 20:36:11', NULL),
 (7, 3, 3, 150.000, '2025-04-22 20:36:11', '2025-04-22 20:36:11', NULL),
 (8, 3, 5, 20.000, '2025-04-22 20:36:11', '2025-04-22 20:36:11', NULL),
@@ -400,7 +426,19 @@ INSERT INTO `komposisi_menus` (`id`, `menu_id`, `bahan_id`, `jumlah`, `created_a
 (24, 9, 8, 100.000, '2025-04-22 20:50:16', '2025-04-22 20:50:16', NULL),
 (25, 10, 13, 5.000, '2025-04-22 20:58:06', '2025-04-22 20:58:06', NULL),
 (26, 10, 17, 200.000, '2025-04-22 20:58:06', '2025-04-22 20:58:06', NULL),
-(27, 10, 8, 100.000, '2025-04-22 20:58:06', '2025-04-22 20:58:06', NULL);
+(27, 10, 8, 100.000, '2025-04-22 20:58:06', '2025-04-22 20:58:06', NULL),
+(31, 11, 3, 70.000, '2025-04-24 19:09:34', '2025-04-24 19:09:34', NULL),
+(32, 11, 5, 80.000, '2025-04-24 19:09:34', '2025-04-24 19:09:34', NULL),
+(33, 11, 3, 90.000, '2025-04-24 19:09:34', '2025-04-24 19:09:34', NULL),
+(34, 11, 4, 10.000, '2025-04-24 19:09:34', '2025-04-24 19:09:34', NULL),
+(37, 12, 14, 450.000, '2025-04-24 19:17:45', '2025-04-24 19:17:45', NULL),
+(38, 12, 8, 550.000, '2025-04-24 19:17:45', '2025-04-24 19:17:45', NULL),
+(42, 2, 1, 40.000, '2025-04-28 21:18:23', '2025-04-28 21:18:23', NULL),
+(43, 2, 3, 150.000, '2025-04-28 21:18:23', '2025-04-28 21:18:23', NULL),
+(44, 2, 4, 10.000, '2025-04-28 21:18:23', '2025-04-28 21:18:23', NULL),
+(48, 14, 14, 50.000, '2025-04-28 21:21:37', '2025-04-28 21:21:37', NULL),
+(49, 14, 7, 40.000, '2025-04-28 21:21:37', '2025-04-28 21:21:37', NULL),
+(50, 14, 8, 50.000, '2025-04-28 21:21:37', '2025-04-28 21:21:37', NULL);
 
 -- --------------------------------------------------------
 
@@ -444,7 +482,7 @@ CREATE TABLE `menus` (
 
 INSERT INTO `menus` (`id`, `user_id`, `name`, `description`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 'Espresso', 'Espreso adalah jenis kopi yang dihasilkan dengan mengekstraksi biji kopi yang sudah digiling dengan menyemburkan air panas di bawah tekanan tinggi.', NULL, '2025-04-21 23:35:51', '2025-04-22 20:24:38', NULL),
-(2, 1, 'Cappucino', 'Kapucino (dari bahasa Italia: cappuccino) adalah minuman kopi khas Italia yang dibuat dari espreso dan susu.', NULL, '2025-04-22 20:35:04', '2025-04-22 20:35:04', NULL),
+(2, 1, 'Cappucino', 'Kapucino (dari bahasa Italia: cappuccino) adalah minuman kopi khas Italia yang dibuat dari espreso dan susu.', 'upload/menu/1745900302.jpg', '2025-04-22 20:35:04', '2025-04-28 21:18:22', NULL),
 (3, 1, 'Caramel Latte', 'Kopi caramel latte dan caramel macchiato sama-sama hidangan kopi susu. Bedanya, kopi caramel latte mengandung susu lebih banyak, yaitu sekitar ¾ cup.', NULL, '2025-04-22 20:36:11', '2025-04-22 20:36:11', NULL),
 (4, 1, 'Matcha Latte', 'Matcha Latte memiliki karakter rasa umami, sedikit rasa pahit dan aroma lembut khas teh hijau.', NULL, '2025-04-22 20:40:53', '2025-04-22 20:40:53', NULL),
 (5, 1, 'Hot Chocolate', 'Hot Chocolate adalah minuman panas yang dibuat dari cokelat atau kakao bubuk dan gula, dengan air atau susu hangat.', NULL, '2025-04-22 20:42:28', '2025-04-22 20:42:28', NULL),
@@ -452,7 +490,11 @@ INSERT INTO `menus` (`id`, `user_id`, `name`, `description`, `image`, `created_a
 (7, 1, 'Strawberry Juice', 'Strawberry Juice is a refreshing fresh fruit juice that is full of vitamin C and antioxidants and lot of invigorating flavor.', NULL, '2025-04-22 20:45:08', '2025-04-22 20:45:08', NULL),
 (8, 1, 'Cheese Toast', 'Roti ini difermentasi total lebih dari 18 jam, sehingga rasa jadi jauh lebih enak daripada roti industri yang diproses kilat, kadang hanya 1 jam .', NULL, '2025-04-22 20:46:46', '2025-04-22 20:46:46', NULL),
 (9, 1, 'Iced Americano', 'Espresso shots topped with cold water produce a light layer of crema, then served over ice. The result: a wonderfully rich cup with depth and nuance.', NULL, '2025-04-22 20:50:16', '2025-04-22 20:50:16', NULL),
-(10, 1, 'Mint Mojito', 'Mix this classic cocktail for a party using fresh mint, white rum, sugar, zesty lime and cooling soda water. Play with the quantities to suit your taste.', NULL, '2025-04-22 20:58:06', '2025-04-22 20:58:06', NULL);
+(10, 1, 'Mint Mojito', 'Mix this classic cocktail for a party using fresh mint, white rum, sugar, zesty lime and cooling soda water. Play with the quantities to suit your taste.', NULL, '2025-04-22 20:58:06', '2025-04-22 20:58:06', NULL),
+(11, 1, 'Test', 'oo', NULL, '2025-04-24 19:09:09', '2025-04-24 19:09:09', NULL),
+(12, 1, 'TEST 22', 'a', NULL, '2025-04-24 19:17:33', '2025-04-24 19:17:33', NULL),
+(13, 1, 'kl', 'kl', NULL, '2025-04-28 20:31:32', '2025-04-28 20:31:32', NULL),
+(14, 1, 'Cappucino 3', 'Des Cappucino 2', 'upload/menu/1745899334.jpg', '2025-04-28 21:02:14', '2025-04-28 21:21:37', NULL);
 
 -- --------------------------------------------------------
 
@@ -496,7 +538,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (23, '2025_04_22_900020_create_deleted_items_table', 1),
 (24, '2025_04_22_900029_create_tag_notifikasis_table', 1),
 (25, '2025_04_22_900030_create_notifikasis_table', 1),
-(26, '2025_04_22_900040_create_log_activities_table', 1);
+(26, '2025_04_22_900040_create_log_activities_table', 1),
+(27, '2025_04_22_000129_create_barang_awals_table', 2);
 
 -- --------------------------------------------------------
 
@@ -667,7 +710,10 @@ INSERT INTO `transaksis` (`id`, `user_id`, `date`, `menu_name`, `menu_id`, `juml
 (8, 1, '2025-04-23', NULL, 9, 3.000, '2025-04-22 21:21:06', '2025-04-22 21:21:06', NULL),
 (9, 1, '2025-04-23', NULL, 10, 5.000, '2025-04-22 21:21:16', '2025-04-22 21:21:16', NULL),
 (10, 1, '2025-04-23', NULL, 2, 3.000, '2025-04-22 21:37:33', '2025-04-22 21:37:33', NULL),
-(16, 1, '2025-04-23', NULL, 3, 4.000, '2025-04-22 21:44:13', '2025-04-22 21:44:13', NULL);
+(16, 1, '2025-04-23', NULL, 3, 4.000, '2025-04-22 21:44:13', '2025-04-22 21:44:13', NULL),
+(17, 1, '2025-04-25', NULL, 9, 5.000, '2025-04-24 20:55:02', '2025-04-24 20:55:02', NULL),
+(18, 1, '2025-04-25', NULL, 1, 2.000, '2025-04-24 20:55:36', '2025-04-24 20:55:36', NULL),
+(19, 1, '2025-04-25', NULL, 1, 5.000, '2025-04-24 20:55:48', '2025-04-24 20:55:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -693,7 +739,14 @@ CREATE TABLE `transaksi_details` (
 INSERT INTO `transaksi_details` (`id`, `transaksi_id`, `menu_id`, `bahan_id`, `jumlah`, `satuan`, `created_at`, `updated_at`) VALUES
 (1, 16, NULL, 1, 160, NULL, '2025-04-22 21:44:13', '2025-04-22 21:44:13'),
 (2, 16, NULL, 3, 600, NULL, '2025-04-22 21:44:13', '2025-04-22 21:44:13'),
-(3, 16, NULL, 5, 80, NULL, '2025-04-22 21:44:13', '2025-04-22 21:44:13');
+(3, 16, NULL, 5, 80, NULL, '2025-04-22 21:44:13', '2025-04-22 21:44:13'),
+(4, 17, NULL, 2, 200, NULL, '2025-04-24 20:55:02', '2025-04-24 20:55:02'),
+(5, 17, NULL, 14, 100, NULL, '2025-04-24 20:55:03', '2025-04-24 20:55:03'),
+(6, 17, NULL, 8, 500, NULL, '2025-04-24 20:55:03', '2025-04-24 20:55:03'),
+(7, 18, NULL, 1, 100, NULL, '2025-04-24 20:55:37', '2025-04-24 20:55:37'),
+(8, 18, NULL, 14, 400, NULL, '2025-04-24 20:55:37', '2025-04-24 20:55:37'),
+(9, 19, NULL, 1, 250, NULL, '2025-04-24 20:55:48', '2025-04-24 20:55:48'),
+(10, 19, NULL, 14, 1000, NULL, '2025-04-24 20:55:48', '2025-04-24 20:55:48');
 
 -- --------------------------------------------------------
 
@@ -783,6 +836,14 @@ ALTER TABLE `barangs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `barangs_user_id_foreign` (`user_id`),
   ADD KEY `barangs_satuan_id_foreign` (`satuan_id`);
+
+--
+-- Indexes for table `barang_awals`
+--
+ALTER TABLE `barang_awals`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `barang_awals_user_id_foreign` (`user_id`),
+  ADD KEY `barang_awals_barang_id_foreign` (`barang_id`);
 
 --
 -- Indexes for table `barang_keluars`
@@ -963,7 +1024,13 @@ ALTER TABLE `bahan_stoks`
 -- AUTO_INCREMENT for table `barangs`
 --
 ALTER TABLE `barangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `barang_awals`
+--
+ALTER TABLE `barang_awals`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `barang_keluars`
@@ -975,7 +1042,7 @@ ALTER TABLE `barang_keluars`
 -- AUTO_INCREMENT for table `barang_masuks`
 --
 ALTER TABLE `barang_masuks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `deleted_items`
@@ -993,7 +1060,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `komposisi_menus`
 --
 ALTER TABLE `komposisi_menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `log_activities`
@@ -1005,13 +1072,13 @@ ALTER TABLE `log_activities`
 -- AUTO_INCREMENT for table `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `notifikasis`
@@ -1053,13 +1120,13 @@ ALTER TABLE `temporary_files`
 -- AUTO_INCREMENT for table `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `transaksi_details`
 --
 ALTER TABLE `transaksi_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1119,6 +1186,13 @@ ALTER TABLE `bahan_stoks`
 ALTER TABLE `barangs`
   ADD CONSTRAINT `barangs_satuan_id_foreign` FOREIGN KEY (`satuan_id`) REFERENCES `satuan_barangs` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `barangs_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `barang_awals`
+--
+ALTER TABLE `barang_awals`
+  ADD CONSTRAINT `barang_awals_barang_id_foreign` FOREIGN KEY (`barang_id`) REFERENCES `barangs` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `barang_awals_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `barang_keluars`
@@ -1183,7 +1257,9 @@ ALTER TABLE `transaksis`
 -- Constraints for table `transaksi_details`
 --
 ALTER TABLE `transaksi_details`
-  ADD CONSTRAINT `transaksi_details_bahan_id_foreign` FOREIGN KEY (`bahan_id`) REFERENCES `bahans` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `transaksi_details_bahan_id_foreign` FOREIGN KEY (`bahan_id`) REFERENCES `bahans` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `transaksi_details_menu_id_foreign` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `transaksi_details_transaksi_id_foreign` FOREIGN KEY (`transaksi_id`) REFERENCES `transaksis` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

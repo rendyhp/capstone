@@ -16,7 +16,9 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Stok Barang - Master</li>
+                                <li class="breadcrumb-item"><a class="" href="/barang/masuk-keluar">Stok Barang - Masuk
+                                        Kelar</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ $barangs->name }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -84,11 +86,11 @@
                         <div class="table-responsive">
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                        data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
-                                    </button>
+    
+                                    <a href="#" onclick="window.history.back(); return false;">
+                                        <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
+                                    </a>
+
                                     <div class="col-sm-3 float-end mt-3">
                                         <div class="d-flex gap-2">
                                             <a href="/barang/masuk-keluar" class="btn btn-outline-secondary btn-sm"
@@ -126,13 +128,7 @@
                                                         <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
                                                         </td>
                                                         <td>{{ $trx['date'] }}</td>
-                                                        <td>
-                                                            <a href="/barang/masuk-keluar/{{ Hashids::encode($trx['barang_id']) }}"
-                                                                class="text-decoration-none text-dark">
-                                                                {{ $trx['name'] ?? '-' }}
-                                                            </a>
-                                                        </td>
-
+                                                        <td>{{ $trx['name'] ?? '-' }}</td>
                                                         <td class="text-center">
                                                             <span
                                                                 class="badge {{ $trx['tipe'] === 'MASUK' ? 'bg-success' : ($trx['tipe'] === 'KELUAR' ? 'bg-danger' : ($trx['tipe'] === 'AWAL' ? 'bg-warning text-dark' : 'bg-secondary')) }}">
@@ -156,16 +152,5 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
 
 @endsection

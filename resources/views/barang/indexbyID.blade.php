@@ -6,7 +6,6 @@
         $currentUrl = request()->path();
     @endphp
 
-
     <div class="container">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -58,9 +57,9 @@
                 Barang Masuk/Keluar
             </a>
             <!-- <a href="/barang/data-barang"
-                                        class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
-                                        Data Barang
-                                    </a> -->
+                                                    class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
+                                                    Data Barang
+                                                </a> -->
 
             <a href="/barang/satuan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/satuan') ? 'active' : '' }}">
@@ -78,11 +77,12 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bahan </div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Barang </div>
                     </div>
+
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
+                            <table id="tableBarang" class="table table-bordered text-dark table-sm">
                                 <div class="mb-3">
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
@@ -90,14 +90,18 @@
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" value="" id="toggleImageColumn">
+                                            <label class="form-check-label" for="toggleImageColumn">
+                                                Tampilkan Gambar
+                                            </label>
+                                        </div>
                                         <div class="d-flex gap-2">
-                                            <a href="/barang/masuk-keluar" class="btn btn-outline-secondary btn-sm"
+                                            <a href="/barang/data-barang" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/barang/masuk-keluar" method="get" class="form-inline d-flex">
-                                                <input type="hidden" name="date"
-                                                    value="{{ request('date', now()->toDateString()) }}">
+                                            <form action="/barang/data-barang" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
                                                     name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
@@ -108,48 +112,39 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th>Tanggal</th>
-                                                <th>Nama Barang</th>
-                                                <th>Tipe</th>
-                                                <th>Jumlah</th>
+                                                <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
+                                                <th>Nama barang</th>
+                                                <th>Deskripsi barang</th>
+                                                <th>Stok</th>
                                                 <th>Satuan</th>
-                                                <th>Keterangan</th>
-                                                <th>User</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($transaksis->isEmpty())
-                                                <p>Tidak ada data yang ditemukan.</p>
-                                            @else
-                                                @foreach ($transaksis as $index => $trx)
+                                            
+                                                
                                                     <tr>
-                                                        <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
+                                                        <td>{{ $barang->id }}
                                                         </td>
-                                                        <td>{{ $trx['date'] }}</td>
+                                                        <td class="column-gambar" style="display:none;">
+                                                            <img src="{{ asset($barang->image ?? '') }}"
+                                                                style="width: 100px; max-height: 100px;" alt="Img">
+                                                        </td>
                                                         <td>
-                                                            <a href="/barang/masuk-keluar/{{ Hashids::encode($trx['barang_id']) }}"
-                                                                class="text-decoration-none text-dark">
-                                                                {{ $trx['name'] ?? '-' }}
-                                                            </a>
+                                                            
+                                                                {{ $barang->name ?? '-' }}
+                                                            
                                                         </td>
-
-                                                        <td class="text-center">
-                                                            <span
-                                                                class="badge {{ $trx['tipe'] === 'MASUK' ? 'bg-success' : ($trx['tipe'] === 'KELUAR' ? 'bg-danger' : ($trx['tipe'] === 'AWAL' ? 'bg-warning text-dark' : 'bg-secondary')) }}">
-                                                                {{ $trx['tipe'] }}
-                                                            </span>
+                                                        <td>{{ $barang->description ?? '-' }}</td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($barang->stok_akhir ?? '0', 3, ',', '.'), '0'), ',') }}
                                                         </td>
-
-                                                        <td class="text-end">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
-                                                        <td>{{ $trx['satuan'] }}</td>
-                                                        <td>{{ $trx['keterangan'] }}</td>
-                                                        <td>{{ $trx['user'] }}</td>
+                                                        <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
                                                     </tr>
-                                                @endforeach
-                                            @endif
+                                              
+                                            
                                         </tbody>
                             </table>
-                            {{ $transaksis->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                           
                         </div>
                     </div>
                 </div>
@@ -157,15 +152,17 @@
         </div>
     </div>
 
+    <script>
 
+        const checkbox = document.getElementById('toggleImageColumn');
+        const imageColumns = document.querySelectorAll('.column-gambar');
 
+        checkbox.addEventListener('change', function () {
+            imageColumns.forEach(col => {
+                col.style.display = this.checked ? '' : 'none';
+            });
+        });
 
-
-
-
-
-
-
-
+    </script>
 
 @endsection

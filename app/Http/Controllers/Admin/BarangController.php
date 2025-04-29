@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Barang;
+use App\Models\BarangAwal;
 use App\Models\BarangKeluar;
 use App\Models\BarangMasuk;
 use App\Models\SatuanBarang;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 
 use App\Helpers\LogActivity;
+use Hashids\Hashids;
 
 class BarangController extends Controller
 {
@@ -52,11 +54,69 @@ class BarangController extends Controller
         }
     }
 
+    public function indexbyId(Request $request, $encryptedId)
+    {
+        $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
+        $id = $hashids->decode($encryptedId);
+        if (empty($id)) {
+            abort(404, 'ID tidak valid');
+        }
+
+        $user = Auth::user();
+        $role = $user->role;
+
+        $query = Barang::select(
+            'barangs.*',
+            DB::raw('
+                (COALESCE(barangs.jumlah, 0) +
+                COALESCE((SELECT SUM(jumlah) FROM barang_masuks WHERE barang_id = barangs.id AND deleted_at IS NULL), 0) -
+                COALESCE((SELECT SUM(jumlah) FROM barang_keluars WHERE barang_id = barangs.id AND deleted_at IS NULL), 0)
+                ) AS stok_akhir
+            ')
+        )
+        ->join('satuan_barangs', 'barangs.satuan_id', '=', 'satuan_barangs.id')
+        ->where('barangs.id', $id[0])
+        ->whereNull('barangs.deleted_at')
+        ->firstOrFail();
+
+        if ($search = $request->input('search')) {
+            $query->where('barangs.name', 'like', '%' . $search . '%');
+        }
+
+        $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
+        $barang = $query;
+
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            return view('barang.indexbyId', compact('barang', 'satuanBarangs'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+    }
+
 
     public function indexMasukKeluar(Request $request)
     {
         $user = Auth::user();
         $role = $user->role;
+
+        // Data barang awal
+        $barangAwals = BarangAwal::with(['barang', 'user'])
+            ->whereNull('deleted_at')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'date' => $item->date,
+                    'barang_id' => $item->barang_id,
+                    'user' => $item->user->name ?? 'Unknown',
+                    'keterangan' => $item->keterangan ?? '-',
+                    'name' => $item->barang->name ?? '-',
+                    'tipe' => 'AWAL',
+                    'jumlah' => $item->jumlah,
+                    'satuan' => $item->barang->satuanBarang->name ?? '-',
+                    'created_at' => $item->created_at,
+                ];
+            });
 
         // Data barang masuk
         $barangMasuks = BarangMasuk::with(['barang', 'user'])
@@ -66,8 +126,10 @@ class BarangController extends Controller
                 return [
                     'id' => $item->id,
                     'date' => $item->date,
+                    'barang_id' => $item->barang_id,
                     'user' => $item->user->name ?? 'Unknown',
                     'name' => $item->barang->name ?? '-',
+                    'keterangan' => $item->keterangan ?? '-',
                     'tipe' => 'MASUK',
                     'jumlah' => $item->jumlah,
                     'satuan' => $item->barang->satuanBarang->name ?? '-',
@@ -83,8 +145,10 @@ class BarangController extends Controller
                 return [
                     'id' => $item->id,
                     'date' => $item->date,
+                    'barang_id' => $item->barang_id,
                     'user' => $item->user->name ?? 'Unknown',
                     'name' => $item->barang->name ?? '-',
+                    'keterangan' => $item->keterangan ?? '-',
                     'tipe' => 'KELUAR',
                     'jumlah' => $item->jumlah,
                     'satuan' => $item->barang->satuanBarang->name ?? '-',
@@ -93,7 +157,7 @@ class BarangController extends Controller
             });
 
         // Gabungkan dan urutkan semua transaksi
-        $merged = $barangMasuks->merge($barangKeluars)->sortByDesc('created_at')->values();
+        $merged = $barangMasuks->merge($barangKeluars)->merge($barangAwals)->sortByDesc('created_at')->values();
 
         // Paginate secara manual
         $page = $request->input('page', 1);
@@ -110,6 +174,97 @@ class BarangController extends Controller
 
         if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
             return view('barang.indexBarangMasukKeluar', compact('transaksis'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+    }
+
+    public function indexBarangMKbyID(Request $request, $encryptedId)
+    {
+        $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
+        $id = $hashids->decode($encryptedId);
+        if (empty($id)) {
+            abort(404, 'ID tidak valid');
+        }
+
+        $user = Auth::user();
+        $role = $user->role;
+
+        $barangs = Barang::whereNull('deleted_at')->find($id[0]);
+
+
+        // Data barang awal
+        $barangAwals = BarangAwal::with(['barang', 'user'])
+            ->whereNull('deleted_at')->where('barang_id', $id[0])
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'date' => $item->date,
+                    'user' => $item->user->name ?? 'Unknown',
+                    'keterangan' => $item->keterangan ?? '-',
+                    'name' => $item->barang->name ?? '-',
+                    'tipe' => 'AWAL',
+                    'jumlah' => $item->jumlah,
+                    'satuan' => $item->barang->satuanBarang->name ?? '-',
+                    'created_at' => $item->created_at,
+                ];
+            });
+
+        // Data barang masuk
+        $barangMasuks = BarangMasuk::with(['barang', 'user'])
+            ->whereNull('deleted_at')->whereNull('deleted_at')->where('barang_id', $id[0])
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'date' => $item->date,
+                    'user' => $item->user->name ?? 'Unknown',
+                    'name' => $item->barang->name ?? '-',
+                    'keterangan' => $item->keterangan ?? '-',
+                    'tipe' => 'MASUK',
+                    'jumlah' => $item->jumlah,
+                    'satuan' => $item->barang->satuanBarang->name ?? '-',
+                    'created_at' => $item->created_at,
+                ];
+            });
+
+        // Data barang keluar
+        $barangKeluars = BarangKeluar::with(['barang', 'user'])
+            ->whereNull('deleted_at')->whereNull('deleted_at')->where('barang_id', $id[0])
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'date' => $item->date,
+                    'user' => $item->user->name ?? 'Unknown',
+                    'name' => $item->barang->name ?? '-',
+                    'keterangan' => $item->keterangan ?? '-',
+                    'tipe' => 'KELUAR',
+                    'jumlah' => $item->jumlah,
+                    'satuan' => $item->barang->satuanBarang->name ?? '-',
+                    'created_at' => $item->created_at,
+                ];
+            });
+
+        // Gabungkan dan urutkan semua transaksi
+        $merged = $barangMasuks->merge($barangKeluars)->merge($barangAwals)->sortByDesc('created_at')->values();
+
+        // Paginate secara manual
+        $page = $request->input('page', 1);
+        $perPage = 20;
+        $offset = ($page - 1) * $perPage;
+
+        $transaksis = new LengthAwarePaginator(
+            $merged->slice($offset, $perPage),
+            $merged->count(),
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
+
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            return view('barang.indexBarangMKbyID', compact('transaksis', 'barangs'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
@@ -179,14 +334,12 @@ class BarangController extends Controller
 
     public function storeM(Request $request)
     {
-
-        
         $validated = $request->validate([
             'id' => 'required',
-   
+            'date' => 'required|date',
             'keterangan' => 'nullable',
             'jumlah' => 'required|numeric|min:0',
-            'date' => 'required|date',
+
         ]);
 
         BarangMasuk::create([
@@ -204,7 +357,7 @@ class BarangController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:barangs,id',
-    
+
             'keterangan' => 'nullable',
             'jumlah' => 'required|numeric|min:0',
             'date' => 'required|date',
@@ -226,7 +379,7 @@ class BarangController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:30',
-            'date' => 'nullable|date',
+            'date' => 'required|date',
             'description' => 'nullable|string',
             'jumlah' => 'required|integer|max:20',
             'satuan_id' => 'required',
@@ -235,20 +388,47 @@ class BarangController extends Controller
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
+        } else {
+            $user = Auth::user()->id;
+
+            if ($request->has('image')) {
+                $file = $request->file('image');
+                $extension = $file->getClientOriginalExtension();
+
+                $filename = time() . '.' . $extension;
+
+                $path = 'upload/barang/';
+                $file->move($path, $filename);
+
+                $Barang = new Barang;
+                $Barang->user_id = $user;
+                $Barang->name = $request->input('name');
+                $Barang->description = $request->input('description' ?? '-');
+                $Barang->jumlah = $request->input('jumlah' ?? 0);
+                $Barang->satuan_id = $request->input('satuan_id' ?? '-');
+                $Barang->image = $path . $filename;
+                $Barang->save();
+            } else {
+                $Barang = new Barang;
+                $Barang->user_id = $user;
+                $Barang->name = $request->input('name');
+                $Barang->description = $request->input('description' ?? '-');
+                $Barang->jumlah = $request->input('jumlah' ?? 0);
+                $Barang->satuan_id = $request->input('satuan_id' ?? '-');
+
+                $Barang->save();
+            }
+
+            BarangAwal::create([
+                'barang_id' => $Barang->id,
+                'keterangan' => 'Stok awal ' . $request->name,
+                'jumlah' => $Barang->jumlah,
+                'user_id' => Auth::id(),
+                'date' => $request->date,
+            ]);
+
+
         }
-        $user = Auth::user()->id;
-
-        $imageName = $this->handleFile($request->image);
-
-        $Barang = new Barang;
-        $Barang->user_id = $user;
-        $Barang->name = $request->input('name');
-        $Barang->date = $request->input('date')?: null;
-        $Barang->description = $request->input('description' ?: '-');
-        $Barang->jumlah = $request->input('jumlah' ?: 0);
-        $Barang->satuan_id = $request->input('satuan_id' ?: '-');
-        $Barang->image = $request->input('image') ?: null;
-        $Barang->save();
 
         // Panggil fungsi logAdd()
         // LogActivity::addToLog('Create Barang "' . $request->input('name') . '"');

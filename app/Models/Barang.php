@@ -9,11 +9,11 @@ use Cviebrock\EloquentSluggable\Sluggable;
 class Barang extends Model
 {
     use HasFactory;
-    
+
 
     protected $fillable = [
         'user_id',
-        'date',
+
         'name',
         'description',
         'jumlah',
@@ -27,26 +27,17 @@ class Barang extends Model
     }
 
     public function barangMasuks()
-{
-    return $this->hasMany(BarangMasuk::class);
-}
+    {
+        return $this->hasMany(BarangMasuk::class);
+    }
 
-public function barangKeluars()
-{
-    return $this->hasMany(BarangKeluar::class);
-}
-
-public function getLastTransactionDateAttribute()
-{
-    $lastMasuk = $this->barangMasuks()->latest('date')->first();
-    $lastKeluar = $this->barangKeluars()->latest('date')->first();
-
-    $lastDates = collect([
-        optional($lastMasuk)->date,
-        optional($lastKeluar)->date,
-    ])->filter();
-
-    return $lastDates->sortDesc()->first();
-}
+    public function barangKeluars()
+    {
+        return $this->hasMany(BarangKeluar::class);
+    }
+    public function barangAwals()
+    {
+        return $this->hasMany(BarangAwal::class);
+    }
 
 }
