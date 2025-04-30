@@ -16,6 +16,7 @@ class BahanMasuk extends Model
 
     protected $fillable = [
         'user_id',
+        'keterangan',
         'date',
         'bahan_id',
         'jumlah',

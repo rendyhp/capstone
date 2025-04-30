@@ -74,10 +74,10 @@ class BarangController extends Controller
                 ) AS stok_akhir
             ')
         )
-        ->join('satuan_barangs', 'barangs.satuan_id', '=', 'satuan_barangs.id')
-        ->where('barangs.id', $id[0])
-        ->whereNull('barangs.deleted_at')
-        ->firstOrFail();
+            ->join('satuan_barangs', 'barangs.satuan_id', '=', 'satuan_barangs.id')
+            ->where('barangs.id', $id[0])
+            ->whereNull('barangs.deleted_at')
+            ->firstOrFail();
 
         if ($search = $request->input('search')) {
             $query->where('barangs.name', 'like', '%' . $search . '%');
@@ -156,10 +156,14 @@ class BarangController extends Controller
                 ];
             });
 
-        // Gabungkan dan urutkan semua transaksi
         $merged = $barangMasuks->merge($barangKeluars)->merge($barangAwals)->sortByDesc('created_at')->values();
 
-        // Paginate secara manual
+        if ($search = $request->input('search')) {
+            $merged = $merged->filter(function ($item) use ($search) {
+                return stripos($item['name'], $search) !== false;
+            })->values(); 
+        }
+
         $page = $request->input('page', 1);
         $perPage = 20;
         $offset = ($page - 1) * $perPage;

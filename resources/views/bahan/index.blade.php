@@ -105,7 +105,8 @@
 
                                     <div class="col-sm-3 float-end">
                                         <div class="d-flex gap-2 mb-2">
-                                            <a href="/bahan/master" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                            <a href="/bahan/master" class="btn btn-outline-secondary btn-sm"
+                                                title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/bahan/master" method="get" class="form-inline d-flex">
@@ -166,9 +167,29 @@
                                                         <td>{{ $bahan->satuan->name ?? '-' }}</td>
 
                                                         <td>
-                                                            <button type="button" class="btn btn-outline-success"
-                                                                onclick="window.location.href='{{ route('stok-bahan.historyBahan', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
-                                                                <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok
+                                                            <!-- Tombol Tambah -->
+                                                            <button type="button" class="btn btn-outline-success btnTambahStok"
+                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
+                                                                data-name="{{ $bahan->name ?? 'NULL'}}"
+                                                                data-satuan="{{ $bahan->satuan->name ?? '-' }}"
+                                                                data-bs-toggle="modal" data-bs-target="#barangModalM">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </button>
+
+
+                                                            <!-- Tombol Kurangi -->
+                                                            <button type="button" class="btn btn-outline-success btnKurangStok"
+                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
+                                                                data-name="{{ $bahan->name ?? 'NULL'}}"
+                                                                data-satuan="{{ $bahan->satuan->name ?? '-' }}"
+                                                                data-bs-toggle="modal" data-bs-target="#barangModalK">
+                                                                <i class="fa fa-minus" aria-hidden="true"></i>
+                                                            </button>
+
+
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                onclick="window.location.href='{{ route('bahan.indexBahanMKbyID', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
+                                                                <i class="fa fa-info"></i>
                                                             </button>
                                                         </td>
 

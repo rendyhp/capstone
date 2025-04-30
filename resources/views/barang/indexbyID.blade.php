@@ -57,9 +57,9 @@
                 Barang Masuk/Keluar
             </a>
             <!-- <a href="/barang/data-barang"
-                                                    class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
-                                                    Data Barang
-                                                </a> -->
+                                                        class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
+                                                        Data Barang
+                                                    </a> -->
 
             <a href="/barang/satuan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/satuan') ? 'active' : '' }}">
@@ -85,10 +85,9 @@
                             <table id="tableBarang" class="table table-bordered text-dark table-sm">
                                 <div class="mb-3">
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                        data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
-                                    </button>
+                                    <a href="#" onclick="window.history.back(); return false;">
+                                        <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
+                                    </a>
                                     <div class="col-sm-3 float-end mt-3">
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" value="" id="toggleImageColumn">
@@ -96,15 +95,11 @@
                                                 Tampilkan Gambar
                                             </label>
                                         </div>
-                                        <div class="d-flex gap-2">
-                                            <a href="/barang/data-barang" class="btn btn-outline-secondary btn-sm"
+                                        <div class="d-flex gap-2 mb-2">
+                                            <a href="/barang/master/{{ Hashids::encode($barang->id) }}" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/barang/data-barang" method="get" class="form-inline d-flex">
-                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Search" value="{{ request('search') }}">
-                                            </form>
                                         </div>
 
                                         <div>
@@ -120,31 +115,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
-                                                
-                                                    <tr>
-                                                        <td>{{ $barang->id }}
-                                                        </td>
-                                                        <td class="column-gambar" style="display:none;">
-                                                            <img src="{{ asset($barang->image ?? '') }}"
-                                                                style="width: 100px; max-height: 100px;" alt="Img">
-                                                        </td>
-                                                        <td>
-                                                            
-                                                                {{ $barang->name ?? '-' }}
-                                                            
-                                                        </td>
-                                                        <td>{{ $barang->description ?? '-' }}</td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($barang->stok_akhir ?? '0', 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
-                                                    </tr>
-                                              
-                                            
+
+
+                                            <tr>
+                                                <td>{{ $barang->id }}
+                                                </td>
+                                                <td class="column-gambar" style="display:none;">
+                                                    <img src="{{ asset($barang->image ?? '') }}"
+                                                        style="width: 100px; max-height: 100px;" alt="Img">
+                                                </td>
+                                                <td>
+
+                                                    {{ $barang->name ?? '-' }}
+
+                                                </td>
+                                                <td>{{ $barang->description ?? '-' }}</td>
+                                                <td class="text-end">
+                                                    {{ rtrim(rtrim(number_format($barang->stok_akhir ?? '0', 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                                <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
+                                            </tr>
+
+
                                         </tbody>
                             </table>
-                           
+
                         </div>
                     </div>
                 </div>

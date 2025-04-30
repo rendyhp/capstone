@@ -95,7 +95,8 @@
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
                                         <div class="d-flex gap-2">
-                                            <a href=" /bahan/masuk-keluar" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                            <a href=" /bahan/masuk-keluar" class="btn btn-outline-secondary btn-sm"
+                                                title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action=" /bahan/masuk-keluar" method="get" class="form-inline d-flex">
@@ -127,8 +128,14 @@
                                                     <tr>
                                                         <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
                                                         </td>
-                                                        <td>{{ $trx['date'] }}</td>
-                                                        <td>{{ $trx['name'] ?? '-' }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($trx['date'])->translatedFormat('d F Y') }}
+                                                        </td>
+                                                        <td>
+                                                            <a href="/bahan/masuk-keluar/{{ Hashids::encode($trx['bahan_id']) }}"
+                                                                class="text-decoration-none text-dark">
+                                                                {{ $trx['name'] ?? '-' }}
+                                                            </a>
+                                                        </td>
                                                         <td class="text-center">
                                                             <span
                                                                 class="badge {{ $trx['tipe'] === 'MASUK' ? 'bg-success' : 'bg-danger' }}"

@@ -72,23 +72,33 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/barang/satuan/edit', [BarangController::class, 'updateSatuan'])->name('barang.updateSatuan');
     // Route::put('/stok-barang/delete/{id}', [BarangController::class, 'delete'])->name('stok-barang.delete');
 
-    Route::get('/bahan/master', [BahanController::class, 'index'])->name('bahan');
+    Route::get('/bahan/master', [BahanController::class, 'index'])->name('bahan.index');
     Route::get('/bahan/masuk-keluar', [BahanController::class, 'indexMasukKeluar'])->name('bahan.indexMasukKeluar');
-    Route::get('/bahan/data-bahan', [BahanController::class, 'indexDataBahan'])->name('bahan.indexDataBahan');
-    Route::post('/bahan/data-bahan/store', [BahanController::class, 'storeDataBahan'])->name('barang.storeDataBahan');
-    Route::put('/bahan/data-bahan/edit', [BahanController::class, 'updateDataBahan'])->name('barang.updateDataBahan');
-    Route::put('/bahan/data-bahan/delete/{id}', [BahanController::class, 'deleteDataBahan'])->name('bahan.deleteDataBahan');
+
     Route::get('/bahan/bahan-awal', [BahanController::class, 'indexBahanAwal'])->name('bahan.indexBahanAwal');
+    Route::post('/bahan/bahan-awal/store', [BahanController::class, 'storeBahanAwal'])->name('bahan.storeBahanAwal');
+    Route::put('/bahan/bahan-awal/edit', [BahanController::class, 'updateBahanAwal'])->name('bahan.updateBahanAwal');
+    Route::put('/bahan/bahan-awal/delete', [BahanController::class, 'deleteBahanAwal'])->name('bahan.deleteBahanAwal');
+
+    Route::get('/bahan/data-bahan', [BahanController::class, 'indexDataBahan'])->name('bahan.indexDataBahan');
+    Route::post('/bahan/data-bahan/store', [BahanController::class, 'storeDataBahan'])->name('bahan.storeDataBahan');
+    Route::put('/bahan/data-bahan/edit', [BahanController::class, 'updateDataBahan'])->name('bahan.updateDataBahan');
+    Route::put('/bahan/data-bahan/delete/{id}', [BahanController::class, 'deleteDataBahan'])->name('bahan.deleteDataBahan');
+
     Route::get('/bahan/satuan', [BahanController::class, 'indexSatuan'])->name('bahan.indexSatuan');
     Route::post('/bahan/satuan/store', [BahanController::class, 'storeSatuan'])->name('bahan.storeSatuan');
     Route::put('/bahan/satuan/edit', [BahanController::class, 'updateSatuan'])->name('bahan.updateSatuan');
     Route::get('/bahan/history', [BahanController::class, 'indexHistory'])->name('bahan.indexHistory');
 
+    Route::get('/bahan/masuk-keluar', [BahanController::class, 'indexMasukKeluar'])->name('bahan.indexMasukKeluar');
+    Route::get('/bahan/masuk-keluar/{encryptedId}', [BahanController::class, 'indexBahanMKbyID'])->name('bahan.indexBahanMKbyID');
+    Route::post('/bahan/master/storeM', [BahanController::class, 'storeM'])->name('bahan.storeM');
+    Route::post('/bahan/master/storeK', [BahanController::class, 'storeK'])->name('bahan.storeK');
+    Route::post('/bahan/masuk-keluar/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
+    Route::put('/bahan/masuk-keluar/update/', [BahanController::class, 'inputUpdate'])->name('historyBahan.update');
+    Route::put('/bahan/masuk-keluar/delete/{id}', [BahanController::class, 'inputDelete'])->name('historyBahan.delete');
+    
 
-    Route::post('/stok-bahan/historyInput/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
-    Route::put('/stok-bahan/historyInput/update/', [BahanController::class, 'inputUpdate'])->name('historyBahan.update');
-    Route::put('/stok-bahan/historyInput/delete/{encryptedId}', [BahanController::class, 'inputDelete'])->name('historyBahan.delete');
-    Route::get('/stok-bahan/historyInput/{encryptedId}', [BahanController::class, 'indexHistory'])->name('stok-bahan.historyBahan');
 
     Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');
     Route::get('/stock-opname/{bahan_id}/edit', [StockOpnameController::class, 'edit']);
@@ -97,10 +107,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/stock-opname/simpan', [StockOpnameController::class, 'simpan'])->name('stock-opname.simpan');
     Route::post('/stock-opname/simpan/store', [StockOpnameController::class, 'simpanDataBaru'])->name('stock-opname.simpan.store');
 
-    Route::get('/bahan-awal', [BahanAwalController::class, 'index'])->name('stok-bahan-awal');
-    Route::put('/bahan-awal/delete', [BahanAwalController::class, 'delete'])->name('stok-bahan-awal.delete');
-    Route::get('/bahan-awal/{bahan_id}/edit', [BahanAwalController::class, 'edit']);
-    Route::put('/bahan-awal/{bahan_id}', [BahanAwalController::class, 'update'])->name('bahan-awal.update');
+
 
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');

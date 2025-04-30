@@ -1,17 +1,21 @@
 @extends('layouts.main')
-@section('StockOpname', 'active')
+@section('StokBahan', 'active')
 @section('container')
+
+    @php
+        $currentUrl = request()->path();
+    @endphp
 
     <div class="container">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Data Bahan</h2>
+                    <h2 class="pageheader-title ">Stok Bahan</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Data Bahan</li>
+                                <li class="breadcrumb-item active" aria-current="page">Bahan Awal</li>
                             </ol>
                         </nav>
                     </div>
@@ -41,7 +45,6 @@
                 </div>
             </div>
         @endif
-
         <form action="/bahan-awal" method="GET" class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
                 <label for="tanggalbahan" class="col-sm-2 col-form-label">Tanggal</label>
@@ -56,11 +59,43 @@
                 </div>
             </div>
         </form>
+        <div>
+            <a href="/bahan/master"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
+                Master
+            </a>
+
+            <a href="/bahan/masuk-keluar"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
+                Bahan Masuk/Keluar
+            </a>
+            <a href="/bahan/bahan-awal"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/bahan-awal') ? 'active' : '' }}">
+                Bahan Awal
+            </a>
+            <a href="/bahan/data-bahan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/data-bahan') ? 'active' : '' }}">
+                Data Bahan
+            </a>
+
+            <a href="/bahan/satuan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/satuan') ? 'active' : '' }}">
+                Satuan
+            </a>
+
+            @if(Auth::check() && (Auth::user()->role == 'OWNER' || Auth::user()->role == 'MANAJER'))
+                <a href="/bahan/history"
+                    class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/history') ? 'active' : '' }}">
+                    Riwayat
+                </a>
+            @endif
+        </div>
+
         <div class="row">
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bahan </div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bahan Awal</div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -73,10 +108,11 @@
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
                                         <div class="d-flex gap-2">
-                                            <a href="/bahan-awal" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                            <a href="/bahan/bahan-awal" class="btn btn-outline-secondary btn-sm"
+                                                title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/bahan-awal" method="get" class="form-inline d-flex">
+                                            <form action="/bahan/bahan-awal" method="get" class="form-inline d-flex">
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
@@ -104,7 +140,8 @@
                                                     <tr>
                                                         <td>{{ ($bahanAwalAwals->currentPage() - 1) * $bahanAwalAwals->perPage() + $loop->iteration }}
                                                         </td>
-
+                                                        <td>{{ \Carbon\Carbon::parse($bahanAwal->date)->translatedFormat('d F Y') }}
+                                                        </td>
                                                         <td>{{ $bahanAwal->bahan_name }}</td>
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($bahanAwal->stok, 3, ',', '.'), '0'), ',') }}
@@ -120,7 +157,7 @@
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
-                                                            <form action="{{ route('stok-bahan-awal.delete') }}" method="POST"
+                                                            <form action="{{ route('bahan.deleteBahanAwal') }}" method="POST"
                                                                 class="d-inline">
                                                                 @method('PUT')
                                                                 @csrf
@@ -161,8 +198,6 @@
         </select>
     </div>
 
-
-
     <!-- Modal Tambah Bahan Awal -->
     <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="container modal-dialog">
@@ -171,7 +206,7 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Bahan Awal</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="/bahan-awal">
+                <form method="POST" action="/bahan/bahan-awal/store">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">

@@ -16,7 +16,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Stok Barang - Master</li>
+                                <li class="breadcrumb-item active" aria-current="page">Stok Barang - Masuk/Keluar</li>
                             </ol>
                         </nav>
                     </div>
@@ -58,9 +58,9 @@
                 Barang Masuk/Keluar
             </a>
             <!-- <a href="/barang/data-barang"
-                                        class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
-                                        Data Barang
-                                    </a> -->
+                                            class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
+                                            Data Barang
+                                        </a> -->
 
             <a href="/barang/satuan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/satuan') ? 'active' : '' }}">
@@ -78,19 +78,14 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bahan </div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bahan Masuk/Keluar</div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                        data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
-                                    </button>
                                     <div class="col-sm-3 float-end mt-3">
-                                        <div class="d-flex gap-2">
+                                        <div class="d-flex gap-2 mb-2">
                                             <a href="/barang/masuk-keluar" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
@@ -125,7 +120,8 @@
                                                     <tr>
                                                         <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
                                                         </td>
-                                                        <td>{{ $trx['date'] }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($trx['date'])->translatedFormat('d F Y') }}
+                                                        </td>
                                                         <td>
                                                             <a href="/barang/masuk-keluar/{{ Hashids::encode($trx['barang_id']) }}"
                                                                 class="text-decoration-none text-dark">

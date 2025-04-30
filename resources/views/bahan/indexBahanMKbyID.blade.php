@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('StokBarang', 'active')
+@section('StokBahan', 'active')
 @section('container')
 
     @php
@@ -16,9 +16,9 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a class="" href="/barang/masuk-keluar">Stok Barang - Masuk
+                                <li class="breadcrumb-item"><a class="" href="/bahan/masuk-keluar">Stok Bahan - Masuk
                                         Keluar</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">{{ $barangs->name }}</li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ $bahans->name }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -50,28 +50,32 @@
         @endif
 
         <div>
-            <a href="/barang/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/master') ? 'active' : '' }}">
+            <a href="/bahan/master"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
                 Master
             </a>
 
-            <a href="/barang/masuk-keluar"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/masuk-keluar') ? 'active' : '' }}">
-                Barang Masuk/Keluar
+            <a href="/bahan/masuk-keluar"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
+                Bahan Masuk/Keluar
             </a>
-            <!-- <a href="/barang/data-barang"
-                                                                    class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
-                                                                    Data Barang
-                                                                </a> -->
+            <a href="/bahan/bahan-awal"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/bahan-awal') ? 'active' : '' }}">
+                Bahan Awal
+            </a>
+            <a href="/bahan/data-bahan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/data-bahan') ? 'active' : '' }}">
+                Data Bahan
+            </a>
 
-            <a href="/barang/satuan"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/satuan') ? 'active' : '' }}">
+            <a href="/bahan/satuan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/satuan') ? 'active' : '' }}">
                 Satuan
             </a>
 
             @if(Auth::check() && (Auth::user()->role == 'OWNER' || Auth::user()->role == 'MANAJER'))
-                <a href="/barang/history"
-                    class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/history') ? 'active' : '' }}">
+                <a href="/bahan/history"
+                    class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/history') ? 'active' : '' }}">
                     Riwayat
                 </a>
             @endif
@@ -80,14 +84,14 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2">History Input {{ $barangs->name }}</div>
+                        <div class="card-title fs-5 fw-bold mt-2">History Input {{ $bahans->name }}</div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
 
-                                    <div class="mb-3"> <a href="#" onclick="window.history.back(); return false;">
+                                    <div class="mb-3"> <a href="/bahan/master">
                                             <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
                                         </a>
                                     </div>
@@ -95,25 +99,25 @@
 
                                     <!-- Tombol Tambah -->
                                     <button type="button" class="btn btn-outline-success btnTambahStok"
-                                        data-id="{{ $barangs->id ?? 'NULL' }}" data-name="{{ $barangs->name ?? 'NULL'}}"
-                                        data-satuan="{{ $barangs->satuanBarang->name ?? '-' }}" data-bs-toggle="modal"
+                                        data-id="{{ $bahans->id ?? 'NULL' }}" data-name="{{ $bahans->name ?? 'NULL'}}"
+                                        data-satuan="{{ $bahans->satuan->name ?? '-' }}" data-bs-toggle="modal"
                                         data-bs-target="#barangModalM">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok {{ $barangs->name }}
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok {{ $bahans->name }}
                                     </button>
 
 
                                     <!-- Tombol Kurangi -->
                                     <button type="button" class="btn btn-outline-success btnKurangStok"
-                                        data-id="{{ $barangs->id ?? 'NULL' }}" data-name="{{ $barangs->name ?? 'NULL'}}"
-                                        data-satuan="{{ $barangs->satuanBarang->name ?? '-' }}" data-bs-toggle="modal"
+                                        data-id="{{ $bahans->id ?? 'NULL' }}" data-name="{{ $bahans->name ?? 'NULL'}}"
+                                        data-satuan="{{ $bahans->satuan->name ?? '-' }}" data-bs-toggle="modal"
                                         data-bs-target="#barangModalK">
-                                        <i class="fa fa-minus me-2" aria-hidden="true"></i>Stok {{ $barangs->name }}
+                                        <i class="fa fa-minus me-2" aria-hidden="true"></i>Stok {{ $bahans->name }}
                                         Berkurang
                                     </button>
 
                                     <div class="col-sm-2 float-end mt-3">
                                         <div class="d-flex gap-2">
-                                            <a href="/barang/masuk-keluar/{{ Hashids::encode($barangs->id) }}"
+                                            <a href="/bahan/masuk-keluar/{{ Hashids::encode($bahans->id) }}"
                                                 class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
@@ -177,7 +181,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/barang/master/storeM'>
+                    <form method="Post" action='/bahan/master/storeM'>
                         @csrf
 
                         <div class="mb-3">
@@ -186,7 +190,7 @@
                             <input type="date" class="form-control" name="date" id="stokDateM" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Barang</label>
+                            <label class="form-label fw-bold">Nama Bahan</label>
                             <input type="text" disabled class="form-control  @error('name') is-invalid @enderror"
                                 id="stokBarangNameM">
                             @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
@@ -204,7 +208,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Catatan barang masuk"></textarea>
+                                name="keterangan" rows="4" placeholder="Catatan keterangan masuk"></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -222,7 +226,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/barang/master/storeK'>
+                    <form method="Post" action='/bahan/master/storeK'>
                         @csrf
                         <input type="hidden" name="id" id="stokBarangIdK">
                         <div class="mb-3">

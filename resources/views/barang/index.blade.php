@@ -96,7 +96,7 @@
                                                 Tampilkan Gambar
                                             </label>
                                         </div>
-                                        <div class="d-flex gap-2">
+                                        <div class="d-flex gap-2 mb-2">
                                             <a href="/barang/data-barang" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
@@ -168,8 +168,8 @@
                                                             <div class="dropdown" style="display:initial;">
                                                                 <button class="btn btn-secondary btn-sm dropdown-toggle"
                                                                     type="button" id="dropdownMenuButton{{ $barang->id }}"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    &#8942; <!-- simbol titik tiga vertikal -->
+                                                                    data-bs-toggle="dropdown" aria-expanded="false" style="height: 36px;">
+                                                                    &#8942; 
                                                                 </button>
                                                                 <ul class="dropdown-menu"
                                                                     aria-labelledby="dropdownMenuButton{{ $barang->id }}">
