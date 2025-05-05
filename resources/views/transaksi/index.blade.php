@@ -45,9 +45,17 @@
                     <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah menu
                 </button>
 
-                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                    Impor CSV
-                </button>
+                <form action="{{ route('transaksi.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <label for="file">Import Transaksi</label>
+                    <input type="file" name="file" required>
+
+                    <label for="date">Tanggal Transaksi</label>
+                    <input type="date" name="date" required>
+
+                    <button type="submit">Upload</button>
+                </form>
+
 
 
 

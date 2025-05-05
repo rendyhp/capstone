@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->date('date');
             $table->string('menu_name')->nullable();
             $table->foreignId('menu_id')->references('id')->on('menus')->onDelete('cascade');
-            $table->decimal('jumlah', 15, 3);
+            $table->integer('jumlah');
             $table->timestamps();
             $table->softDeletes();
         });

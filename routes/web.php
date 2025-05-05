@@ -97,7 +97,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/bahan/masuk-keluar/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
     Route::put('/bahan/masuk-keluar/update/', [BahanController::class, 'inputUpdate'])->name('historyBahan.update');
     Route::put('/bahan/masuk-keluar/delete/{id}', [BahanController::class, 'inputDelete'])->name('historyBahan.delete');
-    
+
 
 
     Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');
@@ -114,7 +114,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/daftar-menu/delete/{id}', [MenuController::class, 'delete'])->name('daftar-menu.delete');
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
-    Route::post('/transaksi/import', [TransaksiController::class, 'import'])->name('transaksi.import');
+    Route::post('/transaksi/import', [TransaksiController::class, 'importTransaksi'])->name('transaksi.import');
+
+
     Route::get('/transaksi/preview', [TransaksiController::class, 'preview'])->name('transaksi.preview');
     Route::delete('/transaksi/temp-delete', [TransaksiController::class, 'deleteTemp'])->name('transaksi.tempDelete');
 

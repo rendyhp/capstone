@@ -92,6 +92,12 @@
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" value="" id="toggleImageColumn">
+                                            <label class="form-check-label" for="toggleImageColumn">
+                                                Tampilkan Gambar
+                                            </label>
+                                        </div>
                                         <div class="d-flex gap-2">
                                             <a href="/bahan/data-bahan" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
@@ -108,6 +114,7 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
+                                                <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
                                                 <th>Nama Bahan</th>
                                                 <th>Deskripsi Bahan</th>
                                                 <th>Pengingat Stok Minimum</th>
@@ -122,6 +129,10 @@
                                                 @foreach ($bahans as $bahan)
                                                     <tr>
                                                         <td>{{ ($bahans->currentPage() - 1) * $bahans->perPage() + $loop->iteration }}
+                                                        <td class="column-gambar" style="display:none;">
+                                                            <img src="{{ asset($bahan->image) }}"
+                                                                style="width: 100px; max-height: 100px;" alt="Img">
+                                                        </td>
                                                         <td>{{ $bahan->name }}</td>
                                                         <td style="max-width: 150px">{{ $bahan->description }}</td>
                                                         <td class="text-end">
@@ -175,8 +186,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/bahan/data-bahan/store'>
+                    <form method="Post" action='/bahan/data-bahan/store' enctype="multipart/form-data">
                         @csrf
+                        <div class="mb-3">
+                            <label for="image" class="form-label text-dark fw-bold">Gambar</label>
+                            <input type="file" class="form-control" id="image" name="image">
+                        </div>
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Bahan Baku</label>
                             <input type="text" required class="form-control" id="name" name="name"
@@ -319,5 +334,17 @@
             .addEventListener("click", function () {
                 toggleInput("txtminimum", "toggleMinimum2");
             });
+    </script>
+
+    <script>
+        const checkbox = document.getElementById('toggleImageColumn');
+        const imageColumns = document.querySelectorAll('.column-gambar');
+
+        checkbox.addEventListener('change', function () {
+            imageColumns.forEach(col => {
+                col.style.display = this.checked ? '' : 'none';
+            });
+        });
+
     </script>
 @endsection

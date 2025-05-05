@@ -126,8 +126,8 @@
                                                 <th>Masuk</th>
                                                 <th>Keluar</th>
                                                 <th>Terpakai</th>
-                                                <th>Akhir Seharusnya</th>
-                                                <th>Bahan Akhir</th>
+                                                <th>Akhir<br>Seharusnya</th>
+                                                <th>Akhir<br>Sebenarnya</th>
                                                 <th>Terbuang</th>
                                                 <th>Satuan</th>
                                                 <th>Aksi</th>

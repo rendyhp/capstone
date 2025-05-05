@@ -27,6 +27,13 @@ class BarangController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
+       
+        $allowedSortColumns = ['id', 'name', 'jumlah', 'created_at'];
+        $allowedSortDirections = ['asc', 'desc'];
+
+        $orderBy = in_array($request->input('orderBy'), $allowedSortColumns) ? $request->input('orderBy') : 'name';
+        $sort = in_array($request->input('sort'), $allowedSortDirections) ? $request->input('sort') : 'asc';
+
         $query = Barang::select(
             'barangs.*',
             DB::raw('
@@ -38,7 +45,7 @@ class BarangController extends Controller
         )
             ->join('satuan_barangs', 'barangs.satuan_id', '=', 'satuan_barangs.id')
             ->whereNull('barangs.deleted_at')
-            ->orderBy('barangs.name', 'asc');
+            ->orderBy('barangs.' . $orderBy, $sort);
 
         if ($search = $request->input('search')) {
             $query->where('barangs.name', 'like', '%' . $search . '%');
@@ -161,7 +168,7 @@ class BarangController extends Controller
         if ($search = $request->input('search')) {
             $merged = $merged->filter(function ($item) use ($search) {
                 return stripos($item['name'], $search) !== false;
-            })->values(); 
+            })->values();
         }
 
         $page = $request->input('page', 1);
@@ -387,7 +394,7 @@ class BarangController extends Controller
             'description' => 'nullable|string',
             'jumlah' => 'required|integer|max:20',
             'satuan_id' => 'required',
-            'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
+            'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
 
         if ($validator->fails()) {
@@ -406,6 +413,7 @@ class BarangController extends Controller
 
                 $Barang = new Barang;
                 $Barang->user_id = $user;
+                $Barang->date = $request->input('date');
                 $Barang->name = $request->input('name');
                 $Barang->description = $request->input('description' ?? '-');
                 $Barang->jumlah = $request->input('jumlah' ?? 0);
@@ -415,6 +423,7 @@ class BarangController extends Controller
             } else {
                 $Barang = new Barang;
                 $Barang->user_id = $user;
+                $Barang->date = $request->input('date');
                 $Barang->name = $request->input('name');
                 $Barang->description = $request->input('description' ?? '-');
                 $Barang->jumlah = $request->input('jumlah' ?? 0);
@@ -441,8 +450,8 @@ class BarangController extends Controller
         $data = DB::table('barangs')->paginate($dataPerPage);
         $lastPage = $data->lastPage();
 
-        return redirect('/barang/master?page=' . $lastPage)->with('success', 'Barang "' . $Barang->name . '" Berhasil Ditambahkan');
-
+        return redirect('/barang/master?page=' . $lastPage . '&order=id&sort=asc')
+            ->with('success', 'Barang "' . $Barang->name . '" Berhasil Ditambahkan');
     }
 
     public function storeSatuan(Request $request)
@@ -471,50 +480,6 @@ class BarangController extends Controller
 
         return redirect('/barang/satuan?page=' . $lastPage)->with('success', 'Satuan "' . $Satuan->name . '" Berhasil Ditambahkan');
 
-    }
-
-    public function tmpUpload(Request $request)
-    {
-        if ($request->hasFile('image')) {
-            $fileIMG = $request->file('image');
-            $imageName = $fileIMG->getClientOriginalName();
-            $folder = uniqid('post', true);
-            $fileIMG->move(public_path('upload/tmp/' . $folder), $imageName);
-            TemporaryFile::create([
-                'folder' => $folder,
-                'file' => $imageName
-            ]);
-            return $folder;
-        }
-
-        return '';
-    }
-
-    public function tmpDelete()
-    {
-        $tmp_file = TemporaryFile::where('folder', request()->getContent())->first();
-        if ($tmp_file) {
-            File::cleanDirectory(public_path('upload/tmp/' . $tmp_file->folder));
-            $tmp_file->delete();
-        }
-    }
-
-    private function handleFile($file)
-    {
-        $tmp_file = TemporaryFile::where('folder', $file)->first();
-        if ($tmp_file) {
-            $fileName = public_path('upload/tmp/' . $tmp_file->folder . '/' . $tmp_file->file);
-            $fileContents = file_get_contents($fileName);
-            $newFilePath = public_path('upload/img/barang/' . $tmp_file->file);
-            file_put_contents($newFilePath, $fileContents);
-            $tmpLocation = 'upload/publication/' . $tmp_file->file;
-            File::cleanDirectory(public_path('upload/tmp/' . $tmp_file->folder));
-            $tmp_file->delete();
-
-            return $tmpLocation;
-        } else {
-            return null;
-        }
     }
 
     public function show($id)

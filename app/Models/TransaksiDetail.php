@@ -14,7 +14,9 @@ class TransaksiDetail extends Model
     ];
 
     protected $fillable = [
+        'date',
         'transaksi_id',
+        'menu_id',
         'bahan_id',
         'jumlah',
         'satuan_id'

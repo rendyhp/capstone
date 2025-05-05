@@ -12,11 +12,12 @@ return new class extends Migration {
     {
         Schema::create('transaksi_details', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
             $table->foreignId('transaksi_id')->constrained('transaksis')->onDelete('cascade');
             $table->foreignId('menu_id')->constrained('menus')->onDelete('cascade');
             $table->foreignId('bahan_id')->constrained('bahans')->onDelete('cascade');
-            $table->double('jumlah');
-            $table->string('satuan');
+            $table->decimal('jumlah', 15, 3);
+            $table->string('satuan')->nullable();
             $table->timestamps();
         });
     }

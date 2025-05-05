@@ -56,16 +56,10 @@
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/masuk-keluar') ? 'active' : '' }}">
                 Barang Masuk/Keluar
             </a>
-            <!-- <a href="/barang/data-barang"
-                                                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
-                                                Data Barang
-                                            </a> -->
-
             <a href="/barang/satuan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/satuan') ? 'active' : '' }}">
                 Satuan
             </a>
-
             @if(Auth::check() && (Auth::user()->role == 'OWNER' || Auth::user()->role == 'MANAJER'))
                 <a href="/barang/history"
                     class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/history') ? 'active' : '' }}">
@@ -97,11 +91,11 @@
                                             </label>
                                         </div>
                                         <div class="d-flex gap-2 mb-2">
-                                            <a href="/barang/data-barang" class="btn btn-outline-secondary btn-sm"
+                                            <a href="/barang/master" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/barang/data-barang" method="get" class="form-inline d-flex">
+                                            <form action="/barang/master" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
                                                     name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
@@ -113,8 +107,8 @@
                                             <tr>
                                                 <th>No.</th>
                                                 <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
-                                                <th>Nama barang</th>
-                                                <th>Deskripsi barang</th>
+                                                <th>Nama Barang</th>
+                                                <th>Deskripsi Barang</th>
                                                 <th>Stok</th>
                                                 <th>Satuan</th>
                                                 <th>Aksi</th>

@@ -83,7 +83,7 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th>Gambar</th>
+                                                <th style="width: 110px">Gambar</th>
                                                 <th>Nama Menu</th>
                                                 <th>Bahan</th>
                                                 <th>Aksi</th>
@@ -98,7 +98,7 @@
                                                         <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
                                                         </td>
                                                         <td> 
-                                                            <img src="{{ asset($menu->image) }}" style="width: 70px; height: 70px;" alt="Img">
+                                                            <img src="{{ asset($menu->image) }}" style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                         <td>{{ $menu->name }}</td>
 

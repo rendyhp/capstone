@@ -127,15 +127,15 @@ class BahanController extends Controller
                 ];
             });
 
-       
+
         $merged = $bahanMasuks->merge($bahanKeluars)->sortByDesc('created_at')->values();
 
         if ($search = $request->input('search')) {
             $merged = $merged->filter(function ($item) use ($search) {
                 return stripos($item['name'], $search) !== false;
-            })->values(); 
+            })->values();
         }
-  
+
         $page = $request->input('page', 1);
         $perPage = 20;
         $offset = ($page - 1) * $perPage;
@@ -317,8 +317,14 @@ class BahanController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
+        $allowedSortColumns = ['id', 'name', 'jumlah', 'created_at'];
+        $allowedSortDirections = ['asc', 'desc'];
+
+        $orderBy = in_array($request->input('orderBy'), $allowedSortColumns) ? $request->input('orderBy') : 'name';
+        $sort = in_array($request->input('sort'), $allowedSortDirections) ? $request->input('sort') : 'asc';
+
         $query = SatuanBahan::whereNull('deleted_at')
-            ->orderBy('name', 'asc');
+            ->orderBy($orderBy, $sort);
 
         if ($search = $request->input('search')) {
             $query->where('satuan_bahans.name', 'like', '%' . $search . '%');
@@ -444,29 +450,36 @@ class BahanController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:30',
-
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
         $user = Auth::user()->id;
+
+        $existing = SatuanBahan::whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
+
+        $dataPerPage = 20;
+        $data = DB::table('satuan_bahans')->paginate($dataPerPage);
+        $lastPage = $data->lastPage();
+
+        if ($existing) {
+            return redirect('/bahan/satuan?page=' . $lastPage . '&order=id&sort=asc')
+                ->with('error', 'Satuan "' . $request->input('name') . '" sudah ada');
+        }
 
         $Satuan = new SatuanBahan();
         $Satuan->user_id = $user;
         $Satuan->name = $request->input('name');
         $Satuan->save();
 
-        // Panggil fungsi logAdd()
-        // LogActivity::addToLog('Create Barang "' . $request->input('name') . '"');
+        // LogActivity::addToLog('Create Satuan "' . $Satuan->name . '"');
 
-        $dataPerPage = 20;
-        $data = DB::table('satuan_bahans')->paginate($dataPerPage);
-        $lastPage = $data->lastPage();
-
-        return redirect('/bahan/satuan?page=' . $lastPage)->with('success', 'Satuan "' . $Satuan->name . '" Berhasil Ditambahkan');
-
+        return redirect('/bahan/satuan?page=' . $lastPage . '&order=id&sort=asc')
+            ->with('success', 'Satuan "' . $Satuan->name . '" Berhasil Ditambahkan');
     }
+
 
     public function inputUpdate(Request $request)
     {
@@ -595,43 +608,57 @@ class BahanController extends Controller
 
     public function storeDataBahan(Request $request)
     {
-        Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'minimum' => 'required|integer|max:20',
+            'minimum' => 'required|integer',
             'satuan_id' => 'required',
+            'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
 
-        try {
-            $user = Auth::user()->id;
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-            $Bahan = new Bahan;
-            $Bahan->user_id = $user;
-            $Bahan->name = $request->input('name');
-            $Bahan->description = $request->input('description' ?: '-');
-            $Bahan->minimum = $request->input('minimum' ?: 0);
-            $Bahan->satuan_id = $request->input('satuan_id' ?: '-');
-            $Bahan->save();
-
-            // Panggil fungsi logAdd() jika diperlukan
-            // LogActivity::addToLog('Create Barang "' . $request->input('name') . '"');
-
+        // Cek apakah nama bahan (case insensitive) sudah ada
+        $existing = Bahan::whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
+        if ($existing) {
             $dataPerPage = 20;
             $data = DB::table('bahans')->paginate($dataPerPage);
             $lastPage = $data->lastPage();
 
-            // Redirect to the data-bahan page with order by id asc
-            return redirect('/bahan/data-bahan?page=' . $lastPage . '&orderBy=id&direction=asc')
-                ->with('success', 'Data "' . $Bahan->name . '" Berhasil Ditambahkan');
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Handle unique constraint violation
-            if ($e->errorInfo[1] == 1062) {
-                return redirect('data-bahan')->with('error', 'Bahan Gagal Ditambahkan : Nama Bahan yang diinputkan sudah ada');
-            } else {
-                throw $e; // Rethrow the exception if it's not a unique constraint error
-            }
+            return redirect('/bahan/data-bahan?page=' . $lastPage . '&orderBy=id&sort=asc')
+                ->with('error', 'Bahan "' . $request->input('name') . '" sudah ada.');
         }
+
+        $user = Auth::user()->id;
+        $Bahan = new Bahan;
+        $Bahan->user_id = $user;
+        $Bahan->name = $request->input('name');
+        $Bahan->description = $request->input('description', '-');
+        $Bahan->minimum = $request->input('minimum', 0);
+        $Bahan->satuan_id = $request->input('satuan_id', null);
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $path = 'upload/bahan/';
+            $file->move($path, $filename);
+            $Bahan->image = $path . $filename;
+        }
+
+        $Bahan->save();
+
+        $dataPerPage = 20;
+        $data = DB::table('bahans')->paginate($dataPerPage);
+        $lastPage = $data->lastPage();
+
+        return redirect('/bahan/data-bahan?page=' . $lastPage . '&orderBy=id&sort=asc')
+            ->with('success', 'Data "' . $Bahan->name . '" Berhasil Ditambahkan');
     }
+
+
 
 
     public function show($slug)

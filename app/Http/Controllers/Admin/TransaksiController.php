@@ -91,54 +91,43 @@ class TransaksiController extends Controller
         }
     }
 
+    public function importTransaksi(Request $request)
+{
+    $request->validate([
+        'file' => 'required|file|mimes:xlsx,xls',
+        'date' => 'required|date',
+    ]);
 
+    $file = $request->file('file');
+    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
+    $sheet = $spreadsheet->getActiveSheet();
+    $rows = $sheet->toArray();
 
+    for ($i = 1; $i < count($rows); $i++) {
+        $judulProduk = trim($rows[$i][0]); 
+        $jumlah = (int) $rows[$i][2]; 
 
-
-
-    public function import(Request $request)
-    {
-        // Ambil data user yang sedang login
-        $user = Auth::user();
-
-        // Validasi input file dan tanggal
-        $request->validate([
-            'date' => 'required|date',
-            'file' => 'required|file|mimes:xlsx,xls',
-        ]);
-
-        // Ambil file dari request
-        $file = $request->file('file');
-
-        // Load file Excel menggunakan PHPSpreadsheet
-        $spreadsheet = IOFactory::load($file);
-
-        // Ambil worksheet pertama
-        $worksheet = $spreadsheet->getActiveSheet();
-
-        // Loop melalui data di worksheet dan simpan ke database
-        foreach ($worksheet->getRowIterator() as $row) {
-            $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(false); // Pastikan semua cell dilalui
-
-            $data = [];
-            foreach ($cellIterator as $cell) {
-                $data[] = $cell->getFormattedValue();
-            }
-
-            // Pastikan data yang akan dimasukkan ke dalam database sesuai dengan struktur tabel Transaksi
-            // Misalnya menu_name di kolom pertama dan jumlah di kolom kedua
-            Transaksi::create([
-                'user_id' => $user->id,   // Menggunakan user ID yang benar
-                'date' => $request->input('date'),
-                'menu_name' => $data[0],   // Nama menu di kolom pertama
-                'jumlah' => $data[1],      // Jumlah di kolom kedua
-            ]);
+        if (!$judulProduk || $jumlah <= 0) {
+            continue;
         }
 
-        // Kembalikan respon sukses setelah data berhasil diimpor
-        return redirect()->back()->with('success', 'Data berhasil diimpor');
+        $menu = Menu::where('name', $judulProduk)->first();
+        if (!$menu) {
+            continue;
+        }
+
+        $transaksi = Transaksi::create([
+            'user_id' => Auth::id(),
+            'menu_id' => $menu->id,
+            'jumlah' => $jumlah,
+            'date' => $request->date,
+        ]);
+
+        $this->hitungBahanTerpakai($transaksi);
     }
+
+    return redirect()->route('transaksi.index')->with('success', 'Import transaksi berhasil.');
+}
 
     public function preview()
     {
@@ -208,10 +197,12 @@ class TransaksiController extends Controller
         foreach ($menu->komposisi as $komposisi) {
             // Simpan detail pemakaian bahan dalam transaksi_detail
             TransaksiDetail::create([
+                'date' => $transaksi->date,
                 'transaksi_id' => $transaksi->id,
-                
+                'menu_id' => $transaksi->menu_id,
                 'bahan_id' => $komposisi->bahan_id,
                 'jumlah' => $komposisi->jumlah * $transaksi->jumlah,
+                
                
             ]);
 
