@@ -51,15 +51,15 @@
                 </button>
 
                 <!-- <form action="{{ route('transaksi.import') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <label for="file">Import Transaksi</label>
-                                <input type="file" name="file" required>
+                                    @csrf
+                                    <label for="file">Import Transaksi</label>
+                                    <input type="file" name="file" required>
 
-                                <label for="date">Tanggal Transaksi</label>
-                                <input type="date" name="date" required>
+                                    <label for="date">Tanggal Transaksi</label>
+                                    <input type="date" name="date" required>
 
-                                <button type="submit">Upload</button>
-                            </form> -->
+                                    <button type="submit">Upload</button>
+                                </form> -->
 
 
 
@@ -68,6 +68,7 @@
                     <thead class="table-primary">
                         <tr>
                             <th>No.</th>
+                            <th class="column-gambar" style="width: 110px;">Gambar</th>
                             <th>Nama Menu</th>
                             <th>Jumlah</th>
                             <th>Bahan</th>
@@ -78,6 +79,10 @@
                         @forelse($paginated as $key => $transaksi)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
+                                <td class="column-gambar">
+                                    <img src="{{ asset($transaksi['menu_image']) }}" style="width: 100px; max-height: 100px;"
+                                        alt="Img">
+                                </td>
                                 <td>{{ $transaksi['menu_name'] }}</td>
                                 <td class="text-end">
                                     {{ rtrim(rtrim(number_format($transaksi['total_jumlah'], 3, ',', '.'), '0'), ',') }}
@@ -93,6 +98,8 @@
                                     </ul>
                                 </td>
                                 <td>
+                                    
+
                                     <button class="btn btn-primary btn-sm edit-btn"
                                         data-id="{{ $transaksi['menu_id'] }}">Edit</button>
                                     <!-- Hapus butuh id transaksi spesifik, jadi disesuaikan jika ada -->
@@ -308,11 +315,11 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                        <td>${i}</td>
-                        <td>${namaMenu}</td>
-                        ${mode === 'update' ? `<td class="jumlah-sebelumnya">Memuat...</td>` : ''}
-                        <td>${jumlahBaru}</td>
-                    `;
+                            <td>${i}</td>
+                            <td>${namaMenu}</td>
+                            ${mode === 'update' ? `<td class="jumlah-sebelumnya">Memuat...</td>` : ''}
+                            <td>${jumlahBaru}</td>
+                        `;
                             tbody.appendChild(tr);
 
                             // Jika mode update, ambil jumlah sebelumnya dari server (Ajax)

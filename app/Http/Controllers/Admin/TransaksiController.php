@@ -39,6 +39,7 @@ class TransaksiController extends Controller
             ->selectRaw('
             transaksis.menu_id,
             menus.name as menu_name,
+            menus.image as menu_image,
             SUM(transaksis.jumlah) as total_jumlah,
             bahans.name as bahan_name,
             satuan_bahans.name as satuan_name,
@@ -52,7 +53,7 @@ class TransaksiController extends Controller
             ->when($search, function ($q) use ($search) {
                 $q->where('menus.name', 'like', '%' . $search . '%');
             })
-            ->groupBy('transaksis.menu_id', 'menus.name', 'bahans.name', 'satuan_bahans.name')
+            ->groupBy('transaksis.menu_id', 'menus.name', 'menus.image', 'bahans.name', 'satuan_bahans.name')
             ->orderBy('menus.name', 'asc')
             ->get();
 
@@ -60,6 +61,7 @@ class TransaksiController extends Controller
         $transaksis = $allData->groupBy('menu_id')->map(function ($items) {
             return [
                 'menu_id' => $items->first()->menu_id,
+                'menu_image' => $items->first()->menu_image,
                 'menu_name' => $items->first()->menu_name,
                 'total_jumlah' => $items->first()->total_jumlah,
                 'bahans' => $items->map(function ($item) {
