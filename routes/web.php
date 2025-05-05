@@ -115,6 +115,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
     Route::post('/transaksi/import', [TransaksiController::class, 'importTransaksi'])->name('transaksi.import');
+    Route::get('/transaksi/jumlah-sebelumnya', [TransaksiController::class, 'jumlahSebelumnya']);
+
 
 
     Route::get('/transaksi/preview', [TransaksiController::class, 'preview'])->name('transaksi.preview');

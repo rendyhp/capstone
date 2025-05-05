@@ -275,6 +275,7 @@
     <!-- ... (other script tags) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
     $('#editBarangModal').on('shown.bs.modal', function () {
         $('#id_bahan.select2-hidden-accessible').select2('destroy');

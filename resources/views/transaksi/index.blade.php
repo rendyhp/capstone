@@ -45,16 +45,21 @@
                     <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah menu
                 </button>
 
-                <form action="{{ route('transaksi.import') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <label for="file">Import Transaksi</label>
-                    <input type="file" name="file" required>
+                <!-- Tombol trigger modal -->
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#importModal">
+                    <i class="fa fa-upload me-2" aria-hidden="true"></i>Import Transaksi
+                </button>
 
-                    <label for="date">Tanggal Transaksi</label>
-                    <input type="date" name="date" required>
+                <!-- <form action="{{ route('transaksi.import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <label for="file">Import Transaksi</label>
+                                <input type="file" name="file" required>
 
-                    <button type="submit">Upload</button>
-                </form>
+                                <label for="date">Tanggal Transaksi</label>
+                                <input type="date" name="date" required>
+
+                                <button type="submit">Upload</button>
+                            </form> -->
 
 
 
@@ -184,6 +189,65 @@
             </div>
         </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <form id="importForm" action="{{ route('transaksi.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="importModalLabel">Import Transaksi</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="mb-3">
+                                <label for="file">File Excel</label>
+                                <input type="file" name="file" id="fileInput" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="date">Tanggal Transaksi</label>
+                                <input type="date" name="date" class="form-control" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Mode Import</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="mode" id="modeTambah" value="tambah"
+                                        checked>
+                                    <label class="form-check-label" for="modeTambah">Tambahkan</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="mode" id="modeUpdate" value="update">
+                                    <label class="form-check-label" for="modeUpdate">Update (hapus & ganti)</label>
+                                </div>
+                            </div>
+
+                            <!-- Preview -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered mt-3" id="previewTable" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Menu</th>
+                                            <th class="preview-update-column">Jumlah Sebelumnya</th>
+                                            <th>Jumlah Baru</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Import</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
 
 
 
@@ -210,6 +274,83 @@
                 </div>
             </div>
         </div>
+
+        <script>
+            document.getElementById('fileInput').addEventListener('change', handleFile, false);
+            document.getElementsByName('mode').forEach(radio => {
+                radio.addEventListener('change', toggleModeColumns);
+            });
+
+            function handleFile(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                    // Kosongkan tbody
+                    const tbody = document.querySelector('#previewTable tbody');
+                    tbody.innerHTML = "";
+
+                    let mode = document.querySelector('input[name="mode"]:checked').value;
+
+                    if (rows.length > 1) {
+                        for (let i = 1; i < rows.length; i++) {
+                            const namaMenu = rows[i][0] || '';
+                            const jumlahBaru = rows[i][2] || 0;
+
+                            if (!namaMenu || jumlahBaru <= 0) continue;
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                        <td>${i}</td>
+                        <td>${namaMenu}</td>
+                        ${mode === 'update' ? `<td class="jumlah-sebelumnya">Memuat...</td>` : ''}
+                        <td>${jumlahBaru}</td>
+                    `;
+                            tbody.appendChild(tr);
+
+                            // Jika mode update, ambil jumlah sebelumnya dari server (Ajax)
+                            if (mode === 'update') {
+                                fetch(`/transaksi/jumlah-sebelumnya?menu=${encodeURIComponent(namaMenu)}&date=${document.querySelector('input[name="date"]').value}`)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        tr.querySelector('.jumlah-sebelumnya').textContent = data.jumlah || 0;
+                                    }).catch(() => {
+                                        tr.querySelector('.jumlah-sebelumnya').textContent = '-';
+                                    });
+                            }
+                        }
+
+                        document.getElementById('previewTable').style.display = 'table';
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            }
+
+            function toggleModeColumns() {
+                const mode = document.querySelector('input[name="mode"]:checked').value;
+                const updateCols = document.querySelectorAll('.preview-update-column');
+                const sebelumnyaCells = document.querySelectorAll('.jumlah-sebelumnya');
+
+                if (mode === 'update') {
+                    updateCols.forEach(col => col.style.display = '');
+                    sebelumnyaCells.forEach(cell => cell.style.display = '');
+                } else {
+                    updateCols.forEach(col => col.style.display = 'none');
+                    sebelumnyaCells.forEach(cell => cell.style.display = 'none');
+                }
+
+                // Refresh file to reload preview
+                document.getElementById('fileInput').dispatchEvent(new Event('change'));
+            }
+        </script>
+
 
 
 

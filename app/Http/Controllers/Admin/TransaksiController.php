@@ -80,7 +80,7 @@ class TransaksiController extends Controller
         $paginated->appends($request->query());
 
         // Ambil semua menu untuk modal/edit
-        $menus = Menu::with('komposisi.bahan.satuan')->whereNull('deleted_at')->orderBy('name','asc')->get();
+        $menus = Menu::with('komposisi.bahan.satuan')->whereNull('deleted_at')->orderBy('name', 'asc')->get();
 
         if ($role === 'OWNER') {
             return view('transaksi.index', compact('paginated', 'date', 'menus'));
@@ -92,78 +92,76 @@ class TransaksiController extends Controller
     }
 
     public function importTransaksi(Request $request)
-{
-    $request->validate([
-        'file' => 'required|file|mimes:xlsx,xls',
-        'date' => 'required|date',
-    ]);
-
-    $file = $request->file('file');
-    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
-    $sheet = $spreadsheet->getActiveSheet();
-    $rows = $sheet->toArray();
-
-    for ($i = 1; $i < count($rows); $i++) {
-        $judulProduk = trim($rows[$i][0]); 
-        $jumlah = (int) $rows[$i][2]; 
-
-        if (!$judulProduk || $jumlah <= 0) {
-            continue;
-        }
-
-        $menu = Menu::where('name', $judulProduk)->first();
-        if (!$menu) {
-            continue;
-        }
-
-        $transaksi = Transaksi::create([
-            'user_id' => Auth::id(),
-            'menu_id' => $menu->id,
-            'jumlah' => $jumlah,
-            'date' => $request->date,
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+            'date' => 'required|date',
+            'mode' => 'required|in:tambah,update',
         ]);
 
-        $this->hitungBahanTerpakai($transaksi);
-    }
+        $file = $request->file('file');
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = $sheet->toArray();
 
-    return redirect()->route('transaksi.index')->with('success', 'Import transaksi berhasil.');
-}
+        $tanggal = $request->date;
+        $mode = $request->mode;
 
-    public function preview()
-    {
-        $path = session('temp_excel');
+        $processedMenus = [];
 
-        if (!$path || !Storage::exists($path)) {
-            return redirect()->back()->with('error', 'File tidak ditemukan.');
-        }
+        for ($i = 1; $i < count($rows); $i++) {
+            $judulProduk = trim($rows[$i][0]);
+            $jumlah = (int) $rows[$i][2];
 
-        $data = Excel::toCollection(null, storage_path('app/' . $path))->first();
-        $previewData = [];
-
-        foreach ($data as $row) {
-            if (!empty($row[0]) && !empty($row[2])) {
-                $previewData[] = [
-                    'menu' => $row[0],
-                    'jumlah' => intval($row[2]),
-                ];
+            if (!$judulProduk || $jumlah <= 0) {
+                continue;
             }
+
+            $menu = Menu::whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($judulProduk))])->first();
+
+            if (!$menu) {
+                continue;
+            }
+
+            // Simpan ID menu untuk proses update
+            $processedMenus[] = $menu->id;
+
+            // Jika update, hapus semua transaksi dengan tanggal & menu yang sama
+            if ($mode === 'update') {
+                Transaksi::where('menu_id', $menu->id)->whereDate('date', $tanggal)->delete();
+            }
+
+            $transaksi = Transaksi::create([
+                'user_id' => Auth::id(),
+                'menu_id' => $menu->id,
+                'jumlah' => $jumlah,
+                'date' => $tanggal,
+            ]);
+
+            $this->hitungBahanTerpakai($transaksi);
         }
 
-        return view('transaksi.preview', compact('previewData'));
+        return redirect()->route('transaksi.index')->with('success', 'Import transaksi berhasil.');
     }
 
-    public function deleteTemp()
+    public function jumlahSebelumnya(Request $request)
     {
-        $path = session('temp_excel');
+        $menuName = $request->input('menu');
+        $date = $request->input('date');
 
-        if ($path && Storage::exists($path)) {
-            Storage::delete($path);
+        $menu = Menu::whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($menuName))])->first();
+
+        if (!$menu) {
+            return response()->json(['jumlah' => 0]);
         }
 
-        session()->forget('temp_excel');
+        $jumlah = Transaksi::where('menu_id', $menu->id)
+            ->whereDate('date', $date)
+            ->sum('jumlah');
 
-        return redirect()->back()->with('success', 'File sementara dihapus.');
+        return response()->json(['jumlah' => $jumlah]);
     }
+
 
 
 
@@ -202,8 +200,8 @@ class TransaksiController extends Controller
                 'menu_id' => $transaksi->menu_id,
                 'bahan_id' => $komposisi->bahan_id,
                 'jumlah' => $komposisi->jumlah * $transaksi->jumlah,
-                
-               
+
+
             ]);
 
 
