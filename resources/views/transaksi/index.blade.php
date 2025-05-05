@@ -19,11 +19,28 @@
             </div>
         </div>
 
-        @if(session()->has('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+        @if (session()->has('success'))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fa fa-check me-2" aria-hidden="true"></i>
+                        {{ session('success') }}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
         @endif
-        @if(session()->has('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
+
+        @if (session()->has('error'))
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"></i>
+                        &nbsp{{ session()->get('error') }}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
         @endif
 
         <form action="{{ route('transaksi.index') }}" method="GET" class="mb-3 d-flex align-items-center">
@@ -49,18 +66,6 @@
                 <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#importModal">
                     <i class="fa fa-upload me-2" aria-hidden="true"></i>Import Transaksi
                 </button>
-
-                <!-- <form action="{{ route('transaksi.import') }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    <label for="file">Import Transaksi</label>
-                                    <input type="file" name="file" required>
-
-                                    <label for="date">Tanggal Transaksi</label>
-                                    <input type="date" name="date" required>
-
-                                    <button type="submit">Upload</button>
-                                </form> -->
-
 
 
 
@@ -98,11 +103,17 @@
                                     </ul>
                                 </td>
                                 <td>
-                                    
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary btn-sm btn_edittransaksi"
+                                        data-id="{{ $transaksi['transaksi_id'] }}"
+                                        data-date="{{ $transaksi['date'] ?? 'NULL' }}"
+                                        data-menu-id="{{ $transaksi['menu_id'] }}" 
+                                        data-jumlah="{{ $transaksi['total_jumlah'] ?? 'NULL' }}"
+                                        data-menu-name="{{ $transaksi['menu_name'] ?? 'NULL' }}"
+                                        data-komposisi="{{ json_encode($transaksi['komposisi']) }}">
+                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                    </button>
 
-                                    <button class="btn btn-primary btn-sm edit-btn"
-                                        data-id="{{ $transaksi['menu_id'] }}">Edit</button>
-                                    <!-- Hapus butuh id transaksi spesifik, jadi disesuaikan jika ada -->
                                 </td>
                             </tr>
                         @empty
@@ -255,27 +266,32 @@
             </div>
         </div>
 
-
-
-
-
-        <!-- Modal Edit -->
-        <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
+        <!-- Modal Edit Barang-->
+        <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Transaksi</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Edit Transaksi</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="editForm">
-                            @csrf @method('PUT')
-                            <input type="hidden" id="transaksiId">
-                            <div class="form-group">
-                                <label for="editJumlah">Jumlah</label>
-                                <input type="number" id="editJumlah" class="form-control">
+                        <form method="POST" id="editBarangForm">
+                            @method('PUT')
+                            @csrf
+                            <div class="mb-3">
+                                <input type="text" name="id" id="txtid" hidden>
+                                <input type="hidden" name="menu_id" id="txtmenuId">
+
+
+                                <input type="date" name="date" id="txtdate" class="form-control">
+                                <label for="menu_name" class="form-label">Nama Menu</label>
+                                <input type="text" readonly name="menu_name" id="txtname" class="form-control">
+                                <label for="jumlah" class="form-label">Jumlah</label>
+                                <input type="number" name="jumlah" id="txtjumlahMenu" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Ubah</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -315,11 +331,11 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                            <td>${i}</td>
-                            <td>${namaMenu}</td>
-                            ${mode === 'update' ? `<td class="jumlah-sebelumnya">Memuat...</td>` : ''}
-                            <td>${jumlahBaru}</td>
-                        `;
+                                                                                <td>${i}</td>
+                                                                                <td>${namaMenu}</td>
+                                                                                ${mode === 'update' ? `<td class="jumlah-sebelumnya">Memuat...</td>` : ''}
+                                                                                <td>${jumlahBaru}</td>
+                                                                            `;
                             tbody.appendChild(tr);
 
                             // Jika mode update, ambil jumlah sebelumnya dari server (Ajax)

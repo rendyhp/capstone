@@ -37,13 +37,17 @@ class TransaksiController extends Controller
         // Ambil semua data transaksi dan komposisi
         $allData = DB::table('transaksis')
             ->selectRaw('
-            transaksis.menu_id,
+            transaksis.menu_id as menu_id,
+            transaksis.date as date,
             menus.name as menu_name,
             menus.image as menu_image,
             SUM(transaksis.jumlah) as total_jumlah,
+            MIN(transaksis.id) as transaksi_id,
             bahans.name as bahan_name,
             satuan_bahans.name as satuan_name,
-            SUM(komposisi_menus.jumlah * transaksis.jumlah) as total_bahan
+            SUM(komposisi_menus.jumlah * transaksis.jumlah) as total_bahan,
+            komposisi_menus.bahan_id,  -- Include komposisi_menus.bahan_id
+            komposisi_menus.jumlah as komposisi_jumlah  -- Include komposisi_menus.jumlah
         ')
             ->join('menus', 'transaksis.menu_id', '=', 'menus.id')
             ->join('komposisi_menus', 'menus.id', '=', 'komposisi_menus.menu_id')
@@ -53,7 +57,16 @@ class TransaksiController extends Controller
             ->when($search, function ($q) use ($search) {
                 $q->where('menus.name', 'like', '%' . $search . '%');
             })
-            ->groupBy('transaksis.menu_id', 'menus.name', 'menus.image', 'bahans.name', 'satuan_bahans.name')
+            ->groupBy(
+                'transaksis.menu_id',
+                'transaksis.date',
+                'menus.name',
+                'menus.image',
+                'bahans.name',
+                'satuan_bahans.name',
+                'komposisi_menus.bahan_id',
+                'komposisi_menus.jumlah'
+            )
             ->orderBy('menus.name', 'asc')
             ->get();
 
@@ -61,6 +74,8 @@ class TransaksiController extends Controller
         $transaksis = $allData->groupBy('menu_id')->map(function ($items) {
             return [
                 'menu_id' => $items->first()->menu_id,
+                'transaksi_id' => $items->first()->transaksi_id,
+                'date' => $items->first()->date,
                 'menu_image' => $items->first()->menu_image,
                 'menu_name' => $items->first()->menu_name,
                 'total_jumlah' => $items->first()->total_jumlah,
@@ -69,6 +84,12 @@ class TransaksiController extends Controller
                         'bahan_name' => $item->bahan_name,
                         'total_bahan' => $item->total_bahan,
                         'satuan_name' => $item->satuan_name,
+                    ];
+                }),
+                'komposisi' => $items->map(function ($item) {
+                    return [
+                        'bahan_id' => $item->bahan_id,
+                        'komposisi_jumlah' => $item->komposisi_jumlah,
                     ];
                 })
             ];
@@ -92,6 +113,8 @@ class TransaksiController extends Controller
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
+
+
 
     public function importTransaksi(Request $request)
     {
@@ -219,35 +242,58 @@ class TransaksiController extends Controller
         return view('transaksi.edit', compact('transaksi', 'menus'));
     }
 
-    public function update(Request $request, $id)
+    public function updateTransaksi(Request $request, $id)
     {
+
         $request->validate([
             'menu_id' => 'required|exists:menus,id',
             'jumlah' => 'required|numeric|min:1',
             'date' => 'required|date',
-            'catatan' => 'nullable|string'
         ]);
 
-        $transaksi = Transaksi::findOrFail($id);
+        $transaksi = Transaksi::find($id);
 
-        $transaksi->update([
-            'menu_id' => $request->menu_id,
-            'jumlah' => $request->jumlah,
-            'date' => $request->date,
-            'catatan' => $request->catatan,
-        ]);
+        if (!$transaksi) {
+            return redirect()->route('transaksi.index')->with('error', 'Transaksi tidak ditemukan.');
+        }
 
-        // Hapus dan hitung ulang transaksi_detail
-        // $transaksi->transaksiDetail()->delete();
+        // Simpan perubahan terlebih dahulu
+        $transaksi->menu_id = $request->menu_id;
+        $transaksi->jumlah = $request->jumlah;
+        $transaksi->date = $request->date;
+        $transaksi->save();
+
+        // Hapus transaksi lain yang sama (duplikat) tapi bukan yang sedang diupdate
+        DB::table('transaksis')
+            ->where('menu_id', $request->menu_id)
+            ->where('date', $request->date)
+            ->where('id', '!=', $transaksi->id)
+            ->delete();
+
+        // Recalculate ingredients usage
         $this->hitungBahanTerpakai($transaksi);
 
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diubah');
     }
+
+
+
+
+
+
 
 
     public function destroy($id)
     {
-        Transaksi::findOrFail($id)->delete();
-        return redirect()->back()->with('success', 'Transaksi berhasil dihapus');
+        $transaksi = Transaksi::find($id);
+
+        if (!$transaksi) {
+            return redirect()->route('transaksi.index')->with('error', 'Transaksi tidak ditemukan.');
+        }
+
+        // Hapus transaksi
+        $transaksi->delete();
+
+        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
     }
 }

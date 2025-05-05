@@ -169,7 +169,7 @@ $(document).on("click", ".btn_editsatuanbahan", function (e) {
 $(document).on("click", ".btnTambahStok", function () {
     var id = $(this).data("id");
     var name = $(this).data("name");
-    var satuan = $(this).data("satuan")
+    var satuan = $(this).data("satuan");
 
     console.log(id, name, satuan);
 
@@ -181,7 +181,7 @@ $(document).on("click", ".btnTambahStok", function () {
 $(document).on("click", ".btnKurangStok", function () {
     var id = $(this).data("id");
     var name = $(this).data("name");
-    var satuan = $(this).data("satuan")
+    var satuan = $(this).data("satuan");
 
     console.log(id, name, satuan);
 
@@ -365,7 +365,6 @@ $(document).ready(function () {
         $("#editMenuName").val(name);
         $("#editMenuDescription").val(description);
 
-
         const container = $("#editBahanContainer");
         container.empty();
 
@@ -416,6 +415,34 @@ $(document).ready(function () {
 });
 
 ////////////////////////////////////////////////////////
+
+$(document).on("click", ".btn_edittransaksi", function () {
+    var id = $(this).data("id");
+    var date = $(this).data("date");
+    var jumlah = $(this).data("jumlah");
+    var menuName = $(this).data("menu-name");
+    var menu_id = $(this).data("menu-id");
+
+    // Debugging: Cek nilai dari menu_id
+    console.log("menu_id:", menu_id);
+
+    $("#txtid").val(id);
+    $("#txtdate").val(date);
+    $("#txtname").val(menuName);
+    $("#txtjumlahMenu").val(jumlah);
+    $("#txtmenuId").val(menu_id);
+
+    // Debugging: Pastikan nilai sudah di-set di input
+    console.log("Hidden menu_id input value:", $("#txtmenuId").val());
+
+    // Set action URL for the form
+    $("#editBarangForm").attr("action", "/transaksi/updateTransaksi/" + id);
+
+    // Show modal
+    $("#editBarangModal").modal("show");
+});
+
+/////////////////////////////////////////////////////////
 
 $(document).ready(function () {
     const bahanOptionsTemplate = document.querySelector("#bahanOptions select");
