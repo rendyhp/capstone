@@ -59,22 +59,10 @@
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/masuk-keluar') ? 'active' : '' }}">
                 Barang Masuk/Keluar
             </a>
-            <!-- <a href="/barang/data-barang"
-                                                                    class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/data-barang') ? 'active' : '' }}">
-                                                                    Data Barang
-                                                                </a> -->
-
             <a href="/barang/satuan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/satuan') ? 'active' : '' }}">
                 Satuan
             </a>
-
-            @if(Auth::check() && (Auth::user()->role == 'OWNER' || Auth::user()->role == 'MANAJER'))
-                <a href="/barang/history"
-                    class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/history') ? 'active' : '' }}">
-                    Riwayat
-                </a>
-            @endif
         </div>
         <div class="row">
             <div class="col-xl-12">
@@ -91,6 +79,13 @@
                                             <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
                                         </a>
                                     </div>
+
+                                    <div class="mb-3 text-center fw-bold">
+                                        <img src="{{ asset($barangs->image) }}" style="width: 150px; max-height: 150px;"
+                                            alt="Img">
+                                        <p>{{ $barangs->name }}</p>
+                                    </div>
+
 
 
                                     <!-- Tombol Tambah -->

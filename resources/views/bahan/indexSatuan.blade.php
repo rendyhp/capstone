@@ -70,13 +70,6 @@
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/satuan') ? 'active' : '' }}">
                 Satuan
             </a>
-
-            @if(Auth::check() && (Auth::user()->role == 'OWNER' || Auth::user()->role == 'MANAJER'))
-                <a href="/bahan/history"
-                    class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/history') ? 'active' : '' }}">
-                    Riwayat
-                </a>
-            @endif
         </div>
         <div class="row">
             <div class="col-xl-12">

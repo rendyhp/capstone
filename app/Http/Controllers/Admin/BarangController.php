@@ -27,7 +27,7 @@ class BarangController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-       
+
         $allowedSortColumns = ['id', 'name', 'jumlah', 'created_at'];
         $allowedSortDirections = ['asc', 'desc'];
 
@@ -259,7 +259,13 @@ class BarangController extends Controller
             });
 
         // Gabungkan dan urutkan semua transaksi
-        $merged = $barangMasuks->merge($barangKeluars)->merge($barangAwals)->sortByDesc('created_at')->values();
+        $merged = collect()
+            ->concat($barangMasuks)
+            ->concat($barangKeluars)
+            ->concat($barangAwals)
+            ->sortByDesc('created_at')
+            ->values();
+
 
         // Paginate secara manual
         $page = $request->input('page', 1);
