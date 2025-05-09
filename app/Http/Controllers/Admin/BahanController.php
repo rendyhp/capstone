@@ -74,6 +74,10 @@ class BahanController extends Controller
                 ->sum('jumlah');
             $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
         }
+        if ($request->ajax()) {
+            return response()->json($bahans);
+        }
+        
         if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
             return view('bahan.index', [
 
