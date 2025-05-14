@@ -125,8 +125,9 @@ Route::middleware(['auth'])->group(function () {
     // Lainnya
     Route::get('/log-activities', [LogActivityController::class, 'index'])->name('log-activities');
     Route::get('/protected/user-data', [UserController::class, 'index'])->name('user.index');
-    Route::get('/protected/user-data/register', [UserController::class, 'index'])->name('user-data');
+    Route::get('/protected/user-data/register', [UserController::class, 'register'])->name('user-data');
     Route::get('/protected/user/{id}', [UserController::class, 'getEmail'])->name('user.getEmail');
+    Route::put('/protected/user/{id}/delete', [UserController::class, 'delete'])->name('user.delete');
 
 
     // Dashboard routes
@@ -138,7 +139,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('/stock-opname', \App\Http\Controllers\Admin\StockOpnameController::class);
     Route::resource('/daftar-menu', \App\Http\Controllers\Admin\MenuController::class);
     Route::resource('/transaksi', \App\Http\Controllers\Admin\TransaksiController::class);
-    Route::resource('/user', \App\Http\Controllers\UserController::class);
+    
 
 });
 

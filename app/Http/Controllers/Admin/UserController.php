@@ -34,7 +34,7 @@ class UserController extends Controller
             return view('user.index', [
                 'userDatas' => $userDatas,
                 'maskEmail' => fn($email) => $this->maskEmail($email),
-                'role' => $role 
+                'role' => $role
             ]);
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -64,6 +64,47 @@ class UserController extends Controller
         $targetUser = User::findOrFail($id);
         return response()->json(['email' => $targetUser->email]);
     }
+
+    public function register(Request $request)
+    {
+        $user = Auth::user();
+        $role = $user->role;
+
+        if (in_array($role, ['OWNER', 'MANAJER'])) {
+            return view('user.register', [
+            ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        $currentUser = Auth::user();
+        $currentRole = $currentUser->role;
+
+        $id = $request->id;
+        $targetUser = User::findOrFail($id);
+        $targetRole = $targetUser->role;
+
+        if ($currentRole === 'STAF') {
+            abort(403, 'Anda tidak memiliki akses!');
+        }
+
+        if ($currentRole === 'OWNER' && !in_array($targetRole, ['MANAJER', 'STAF'])) {
+            abort(403, 'Anda tidak memiliki akses!');
+        }
+
+        if ($currentRole === 'MANAJER' && $targetRole !== 'STAF') {
+            abort(403, 'Anda tidak memiliki akses!');
+        }
+
+        $targetUser->deleted_at = now();
+        $targetUser->save();
+
+        return redirect()->back()->with('success', 'Data ' . $targetUser->name . ' berhasil dihapus');
+    }
+
 
 
     public function configIndex()

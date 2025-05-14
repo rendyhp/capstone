@@ -58,10 +58,11 @@
                             <table id="tableBarang" class="table table-bordered text-dark table-sm">
                                 <div class="mb-3">
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                        data-bs-target="#barangModal">
+                                    <button type="button" class="btn btn-outline-success"
+                                        onclick="window.location.href='/protected/user-data/register'">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Register
                                     </button>
+
                                     <div class="col-sm-3 float-end mt-3">
                                         <div class="d-flex gap-2 mb-2">
                                             <a href="/protected/user-data" class="btn btn-outline-secondary btn-sm"
@@ -98,25 +99,42 @@
                                                             <span class="masked-email">{{ $maskEmail($user->email) }}</span>
                                                             <span class="full-email d-none"></span>
 
-                                                            <button class="btn btn-sm btn-light toggle-email"
-                                                                data-user-id="{{ $user->id }}" style="border: none;"
-                                                                title="Lihat email penuh">
-                                                                <i class="fas fa-eye text-secondary"></i>
-                                                            </button>
+                                                            @if (
+                                                                    ($role === 'OWNER') ||
+                                                                    ($role === 'MANAJER' && ($user->role === 'STAF' || $user->id === auth()->user()->id))
+                                                                )
+                                                                <button class="btn btn-sm btn-light toggle-email"
+                                                                    data-user-id="{{ $user->id }}" style="border: none;"
+                                                                    title="Lihat email penuh">
+                                                                    <i class="fas fa-eye text-secondary"></i>
+                                                                </button>
+                                                            @endif
                                                         </td>
+
 
                                                         <td>{{ $user->role }}</td>
 
 
                                                         <td>
-                                                            @if (auth()->user()->role == 'OWNER' || (auth()->user()->role == 'MANAJER' && $user->role == 'STAF'))
-                                                                <form action="/bahan/data-bahan/delete/{{ $user->id }}" class="d-inline"
+                                                            @if (auth()->user()->role == 'OWNER' && ($user->role == 'MANAJER' || $user->role == 'STAF'))
+                                                                <form action="/protected/user/{{ $user->id }}/delete" class="d-inline"
                                                                     method="post">
                                                                     @method('PUT')
                                                                     @csrf
                                                                     <button class="btn btn-danger btn-sm" type="submit"
-                                                                        onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                            class="fa fa-trash"></i></button>
+                                                                        onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @elseif (auth()->user()->role == 'MANAJER' && $user->role == 'STAF')
+                                                                <form action="/protected/user/{{ $user->id }}/delete" class="d-inline"
+                                                                    method="post">
+                                                                    @method('PUT')
+                                                                    @csrf
+                                                                    <button class="btn btn-danger btn-sm" type="submit"
+                                                                        onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
                                                                 </form>
                                                             @endif
                                                         </td>

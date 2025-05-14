@@ -12,6 +12,12 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected static function booted()
+    {
+        static::addGlobalScope('notDeleted', function ($query) {
+            $query->whereNull('deleted_at');
+        });
+    }
     /**
      * The attributes that are mass assignable.
      *

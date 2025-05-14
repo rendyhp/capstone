@@ -74,7 +74,6 @@ class LoginController extends Controller
             return true;
         }
 
-        // Pengecekan apakah email benar
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         if ($user) {
@@ -89,5 +88,14 @@ class LoginController extends Controller
         }
 
         return false;
+    }
+
+    protected function credentials(Request $request)
+    {
+        return [
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+            'deleted_at' => null, // hanya user yang tidak soft-deleted
+        ];
     }
 }
