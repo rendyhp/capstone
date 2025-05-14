@@ -284,18 +284,27 @@
             $('#id_bahan').select2({
                 placeholder: "Cari bahan...",
                 allowClear: true,
-                dropdownParent: $('#editBarangModal')
+                dropdownParent: $('#editBarangModal .modal-content'),
+                dropdownAutoWidth: true,
+                width: '100%'
             });
 
 
             $('#txtsatuan_id').select2({
                 placeholder: "Cari atau pilih satuan...",
                 allowClear: true,
-                dropdownParent: $('#editBarangModal')
+                dropdownParent: $('#editBarangModal .modal-content'),
+                dropdownAutoWidth: true,
+                width: '100%'
             });
 
             setTimeout(() => {
                 $('.select2-container--open .select2-search__field').focus();
+            }, 100);
+        });
+        $(document).on('select2:open', () => {
+            setTimeout(() => {
+                document.querySelector('.select2-container--open .select2-search__field').focus();
             }, 100);
         });
 
@@ -304,12 +313,16 @@
             $('#satuan_id').select2({
                 placeholder: "Cari atau pilih satuan...",
                 allowClear: true,
-                dropdownParent: $('#barangModal')
+                dropdownParent: $('#barangModal .modal-content'), 
+                dropdownAutoWidth: true,
+                width: '100%'
             });
             $('#menu_id').select2({
                 placeholder: "Cari atau pilih menu...",
                 allowClear: true,
-                dropdownParent: $('#barangModal')
+                dropdownParent: $('#barangModal .modal-content'), // 
+                dropdownAutoWidth: true,
+                width: '100%'
             });
 
             setTimeout(() => {
