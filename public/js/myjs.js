@@ -40,7 +40,7 @@ toggleDropdown(
     "menuTransaksiDropdown"
 );
 toggleDropdown(
-    ["/admin-only/log", "/admin-only/user-data"],
+    ["/log-activities", "/protected/user-data"],
     "lainnyaDropdownMenu",
     "lainnyaDropdown"
 );

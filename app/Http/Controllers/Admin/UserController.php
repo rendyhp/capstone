@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
 use Auth;
+use Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -77,6 +78,52 @@ class UserController extends Controller
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
+
+    public function registerStore(Request $request)
+    {
+        // Cek autentikasi dan role pengguna yang login
+        $user = Auth::user();
+        $role = $user->role;
+
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'role' => 'required|in:OWNER,MANAJER,STAF',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Logika role
+        if ($role == 'OWNER') {
+            // OWNER bisa membuat role OWNER, MANAGER, atau STAFF
+            if (!in_array($request->role, ['OWNER', 'MANAJER', 'STAF'])) {
+                abort(403, 'Anda tidak memiliki akses!');
+            }
+        } elseif ($role == 'MANAJER') {
+            // MANAJER hanya bisa membuat STAF
+            if ($request->role != 'STAF') {
+                abort(403, 'Anda tidak memiliki akses!');
+            }
+        } else {
+            // Selain OWNER dan MANAJER tidak boleh mengakses
+            abort(403, 'Anda tidak memiliki akses!');
+        }
+
+        // Simpan user
+        $user = User::create([
+            'name' => $request->name,
+            'username' => $request->username,
+            'email' => $request->email,
+            'role' => $request->role,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // Redirect ke protected/user-data dengan pesan sukses
+        return redirect('/protected/user-data')->with('message', 'Registrasi Akun ' . $user->name . ' Berhasil!');
+    }
+
+
 
     public function delete(Request $request)
     {

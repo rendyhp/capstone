@@ -125,7 +125,8 @@ Route::middleware(['auth'])->group(function () {
     // Lainnya
     Route::get('/log-activities', [LogActivityController::class, 'index'])->name('log-activities');
     Route::get('/protected/user-data', [UserController::class, 'index'])->name('user.index');
-    Route::get('/protected/user-data/register', [UserController::class, 'register'])->name('user-data');
+    Route::get('/protected/user-data/register', [UserController::class, 'register'])->name('user-data.register');
+    Route::post('/protected/user-data/registerStore', [UserController::class, 'registerStore'])->name('user-data.registerStore');
     Route::get('/protected/user/{id}', [UserController::class, 'getEmail'])->name('user.getEmail');
     Route::put('/protected/user/{id}/delete', [UserController::class, 'delete'])->name('user.delete');
 

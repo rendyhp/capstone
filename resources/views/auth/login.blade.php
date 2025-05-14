@@ -140,11 +140,7 @@
                             style="padding-left: 2.5rem; padding-right: 2.5rem; width: 400px; border-radius: 20px;">
                             {{ __('Login') }}
                         </button>
-                        <div class="mt-4">
-                          <a href="#!" class="text-body fs-7 fw-bold">Forgot password ?</a>
-                        </div>
-                        <p class="small fw-bold mt-2 pt-1 mb-4">Don't have an account ? <a
-                                href="{{ route('register') }}" class="link-danger">{{ __('Register') }}</a></p>
+                        
                     </div>
                     
                 </form>
