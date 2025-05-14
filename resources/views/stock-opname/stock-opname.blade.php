@@ -1,32 +1,43 @@
 @extends('layouts.main')
-@section('DataBahan', 'active')
-@section('container')
 
+@section('DataBahan', 'active')
+
+@section('container')
     <style>
         .cards {
-            height: auto;
             background-color: #f7fcfb;
-            /* Warna biru muda */
             border-radius: 10px;
-            /* Sudut card membulat */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            /* Efek bayangan card */
             padding: 20px;
-            /* Ruang dalam card */
         }
 
-        .cards h3 {
+        .cards h3,
+        .cards p {
             color: #333;
-            /* Warna teks */
         }
 
         .cards p {
             color: #555;
-            /* Warna teks */
         }
     </style>
-    <div class="container cards">
-        <a href={{url('/stock-opname')}}><i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali</a>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="page-header">
+                    <h2 class="pageheader-title ">Form Stock Opname</h2>
+                    <div class="page-breadcrumb">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a class="" href="/stock-opname">Stock Opname</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Form Stock Opname</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
         @if (session()->has('success'))
             <div class="alert alert-success alert-dismissible" role="alert">
                 <div class="d-flex justify-content-between align-items-center">
@@ -39,7 +50,7 @@
             </div>
         @endif
 
-        @if(session()->has('error'))
+        @if (session()->has('error'))
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -50,129 +61,109 @@
                 </div>
             </div>
         @endif
-        <form id="transaksi-form" action="{{ route('stock-opname.simpan.store') }}" method="POST">
-            @csrf
-            <h2 style="text-align: center;" class="mt-3 text-uppercase fs-2">Stock Opname</h2>
 
-            <div class="mb-3 row">
-                <label for="tanggaltransmasuk" class="col-sm-2 col-form-label">Tanggal</label>
-                <div class="col-sm-2">
-                    <input type="date" class="form-control" id="tanggaltransmasuk" name="tanggaltransmasuk" required>
-                </div>
+        <div class="d-flex align-items-center mb-3 row">
+            <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" id="tanggalbahan" name="date" value="{{ $date }}" readonly>
+            </div>
+        </div>
+
+        <div class="container cards">
+            {{-- Back Button --}}
+            <div class="mb-3">
+                <a href="{{ url('/stock-opname') }}">
+                    <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
+                </a>
             </div>
 
-            <table class="table table-bordered text-dark table-sm text-center">
-                <thead class="table-primary">
-                    <tr>
-                        <th>No.</th>
-                        <th>Nama Bahan</th>
-                        <th>Jumlah</th>
-                        <th>Satuan</th>
-                        <th>Konfirmasi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($stockOpnames as $index => $bahan)
+
+            {{-- Form Input Stok --}}
+            <form id="transaksi-form" action="{{ route('stock-opname.simpan.store', ['page' => $currentPage]) }}"
+                method="POST">
+                @csrf
+                <input type="hidden" name="tanggaltransmasuk" value="{{ $date }}">
+
+                {{-- Tabel Bahan --}}
+                <table class="table table-bordered text-dark table-sm text-center">
+                    <thead class="table-primary">
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>
-                                <input type="hidden" name="bahan_id[]" value="{{ $bahan->id }}">
-                                {{ $bahan->name }}
-                            </td>
-                            <td>
-                                <div class="input-group">
-                                    <input type="number" id="number0" name="jumlah[]"
-                                        class="form-control text-center jumlah-input number0"
-                                        value="{{ optional($bahan->bahanAkhir)->jumlah ?? 0 }}" required readonly>
-                                    <button type="button" class="btn btn-primary ms-2 toggle-jumlah">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                </div>
-                            </td>
-                            <td>{{ $bahan->satuan->name }}</td>
-                            <td width="200px">
-                                <button type="button" class="btn btn-primary btn-konfirmasi">
-                                    Konfirmasi
-                                </button>
-                            </td>
+                            <th>No</th>
+                            <th>Nama Bahan</th>
+                            <th>Jumlah Sebelumnya</th>
+                            <th>Jumlah</th>
+                            <th>Satuan</th>
                         </tr>
-                    @endforeach
-                </tbody>
+                    </thead>
+                    <tbody>
+                        @foreach ($stockOpnames as $index => $bahan)
+                            <tr>
+                                <td>{{ $loop->iteration + (($currentPage - 1) * 20) }}</td>
+                                <td>
+                                    <input type="hidden" name="bahan_id[]" value="{{ $bahan->id }}">
+                                    {{ $bahan->name }}
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control text-center"
+                                        value="{{ $bahan->jumlah_sebelumnya !== null ? rtrim(rtrim(number_format($bahan->jumlah_sebelumnya, 3, '.', ''), '0'), '.') : '0' }}"
+                                        readonly>
+                                </td>
+
+                                <td>
+                                    <input type="number" name="jumlah[]" step="0.001" min="0" value="0"
+                                        class="form-control text-center number0" required>
+                                </td>
+                                <td>{{ $bahan->satuan->name }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                {{-- Opsi Simpan untuk Besok --}}
                 <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" value="1" id="saveForTomorrow" name="save_for_tomorrow">
+                    <input class="form-check-input" type="checkbox" id="saveForTomorrow" name="save_for_tomorrow" value="1">
                     <label class="form-check-label fw-bold" for="saveForTomorrow">
-                        Simpan untuk data awal besok?
+                        Simpan juga untuk stok awal besok?
                     </label>
+
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" id="customDateCheckbox" value="1">
+                        <label class="form-check-label" for="customDateCheckbox">Custom Tanggal</label>
+                        <input type="date" class="form-control mt-2" id="customDateInput" name="custom_date"
+                            style="display: none;">
+                    </div>
                 </div>
-            </table>
 
-            <div class="d-flex justify-content-end">
-                <button type="submit" id="submitBtn" class="btn btn-danger" disabled>Simpan</button>
-            </div>
+                {{-- Tombol Navigasi --}}
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn {{ $hasNextPage ? 'btn-primary' : 'btn-success' }}">
+                        {{ $hasNextPage ? 'Next' : 'Submit' }}
+                    </button>
+                </div>
+            </form>
+        </div>
 
-        </form>
+        {{-- Script Toggle Custom Date --}}
+        <script>
+            const saveForTomorrowCheckbox = document.getElementById('saveForTomorrow');
+            const customDateCheckbox = document.getElementById('customDateCheckbox');
+            const customDateInput = document.getElementById('customDateInput');
 
-        <script>function updateSubmitButton() {
-                const submitBtn = document.getElementById("submitBtn");
-                const allConfirmed = [
-                    ...document.querySelectorAll(".btn-konfirmasi"),
-                ].every((button) => button.classList.contains("btn-success"));
-
-                if (allConfirmed) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove("btn-danger");
-                    submitBtn.classList.add("btn-primary");
-                } else {
-                    submitBtn.disabled = true;
-                    submitBtn.classList.remove("btn-primary");
-                    submitBtn.classList.add("btn-danger");
+            function toggleCustomDateOptions() {
+                const isSaveChecked = saveForTomorrowCheckbox.checked;
+                customDateCheckbox.disabled = !isSaveChecked;
+                if (!isSaveChecked) {
+                    customDateCheckbox.checked = false;
+                    customDateInput.style.display = 'none';
                 }
             }
 
-            document.querySelectorAll(".btn-konfirmasi").forEach(function (button) {
-                button.addEventListener("click", function () {
-                    let row = this.closest("tr");
-                    let editButton = row.querySelector(".toggle-jumlah");
-
-                    if (this.classList.contains("btn-primary")) {
-                        this.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
-                        this.disabled = true;
-
-                        setTimeout(() => {
-                            this.innerHTML = '<i class="fa fa-check"></i>';
-                            this.classList.remove("btn-primary");
-                            this.classList.add("btn-success");
-                            this.disabled = false;
-                            if (editButton) editButton.style.display = "none";
-                            updateSubmitButton();
-                        }, 500);
-                    } else {
-                        this.innerHTML = "Konfirmasi";
-                        this.classList.remove("btn-success");
-                        this.classList.add("btn-primary");
-                        if (editButton) editButton.style.display = "inline-block";
-                        updateSubmitButton();
-                    }
-                });
+            saveForTomorrowCheckbox.addEventListener('change', toggleCustomDateOptions);
+            customDateCheckbox.addEventListener('change', () => {
+                customDateInput.style.display = customDateCheckbox.checked ? 'block' : 'none';
             });
 
-            document.querySelectorAll(".toggle-jumlah").forEach(function (editButton) {
-                editButton.addEventListener("click", function () {
-                    let inputField = this.previousElementSibling;
-
-                    if (inputField.readOnly) {
-                        inputField.readOnly = false;
-                        inputField.focus();
-                        inputField.select();
-
-                        inputField.addEventListener("focusout", function lockInput() {
-                            inputField.readOnly = true;
-                            inputField.removeEventListener("focusout", lockInput);
-                        });
-                    }
-                });
-            });
-
-            updateSubmitButton();
+            // Jalankan saat awal page load
+            toggleCustomDateOptions();
         </script>
 @endsection

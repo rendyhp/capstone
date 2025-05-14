@@ -67,10 +67,11 @@
                             <table id="tableBarang" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-outline-success"
-                                        onclick="window.location.href='{{ url('/stock-opname/simpan') }}'">
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                        data-bs-target="#modalTanggal">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Stock Opname
                                     </button>
+
                                     <button type="button" class="btn btn-outline-success"
                                         onclick="window.location.href='{{ url('/bahan-awal') }}'">
                                         Lihat Bahan Awal
@@ -84,8 +85,8 @@
                                             <form action="/stock-opname" method="get" class="form-inline d-flex">
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
-                                                <input class="form-control form-control-sm" autocomplete="off" type="text" name="search"
-                                                    placeholder="Search" value="{{ request('search') }}">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                                    name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -143,6 +144,24 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Pilih Tanggal -->
+    <div class="modal fade" id="modalTanggal" tabindex="-1" aria-labelledby="modalTanggalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{{ route('stock-opname.simpan') }}" method="GET" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTanggalLabel">Pilih Tanggal Stock Opname</h5>
+                </div>
+                <div class="modal-body">
+                    <label for="tanggal">Tanggal:</label>
+                    <input type="date" name="date" class="form-control" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Lanjut</button>
+                </div>
+            </form>
         </div>
     </div>
 

@@ -99,8 +99,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/bahan/masuk-keluar/update/', [BahanController::class, 'inputUpdate'])->name('historyBahan.update');
     Route::put('/bahan/masuk-keluar/delete/{id}', [BahanController::class, 'inputDelete'])->name('historyBahan.delete');
 
-
-
     Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');
     Route::get('/stock-opname/{bahan_id}/edit', [StockOpnameController::class, 'edit']);
     Route::put('/stock-opname/{bahan_id}/update', [StockOpnameController::class, 'update'])->name('stock-opname.update');

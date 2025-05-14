@@ -3,26 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AkhirTerpakaiSeharusnya;
 use App\Models\Bahan;
 use App\Models\BahanAkhir;
 use App\Models\BahanAwal;
-
-use App\Models\Barang;
-use App\Models\HistoryInput;
-
 use App\Models\SatuanBahan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
 
 use App\Models\TemporaryFile;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Redirect;
 
 use App\Helpers\LogActivity;
 
@@ -61,15 +52,12 @@ class StockOpnameController extends Controller
             $query->where('bahans.name', 'like', '%' . $search . '%');
         }
 
-        // Ambil semua data dulu
         $allData = $query->orderByDesc('bahan_akhirs.id')->get();
 
-        // Grouping berdasarkan bahan_id, ambil entri terakhir
         $grouped = $allData->groupBy('bahan_id')->map(function ($items) {
-            return $items->first(); // ambil yang id paling besar (terbaru)
+            return $items->first();
         })->values();
 
-        // Manual paginate
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $perPage = 20;
         $currentItems = $grouped->slice(($currentPage - 1) * $perPage, $perPage)->values();
@@ -77,40 +65,53 @@ class StockOpnameController extends Controller
         $bahan_akhirs->appends($request->query());
 
         $total_jumlah = $grouped->sum('jumlah');
-       
+
         $satuans = SatuanBahan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
         $bahans = Bahan::whereNull('deleted_at')->with('satuan')->orderBy('name', 'asc')->get();
 
-        // Return ke view sesuai role
-        if ($role === 'OWNER') {
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
             return view('stock-opname.index', compact('bahan_akhirs', 'date', 'total_jumlah', 'satuans', 'bahans'));
-        } elseif ($role === 'user') {
-            return view('user.barang', compact('bahan_akhirs', 'date', 'total_jumlah'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
-
-
-
-
     public function simpan(Request $request)
     {
         $user = Auth::user();
         $role = $user->role;
 
-        // Ambil semua bahan beserta satuan dan jumlah stok akhir (jika ada)
-        $stockOpnames = Bahan::with([
-            'satuan',
-            'bahanAkhir' => function ($query) {
-                $query->latest('date'); // Ambil stok akhir terbaru
-            }
-        ])->orderBy('name', 'asc')
-            ->whereNull('deleted_at')
+        if (!in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+
+        $date = $request->input('date');
+        $currentPage = $request->input('page', 1);
+        $perPage = 20;
+
+        // Gunakan tanggal yang dipilih user, tanpa -1 hari
+        $stockOpnames = Bahan::with('satuan')
+            ->select('bahans.*')
+            ->selectSub(function ($query) use ($date) {
+                $query->from('bahan_akhirs')
+                    ->select(DB::raw('SUM(jumlah)'))
+                    ->whereColumn('bahan_akhirs.bahan_id', 'bahans.id')
+                    ->whereDate('bahan_akhirs.date', $date); // pakai $date langsung
+            }, 'jumlah_sebelumnya')
+            ->whereNull('bahans.deleted_at')
+            ->orderBy('bahans.name', 'asc')
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage + 1)
             ->get();
 
-        return view('stock-opname.stock-opname', compact('stockOpnames'));
+        $hasNextPage = $stockOpnames->count() > $perPage;
+        if ($hasNextPage) {
+            $stockOpnames = $stockOpnames->slice(0, $perPage);
+        }
+
+        return view('stock-opname.stock-opname', compact('stockOpnames', 'date', 'currentPage', 'hasNextPage'));
     }
+
+
 
     public function simpanDataBaru(Request $request)
     {
@@ -120,17 +121,17 @@ class StockOpnameController extends Controller
             'tanggaltransmasuk' => 'required|date',
             'bahan_id' => 'required|array',
             'jumlah' => 'required|array',
-            'save_for_tomorrow' => 'nullable' // boleh tidak dikirim
+            'save_for_tomorrow' => 'nullable|boolean',
+            'custom_date' => 'nullable|date'
         ]);
 
         $tanggalHariIni = $validatedData['tanggaltransmasuk'];
-        $tanggalBesok = date('Y-m-d', strtotime($tanggalHariIni . ' +1 day'));
+        $tanggalBesok = $request->has('custom_date') ? $request->custom_date : date('Y-m-d', strtotime($tanggalHariIni . ' +1 day'));
         $saveBesok = $request->has('save_for_tomorrow');
 
         foreach ($validatedData['bahan_id'] as $index => $bahan_id) {
             $jumlah = $validatedData['jumlah'][$index];
 
-            // Simpan ke BahanAkhir (stok hari ini)
             BahanAkhir::create([
                 'user_id' => $user,
                 'date' => $tanggalHariIni,
@@ -138,7 +139,6 @@ class StockOpnameController extends Controller
                 'jumlah' => $jumlah,
             ]);
 
-            // Jika checkbox dicentang, simpan juga untuk besok
             if ($saveBesok) {
                 BahanAwal::create([
                     'user_id' => $user,
@@ -147,11 +147,21 @@ class StockOpnameController extends Controller
                     'jumlah' => $jumlah,
                 ]);
             }
+
         }
 
-        return redirect()->route('stock-opname.index', ['date' => $tanggalHariIni])
-            ->with('success', 'Data Stock Opname berhasil disimpan!');
+        // Cek next page
+        $nextPage = $request->input('page', 1) + 1;
+        $totalData = Bahan::whereNull('deleted_at')->count();
+        if ($nextPage > ceil($totalData / 20)) {
+            return redirect()->route('stock-opname.index', ['date' => $tanggalHariIni])
+                ->with('success', 'Semua data Stock Opname berhasil disimpan!');
+        }
+
+        return redirect()->route('stock-opname.simpan', ['date' => $tanggalHariIni, 'page' => $nextPage])
+            ->with('success', 'Data halaman sebelumnya berhasil disimpan!');
     }
+
 
     public function create()
     {
