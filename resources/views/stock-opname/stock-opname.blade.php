@@ -1,7 +1,5 @@
 @extends('layouts.main')
-
-@section('DataBahan', 'active')
-
+@section('StockOpname', 'active')
 @section('container')
     <style>
         .cards {
