@@ -60,7 +60,7 @@
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/satuan') ? 'active' : '' }}">
                 Satuan
             </a>
-            
+
         </div>
         <div class="row">
             <div class="col-xl-12">
@@ -157,8 +157,9 @@
                                                             <div class="dropdown" style="display:initial;">
                                                                 <button class="btn btn-secondary btn-sm dropdown-toggle"
                                                                     type="button" id="dropdownMenuButton{{ $barang->id }}"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false" style="height: 36px;">
-                                                                    &#8942; 
+                                                                    data-bs-toggle="dropdown" aria-expanded="false"
+                                                                    style="height: 36px;">
+                                                                    &#8942;
                                                                 </button>
                                                                 <ul class="dropdown-menu"
                                                                     aria-labelledby="dropdownMenuButton{{ $barang->id }}">
@@ -220,11 +221,13 @@
                         @csrf
                         <div class="mb-3">
                             <label class="form-label fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="date">
+                            <input type="date" class="form-control" name="date" required id="date">
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label text-dark fw-bold">Gambar</label>
-                            <input type="file" class="form-control" id="image" name="image">
+                            <input type="file" class="form-control" id="image" name="image" onchange="previewImage(this)">
+
+
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
@@ -326,7 +329,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control" name="jumlah" required autocomplete="off">
+                            <input type="number" min="1" class="form-control number0" name="jumlah" required
+                                autocomplete="off">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>
@@ -363,6 +367,21 @@
                         <div class="mb-3">
                             <input hidden type="text" name="id" id="txtid">
                             <input hidden type="number" name="jumlah" id="txtjumlah">
+                            <label for="image" class="form-label text-dark fw-bold">Gambar</label>
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="txtimage"
+                                name="image">
+                            @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                        </div>
+ 
+                            <div class="mb-3" id="previewGambar" style="display:none;">
+                                <label for="previewGambar" class="form-label text-dark fw-bold">Gambar sebelumnya</label>
+
+                                <img id="previewImage" src="" alt="Preview Gambar" class="img-thumbnail mt-2" style="display: none; width: 100px;">
+
+
+                            </div>
+
+                        <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
                             <input type="text" required autocomplete="off"
                                 class="form-control @error('name') is-invalid @enderror" id="txtname" name="name">
@@ -388,16 +407,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="image" class="form-label text-dark fw-bold">Gambar</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="txtimage"
-                                name="image">
-                            <img id="previewImage" src="" alt="Preview Gambar" class="img-thumbnail mt-2"
-                                style="display: none; width: 100px;">
-                            @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
-                        </div>
-
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary text-white">Ubah</button>
                         </div>
@@ -419,6 +428,21 @@
             });
         });
 
+    </script>
+
+    <script>
+
+        function previewImage(input) {
+            const preview = document.getElementById('previewImage');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
 
 @endsection

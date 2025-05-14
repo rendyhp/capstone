@@ -123,15 +123,19 @@ $(document).on("click", ".btn_editbarang", function (e) {
     $("#txtjumlah").val(formattedJumlah);
     $("#txtsatuan_id").val(satuan_id);
 
-    if (image) {
+    if (image && image !== 'NULL') {
+        $("#previewGambar")
+            .show();
         $("#previewImage")
-            .attr("src", "/storage/" + image)
+            .attr("src", "/" + image) // pastikan path benar, misal "upload/barang/xxx.jpg"
             .show();
     } else {
+        $("#previewGambar")
+            .hide();
         $("#previewImage").hide();
     }
 
-    $("#editBarangModal").modal("toggle");
+    $("#editBarangModal").modal("show");
 });
 
 ///////////////////////////////////////////////

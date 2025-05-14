@@ -408,35 +408,25 @@ class BarangController extends Controller
         } else {
             $user = Auth::user()->id;
 
-            if ($request->has('image')) {
+            $Barang = new Barang;
+            $Barang->user_id = Auth::id();
+            $Barang->date = $request->input('date');
+            $Barang->name = $request->input('name');
+            $Barang->description = $request->input('description') ?? '-';
+            $Barang->jumlah = $request->input('jumlah') ?? 0;
+            $Barang->satuan_id = $request->input('satuan_id') ?? '-';
+
+            if ($request->hasFile('image')) {
                 $file = $request->file('image');
                 $extension = $file->getClientOriginalExtension();
-
                 $filename = time() . '.' . $extension;
-
                 $path = 'upload/barang/';
                 $file->move($path, $filename);
-
-                $Barang = new Barang;
-                $Barang->user_id = $user;
-                $Barang->date = $request->input('date');
-                $Barang->name = $request->input('name');
-                $Barang->description = $request->input('description' ?? '-');
-                $Barang->jumlah = $request->input('jumlah' ?? 0);
-                $Barang->satuan_id = $request->input('satuan_id' ?? '-');
                 $Barang->image = $path . $filename;
-                $Barang->save();
-            } else {
-                $Barang = new Barang;
-                $Barang->user_id = $user;
-                $Barang->date = $request->input('date');
-                $Barang->name = $request->input('name');
-                $Barang->description = $request->input('description' ?? '-');
-                $Barang->jumlah = $request->input('jumlah' ?? 0);
-                $Barang->satuan_id = $request->input('satuan_id' ?? '-');
-
-                $Barang->save();
             }
+
+            $Barang->save();
+
 
             BarangAwal::create([
                 'barang_id' => $Barang->id,
@@ -456,7 +446,7 @@ class BarangController extends Controller
         $data = DB::table('barangs')->paginate($dataPerPage);
         $lastPage = $data->lastPage();
 
-        return redirect('/barang/master?page=' . $lastPage . '&order=id&sort=asc')
+        return redirect('/barang/master?page=' . $lastPage . '&orderBy=id&sort=asc')
             ->with('success', 'Barang "' . $Barang->name . '" Berhasil Ditambahkan');
     }
 
