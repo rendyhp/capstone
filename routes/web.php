@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\NotifikasiController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\StockOpnameController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\TransaksiController;
@@ -123,7 +124,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Lainnya
     Route::get('/log-activities', [LogActivityController::class, 'index'])->name('log-activities');
-    Route::get('/user-data', [UserController::class, 'index'])->name('user-data');
+    Route::get('/protected/user-data', [UserController::class, 'index'])->name('user.index');
+    Route::get('/protected/user-data/register', [UserController::class, 'index'])->name('user-data');
+    Route::get('/protected/user/{id}', [UserController::class, 'getEmail'])->name('user.getEmail');
+
 
     // Dashboard routes
     // Route::get('/laporan', [DashboardController::class, 'laporan'])->name('dashboard.laporan');

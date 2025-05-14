@@ -177,15 +177,19 @@ class TransaksiController extends Controller
         $menu = Menu::whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($menuName))])->first();
 
         if (!$menu) {
-            return response()->json(['jumlah' => 0]);
+            return response()->json(['jumlah' => 0, 'menu_name' => null]);
         }
 
         $jumlah = Transaksi::where('menu_id', $menu->id)
             ->whereDate('date', $date)
             ->sum('jumlah');
 
-        return response()->json(['jumlah' => $jumlah]);
+        return response()->json([
+            'jumlah' => $jumlah,
+            'menu_name' => $menu->name,
+        ]);
     }
+
 
 
 
@@ -208,7 +212,7 @@ class TransaksiController extends Controller
 
         $this->hitungBahanTerpakai($transaksi);
 
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
     private function hitungBahanTerpakai(Transaksi $transaksi)
@@ -257,43 +261,33 @@ class TransaksiController extends Controller
             return redirect()->route('transaksi.index')->with('error', 'Transaksi tidak ditemukan.');
         }
 
-        // Simpan perubahan terlebih dahulu
+
         $transaksi->menu_id = $request->menu_id;
         $transaksi->jumlah = $request->jumlah;
         $transaksi->date = $request->date;
         $transaksi->save();
 
-        // Hapus transaksi lain yang sama (duplikat) tapi bukan yang sedang diupdate
         DB::table('transaksis')
             ->where('menu_id', $request->menu_id)
             ->where('date', $request->date)
             ->where('id', '!=', $transaksi->id)
             ->delete();
 
-        // Recalculate ingredients usage
         $this->hitungBahanTerpakai($transaksi);
 
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diubah');
+        return redirect()->back()->with('success', 'Transaksi berhasil diubah');
     }
-
-
-
-
-
-
-
 
     public function destroy($id)
     {
         $transaksi = Transaksi::find($id);
 
         if (!$transaksi) {
-            return redirect()->route('transaksi.index')->with('error', 'Transaksi tidak ditemukan.');
+            return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
         }
 
-        // Hapus transaksi
         $transaksi->delete();
 
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil dihapus.');
+        return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
     }
 }

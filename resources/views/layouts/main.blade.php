@@ -113,9 +113,9 @@
                             <a href="#" id="lainnyaDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
                             <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
-                                <a href="/admin-only/log" class="nav-link @yield('LogActivities')"><i
+                                <a href="/log-activities" class="nav-link @yield('LogActivities')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Log Aktifitas</a>
-                                <a href="/admin-only/user-data" class="nav-link @yield('UserData')"><i
+                                <a href="/protected/user-data" class="nav-link @yield('UserData')"><i
                                         class="fa fa-file me-2"></i>Data User</a>
                             </div>
                         </div>
@@ -156,10 +156,10 @@
                         <div class="nav-item dropdown">
                             <a href="#" id="lainnyaDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
-                            <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
-                                <a href="/admin-only/log" class="nav-link @yield('LogActivities')"><i
+                                <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
+                                <a href="/log-activities" class="nav-link @yield('LogActivities')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Log Aktifitas</a>
-                                <a href="/admin-only/user-data" class="nav-link @yield('UserData')"><i
+                                <a href="/protected/user-data" class="nav-link @yield('UserData')"><i
                                         class="fa fa-file me-2"></i>Data User</a>
                             </div>
                         </div>
@@ -329,6 +329,8 @@
                 $('.select2-container--open .select2-search__field').focus();
             }, 100);
         });
+
+        
 
         $(document).ready(function () {
             $('.select2').select2({

@@ -83,8 +83,8 @@
 
 .input-group .select2-container {
     display: inline-block;
-    max-width: 10rem;
-    width: 10rem !important;
+    max-width: 14rem;
+    width: 14rem !important;
 }
 
 .select2-selection {

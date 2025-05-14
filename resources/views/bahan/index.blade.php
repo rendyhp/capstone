@@ -48,8 +48,8 @@
 
         <form action="/bahan/master" method="GET" class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
-                <label for="tanggalbahan" class="col-sm-2 col-form-label">Tanggal</label>
-                <div class="col-sm-8">
+                <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
+                <div class="col-sm-6">
                     <input type="date" class="form-control" id="tanggalbahan" name="date" value="{{ $date }}">
                 </div>
                 <div class="col-sm-2">
@@ -83,8 +83,8 @@
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/satuan') ? 'active' : '' }}">
                 Satuan
             </a>
-
         </div>
+        
         <div class="row">
             <div class="col-xl-12">
                 <div class="card custom-card">

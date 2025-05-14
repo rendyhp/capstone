@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
+use Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -14,12 +15,62 @@ use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $role = $user->role;
+
+        $query = User::whereNull('deleted_at')
+            ->orderByRaw("FIELD(role, 'OWNER', 'MANAJER', 'STAF')")
+            ->orderBy('name');
+
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        $userDatas = $query->paginate(20)->appends($request->query());
+
+        if (in_array($role, ['OWNER', 'MANAJER'])) {
+            return view('user.index', [
+                'userDatas' => $userDatas,
+                'maskEmail' => fn($email) => $this->maskEmail($email),
+                'role' => $role 
+            ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+    }
+
+
+    private function maskEmail($email)
+    {
+        [$username, $domain] = explode('@', $email);
+
+        if (strlen($username) <= 2) {
+            return substr($username, 0, 1) . '*' . '@' . $domain;
+        } else {
+            return substr($username, 0, 2) . '***' . substr($username, -1) . '@' . $domain;
+        }
+    }
+
+    public function getEmail($id)
+    {
+        $user = Auth::user();
+
+        if (!in_array($user->role, ['OWNER', 'MANAJER'])) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $targetUser = User::findOrFail($id);
+        return response()->json(['email' => $targetUser->email]);
+    }
+
 
     public function configIndex()
     {
         $users = User::latest()->get();
 
-        return view('pages.admin.user.configIndex', compact('users'));
+        return view('user.index', compact('users'));
     }
 
     public function configCreate()
@@ -46,8 +97,8 @@ class UserController extends Controller
 
         // Create user
         User::create([
-            'name'     => $request->name,
-            'email'   => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'username' => $request->username,
             'password' => bcrypt($request->password), // Securely hash the password
             'role' => $request->role
@@ -92,7 +143,7 @@ class UserController extends Controller
         // Lakukan penghapusan permanen menggunakan Eloquent
         LogActivityModel::where('id', $id)->forceDelete();
         // Redirect kembali ke halaman sebelumnya
-        return Redirect::back()->with('delete', 'Log "'  . $subject . '" berhasil dihapus permanen');
+        return Redirect::back()->with('delete', 'Log "' . $subject . '" berhasil dihapus permanen');
     }
 
 
@@ -102,80 +153,5 @@ class UserController extends Controller
 
 
 
-    public function index()
-    {
-        $users = User::all();
-        return view('admin.user.index', ['user' => $users]);
-    }
 
-    public function create()
-    {
-        return view('admin.user.create');
-    }
-
-    public function store(Request $request)
-    {
-        // Validasi data dari formulir
-        $request->validate([
-            'name' => 'required',
-            'username' => 'required|unique:users',
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
-            'role' => 'required|in:ADMIN,PETUGAS',
-        ]);
-
-        // Simpan data ke database
-        User::create([
-            'name' => $request->input('name'),
-            'username' => $request->input('username'),
-            'email' => $request->input('email'),
-            'password' => bcrypt($request->input('password')),
-            'role' => $request->input('role'),
-        ]);
-
-        return redirect()->route('admin.user.index')->with('success', 'User berhasil ditambahkan');
-    }
-
-    public function show($id)
-    {
-        $user = User::find($id);
-        return view('admin.user.show', ['user' => $user]);
-    }
-
-    public function edit($id)
-    {
-        $user = User::find($id);
-        return view('admin.users.edit', ['user' => $user]);
-    }
-
-    public function update(Request $request, $id)
-    {
-        // Validasi data dari formulir
-        $request->validate([
-            'name' => 'required',
-            'username' => 'required|unique:users,username,' . $id,
-            'email' => 'required|email|unique:users,email,' . $id,
-            'role' => 'required|in:ADMIN,PETUGAS',
-        ]);
-
-        // Update data di database
-        $user = User::find($id);
-        $user->update([
-            'name' => $request->input('name'),
-            'username' => $request->input('username'),
-            'email' => $request->input('email'),
-            'role' => $request->input('role'),
-        ]);
-
-        return redirect()->route('admin.user.index')->with('success', 'User berhasil diperbarui');
-    }
-
-    public function destroy($id)
-    {
-        // Hapus data dari database
-        $users = User::find($id);
-        $users->delete();
-
-        return redirect()->route('admin.user.index')->with('success', 'User berhasil dihapus');
-    }
 }

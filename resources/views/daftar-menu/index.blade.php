@@ -97,8 +97,9 @@
                                                     <tr>
                                                         <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
                                                         </td>
-                                                        <td> 
-                                                            <img src="{{ asset($menu->image) }}" style="width: 100px; max-height: 100px;" alt="Img">
+                                                        <td>
+                                                            <img src="{{ asset($menu->image) }}"
+                                                                style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                         <td>{{ $menu->name }}</td>
 
@@ -162,7 +163,8 @@
         <!-- Modal Tambah Barang-->
 
         <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="container modal-dialog">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 90%; width: 600px;">
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Menu</h1>
