@@ -393,7 +393,6 @@ class BahanController extends Controller
             'date' => 'required|date',
             'keterangan' => 'nullable',
             'jumlah' => 'required|numeric|min:0',
-
         ]);
 
         BahanMasuk::create([

@@ -84,7 +84,7 @@
                 Satuan
             </a>
         </div>
-        
+
         <div class="row">
             <div class="col-xl-12">
                 <div class="card custom-card">
@@ -170,7 +170,6 @@
                                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                                             </button>
 
-
                                                             <!-- Tombol Kurangi -->
                                                             <button type="button" class="btn btn-outline-success btnKurangStok"
                                                                 data-id="{{ $bahan->id ?? 'NULL' }}"
@@ -198,6 +197,97 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Barang Masuk -->
+    <div class="modal fade" id="barangModalM" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="container modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Bahan Masuk</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="Post" action='/bahan/master/storeM'>
+                        @csrf
+
+                        <div class="mb-3">
+                            <input type="text" hidden name="id" id="stokBarangIdM">
+                            <label class="form-label fw-bold">Tanggal</label>
+                            <input type="date" class="form-control" name="date" id="stokDateM" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nama Barang</label>
+                            <input type="text" disabled class="form-control  @error('name') is-invalid @enderror"
+                                id="stokBarangNameM">
+                            @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Jumlah</label>
+                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Satuan</label>
+                            <input type="text" disabled class="form-control  @error('satuan') is-invalid @enderror"
+                                id="stokBarangSatuanM">
+                            @error('satuan') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
+                            <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
+                                name="keterangan" rows="4" placeholder="Catatan barang masuk"></textarea>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Simpan</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="barangModalK" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="container modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Bahan Keluar</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="Post" action='/bahan/master/storeK'>
+                        @csrf
+                        <input type="hidden" name="id" id="stokBarangIdK">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tanggal</label>
+                            <input type="date" class="form-control" name="date" id="stokDateK" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nama Barang</label>
+                            <input type="text" readonly class="form-control" id="stokBarangNameK">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Jumlah</label>
+                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.0001" value="0"
+                                required autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Satuan</label>
+                            <input type="text" disabled class="form-control  @error('satuan_id') is-invalid @enderror"
+                                id="stokBarangSatuanK">
+                            @error('satuan_id') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
+                            <textarea class="form-control" autocomplete="off" id="stokKeteranganK" required
+                                name="keterangan" rows="4" placeholder="Catatan barang keluar"></textarea>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Simpan</button>
+                </div>
+            </div>
+            </form>
         </div>
     </div>
 

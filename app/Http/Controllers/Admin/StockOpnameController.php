@@ -62,6 +62,7 @@ class StockOpnameController extends Controller
         $perPage = 20;
         $currentItems = $grouped->slice(($currentPage - 1) * $perPage, $perPage)->values();
         $bahan_akhirs = new LengthAwarePaginator($currentItems, $grouped->count(), $perPage);
+        $bahan_akhirs->setPath(url()->current());
         $bahan_akhirs->appends($request->query());
 
         $total_jumlah = $grouped->sum('jumlah');

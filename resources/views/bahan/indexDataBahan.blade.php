@@ -92,7 +92,7 @@
                                                 Tampilkan Gambar
                                             </label>
                                         </div>
-                                        <div class="d-flex gap-2">
+                                        <div class="d-flex gap-2 mb-2">
                                             <a href="/bahan/data-bahan" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
