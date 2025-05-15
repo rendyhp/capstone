@@ -105,13 +105,9 @@ class TransaksiController extends Controller
         // Ambil semua menu untuk modal/edit
         $menus = Menu::with('komposisi.bahan.satuan')->whereNull('deleted_at')->orderBy('name', 'asc')->get();
 
-        if ($role === 'OWNER') {
+       
             return view('transaksi.index', compact('paginated', 'date', 'menus'));
-        } elseif ($role === 'user') {
-            return view('user.transaksi', compact('paginated', 'date', 'menus'));
-        } else {
-            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
+        
     }
 
 

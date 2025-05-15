@@ -73,7 +73,7 @@
                                     </button>
 
                                     <button type="button" class="btn btn-outline-success"
-                                        onclick="window.location.href='{{ url('/bahan-awal') }}'">
+                                        onclick="window.location.href='{{ url('/bahan/bahan-awal') }}'">
                                         Lihat Bahan Awal
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
@@ -110,7 +110,8 @@
                                                         <td>{{ ($bahan_akhirs->currentPage() - 1) * $bahan_akhirs->perPage() + $loop->iteration }}
                                                         </td>
 
-                                                        <td>{{ $bahan_akhir->tanggal }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($bahan_akhir->date)->translatedFormat('d F Y') }}
+                                                        </td>
                                                         <td>{{ $bahan_akhir->bahan_name }}</td>
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($bahan_akhir->total_jumlah, 3, ',', '.'), '0'), ',') }}
@@ -127,7 +128,7 @@
 
                                                             <form action="/stock-opname/delete/{{ $bahan_akhir->id }}"
                                                                 class="d-inline" method="post">
-                                                                @method('PUT')
+                                                                @method('Delete')
                                                                 @csrf
                                                                 <button class="btn btn-danger btn-sm" type="submit"
                                                                     onclick="return confirm('Yakin akan Mendelete Data?')"><i

@@ -234,11 +234,9 @@ class BahanController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        if ($role !== 'OWNER') {
-            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
-
+        
         $date = $request->input('date', Carbon::today()->toDateString());
+        
         $search = $request->input('search');
 
         // Query join BahanAwal -> Bahan -> Satuan

@@ -237,7 +237,7 @@ class StockOpnameController extends Controller
     }
 
 
-    public function delete($bahan_akhir_id)
+    public function destroy($bahan_akhir_id)
     {
         $bahan_akhir = BahanAkhir::find($bahan_akhir_id);
 

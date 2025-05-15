@@ -102,7 +102,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');
     Route::get('/stock-opname/{bahan_id}/edit', [StockOpnameController::class, 'edit']);
     Route::put('/stock-opname/{bahan_id}/update', [StockOpnameController::class, 'update'])->name('stock-opname.update');
-    Route::put('/stock-opname/{bahan_akhir_id}/delete', [StockOpnameController::class, 'delete'])->name('stock-opname.delete');
+    Route::delete('/stock-opname/{bahan_akhir_id}/delete', [StockOpnameController::class, 'delete'])->name('stock-opname.delete');
     Route::get('/stock-opname/simpan', [StockOpnameController::class, 'simpan'])->name('stock-opname.simpan');
     Route::post('/stock-opname/simpan/store', [StockOpnameController::class, 'simpanDataBaru'])->name('stock-opname.simpan.store');
 

@@ -45,7 +45,7 @@
                 </div>
             </div>
         @endif
-        <form action="/bahan-awal" method="GET" class="d-flex align-items-center mb-3">
+        <form action="/bahan/bahan-awal" method="GET" class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
                 <label for="tanggalbahan" class="col-sm-2 col-form-label">Tanggal</label>
                 <div class="col-sm-8">
