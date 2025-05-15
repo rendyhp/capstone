@@ -50,20 +50,11 @@
         <div>
             <a href="/bahan/master"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
-                Master
-            </a>
-
-            <a href="/bahan/masuk-keluar"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
-                Bahan Masuk/Keluar
-            </a>
-            <a href="/bahan/bahan-awal"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/bahan-awal') ? 'active' : '' }}">
-                Bahan Awal
+                Manajemen Bahan
             </a>
             <a href="/bahan/data-bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/data-bahan') ? 'active' : '' }}">
-                Data Bahan
+                Master Bahan
             </a>
 
             <a href="/bahan/satuan"

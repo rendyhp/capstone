@@ -7,7 +7,6 @@ use App\Models\AkhirTerpakaiSeharusnya;
 use App\Models\Bahan;
 use App\Models\BahanAkhir;
 use App\Models\BahanAwal;
-use App\Models\BahanKeluar;
 use App\Models\BahanMasuk;
 use App\Models\BarangMasuk;
 use App\Models\HistoryInput;
@@ -40,15 +39,16 @@ class BahanController extends Controller
 
         $date = $request->input('date', Carbon::today()->toDateString());
 
-        $query = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at');
+        //Data Bar
+        $query1 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section','BAR');
 
-        if ($search = $request->input('search')) {
-            $query->where('name', 'like', '%' . $search . '%');
+        if ($search1 = $request->input('search1')) {
+            $query1->where('name', 'like', '%' . $search1 . '%');
         }
 
-        $bahans = $query->paginate(20)->appends($request->query());
+        $bahan_bars = $query1->paginate(20)->appends($request->query());
 
-        foreach ($bahans as $bahan) {
+        foreach ($bahan_bars as $bahan) {
             $bahan->jumlah_awal = BahanAwal::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
@@ -57,17 +57,14 @@ class BahanController extends Controller
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
                 ->sum('jumlah');
-            $bahan->jumlah_keluar = BahanKeluar::where('bahan_id', $bahan->id)
-                ->whereDate('date', $date)
-                ->whereNull('deleted_at')
-                ->sum('jumlah');
+            
             $bahan->jumlah_terpakai = DB::table('transaksi_details')
                 ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
                 ->where('transaksi_details.bahan_id', $bahan->id)
                 ->whereDate('transaksis.date', $date)
                 ->whereNull('transaksis.deleted_at')
                 ->sum('transaksi_details.jumlah');
-            $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk - $bahan->jumlah_keluar) - $bahan->jumlah_terpakai;
+            $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk) - $bahan->jumlah_terpakai;
             $bahan->bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
@@ -75,13 +72,50 @@ class BahanController extends Controller
             $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
         }
         if ($request->ajax()) {
-            return response()->json($bahans);
+            return response()->json($bahan_bars);
+        }
+
+        // Data Kitchen
+        $query2 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'KITCHEN');
+
+        if ($search2 = $request->input('search2')) {
+            $query2->where('name', 'like', '%' . $search2 . '%');
+        }
+
+        $bahan_kitchens = $query2->paginate(20)->appends($request->query());
+
+        foreach ($bahan_kitchens as $bahan) {
+            $bahan->jumlah_awal = BahanAwal::where('bahan_id', $bahan->id)
+                ->whereDate('date', $date)
+                ->whereNull('deleted_at')
+                ->sum('jumlah');
+            $bahan->jumlah_masuk = BahanMasuk::where('bahan_id', $bahan->id)
+                ->whereDate('date', $date)
+                ->whereNull('deleted_at')
+                ->sum('jumlah');
+            
+            $bahan->jumlah_terpakai = DB::table('transaksi_details')
+                ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+                ->where('transaksi_details.bahan_id', $bahan->id)
+                ->whereDate('transaksis.date', $date)
+                ->whereNull('transaksis.deleted_at')
+                ->sum('transaksi_details.jumlah');
+            $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk) - $bahan->jumlah_terpakai;
+            $bahan->bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
+                ->whereDate('date', $date)
+                ->whereNull('deleted_at')
+                ->sum('jumlah');
+            $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
+        }
+        if ($request->ajax()) {
+            return response()->json($bahan_kitchens);
         }
         
         if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
             return view('bahan.index', [
 
-                'bahans' => $bahans,
+                'bahan_bars' => $bahan_bars,
+                'bahan_kitchens' => $bahan_kitchens,
                 'satuan_bahans' => SatuanBahan::whereNull('deleted_at')->orderBy('name')->get(),
                 'date' => $date,
             ]);
@@ -90,74 +124,7 @@ class BahanController extends Controller
         }
     }
 
-    public function indexMasukKeluar(Request $request)
-    {
-        $user = Auth::user();
-        $role = $user->role;
-
-        // Data barang masuk
-        $bahanMasuks = BahanMasuk::with(['bahan', 'user'])
-            ->whereNull('deleted_at')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'date' => $item->date,
-                    'bahan_id' => $item->bahan_id,
-                    'user' => $item->user->name ?? 'Unknown',
-                    'name' => $item->bahan->name ?? '-',
-                    'tipe' => 'MASUK',
-                    'jumlah' => $item->jumlah,
-                    'satuan' => $item->bahan->satuan->name ?? '-',
-                    'created_at' => $item->created_at,
-                ];
-            });
-
-        // Data barang keluar
-        $bahanKeluars = BahanKeluar::with(['bahan', 'user'])
-            ->whereNull('deleted_at')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'date' => $item->date,
-                    'bahan_id' => $item->bahan_id,
-                    'user' => $item->user->name ?? 'Unknown',
-                    'name' => $item->bahan->name ?? '-',
-                    'tipe' => 'KELUAR',
-                    'jumlah' => $item->jumlah,
-                    'satuan' => $item->bahan->satuan->name ?? '-',
-                    'created_at' => $item->created_at,
-                ];
-            });
-
-
-        $merged = $bahanMasuks->merge($bahanKeluars)->sortByDesc('created_at')->values();
-
-        if ($search = $request->input('search')) {
-            $merged = $merged->filter(function ($item) use ($search) {
-                return stripos($item['name'], $search) !== false;
-            })->values();
-        }
-
-        $page = $request->input('page', 1);
-        $perPage = 20;
-        $offset = ($page - 1) * $perPage;
-
-        $transaksis = new LengthAwarePaginator(
-            $merged->slice($offset, $perPage),
-            $merged->count(),
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
-
-        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
-            return view('bahan.indexBahanMasukKeluar', compact('transaksis'));
-        } else {
-            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
-    }
+    
 
     public function indexBahanMKbyID(Request $request, $encryptedId)
     {
@@ -189,25 +156,9 @@ class BahanController extends Controller
                 ];
             });
 
-        $bahanKeluars = BahanKeluar::with(['bahan', 'user'])
-            ->whereNull('deleted_at')->whereNull('deleted_at')->where('bahan_id', $id[0])
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'date' => $item->date,
-                    'user' => $item->user->name ?? 'Unknown',
-                    'name' => $item->bahan->name ?? '-',
-                    'keterangan' => $item->keterangan ?? '-',
-                    'tipe' => 'KELUAR',
-                    'jumlah' => $item->jumlah,
-                    'satuan' => $item->bahan->satuan->name ?? '-',
-                    'created_at' => $item->created_at,
-                ];
-            });
 
         // Gabungkan dan urutkan semua transaksi
-        $merged = $bahanMasuks->merge($bahanKeluars)->sortByDesc('created_at')->values();
+        $merged = $bahanMasuks->sortByDesc('created_at')->values();
 
         // Paginate secara manual
         $page = $request->input('page', 1);
@@ -234,9 +185,9 @@ class BahanController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        
+
+
         $date = $request->input('date', Carbon::today()->toDateString());
-        
         $search = $request->input('search');
 
         // Query join BahanAwal -> Bahan -> Satuan
@@ -291,21 +242,33 @@ class BahanController extends Controller
         $orderBy = $request->input('orderBy', 'name');
         $direction = $request->input('direction', 'asc');
 
-        $query = Bahan::with('satuan')
-            ->whereNull('deleted_at');
-        $query->orderBy($orderBy, $direction);
+        $query1 = Bahan::with('satuan')
+            ->whereNull('deleted_at')->where('section', 'BAR');
+        $query1->orderBy($orderBy, $direction);
 
         $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
-        if ($search = $request->input('search')) {
-            $query->where('name', 'like', '%' . $search . '%');
+        if ($search1 = $request->input('search1')) {
+            $query1->where('name', 'like', '%' . $search1 . '%');
+        }
+
+        $query2 = Bahan::with('satuan')
+            ->whereNull('deleted_at')->where('section', 'KITCHEN');
+        $query2->orderBy($orderBy, $direction);
+
+        $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
+
+        if ($search2 = $request->input('search2')) {
+            $query2->where('name', 'like', '%' . $search2 . '%');
         }
 
         if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
-            $bahans = $query->paginate(20);
+            $bahan_bars = $query1->paginate(20);
+            $bahan_kitchens = $query2->paginate(20);
 
             return view('bahan.indexDataBahan', [
-                'bahans' => $bahans,
+                'bahan_bars' => $bahan_bars,
+                'bahan_kitchens' => $bahan_kitchens,
                 'satuans' => $satuans
             ]);
         } else {
@@ -402,26 +365,6 @@ class BahanController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Stok berhasil ditambahkan.');
-    }
-
-    public function storeK(Request $request)
-    {
-        $validated = $request->validate([
-            'id' => 'required',
-            'keterangan' => 'nullable',
-            'jumlah' => 'required|numeric|min:0',
-            'date' => 'required|date',
-        ]);
-
-        BahanKeluar::create([
-            'bahan_id' => $validated['id'],
-            'keterangan' => $validated['keterangan'],
-            'jumlah' => $validated['jumlah'],
-            'user_id' => Auth::id(),
-            'date' => $validated['date'],
-        ]);
-
-        return redirect()->back()->with('success', 'Stok berhasil dikurangi.');
     }
 
     public function storeBahanAwal(Request $request)

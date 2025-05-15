@@ -51,21 +51,14 @@
 
         <div>
             <a href="/bahan/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
-                Master
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
+                Manajemen Bahan
             </a>
 
-            <a href="/bahan/masuk-keluar"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
-                Bahan Masuk/Keluar
-            </a>
-            <a href="/bahan/bahan-awal"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/bahan-awal') ? 'active' : '' }}">
-                Bahan Awal
-            </a>
+            
             <a href="/bahan/data-bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/data-bahan') ? 'active' : '' }}">
-                Data Bahan
+                Master Bahan
             </a>
 
             <a href="/bahan/satuan"
@@ -97,16 +90,6 @@
                                         data-satuan="{{ $bahans->satuan->name ?? '-' }}" data-bs-toggle="modal"
                                         data-bs-target="#barangModalM">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok {{ $bahans->name }}
-                                    </button>
-
-
-                                    <!-- Tombol Kurangi -->
-                                    <button type="button" class="btn btn-outline-success btnKurangStok"
-                                        data-id="{{ $bahans->id ?? 'NULL' }}" data-name="{{ $bahans->name ?? 'NULL'}}"
-                                        data-satuan="{{ $bahans->satuan->name ?? '-' }}" data-bs-toggle="modal"
-                                        data-bs-target="#barangModalK">
-                                        <i class="fa fa-minus me-2" aria-hidden="true"></i>Stok {{ $bahans->name }}
-                                        Berkurang
                                     </button>
 
                                     <div class="col-sm-2 float-end mt-3">
@@ -212,47 +195,6 @@
             </form>
         </div>
     </div>
-    <div class="modal fade" id="barangModalK" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="container modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Barang Keluar</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="Post" action='/bahan/master/storeK'>
-                        @csrf
-                        <input type="hidden" name="id" id="stokBarangIdK">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="stokDateK" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Barang</label>
-                            <input type="text" readonly class="form-control" id="stokBarangNameK">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control" name="jumlah" required autocomplete="off">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Satuan</label>
-                            <input type="text" disabled class="form-control  @error('satuan_id') is-invalid @enderror"
-                                id="stokBarangSatuanK">
-                            @error('satuan_id') <div class="alert alert-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
-                            <textarea class="form-control" autocomplete="off" id="stokKeteranganK" required
-                                name="keterangan" rows="4" placeholder="Catatan barang keluar"></textarea>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Simpan</button>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
+    
 
 @endsection

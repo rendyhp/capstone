@@ -10,12 +10,12 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Stok Bahan</h2>
+                    <h2 class="pageheader-title ">Manajemen Bahan</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Data Bahan</li>
+                                <li class="breadcrumb-item active" aria-current="page">Stok Bahan - Manajemen Bahan</li>
                             </ol>
                         </nav>
                     </div>
@@ -63,20 +63,11 @@
         <div>
             <a href="/bahan/master"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
-                Master
-            </a>
-
-            <a href="/bahan/masuk-keluar"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
-                Bahan Masuk/Keluar
-            </a>
-            <a href="/bahan/bahan-awal"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/bahan-awal') ? 'active' : '' }}">
-                Bahan Awal
+                Manajemen Bahan
             </a>
             <a href="/bahan/data-bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/data-bahan') ? 'active' : '' }}">
-                Data Bahan
+                Master Bahan
             </a>
 
             <a href="/bahan/satuan"
@@ -85,11 +76,11 @@
             </a>
         </div>
 
-        <div class="row">
+        <div class="row mb-3">
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bahan </div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Bar </div>
                     </div>
 
                     <div class="card-body">
@@ -107,7 +98,7 @@
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Search" value="{{ request('search') }}">
+                                                    name="search1" placeholder="Search" value="{{ request('search1') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -118,7 +109,6 @@
                                                 <th>Nama Bahan</th>
                                                 <th>Awal</th>
                                                 <th>Masuk</th>
-                                                <th>Keluar</th>
                                                 <th>Terpakai</th>
                                                 <th>Sisa</th>
                                                 <th>Akhir<br>Sebenarnya</th>
@@ -128,12 +118,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($bahans->isEmpty())
+                                            @if ($bahan_bars->isEmpty())
                                                 <p>Tidak ada data yang ditemukan.</p>
                                             @else
-                                                @foreach ($bahans as $bahan)
+                                                @foreach ($bahan_bars as $bahan)
                                                     <tr>
-                                                        <td>{{ ($bahans->currentPage() - 1) * $bahans->perPage() + $loop->iteration }}
+                                                        <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
                                                         </td>
                                                         <td>{{ $bahan->name }}</td>
                                                         <td class="text-end">
@@ -141,9 +131,6 @@
                                                         </td>
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_keluar, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
@@ -170,19 +157,12 @@
                                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                                             </button>
 
-                                                            <!-- Tombol Kurangi -->
-                                                            <button type="button" class="btn btn-outline-success btnKurangStok"
-                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
-                                                                data-name="{{ $bahan->name ?? 'NULL'}}"
-                                                                data-satuan="{{ $bahan->satuan->name ?? '-' }}"
-                                                                data-bs-toggle="modal" data-bs-target="#barangModalK">
-                                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                                            </button>
+                                                        
 
 
                                                             <button type="button" class="btn btn-outline-secondary"
                                                                 onclick="window.location.href='{{ route('bahan.indexBahanMKbyID', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
-                                                                <i class="fa fa-info"></i>
+                                                                <i class="fa fa-info me-2"></i>History
                                                             </button>
                                                         </td>
 
@@ -192,7 +172,111 @@
                                             @endif
                                         </tbody>
                             </table>
-                            {{ $bahans->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                            {{ $bahan_bars->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+            <div class="col-xl-12">
+                <div class="card custom-card">
+                    <div class="card-header">
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Kitchen </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
+                                <div class="mb-3">
+
+                                    <div class="col-sm-3 float-end">
+                                        <div class="d-flex gap-2 mb-2">
+                                            <a href="/bahan/master" class="btn btn-outline-secondary btn-sm"
+                                                title="Refresh">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                            <form action="/bahan/master" method="get" class="form-inline d-flex">
+                                                <input type="hidden" name="date"
+                                                    value="{{ request('date', now()->toDateString()) }}">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                                    name="search2" placeholder="Search" value="{{ request('search2') }}">
+                                            </form>
+                                        </div>
+                                        <div>
+                                        </div>
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Nama Bahan</th>
+                                                <th>Awal</th>
+                                                <th>Masuk</th>
+                                                <th>Terpakai</th>
+                                                <th>Sisa</th>
+                                                <th>Akhir<br>Sebenarnya</th>
+                                                <th>Terbuang</th>
+                                                <th>Satuan</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if ($bahan_kitchens->isEmpty())
+                                                <p>Tidak ada data yang ditemukan.</p>
+                                            @else
+                                                @foreach ($bahan_kitchens as $bahan)
+                                                    <tr>
+                                                        <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
+                                                        </td>
+                                                        <td>{{ $bahan->name }}</td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+
+                                                        <td>{{ $bahan->satuan->name ?? '-' }}</td>
+
+                                                        <td>
+                                                            <!-- Tombol Tambah -->
+                                                            <button type="button" class="btn btn-outline-success btnTambahStok"
+                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
+                                                                data-name="{{ $bahan->name ?? 'NULL'}}"
+                                                                data-satuan="{{ $bahan->satuan->name ?? '-' }}"
+                                                                data-bs-toggle="modal" data-bs-target="#barangModalM">
+                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                            </button>
+
+                                                        
+
+
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                onclick="window.location.href='{{ route('bahan.indexBahanMKbyID', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
+                                                                <i class="fa fa-info me-2"></i>History
+                                                            </button>
+                                                        </td>
+
+
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                            </table>
+                            {{ $bahan_kitchens->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>
@@ -247,48 +331,6 @@
             </form>
         </div>
     </div>
-    <div class="modal fade" id="barangModalK" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="container modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Bahan Keluar</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="Post" action='/bahan/master/storeK'>
-                        @csrf
-                        <input type="hidden" name="id" id="stokBarangIdK">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="stokDateK" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Barang</label>
-                            <input type="text" readonly class="form-control" id="stokBarangNameK">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.0001" value="0"
-                                required autocomplete="off">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Satuan</label>
-                            <input type="text" disabled class="form-control  @error('satuan_id') is-invalid @enderror"
-                                id="stokBarangSatuanK">
-                            @error('satuan_id') <div class="alert alert-danger">{{ $message }}</div> @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
-                            <textarea class="form-control" autocomplete="off" id="stokKeteranganK" required
-                                name="keterangan" rows="4" placeholder="Catatan barang keluar"></textarea>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Simpan</button>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
+    
 
 @endsection

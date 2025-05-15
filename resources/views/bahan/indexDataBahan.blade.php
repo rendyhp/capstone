@@ -10,12 +10,12 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Data Bahan</h2>
+                    <h2 class="pageheader-title ">Master Bahan</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Stok Bahan - Data Bahan</li>
+                                <li class="breadcrumb-item active" aria-current="page">Stok Bahan - Master Bahan</li>
                             </ol>
                         </nav>
                     </div>
@@ -48,20 +48,11 @@
         <div>
             <a href="/bahan/master"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
-                Master
-            </a>
-
-            <a href="/bahan/masuk-keluar"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
-                Bahan Masuk/Keluar
-            </a>
-            <a href="/bahan/bahan-awal"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/bahan-awal') ? 'active' : '' }}">
-                Bahan Awal
+                Manajemen Bahan
             </a>
             <a href="/bahan/data-bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/data-bahan') ? 'active' : '' }}">
-                Data Bahan
+                Master Bahan
             </a>
 
             <a href="/bahan/satuan"
@@ -70,11 +61,12 @@
             </a>
 
         </div>
-        <div class="row">
+
+        <div class="row mb-3">
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Data Bahan </div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Data Bar </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -83,7 +75,7 @@
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                                         data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data Bar
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
                                         <div class="form-check mb-2">
@@ -99,7 +91,7 @@
                                             </a>
                                             <form action="/bahan/data-bahan" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Search" value="{{ request('search') }}">
+                                                    name="search1" placeholder="Search" value="{{ request('search1') }}">
                                             </form>
                                         </div>
 
@@ -117,12 +109,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($bahans->isEmpty())
+                                            @if ($bahan_bars->isEmpty())
                                                 <p>Tidak ada data yang ditemukan.</p>
                                             @else
-                                                @foreach ($bahans as $bahan)
+                                                @foreach ($bahan_bars as $bahan)
                                                     <tr>
-                                                        <td>{{ ($bahans->currentPage() - 1) * $bahans->perPage() + $loop->iteration }}
+                                                        <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
                                                         <td class="column-gambar" style="display:none;">
                                                             <img src="{{ asset($bahan->image) }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
@@ -163,7 +155,103 @@
                                             @endif
                                         </tbody>
                             </table>
-                            {{ $bahans->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                            {{ $bahan_bars->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+            <div class="col-xl-12">
+                <div class="card custom-card">
+                    <div class="card-header">
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Data Kitchen </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tableBahan" class="table table-bordered text-dark table-sm">
+                                <div class="mb-3">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                        data-bs-target="#barangModal">
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data Kitchen
+                                    </button>
+                                    <div class="col-sm-3 float-end mt-3">
+                                        
+                                        <div class="d-flex gap-2 mb-2">
+                                            <a href="/bahan/data-bahan" class="btn btn-outline-secondary btn-sm"
+                                                title="Refresh">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                            <form action="/bahan/data-bahan" method="get" class="form-inline d-flex">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                                    name="search2" placeholder="Search" value="{{ request('search2') }}">
+                                            </form>
+                                        </div>
+
+                                        <div>
+                                        </div>
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>No.</th>
+                                                <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
+                                                <th>Nama Bahan</th>
+                                                <th>Deskripsi Bahan</th>
+                                                <th>Pengingat Stok Minimum</th>
+                                                <th>Satuan</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if ($bahan_kitchens->isEmpty())
+                                                <p>Tidak ada data yang ditemukan.</p>
+                                            @else
+                                                @foreach ($bahan_kitchens as $bahan)
+                                                    <tr>
+                                                        <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
+                                                        <td class="column-gambar" style="display:none;">
+                                                            <img src="{{ asset($bahan->image) }}"
+                                                                style="width: 100px; max-height: 100px;" alt="Img">
+                                                        </td>
+                                                        <td>{{ $bahan->name }}</td>
+                                                        <td style="max-width: 150px">{{ $bahan->description }}</td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td>{{ $bahan->satuan->name ?? '-' }}</td>
+
+                                                        <td>
+                                                            <!-- Button trigger modal -->
+                                                            <button type="button" class="btn btn-primary btn-sm btn_editbahan"
+                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
+                                                                data-name="{{ $bahan->name ?? 'NULL' }}"
+                                                                data-description="{{ $bahan->description ?? 'NULL' }}"
+                                                                data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
+                                                                data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
+                                                                <i class="fa fa-edit" aria-hidden="true"></i>
+                                                            </button>
+
+
+
+                                                            <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
+                                                                class="d-inline" method="post">
+                                                                @method('PUT')
+                                                                @csrf
+                                                                <button class="btn btn-danger btn-sm" type="submit"
+                                                                    onclick="return confirm('Yakin akan Mendelete Data?')"><i
+                                                                        class="fa fa-trash"></i></button>
+                                                            </form>
+
+
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                            </table>
+                            {{ $bahan_bars->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>
@@ -176,13 +264,14 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Bahan</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Bar</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form method="Post" action='/bahan/data-bahan/store' enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
+                            <input type="text" hidden name="section" value="BAR">
                             <label for="image" class="form-label text-dark fw-bold">Gambar</label>
                             <input type="file" class="form-control" id="image" name="image">
                         </div>
@@ -240,6 +329,7 @@
                         @method('PUT')
                         @csrf
                         <div class="mb-3">
+                            <input hidden type="text" name="section" value="BAR">
                             <input hidden type="text" name="id" id="txtid">
                             <label for="name" class="form-label text-dark fw-bold">Nama Bahan Baku</label>
                             <input type="text" autocomplete="off" required

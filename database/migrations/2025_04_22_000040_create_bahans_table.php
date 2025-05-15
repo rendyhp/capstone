@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('minimum', 15, 3);
+            $table->enum('section', ['BAR', 'KITCHEN']);
             $table->foreignId('satuan_id')->references('id')->on('satuan_bahans')->onDelete('cascade');
             $table->string('image')->nullable();
             $table->timestamps();

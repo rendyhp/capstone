@@ -131,10 +131,8 @@
                                             @else
                                                 @foreach ($bahanAwalAwals as $bahanAwal)
                                                     <tr>
-                                                        <td>{{ ($bahanAwalAwals->currentPage() - 1) * $bahanAwalAwals->perPage() + $loop->iteration }}
-                                                        </td>
-                                                        <td>{{ \Carbon\Carbon::parse($bahanAwal->date)->translatedFormat('d F Y') }}
-                                                        </td>
+                                                        <td>{{ ($bahanAwalAwals->currentPage() - 1) * $bahanAwalAwals->perPage() + $loop->iteration }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($bahanAwal->date)->translatedFormat('d F Y') }}</td>
                                                         <td>{{ $bahanAwal->bahan_name }}</td>
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($bahanAwal->stok, 3, ',', '.'), '0'), ',') }}
