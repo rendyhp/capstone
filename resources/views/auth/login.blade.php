@@ -124,17 +124,6 @@
                         <label for="floatingPassword">{{ __('Password') }}</label>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mt-3" style="width: 400px;">
-                        <!-- Checkbox -->
-                        <div class="form-check mb-0">
-                            <input class="form-check-input" type="checkbox" value="" id="form2Example3" />
-                            <label class="form-check-label" for="form2Example3">
-                                {{ __('Remember Me') }}
-                            </label>
-                        </div>
-                        
-                    </div>
-
                     <div class="text-center text-lg-start mt-4 pt-2">
                         <button type="submit" class="btn btn-primary btn-lg"
                             style="padding-left: 2.5rem; padding-right: 2.5rem; width: 400px; border-radius: 20px;">

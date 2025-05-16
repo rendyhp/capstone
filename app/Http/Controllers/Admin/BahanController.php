@@ -3,28 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AkhirTerpakaiSeharusnya;
 use App\Models\Bahan;
 use App\Models\BahanAkhir;
 use App\Models\BahanAwal;
 use App\Models\BahanMasuk;
-use App\Models\BarangMasuk;
 use App\Models\HistoryInput;
-
 use App\Models\SatuanBahan;
-use App\Models\TransaksiDetail;
 use Carbon\Carbon;
 use Hashids\Hashids;
 use Illuminate\Http\Request;
-
-
-use App\Models\TemporaryFile;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 
 use App\Helpers\LogActivity;
@@ -33,14 +24,12 @@ class BahanController extends Controller
 {
     public function index(Request $request)
     {
-
         $user = Auth::user();
         $role = $user->role;
-
         $date = $request->input('date', Carbon::today()->toDateString());
 
-        //Data Bar
-        $query1 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section','BAR');
+        // Data Bar
+        $query1 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'BAR');
 
         if ($search1 = $request->input('search1')) {
             $query1->where('name', 'like', '%' . $search1 . '%');
@@ -49,28 +38,56 @@ class BahanController extends Controller
         $bahan_bars = $query1->paginate(20)->appends($request->query());
 
         foreach ($bahan_bars as $bahan) {
-            $bahan->jumlah_awal = BahanAwal::where('bahan_id', $bahan->id)
+            $bahan_awal = BahanAwal::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
-                ->sum('jumlah');
+                ->first();
+
+            if ($bahan_awal) {
+                $bahan->jumlah_awal = $bahan_awal->jumlah;
+                $bahan->awal_manual = true;
+            } else {
+                $bahan->jumlah_awal = BahanAkhir::where('bahan_id', $bahan->id)
+                    ->where('date', '<', $date)
+                    ->whereNull('deleted_at')
+                    ->orderByDesc('date')
+                    ->value('jumlah') ?? 0;
+
+                $bahan->awal_manual = false;
+            }
+
             $bahan->jumlah_masuk = BahanMasuk::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
                 ->sum('jumlah');
-            
+
             $bahan->jumlah_terpakai = DB::table('transaksi_details')
                 ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
                 ->where('transaksi_details.bahan_id', $bahan->id)
                 ->whereDate('transaksis.date', $date)
                 ->whereNull('transaksis.deleted_at')
                 ->sum('transaksi_details.jumlah');
+
             $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk) - $bahan->jumlah_terpakai;
-            $bahan->bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
+
+            $bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
-                ->sum('jumlah');
-            $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
+                ->first();
+
+            if ($bahan_akhir) {
+                $bahan->bahan_akhir = $bahan_akhir->jumlah;
+                $bahan->akhir_manual = true;
+            } else {
+                $bahan->bahan_akhir = null;
+                $bahan->akhir_manual = false;
+            }
+
+            $bahan->bahan_terbuang = $bahan->bahan_akhir !== null
+                ? ($bahan->jumlah_akhir - $bahan->bahan_akhir)
+                : null;
         }
+
         if ($request->ajax()) {
             return response()->json($bahan_bars);
         }
@@ -85,35 +102,62 @@ class BahanController extends Controller
         $bahan_kitchens = $query2->paginate(20)->appends($request->query());
 
         foreach ($bahan_kitchens as $bahan) {
-            $bahan->jumlah_awal = BahanAwal::where('bahan_id', $bahan->id)
+            $bahan_awal = BahanAwal::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
-                ->sum('jumlah');
+                ->first();
+
+            if ($bahan_awal) {
+                $bahan->jumlah_awal = $bahan_awal->jumlah;
+                $bahan->awal_manual = true;
+            } else {
+                $bahan->jumlah_awal = BahanAkhir::where('bahan_id', $bahan->id)
+                    ->where('date', '<', $date)
+                    ->whereNull('deleted_at')
+                    ->orderByDesc('date')
+                    ->value('jumlah') ?? 0;
+
+                $bahan->awal_manual = false;
+            }
+
             $bahan->jumlah_masuk = BahanMasuk::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
                 ->sum('jumlah');
-            
+
             $bahan->jumlah_terpakai = DB::table('transaksi_details')
                 ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
                 ->where('transaksi_details.bahan_id', $bahan->id)
                 ->whereDate('transaksis.date', $date)
                 ->whereNull('transaksis.deleted_at')
                 ->sum('transaksi_details.jumlah');
+
             $bahan->jumlah_akhir = ($bahan->jumlah_awal + $bahan->jumlah_masuk) - $bahan->jumlah_terpakai;
-            $bahan->bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
+
+            $bahan_akhir = BahanAkhir::where('bahan_id', $bahan->id)
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
-                ->sum('jumlah');
-            $bahan->bahan_terbuang = ($bahan->jumlah_akhir - $bahan->bahan_akhir);
+                ->first();
+
+            if ($bahan_akhir) {
+                $bahan->bahan_akhir = $bahan_akhir->jumlah;
+                $bahan->akhir_manual = true;
+            } else {
+                $bahan->bahan_akhir = null;
+                $bahan->akhir_manual = false;
+            }
+
+            $bahan->bahan_terbuang = $bahan->bahan_akhir !== null
+                ? ($bahan->jumlah_akhir - $bahan->bahan_akhir)
+                : null;
         }
+
         if ($request->ajax()) {
             return response()->json($bahan_kitchens);
         }
-        
-        if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
-            return view('bahan.index', [
 
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            return view('bahan.index', [
                 'bahan_bars' => $bahan_bars,
                 'bahan_kitchens' => $bahan_kitchens,
                 'satuan_bahans' => SatuanBahan::whereNull('deleted_at')->orderBy('name')->get(),
@@ -124,7 +168,54 @@ class BahanController extends Controller
         }
     }
 
-    
+    public function saveBahanAwal(Request $request)
+    {
+        $date = $request->input('date');
+        if (date('j', strtotime($date)) != 1) {
+            return response()->json(['error2' => true]);
+        }
+
+        $request->validate([
+            'bahan_id' => 'required|integer|exists:bahans,id',
+            'date' => 'required|date',
+            'jumlah' => 'required|numeric|min:0',
+        ]);
+
+        BahanAwal::where('bahan_id', $request->bahan_id)
+            ->whereDate('date', $request->date)
+            ->delete();
+
+        BahanAwal::create([
+            'user_id' => Auth::id(),
+            'bahan_id' => $request->bahan_id,
+            'date' => $request->date,
+            'jumlah' => $request->jumlah,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function saveBahanAkhir(Request $request)
+    {
+        $request->validate([
+            'bahan_id' => 'required|integer|exists:bahans,id',
+            'date' => 'required|date',
+            'jumlah' => 'required|numeric|min:0',
+        ]);
+
+        BahanAkhir::where('bahan_id', $request->bahan_id)
+            ->whereDate('date', $request->date)
+            ->delete();
+
+        BahanAkhir::create([
+            'user_id' => Auth::id(),
+            'bahan_id' => $request->bahan_id,
+            'date' => $request->date,
+            'jumlah' => $request->jumlah,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
 
     public function indexBahanMKbyID(Request $request, $encryptedId)
     {
@@ -156,7 +247,6 @@ class BahanController extends Controller
                 ];
             });
 
-
         // Gabungkan dan urutkan semua transaksi
         $merged = $bahanMasuks->sortByDesc('created_at')->values();
 
@@ -180,60 +270,6 @@ class BahanController extends Controller
         }
     }
 
-    public function indexBahanAwal(Request $request)
-    {
-        $user = Auth::user();
-        $role = $user->role;
-
-
-
-        $date = $request->input('date', Carbon::today()->toDateString());
-        $search = $request->input('search');
-
-        // Query join BahanAwal -> Bahan -> Satuan
-        $query = BahanAwal::selectRaw('
-            bahan_awals.bahan_id,
-            SUM(bahan_awals.jumlah) as stok,
-            MAX(bahan_awals.date) as date,
-            bahans.name as bahan_name,
-            satuan_bahans.name as satuan_name
-        ')
-            ->join('bahans', 'bahan_awals.bahan_id', '=', 'bahans.id')
-            ->join('satuan_bahans', 'bahans.satuan_id', '=', 'satuan_bahans.id')
-            ->whereNull('bahan_awals.deleted_at')
-            ->whereNull('bahans.deleted_at')
-            ->whereDate('bahan_awals.date', $date)
-            ->when($search, function ($q) use ($search) {
-                $q->where('bahans.name', 'like', '%' . $search . '%');
-            })
-            ->groupBy('bahan_awals.bahan_id', 'bahans.name', 'satuan_bahans.name')
-            ->orderBy('bahans.name', 'asc');
-
-        $allData = $query->get();
-
-        // Ambil data terbaru untuk tiap bahan_id
-        $grouped = $allData->groupBy('bahan_id')->map(function ($items) {
-            return $items->first();
-        })->values();
-
-        // Pagination manual
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $perPage = 20;
-        $currentItems = $grouped->slice(($currentPage - 1) * $perPage, $perPage)->values();
-        $bahanAwalAwals = new LengthAwarePaginator($currentItems, $grouped->count(), $perPage);
-        $bahanAwalAwals->appends($request->query());
-
-
-        $satuans = SatuanBahan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
-        $bahans = Bahan::whereNull('deleted_at')->with('satuan')->orderBy('name', 'asc')->get();
-
-        return view('bahan.indexBahanAwal', [
-            'bahanAwalAwals' => $bahanAwalAwals,
-            'satuans' => $satuans,
-            'bahans' => $bahans,
-            'date' => $date,
-        ]);
-    }
     public function indexDataBahan(Request $request)
     {
         $user = Auth::user();
@@ -276,7 +312,6 @@ class BahanController extends Controller
         }
     }
 
-
     public function indexSatuan(Request $request)
     {
         $user = Auth::user();
@@ -307,9 +342,6 @@ class BahanController extends Controller
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
-
-
-
 
     public function inputStore(Request $request)
     {
@@ -365,29 +397,6 @@ class BahanController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Stok berhasil ditambahkan.');
-    }
-
-    public function storeBahanAwal(Request $request)
-    {
-        $user = Auth::user();
-
-        // Validate input fields
-        $request->validate([
-            'date' => 'required|date',
-
-        ]);
-        // Process each item in bahan_awal
-        foreach ($request->bahan_awal as $item) {
-            BahanAwal::create([
-                'user_id' => $user->id,
-                'date' => $request->date,
-                'bahan_id' => $item['bahan_id'],
-                'jumlah' => $item['jumlah'],
-            ]);
-        }
-
-        return redirect()->route('bahan.indexBahanAwal', ['date' => $request->date])
-            ->with('success', 'Bahan awal berhasil disimpan.');
     }
 
     public function storeSatuan(Request $request)
@@ -464,44 +473,6 @@ class BahanController extends Controller
         }
     }
 
-    public function updateBahanAwal($bahan_id, Request $request)
-    {
-        $request->validate([
-            'jumlah.*' => 'required|numeric|min:0.001',
-            'date' => 'required|date',
-        ]);
-
-        $jumlahs = $request->input('jumlah');
-        $date = $request->input('date');
-
-        DB::transaction(function () use ($jumlahs, $bahan_id, $date) {
-            // Jika semua jumlah bahan dihapus (jumlahnya kosong)
-            if (empty($jumlahs) || $this->allItemsAreEmpty($jumlahs)) {
-                // Hapus semua entri untuk bahan_id dan tanggal yang diberikan
-                BahanAwal::where('bahan_id', $bahan_id)
-                    ->whereDate('date', $date)
-                    ->delete();
-            } else {
-                // Jika ada jumlah yang diinputkan, lakukan update/insert
-                // Hapus semua entri yang ada untuk bahan_id dan tanggal yang diberikan
-                BahanAwal::where('bahan_id', $bahan_id)
-                    ->whereDate('date', $date)
-                    ->delete();
-
-                // Insert entri baru untuk jumlah yang diberikan
-                foreach ($jumlahs as $jumlah) {
-                    BahanAwal::create([
-                        'bahan_id' => $bahan_id,
-                        'jumlah' => $jumlah,
-                        'date' => $date,
-                    ]);
-                }
-            }
-        });
-
-        return redirect()->back()->with('success', 'Data bahan awal berhasil diperbarui.');
-    }
-
     public function updateSatuan(Request $request, SatuanBahan $satuans)
     {
         $validator = Validator::make($request->all(), [
@@ -544,12 +515,6 @@ class BahanController extends Controller
             ->with('success', 'Data input ' . $historyInput->bahan->name . ' pada "' . $tanggalDelete . '" sebesar ' . $jumlahFormatted . ' berhasil dihapus.');
     }
 
-    public function create()
-    {
-
-        return view('bahan');
-    }
-
     public function storeDataBahan(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -582,6 +547,7 @@ class BahanController extends Controller
         $Bahan->description = $request->input('description', '-');
         $Bahan->minimum = $request->input('minimum', 0);
         $Bahan->satuan_id = $request->input('satuan_id', null);
+        $Bahan->section = $request->input('section');
 
         if ($request->hasFile('image')) {
             $file = $request->file('image');
@@ -610,12 +576,6 @@ class BahanController extends Controller
 
     }
 
-    public function edit(Bahan $bahan)
-    {
-        $Bahan = Bahan::findOrFail($bahan->id);
-        return view('bahan.index', compact('Bahan'));
-    }
-
     public function updateDataBahan(Request $request, Bahan $bahans)
     {
         Validator::make($request->all(), [
@@ -625,28 +585,19 @@ class BahanController extends Controller
             'satuan_id' => 'required',
         ]);
 
-        try {
-            $user = Auth::user()->id;
+        $user = Auth::user()->id;
 
-            $Bahan = Bahan::findOrFail($request->input('id'));
+        $Bahan = Bahan::findOrFail($request->input('id'));
 
-            $Bahan->user_id = $user;
-            $Bahan->name = $request->input('name');
-            $Bahan->description = $request->input('description' ?: '-');
-            $Bahan->minimum = $request->input('minimum' ?: 0);
-            $Bahan->satuan_id = $request->input('satuan_id' ?: '-');
-            $Bahan->save();
+        $Bahan->user_id = $user;
+        $Bahan->name = $request->input('name');
+        $Bahan->description = $request->input('description' ?: '-');
+        $Bahan->minimum = $request->input('minimum' ?: 0);
+        $Bahan->satuan_id = $request->input('satuan_id' ?: '-');
+        $Bahan->save();
 
-            return redirect('/bahan/data-bahan')->with('success', 'Data Berhasil Diubah');
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Check for unique constraint violation
-            if ($e->errorInfo[1] == 1062) {
-                echo '<script>alert("Bahan sudah ada dalam database.");</script>';
-                return redirect('data-bahan')->with('error', 'Bahan Gagal Ditambahkan : Nama Bahan yang diinputkan sudah ada');
-            } else {
-                throw $e; // Rethrow the exception if it's not due to unique constraint
-            }
-        }
+        return redirect('/bahan/data-bahan')->with('success', 'Data Berhasil Diubah');
+
     }
 
     public function delete(Request $request)
@@ -658,33 +609,5 @@ class BahanController extends Controller
         $barang->save();
 
         return redirect('/data-bahan')->with('success', 'Data Berhasil Dihapus');
-    }
-
-    public function deleteBahanAwal(Request $request)
-    {
-        $bahan_id = $request->input('bahan_id');
-        $date = $request->input('date', Carbon::today()->toDateString());
-
-        BahanAwal::where('bahan_id', $bahan_id)
-            ->whereDate('date', $date)
-            ->update(['deleted_at' => now()]);
-
-        return redirect()->route('bahan.indexBahanAwal', ['date' => $date])
-            ->with('success', 'Data bahan berhasil dihapus.');
-    }
-
-    public function deletePermanent(Request $request)
-    {
-        $slug = $request->slug;
-
-        $bahans = Bahans::where('slug', $slug)->firstOrFail();
-        $name = $bahans->title;
-        // Lakukan penghapusan permanen menggunakan Eloquent
-        Bahan::where('slug', $slug)->forceDelete();
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Delete Permanen Bahan "' . $name . '"');
-
-        // Redirect kembali ke halaman sebelumnya
-        return Redirect::back()->with('delete', 'Dataset "' . $name . '" berhasil dihapus permanen');
     }
 }

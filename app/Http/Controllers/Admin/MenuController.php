@@ -8,13 +8,8 @@ use App\Models\Barang;
 use App\Models\KomposisiMenu;
 use App\Models\Menu;
 use Illuminate\Http\Request;
-
-
-use App\Models\TemporaryFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 
 use App\Helpers\LogActivity;
@@ -49,13 +44,6 @@ class MenuController extends Controller
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
-    }
-
-
-    public function create()
-    {
-
-        return view('menu');
     }
 
     public function store(Request $request)
@@ -104,24 +92,16 @@ class MenuController extends Controller
                 ->with('warning', 'Bahan tidak boleh kosong!');
         }
 
-
         $dataPerPage = 20;
         $data = DB::table('menus')->paginate($dataPerPage);
         $lastPage = $data->lastPage();
 
         return redirect('/daftar-menu?page=' . $lastPage . '&orderBy=id&direction=asc')
             ->with('success', 'Data "' . $menu->name . '" Berhasil Ditambahkan');
-
     }
 
     public function show($slug)
     {
-    }
-
-    public function edit(KomposisiMenu $menu)
-    {
-
-        return view('daftar-menu.index');
     }
 
     public function update(Request $request, $id)
@@ -173,7 +153,6 @@ class MenuController extends Controller
         return redirect('/daftar-menu')->with('success', 'Menu "' . $request->name . '" berhasil diperbarui');
     }
 
-
     public function delete(Request $request)
     {
         $id = $request->id;
@@ -183,20 +162,5 @@ class MenuController extends Controller
         $barang->save();
 
         return redirect('/daftar-menu')->with('success', 'Menu Berhasil Dihapus');
-    }
-
-    public function deletePermanent(Request $request)
-    {
-        $slug = $request->slug;
-
-        $barang = Barangs::where('slug', $slug)->firstOrFail();
-        $name = $barang->title;
-        // Lakukan penghapusan permanen menggunakan Eloquent
-        Barang::where('slug', $slug)->forceDelete();
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Delete Permanen Barang "' . $name . '"');
-
-        // Redirect kembali ke halaman sebelumnya
-        return Redirect::back()->with('delete', 'Dataset "' . $name . '" berhasil dihapus permanen');
     }
 }

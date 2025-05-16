@@ -3,18 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Notifikasi;
 use Illuminate\Http\Request;
-
-
-use App\Models\TemporaryFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Redirect;
-
-use App\Helpers\LogActivity;
 
 class NotifikasiController extends Controller
 {

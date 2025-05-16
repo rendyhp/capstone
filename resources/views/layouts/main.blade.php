@@ -17,7 +17,6 @@
     <link href="{{ url('css/swap.css') }}" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
-    <!-- <link href="fontawesome/css/all.min.css" rel="stylesheet"> -->
     <link href="{{ url('fontawesome/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ url('/font/bootstrap-icons.css') }}" rel="stylesheet">
 
@@ -28,13 +27,14 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url('css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <!-- tambahanku -->
+    <!-- Tambahanku -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="vendor/select2/dist/css/select2.min.css" rel="stylesheet" />
 
     <!-- Template Stylesheet -->
     <link href="{{url('css/style.css')}}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -83,9 +83,6 @@
                                         class="fa fa-credit-card-alt me-2"></i>Barang</a>
                                 <a href="/bahan/master" class="nav-link @yield('StokBahan')"><i
                                         class="fa fa-file me-2"></i>Bahan</a>
-                                <a href="/stock-opname" class="nav-link @yield('StockOpname')"><i
-                                        class="fa fa-file me-2"></i>Stock Opname</a>
-
                             </div>
                         </div>
 
@@ -106,8 +103,6 @@
                             <a href="#" id="lainnyaDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
                             <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
-                                <a href="/log-activities" class="nav-link @yield('LogActivities')"><i
-                                        class="fa fa-credit-card-alt me-2"></i>Log Aktifitas</a>
                                 <a href="/protected/user-data" class="nav-link @yield('UserData')"><i
                                         class="fa fa-file me-2"></i>Data User</a>
                             </div>
@@ -127,8 +122,6 @@
                                         class="fa fa-credit-card-alt me-2"></i>Barang</a>
                                 <a href="/bahan/master" class="nav-link @yield('StokBahan')"><i
                                         class="fa fa-file me-2"></i>Bahan</a>
-                                <a href="/stock-opname" class="nav-link @yield('StockOpname')"><i
-                                        class="fa fa-file me-2"></i>Stock Opname</a>
                             </div>
                         </div>
 
@@ -149,9 +142,7 @@
                         <div class="nav-item dropdown">
                             <a href="#" id="lainnyaDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
-                                <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
-                                <a href="/log-activities" class="nav-link @yield('LogActivities')"><i
-                                        class="fa fa-credit-card-alt me-2"></i>Log Aktifitas</a>
+                            <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
                                 <a href="/protected/user-data" class="nav-link @yield('UserData')"><i
                                         class="fa fa-file me-2"></i>Data User</a>
                             </div>
@@ -172,8 +163,6 @@
                                         class="fa fa-credit-card-alt me-2"></i>Barang</a>
                                 <a href="/bahan/master" class="nav-link @yield('StokBahan')"><i
                                         class="fa fa-file me-2"></i>Bahan</a>
-                                <a href="/stock-opname" class="nav-link @yield('StockOpname')"><i
-                                        class="fa fa-file me-2"></i>Stock Opname</a>
                             </div>
                         </div>
 
@@ -271,77 +260,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script>
-        $('#editBarangModal').on('shown.bs.modal', function () {
-            $('#id_bahan.select2-hidden-accessible').select2('destroy');
-            $('#id_bahan').select2({
-                placeholder: "Cari bahan...",
-                allowClear: true,
-                dropdownParent: $('#editBarangModal .modal-content'),
-                dropdownAutoWidth: true,
-                width: '100%'
-            });
 
-
-            $('#txtsatuan_id').select2({
-                placeholder: "Cari atau pilih satuan...",
-                allowClear: true,
-                dropdownParent: $('#editBarangModal .modal-content'),
-                dropdownAutoWidth: true,
-                width: '100%'
-            });
-
-            setTimeout(() => {
-                $('.select2-container--open .select2-search__field').focus();
-            }, 100);
-        });
-        $(document).on('select2:open', () => {
-            setTimeout(() => {
-                document.querySelector('.select2-container--open .select2-search__field').focus();
-            }, 100);
-        });
-
-        $('#barangModal').on('shown.bs.modal', function () {
-            $('#satuan_id.select2-hidden-accessible').select2('destroy');
-            $('#satuan_id').select2({
-                placeholder: "Cari atau pilih satuan...",
-                allowClear: true,
-                dropdownParent: $('#barangModal .modal-content'), 
-                dropdownAutoWidth: true,
-                width: '100%'
-            });
-            $('#menu_id').select2({
-                placeholder: "Cari atau pilih menu...",
-                allowClear: true,
-                dropdownParent: $('#barangModal .modal-content'), // 
-                dropdownAutoWidth: true,
-                width: '100%'
-            });
-
-            setTimeout(() => {
-                $('.select2-container--open .select2-search__field').focus();
-            }, 100);
-        });
-
-        
-
-        $(document).ready(function () {
-            $('.select2').select2({
-                templateResult: function (state) {
-                    if (!state.id) return state.text;
-                    return $(
-                        '<span><img src="' + $(state.element).data('image') + '" class="img-flag" style="width: 20px; height: 20px; margin-right: 10px;" /> ' + state.text + '</span>'
-                    );
-                },
-                templateSelection: function (state) {
-                    if (!state.id) return state.text;
-                    return $(
-                        '<span><img src="' + $(state.element).data('image') + '" class="img-flag" style="width: 20px; height: 20px; margin-right: 10px;" /> ' + state.text + '</span>'
-                    );
-                }
-            });
-        });
-    </script>
+    <!-- My Select2 script-->
+    <script src="{{ url('js/myselect2.js')}}"></script>
 
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

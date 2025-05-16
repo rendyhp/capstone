@@ -1,21 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\BahanAwalController;
 use App\Http\Controllers\Admin\BahanController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\NotifikasiController;
-use App\Http\Controllers\Admin\SearchController;
-use App\Http\Controllers\Admin\StockOpnameController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\TransaksiController;
 use App\Http\Controllers\DashboardController;
 
-use App\Http\Controllers\UPController;
-use App\Http\Controllers\ULPController;
-use App\Http\Controllers\DetailTransaksiController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,15 +35,9 @@ Route::middleware(['auth'])->group(function () {
         return view('layout');
     });
 
+    // Dasbor
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    //coba
-    // routes/web.php
-    Route::get('/search/satuan', [SearchController::class, 'searchSatuan'])->name('search.satuan');
-    //endcoba
-
-    // Buatanku
-    // Awal
+    // Notifikasi dan report dari staf
     Route::get('/notification', [NotifikasiController::class, 'index'])->name('notification');
     Route::get('/report', [NotifikasiController::class, 'indexReport'])->name('report');
 
@@ -57,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
 
     // Stok
+    // Barang
     Route::get('/barang/master', [BarangController::class, 'index'])->name('barang.index');
     Route::get('/barang/master/{encryptedId}', [BarangController::class, 'indexbyID'])->name('barang.indexbyId');
     Route::post('/barang/master/storeM', [BarangController::class, 'storeM'])->name('barang.storeM');
@@ -65,21 +54,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/barang/masuk-keluar/{encryptedId}', [BarangController::class, 'indexBarangMKbyID'])->name('barang.indexBarangMKbyID');
     Route::post('/barang/masuk-keluar/store', [BarangController::class, 'storeMasukKeluar'])->name('barang.storeMasukKeluar');
     Route::put('/barang/masuk-keluar/edit', [BarangController::class, 'updateMasukKeluar'])->name('barang.updateMasukKeluar');
-    Route::get('/barang/data-barang', [BarangController::class, 'indexDataBarang'])->name('barang.indexDataBarang');
     Route::post('/barang/data-barang/store', [BarangController::class, 'storeDataBarang'])->name('barang.storeDataBarang');
     Route::put('/barang/data-barang/edit', [BarangController::class, 'updateDataBarang'])->name('barang.updateDataBarang');
     Route::get('/barang/satuan', [BarangController::class, 'indexSatuan'])->name('barang.indexSatuan');
     Route::post('/barang/satuan/store', [BarangController::class, 'storeSatuan'])->name('barang.storeSatuan');
     Route::put('/barang/satuan/edit', [BarangController::class, 'updateSatuan'])->name('barang.updateSatuan');
-    // Route::put('/stok-barang/delete/{id}', [BarangController::class, 'delete'])->name('stok-barang.delete');
-
+    //Bahan
     Route::get('/bahan/master', [BahanController::class, 'index'])->name('bahan.index');
-    Route::get('/bahan/masuk-keluar', [BahanController::class, 'indexMasukKeluar'])->name('bahan.indexMasukKeluar');
 
-    Route::get('/bahan/bahan-awal', [BahanController::class, 'indexBahanAwal'])->name('bahan.indexBahanAwal');
-    Route::post('/bahan/bahan-awal/store', [BahanController::class, 'storeBahanAwal'])->name('bahan.storeBahanAwal');
-    Route::put('/bahan/bahan-awal/edit', [BahanController::class, 'updateBahanAwal'])->name('bahan.updateBahanAwal');
-    Route::put('/bahan/bahan-awal/delete', [BahanController::class, 'deleteBahanAwal'])->name('bahan.deleteBahanAwal');
+    Route::post('/bahanAwal/save', [BahanController::class, 'saveBahanAwal'])->name('bahanAwal.save');
+    Route::post('/bahanAkhir/save', [BahanController::class, 'saveBahanAkhir'])->name('bahanAkhir.save');
 
     Route::get('/bahan/data-bahan', [BahanController::class, 'indexDataBahan'])->name('bahan.indexDataBahan');
     Route::post('/bahan/data-bahan/store', [BahanController::class, 'storeDataBahan'])->name('bahan.storeDataBahan');
@@ -89,24 +73,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bahan/satuan', [BahanController::class, 'indexSatuan'])->name('bahan.indexSatuan');
     Route::post('/bahan/satuan/store', [BahanController::class, 'storeSatuan'])->name('bahan.storeSatuan');
     Route::put('/bahan/satuan/edit', [BahanController::class, 'updateSatuan'])->name('bahan.updateSatuan');
-    Route::get('/bahan/history', [BahanController::class, 'indexHistory'])->name('bahan.indexHistory');
 
     Route::get('/bahan/masuk-keluar', [BahanController::class, 'indexMasukKeluar'])->name('bahan.indexMasukKeluar');
     Route::get('/bahan/masuk-keluar/{encryptedId}', [BahanController::class, 'indexBahanMKbyID'])->name('bahan.indexBahanMKbyID');
     Route::post('/bahan/master/storeM', [BahanController::class, 'storeM'])->name('bahan.storeM');
     Route::post('/bahan/master/storeK', [BahanController::class, 'storeK'])->name('bahan.storeK');
-    Route::post('/bahan/masuk-keluar/store', [BahanController::class, 'inputStore'])->name('historyBahan.store');
-    Route::put('/bahan/masuk-keluar/update/', [BahanController::class, 'inputUpdate'])->name('historyBahan.update');
-    Route::put('/bahan/masuk-keluar/delete/{id}', [BahanController::class, 'inputDelete'])->name('historyBahan.delete');
-
-    Route::get('/stock-opname', [StockOpnameController::class, 'index'])->name('stock-opname');
-    Route::get('/stock-opname/{bahan_id}/edit', [StockOpnameController::class, 'edit']);
-    Route::put('/stock-opname/{bahan_id}/update', [StockOpnameController::class, 'update'])->name('stock-opname.update');
-    Route::delete('/stock-opname/{bahan_akhir_id}/delete', [StockOpnameController::class, 'delete'])->name('stock-opname.delete');
-    Route::get('/stock-opname/simpan', [StockOpnameController::class, 'simpan'])->name('stock-opname.simpan');
-    Route::post('/stock-opname/simpan/store', [StockOpnameController::class, 'simpanDataBaru'])->name('stock-opname.simpan.store');
-
-
 
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');
@@ -118,29 +89,14 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/transaksi/delete/{id}', [TransaksiController::class, 'destroy'])->name('transaksi.delete');
     Route::put('/transaksi/updateTransaksi/{id}', [TransaksiController::class, 'updateTransaksi'])->name('transaksi.updateTransaksi');
 
-
-
     // Lainnya
-    Route::get('/log-activities', [LogActivityController::class, 'index'])->name('log-activities');
     Route::get('/protected/user-data', [UserController::class, 'index'])->name('user.index');
     Route::get('/protected/user-data/register', [UserController::class, 'register'])->name('user-data.register');
     Route::post('/protected/user-data/registerStore', [UserController::class, 'registerStore'])->name('user-data.registerStore');
     Route::get('/protected/user/{id}', [UserController::class, 'getEmail'])->name('user.getEmail');
     Route::put('/protected/user/{id}/delete', [UserController::class, 'delete'])->name('user.delete');
 
-
-    // Dashboard routes
-    // Route::get('/laporan', [DashboardController::class, 'laporan'])->name('dashboard.laporan');
-    Route::get('/laporan/print', [DashboardController::class, 'print'])->name('dashboard.laporan.print');
-    Route::post('/laporan', [DashboardController::class, 'filter'])->name('dashboard.laporan.filter');
-
     // Resource routes
-    Route::resource('/stock-opname', \App\Http\Controllers\Admin\StockOpnameController::class);
     Route::resource('/daftar-menu', \App\Http\Controllers\Admin\MenuController::class);
     Route::resource('/transaksi', \App\Http\Controllers\Admin\TransaksiController::class);
-    
-
 });
-
-Auth::routes();
-

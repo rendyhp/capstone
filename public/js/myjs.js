@@ -18,17 +18,10 @@ toggleDropdown(
     [
         "/barang/master",
         "/barang/masuk-keluar",
-        "/barang/data-barang",
         "/barang/satuan",
-        "/barang/history",
         "/bahan/master",
-        "/bahan/masuk-keluar",
         "/bahan/data-bahan",
-        "/bahan/bahan-awal",
         "/bahan/satuan",
-        "/bahan/history",
-
-        "/stock-opname",
     ],
     "stokDropdownMenu",
     "stokMasterDropdown"
@@ -40,7 +33,7 @@ toggleDropdown(
     "menuTransaksiDropdown"
 );
 toggleDropdown(
-    ["/log-activities", "/protected/user-data"],
+    ["/protected/user-data"],
     "lainnyaDropdownMenu",
     "lainnyaDropdown"
 );
@@ -140,6 +133,14 @@ $(document).on("click", ".btn_editbarang", function (e) {
 
 ///////////////////////////////////////////////
 
+$(document).on("click", "#barangModal2", function (e) {
+    $("#barangModal2").modal("show");
+});
+
+
+
+//////////////////////////////////////////////
+
 $(document).on("click", ".btn_editsatuanbarang", function (e) {
     var id = $(this).data("id");
     var name = $(this).data("name");
@@ -220,6 +221,33 @@ $(document).on("click", ".btn_editbahan", function (e) {
     $("#editBarangModal").modal("toggle");
 });
 
+/////////////////////////////////////////
+
+$(document).on("click", ".btn_editbahan2", function (e) {
+    var id2 = $(this).data("id");
+    var name2 = $(this).data("name");
+    var description2 = $(this).data("description");
+    var minimum2 = $(this).data("minimum");
+    var satuan_id2 = $(this).data("satuan_id");
+
+    if (!description2 || description2.trim() === "") {
+        description2 = "-";
+    }
+
+    console.log(id2, name2, description2, minimum2, satuan_id2);
+
+    var formattedMinimum2 = minimum2 % 1 === 0 ? parseInt(minimum2) : minimum2;
+
+    $("#txtid2").val(id2);
+    $("#txtname2").val(name2);
+    $("#txtdescription2").val(description2);
+    $("#txtminimum2").val(formattedMinimum2);
+    $("#txtsatuan_id2").val(satuan_id2);
+
+    $("#editBarangModal2").modal("toggle");
+});
+
+
 ////////////////////////////////////////////////
 
 $(document).on("click", ".btn_editstokbahan", function (e) {
@@ -237,25 +265,6 @@ $(document).on("click", ".btn_editstokbahan", function (e) {
     $("#txtjumlah").val(formattedJumlah);
 
     $("#txtsatuan_name").val(satuan_name);
-
-    $("#editBarangModal").modal("toggle");
-});
-
-////////////////////////////////////////////////////
-
-$(document).on("click", ".btn_editbahan_akhir", function (e) {
-    var id = $(this).data("id");
-    var date = $(this).data("date");
-    var bahan_id = $(this).data("bahan_id");
-    var jumlah = $(this).data("jumlah");
-
-    console.log(id, name, description, minimum, satuan_id);
-    var formattedJumlah = jumlah % 1 === 0 ? parseInt(jumlah) : jumlah;
-
-    $("#txtid").val(id);
-    $("#txtdate").val(date);
-    $("#txtbahan_id").val(bahan_id);
-    $("#txtjumlah").val(formattedJumlah);
 
     $("#editBarangModal").modal("toggle");
 });
@@ -509,143 +518,6 @@ $(document).ready(function () {
 });
 
 ////////////////////////////////////////////////////////////
-
-$(document).ready(function () {
-    const bahanOptionsTemplate = document.querySelector("#bahanOptions select");
-
-    function renderBahanAkhirRow(index) {
-        const bahanSelect = bahanOptionsTemplate.cloneNode(true);
-        bahanSelect.name = `bahan_akhir[${index}][bahan_id]`;
-        bahanSelect.classList.add("form-select", "bahan-dropdown");
-
-        const jumlahInput = document.createElement("input");
-        jumlahInput.type = "number";
-        jumlahInput.name = `bahan_akhir[${index}][jumlah]`;
-        jumlahInput.placeholder = "Jumlah";
-        jumlahInput.required = true;
-        jumlahInput.step = "0.001";
-        jumlahInput.min = "0";
-        jumlahInput.max = "99999999999.999";
-        jumlahInput.className = "form-control mx-2";
-        jumlahInput.style.maxWidth = "120px";
-
-        const satuanInput = document.createElement("input");
-        satuanInput.type = "text";
-        satuanInput.placeholder = "Satuan";
-        satuanInput.className = "form-control satuan-input";
-        satuanInput.disabled = true;
-
-        const removeBtn = document.createElement("button");
-        removeBtn.type = "button";
-        removeBtn.className = "btn btn-danger removeBahanAkhir";
-        removeBtn.textContent = "-";
-
-        const row = document.createElement("div");
-        row.className = "input-group mb-2 bahan-item";
-        row.appendChild(bahanSelect);
-        row.appendChild(jumlahInput);
-        row.appendChild(satuanInput);
-        row.appendChild(removeBtn);
-
-        return row;
-    }
-
-    function refreshEventListeners($container) {
-        $container.on("change", ".bahan-dropdown", function () {
-            const satuan = $(this).find("option:selected").data("satuan") || "";
-            $(this).closest(".bahan-item").find(".satuan-input").val(satuan);
-        });
-
-        $container.on("click", ".removeBahanAkhir", function () {
-            $(this).closest(".bahan-item").remove();
-        });
-    }
-
-    $("#addBahanAkhir").on("click", function () {
-        const container = $("#bahanAkhirContainer");
-        const index = container.find(".bahan-item").length;
-        container.append(renderBahanAkhirRow(index));
-    });
-
-    refreshEventListeners($("#bahanAkhirContainer"));
-});
-
-////////////////////////////////////////////
-
-$(document).on("click", ".btn_editbahan_akhir", function () {
-    var bahanId = $(this).data("id");
-    var modal = $("#editBarangModal");
-
-    $("#editBahanAkhirId").val(bahanId);
-
-    $.ajax({
-        url: "/your-endpoint/" + bahanId,
-        method: "GET",
-        success: function (data) {
-            $("#editDate").val(data.date);
-            $("#editBahanAkhirContainer").empty();
-
-            data.bahans.forEach(function (bahan) {
-                var bahanHtml = `
-                    <div class="bahan-row">
-                        <div class="mb-3">
-                            <label class="form-label text-dark fw-bold">Bahan</label>
-                            <select class="form-select bahan-select" data-id="${bahan.id}" name="bahans[]">
-                                <option value="${bahan.id}" selected>${bahan.name}</option>
-                            </select>
-                            <label class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="number" class="form-control bahan-quantity" name="quantities[]" value="${bahan.quantity}" required>
-                            <input type="hidden" name="bahanIds[]" value="${bahan.id}">
-                        </div>
-                    </div>
-                `;
-                $("#editBahanAkhirContainer").append(bahanHtml);
-            });
-        },
-        error: function () {
-            alert("Error loading bahan data.");
-        },
-    });
-
-    modal.modal("show");
-});
-
-$("#addEditBahanAkhir").click(function () {
-    var newRow = `
-        <div class="bahan-row">
-            <div class="mb-3">
-                <label class="form-label text-dark fw-bold">Bahan</label>
-                <select class="form-select bahan-select" name="bahans[]">
-                    
-                </select>
-                <label class="form-label text-dark fw-bold">Jumlah</label>
-                <input type="number" class="form-control bahan-quantity" name="quantities[]" required>
-            </div>
-        </div>
-    `;
-    $("#editBahanAkhirContainer").append(newRow);
-});
-
-$("#editBahanAkhir").submit(function (e) {
-    e.preventDefault();
-
-    var formData = $(this).serialize();
-
-    $.ajax({
-        url: "/your-endpoint/" + $("#editBahanAkhirId").val(),
-        method: "PUT",
-        data: formData,
-        success: function () {
-            alert("Bahan Akhir successfully updated.");
-            $("#editBarangModal").modal("hide");
-        },
-        error: function () {
-            alert("Error saving Bahan Akhir.");
-        },
-    });
-});
-
-////////////////////////////////////////////////////
 
 $("#barangModal").on("shown.bs.modal", function () {
     const menuSelect = document.getElementById("menu_id");

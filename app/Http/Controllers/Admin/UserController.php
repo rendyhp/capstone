@@ -81,11 +81,9 @@ class UserController extends Controller
 
     public function registerStore(Request $request)
     {
-        // Cek autentikasi dan role pengguna yang login
         $user = Auth::user();
         $role = $user->role;
 
-        // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
@@ -94,7 +92,6 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Logika role
         if ($role == 'OWNER') {
             // OWNER bisa membuat role OWNER, MANAGER, atau STAFF
             if (!in_array($request->role, ['OWNER', 'MANAJER', 'STAF'])) {
@@ -119,11 +116,8 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Redirect ke protected/user-data dengan pesan sukses
         return redirect('/protected/user-data')->with('message', 'Registrasi Akun ' . $user->name . ' Berhasil!');
     }
-
-
 
     public function delete(Request $request)
     {
@@ -152,50 +146,6 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Data ' . $targetUser->name . ' berhasil dihapus');
     }
 
-
-
-    public function configIndex()
-    {
-        $users = User::latest()->get();
-
-        return view('user.index', compact('users'));
-    }
-
-    public function configCreate()
-    {
-        return view('pages.admin.user.register');
-    }
-
-    public function configStore(Request $request)
-    {
-        // Define validation rules
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users'],
-            'username' => ['required', 'string', 'min:8', 'max:16', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'confirm' => ['same:password'],
-            'role' => ['required', Rule::in(['ADMIN', 'PETUGAS'])], // Use Rule::in for enum validation
-        ]);
-
-        // Check if validation fails
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        // Create user
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'username' => $request->username,
-            'password' => bcrypt($request->password), // Securely hash the password
-            'role' => $request->role
-        ]);
-
-        // Return response
-        return redirect()->route('admin.user-config')->with('create', 'User behasil ditambahkan');
-    }
-
     public function clearTmp()
     {
         $directory = public_path('upload/tmp/');
@@ -203,43 +153,4 @@ class UserController extends Controller
 
         return redirect()->back();
     }
-
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-
-    public function logIndex(Request $request)
-    {
-        $logs = LogActivity::logActivityLists();
-
-        if ($request->ajax()) {
-            return datatables()->of($logs)->toJson();
-        }
-
-        return view('pages.admin.user.logIndex', compact('logs'));
-    }
-
-    public function logDelete(Request $request)
-    {
-        $id = $request->id;
-
-        $logs = LogActivityModel::where('id', $id)->firstOrFail();
-        $subject = $logs->subject;
-        // Lakukan penghapusan permanen menggunakan Eloquent
-        LogActivityModel::where('id', $id)->forceDelete();
-        // Redirect kembali ke halaman sebelumnya
-        return Redirect::back()->with('delete', 'Log "' . $subject . '" berhasil dihapus permanen');
-    }
-
-
-
-
-
-
-
-
-
 }

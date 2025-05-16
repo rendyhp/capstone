@@ -9,12 +9,10 @@ use App\Models\BarangKeluar;
 use App\Models\BarangMasuk;
 use App\Models\SatuanBarang;
 use Illuminate\Http\Request;
-use App\Models\TemporaryFile;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 
 use App\Helpers\LogActivity;
@@ -99,7 +97,6 @@ class BarangController extends Controller
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
-
 
     public function indexMasukKeluar(Request $request)
     {
@@ -342,13 +339,6 @@ class BarangController extends Controller
         }
     }
 
-
-    public function create()
-    {
-
-        return view('barang');
-    }
-
     public function storeM(Request $request)
     {
         $validated = $request->validate([
@@ -390,7 +380,6 @@ class BarangController extends Controller
 
         return redirect()->back()->with('success', 'Stok berhasil dikurangi.');
     }
-
 
     public function storeDataBarang(Request $request)
     {
@@ -435,12 +424,7 @@ class BarangController extends Controller
                 'user_id' => Auth::id(),
                 'date' => $request->date,
             ]);
-
-
         }
-
-        // Panggil fungsi logAdd()
-        // LogActivity::addToLog('Create Barang "' . $request->input('name') . '"');
 
         $dataPerPage = 20;
         $data = DB::table('barangs')->paginate($dataPerPage);
@@ -467,9 +451,6 @@ class BarangController extends Controller
         $Satuan->name = $request->input('name');
         $Satuan->save();
 
-        // Panggil fungsi logAdd()
-        // LogActivity::addToLog('Create Barang "' . $request->input('name') . '"');
-
         $dataPerPage = 20;
         $data = DB::table('satuan_barangs')->paginate($dataPerPage);
         $lastPage = $data->lastPage();
@@ -481,12 +462,6 @@ class BarangController extends Controller
     public function show($id)
     {
 
-    }
-
-    public function editDataBarang(Barang $barang)
-    {
-        $Barang = Barang::findOrFail($barang->id);
-        return view('barang.indexDataBarang', compact('Barang'));
     }
 
     public function updateDataBarang(Request $request, Barang $barangs)
@@ -544,20 +519,5 @@ class BarangController extends Controller
         $barang->save();
 
         return redirect('/stok-barang')->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
-    }
-
-    public function deletePermanent(Request $request)
-    {
-        $slug = $request->slug;
-
-        $barang = Barangs::where('slug', $slug)->firstOrFail();
-        $name = $barang->title;
-        // Lakukan penghapusan permanen menggunakan Eloquent
-        Barang::where('slug', $slug)->forceDelete();
-        // Panggil fungsi logAdd()
-        LogActivity::addToLog('Delete Permanen Barang "' . $name . '"');
-
-        // Redirect kembali ke halaman sebelumnya
-        return Redirect::back()->with('delete', 'Dataset "' . $name . '" berhasil dihapus permanen');
     }
 }

@@ -3,29 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Imports\TransaksiImport;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\Menu;
 use Illuminate\Pagination\LengthAwarePaginator;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use App\Models\KomposisiMenu;
-use App\Models\Bahan;
 use App\Models\TransaksiDetail;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Storage;
-
-use Illuminate\Support\Collection;
-
-
 
 class TransaksiController extends Controller
 {
-
-
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -105,12 +93,9 @@ class TransaksiController extends Controller
         // Ambil semua menu untuk modal/edit
         $menus = Menu::with('komposisi.bahan.satuan')->whereNull('deleted_at')->orderBy('name', 'asc')->get();
 
-       
-            return view('transaksi.index', compact('paginated', 'date', 'menus'));
-        
+        return view('transaksi.index', compact('paginated', 'date', 'menus'));
+
     }
-
-
 
     public function importTransaksi(Request $request)
     {
