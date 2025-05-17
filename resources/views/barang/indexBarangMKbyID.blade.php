@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('StokBarang', 'active')
 @section('container')
+@section('title', "Masuk/Keluar $barangs->name | BdiM’s Stock")
 
     @php
         $currentUrl = request()->path();

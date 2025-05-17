@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>BdiM's Stock</title>
+    <title>@yield('title', "BdiM’s Stock")</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -18,7 +18,6 @@
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
         rel="stylesheet">
 
-    <!-- <link href="fontawesome/css/all.min.css" rel="stylesheet"> -->
     <link href="{{ url('fontawesome/css/all.min.css') }}" rel="stylesheet">
     <link href="{{ url('/font/bootstrap-icons.css') }}" rel="stylesheet">
 
@@ -33,6 +32,8 @@
 
     <!-- CSS Main -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+    @stack('addStyle')
 
 
     <!-- =======================================================
@@ -82,7 +83,7 @@
                                 @endauth
 
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();">
+                                                                    document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
 
@@ -96,25 +97,28 @@
             </nav><!-- .navbar -->
         </div>
     </header>
+
+    @stack('addScript')
+    <script>
+        const dropdownToggle = document.getElementById('navbarDropdown');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+        let isDropdownOpen = false;
+
+        dropdownToggle.addEventListener('click', function () {
+            if (!isDropdownOpen) {
+                dropdownMenu.classList.add('show');
+                dropdownToggle.setAttribute('aria-expanded', 'true');
+                isDropdownOpen = true;
+            } else {
+                dropdownMenu.classList.remove('show');
+                dropdownToggle.setAttribute('aria-expanded', 'false');
+                isDropdownOpen = false;
+            }
+        });
+    </script>
+
 </body>
 @yield('container')
 
 </html>
-<script>
-    const dropdownToggle = document.getElementById('navbarDropdown');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-
-    let isDropdownOpen = false;
-
-    dropdownToggle.addEventListener('click', function () {
-        if (!isDropdownOpen) {
-            dropdownMenu.classList.add('show');
-            dropdownToggle.setAttribute('aria-expanded', 'true');
-            isDropdownOpen = true;
-        } else {
-            dropdownMenu.classList.remove('show');
-            dropdownToggle.setAttribute('aria-expanded', 'false');
-            isDropdownOpen = false;
-        }
-    });
-</script>

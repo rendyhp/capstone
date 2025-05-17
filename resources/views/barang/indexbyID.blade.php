@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('StokBarang', 'active')
 @section('container')
+@section('title', "Barang | BdiM’s Stock")
 
     @php
         $currentUrl = request()->path();
@@ -84,8 +85,8 @@
                                             </label>
                                         </div>
                                         <div class="d-flex gap-2 mb-2">
-                                            <a href="/barang/master/{{ Hashids::encode($barang->id) }}" class="btn btn-outline-secondary btn-sm"
-                                                title="Refresh">
+                                            <a href="/barang/master/{{ Hashids::encode($barang->id) }}"
+                                                class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                         </div>
@@ -135,17 +136,17 @@
         </div>
     </div>
 
-    <script>
+    @push('addScript')
+        <script>
+            const checkbox = document.getElementById('toggleImageColumn');
+            const imageColumns = document.querySelectorAll('.column-gambar');
 
-        const checkbox = document.getElementById('toggleImageColumn');
-        const imageColumns = document.querySelectorAll('.column-gambar');
-
-        checkbox.addEventListener('change', function () {
-            imageColumns.forEach(col => {
-                col.style.display = this.checked ? '' : 'none';
+            checkbox.addEventListener('change', function () {
+                imageColumns.forEach(col => {
+                    col.style.display = this.checked ? '' : 'none';
+                });
             });
-        });
-
-    </script>
+        </script>
+    @endpush
 
 @endsection

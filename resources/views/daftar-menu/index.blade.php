@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('DaftarMenu', 'active')
 @section('container')
+@section('title', "Daftar Menu | BdiM’s Stock")
 
     <div class="container">
         <div class="row">

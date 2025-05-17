@@ -1,11 +1,11 @@
 @extends('layouts.main')
 @section('StokBahan', 'active')
 @section('container')
+@section('title', "History Input $bahans->name | BdiM’s Stock")
 
     @php
         $currentUrl = request()->path();
     @endphp
-
 
     <div class="container">
         <div class="row">
@@ -16,8 +16,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a class="" href="/bahan/masuk-keluar">Stok Bahan - Masuk
-                                        Keluar</a></li>
+                                <li class="breadcrumb-item"><a class="" href="/bahan/master">Stok Bahan - Manajemen Bahan</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">{{ $bahans->name }}</li>
                             </ol>
                         </nav>
@@ -54,18 +53,14 @@
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
                 Manajemen Bahan
             </a>
-
-            
             <a href="/bahan/data-bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/data-bahan') ? 'active' : '' }}">
                 Master Bahan
             </a>
-
             <a href="/bahan/satuan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/satuan') ? 'active' : '' }}">
                 Satuan
             </a>
-
         </div>
         <div class="row">
             <div class="col-xl-12">
@@ -77,13 +72,10 @@
                         <div class="table-responsive">
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
-
                                     <div class="mb-3"> <a href="/bahan/master">
                                             <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
                                         </a>
                                     </div>
-
-
                                     <!-- Tombol Tambah -->
                                     <button type="button" class="btn btn-outline-success btnTambahStok"
                                         data-id="{{ $bahans->id ?? 'NULL' }}" data-name="{{ $bahans->name ?? 'NULL'}}"
@@ -91,7 +83,6 @@
                                         data-bs-target="#barangModalM">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Stok {{ $bahans->name }}
                                     </button>
-
                                     <div class="col-sm-2 float-end mt-3">
                                         <div class="d-flex gap-2">
                                             <a href="/bahan/masuk-keluar/{{ Hashids::encode($bahans->id) }}"
@@ -195,6 +186,5 @@
             </form>
         </div>
     </div>
-    
 
 @endsection

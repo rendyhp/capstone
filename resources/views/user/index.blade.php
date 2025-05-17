@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('UserData', 'active')
 @section('container')
+@section('title', "User Data | BdiM’s Stock")
 
     @php
         $currentUrl = request()->path();
@@ -151,40 +152,40 @@
         </div>
     </div>
 
-    <script>
-        document.querySelectorAll('.toggle-email').forEach(button => {
-            button.addEventListener('click', function () {
-                const userId = this.getAttribute('data-user-id');
-                const td = this.closest('td');
-                const masked = td.querySelector('.masked-email');
-                const full = td.querySelector('.full-email');
-                const icon = this.querySelector('i'); // Ambil ikon dari tombol
+    @push('addScript')
+        <script>
+            document.querySelectorAll('.toggle-email').forEach(button => {
+                button.addEventListener('click', function () {
+                    const userId = this.getAttribute('data-user-id');
+                    const td = this.closest('td');
+                    const masked = td.querySelector('.masked-email');
+                    const full = td.querySelector('.full-email');
+                    const icon = this.querySelector('i'); // Ambil ikon dari tombol
 
-                if (full.textContent.trim()) {
-                    masked.classList.toggle('d-none');
-                    full.classList.toggle('d-none');
+                    if (full.textContent.trim()) {
+                        masked.classList.toggle('d-none');
+                        full.classList.toggle('d-none');
 
-                    icon.classList.toggle('fa-eye');
-                    icon.classList.toggle('fa-eye-slash');
-                } else {
-                    fetch(`/protected/user/${userId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            full.textContent = data.email;
-                            masked.classList.add('d-none');
-                            full.classList.remove('d-none');
+                        icon.classList.toggle('fa-eye');
+                        icon.classList.toggle('fa-eye-slash');
+                    } else {
+                        fetch(`/protected/user/${userId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                full.textContent = data.email;
+                                masked.classList.add('d-none');
+                                full.classList.remove('d-none');
 
-                            icon.classList.remove('fa-eye');
-                            icon.classList.add('fa-eye-slash');
-                        })
-                        .catch(() => {
-                            alert('Gagal memuat email.');
-                        });
-                }
+                                icon.classList.remove('fa-eye');
+                                icon.classList.add('fa-eye-slash');
+                            })
+                            .catch(() => {
+                                alert('Gagal memuat email.');
+                            });
+                    }
+                });
             });
-        });
-    </script>
-
-
+        </script>
+    @endpush
 
 @endsection

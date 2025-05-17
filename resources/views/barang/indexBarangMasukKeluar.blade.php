@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('StokBarang', 'active')
 @section('container')
+@section('title', "Barang Masuk/Keluar | BdiM’s Stock")
 
     @php
         $currentUrl = request()->path();
@@ -140,16 +141,5 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
 
 @endsection

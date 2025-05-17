@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title class="hide-on-print">BdiM's Stock</title>
+    <title>@yield('title', "BdiM’s Stock")</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -39,6 +39,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <link href="{{ url('css/mycss.css') }}" rel="stylesheet">
+    @stack('addStyle')
 </head>
 
 <body>
@@ -237,8 +238,9 @@
         <!-- Content End -->
     </div>
 
-    <!-- JavaScript Libraries -->
+    @stack('addScript')
 
+    <!-- JavaScript Libraries -->
     <script src="{{ url('js/jquery-3.4.1.min.js')}}"></script>
     <script src="{{ url('js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{ url('lib/chart/chart.min.js')}}"></script>

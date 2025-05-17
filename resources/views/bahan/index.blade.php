@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('StokBahan', 'active')
 @section('container')
+@section('title', 'Manajemen Bahan | Bdim’s Stock')
 
     @php
         $currentUrl = request()->path();
@@ -127,7 +128,7 @@
                                                         </td>
                                                         <td>{{ $bahan->name }}</td>
 
-                                                        <td class="text-end editable {{ $bahan->awal_manual ? 'bg-warning-subtle' : '' }}"
+                                                        <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
                                                             ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
@@ -144,7 +145,7 @@
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
 
-                                                        <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-warning-subtle' : '' }}"
+                                                        <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
                                                             ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
@@ -164,9 +165,6 @@
                                                                 data-bs-toggle="modal" data-bs-target="#barangModalM">
                                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                                             </button>
-
-
-
 
                                                             <button type="button" class="btn btn-outline-secondary"
                                                                 onclick="window.location.href='{{ route('bahan.indexBahanMKbyID', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
@@ -238,7 +236,7 @@
                                                     </td>
                                                     <td>{{ $bahan->name }}</td>
 
-                                                    <td class="text-end editable {{ $bahan->awal_manual ? 'bg-warning-subtle' : '' }}"
+                                                    <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
                                                         ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
                                                         {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                     </td>
@@ -255,7 +253,7 @@
                                                         {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
                                                     </td>
 
-                                                    <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-warning-subtle' : '' }}"
+                                                    <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
                                                         ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
                                                         {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
                                                     </td>
@@ -302,32 +300,38 @@
     <!-- Input bahan awal dan akhir dengandouble click -->
     <div class="modal fade" id="modalEditJumlah" tabindex="-1" aria-labelledby="modalEditJumlahLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form id="formEditJumlah">
-                @csrf
-                <input type="hidden" name="bahan_id" id="bahan_id">
-                <input type="hidden" name="date" id="date">
-                <input type="hidden" name="type" id="type"> <!-- 'awal' atau 'akhir' -->
-
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalEditJumlahLabel">Edit Jumlah</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <label for="jumlah_input">Jumlah:</label>
-                        <input type="number" step="0.001" min="0" id="jumlah_input" name="jumlah"
-                            class="form-control number0" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    </div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 text-primary fw-bold" id="modalEditJumlahLabel">Edit Jumlah</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </form>
+                <div class="modal-body">
+                    <form id="formEditJumlah">
+                        @csrf
+                        <input type="hidden" name="bahan_id" id="bahan_id">
+                        <input type="hidden" name="date" id="date">
+                        <input type="hidden" name="type" id="type">
+
+                        <div class="mb-3">
+                            <label for="jumlah_input" class="form-label">Jumlah:</label>
+                            <input type="number" step="0.001" min="0" id="jumlah_input" name="jumlah"
+                                class="form-control number0" required>
+                        </div>
+
+                        <div class="modal-footer d-flex justify-content-between">
+                            <!-- Tombol Reset -->
+                            <button type="button" class="btn btn-danger" id="resetJumlahBtn">Reset</button>
+
+                            <!-- Tombol Simpan -->
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Barang Masuk -->
+    <!-- Bahan Masuk -->
     <div class="modal fade" id="barangModalM" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="container modal-dialog">
             <div class="modal-content">
@@ -364,7 +368,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Catatan barang masuk"></textarea>
+                                name="keterangan" rows="4" placeholder="Misalnya: Cash"></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -417,8 +421,8 @@
                     if (data.success) {
                         alert('Data berhasil disimpan!');
                         location.reload(); // refresh page supaya update data muncul
-                    } else if (data.error2){
-                        alert('Hanya bisa edit data pada tanggal 1')
+                    } else if (data.error2) {
+                        alert('Hanya bisa edit Bahan Awal pada Tanggal 01')
                     } else {
                         alert('Gagal menyimpan data');
                     }
@@ -426,6 +430,40 @@
                 .catch(err => {
                     console.error(err);
                     alert('Terjadi kesalahan.');
+                });
+        });
+    </script>
+    <script>
+        document.getElementById('resetJumlahBtn').addEventListener('click', function () {
+            const bahan_id = document.getElementById('bahan_id').value;
+            const date = document.getElementById('date').value;
+            const type = document.getElementById('type').value;
+            const _token = document.querySelector('input[name="_token"]').value;
+
+            if (!confirm('Yakin ingin menghapus jumlah ini?')) return;
+
+            let url = type === 'awal' ? '/bahanAwal/delete' : '/bahanAkhir/delete';
+
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': _token
+                },
+                body: JSON.stringify({ bahan_id, date })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Data berhasil dihapus!');
+                        location.reload();
+                    } else {
+                        alert('Data tidak ditemukan.');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Terjadi kesalahan saat menghapus data.');
                 });
         });
     </script>

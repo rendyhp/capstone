@@ -1,7 +1,10 @@
 @extends('layouts.header')
 @section('UserData', 'active')
 @section('container')
-  <style>
+@section('title', 'Register | Bdim’s Stock')
+
+  @push('addStyle')
+    <style>
     #moving-image {
     animation-name: moveImage;
     animation-duration: 3s;
@@ -52,6 +55,7 @@
 
     .form-container {
     border: 2px solid #ccc;
+    margin-top: 6vh;
     border-radius: 10px;
     padding: 20px;
     display: flex;
@@ -59,6 +63,7 @@
     align-items: center;
     overflow-y: auto;
     max-height: 80vh;
+    width: 55vh;
     }
 
 
@@ -81,7 +86,8 @@
     background-color: #f2dede;
     border-color: #ebccd1;
     }
-  </style>
+    </style>
+  @endpush
 
   <section class="vh-100">
     <div class="container-fluid h-custom">
@@ -104,8 +110,6 @@
       {{ session('message') }}
       </div>
       @endif
-
-        {{-- Name --}}
         <div class="form-floating">
         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
           value="{{ old('name') }}" placeholder="Nama" style="border-radius: 20px; width: 400px;" required
@@ -115,8 +119,6 @@
       <div class="text-danger small mt-1">{{ $message }}</div>
       @enderror
         </div>
-
-        {{-- Username --}}
         <div class="form-floating mt-3">
         <input type="text" class="form-control @error('username') is-invalid @enderror" name="username"
           value="{{ old('username') }}" placeholder="Username" style="border-radius: 20px; width: 400px;" required
@@ -126,8 +128,6 @@
       <div class="text-danger small mt-1">{{ $message }}</div>
       @enderror
         </div>
-
-        {{-- Email --}}
         <div class="form-floating mt-3">
         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
           value="{{ old('email') }}" placeholder="Email" style="border-radius: 20px; width: 400px;" required
@@ -137,8 +137,6 @@
       <div class="text-danger small mt-1">{{ $message }}</div>
       @enderror
         </div>
-
-        {{-- Role --}}
         <div class="form-floating mt-3">
         <select class="form-select @error('role') is-invalid @enderror" name="role"
           style="border-radius: 20px; width: 400px;" required autocomplete="off">
@@ -151,7 +149,7 @@
       @elseif (Auth::user()->role == 'MANAJER')
         <option value="STAF" {{ old('role') == 'STAF' ? 'selected' : '' }}>STAF</option>
       @else
-        {{-- Jika role bukan OWNER atau MANAJER, jangan tampilkan opsi apapun --}}
+
       @endif
         </select>
         <label for="role">Role</label>
@@ -160,8 +158,6 @@
       @enderror
         </div>
 
-
-        {{-- Password --}}
         <div class="form-floating mt-3">
         <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
           name="password" placeholder="Password" style="border-radius: 20px; width: 400px;" required
@@ -171,12 +167,11 @@
       <div class="text-danger small mt-1">{{ $message }}</div>
       @enderror
         <!-- <button type="button" id="togglePassword" class="btn btn-outline-secondary"
-        style="position: absolute; right: 10px; top: 30px;">
-        Show
+      style="position: absolute; right: 10px; top: 30px;">
+      Show
       </button> -->
         </div>
 
-        {{-- Confirm Password --}}
         <div class="form-floating mt-3">
         <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm Password"
           style="border-radius: 20px; width: 400px;" required autocomplete="off">
@@ -189,7 +184,8 @@
         {{ __('Register') }}
         </button>
 
-        <p class="small fw-bold mt-3">Kembali <a href="/protected/user-data" class="link-danger">ke halaman user data</a></p>
+        <p class="small fw-bold mt-3">Kembali <a href="/protected/user-data" class="link-danger">ke halaman user
+          data</a></p>
 
         </p>
       </form>
@@ -198,15 +194,17 @@
     </div>
   </section>
 
-  <script>
+  @push('addScript')
+    <script>
     document.getElementById('togglePassword').addEventListener('click', function (e) {
     const passwordField = document.getElementById('password');
     const passwordFieldType = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
     passwordField.setAttribute('type', passwordFieldType);
 
-    // Toggle button text
+
     this.textContent = passwordFieldType === 'password' ? 'Show' : 'Hide';
     });
-  </script>
+    </script>
+  @endpush
 
 @endsection

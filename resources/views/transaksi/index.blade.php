@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('Transaksi', 'active')
 @section('container')
+@section('title', "Transaksi | BdiM’s Stock")
 
     <div class="container">
         <div class="row">
@@ -69,9 +70,9 @@
                             <table id="tableTransaksi" class="table table-bordered text-dark table-sm">
                                 <div class="mb-3">
                                     <!-- Tombol trigger modal -->
-                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                    <button type="button" class="btn btn-outline-success me-2" data-bs-toggle="modal"
                                         data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah menu
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Transaksi
                                     </button>
                                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                                         data-bs-target="#importModal">
@@ -167,32 +168,6 @@
         </div>
     </div>
 
-
-
-    <!-- Modal Upload Excel -->
-    <div class="modal fade" id="uploadExcelModal" tabindex="-1" aria-labelledby="uploadExcelModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form method="POST" action="{{ route('transaksi.import') }}" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="uploadExcelModalLabel">Upload File Excel / CSV</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-
-                    <div class="modal-body">
-                        <input type="file" class="form-control" name="file" accept=".csv,.xlsx" required>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Upload</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
     <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="container modal-dialog">
             <div class="modal-content">
@@ -210,7 +185,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="menu_id" class="form-label text-dark fw-bold">Nama Menu</label>
+                            <label for="menu_id" class="form-label text-dark fw-bold">Nama Transaksi</label>
                             <select class="form-control select2" required id="menu_id" name="menu_id">
                                 <option value="">-- Pilih Menu --</option>
                                 @foreach ($menus as $menu)
@@ -337,165 +312,157 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('fileInput').addEventListener('change', handleFile, false);
-        document.getElementsByName('mode').forEach(radio => {
-            radio.addEventListener('change', toggleModeColumns);
-        });
+    @push('addScript')
+        <script>
+            document.getElementById('fileInput').addEventListener('change', handleFile, false);
+            document.getElementsByName('mode').forEach(radio => {
+                radio.addEventListener('change', toggleModeColumns);
+            });
 
-        let pendingFetches = 0;
+            let pendingFetches = 0;
 
+            function handleFile(e) {
+                const file = e.target.files[0];
+                if (!file) return;
 
-        function handleFile(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
 
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const data = new Uint8Array(e.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+                    const tbody = document.querySelector('#previewTable tbody');
+                    tbody.innerHTML = "";
 
-                const tbody = document.querySelector('#previewTable tbody');
-                tbody.innerHTML = "";
+                    let mode = document.querySelector('input[name="mode"]:checked').value;
+                    const selectedDate = document.querySelector('input[name="date"]').value;
 
-                let mode = document.querySelector('input[name="mode"]:checked').value;
-                const selectedDate = document.querySelector('input[name="date"]').value;
+                    if (rows.length > 1) {
+                        for (let i = 1; i < rows.length; i++) {
+                            const namaMenuExcel = (rows[i][0] || '').trim();
+                            const jumlahBaru = parseInt(rows[i][2] || 0);
 
-                if (rows.length > 1) {
-                    for (let i = 1; i < rows.length; i++) {
-                        const namaMenuExcel = (rows[i][0] || '').trim();
-                        const jumlahBaru = parseInt(rows[i][2] || 0);
+                            if (!namaMenuExcel || jumlahBaru <= 0) continue;
 
-                        if (!namaMenuExcel || jumlahBaru <= 0) continue;
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${i}</td>
+                                <td class="nama-menu">${namaMenuExcel}</td>
+                                <td class="check-cell">⏳</td>
+                                <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
+                                <td>${jumlahBaru}</td>
+                            `;
+                            tbody.appendChild(tr);
 
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
+                            pendingFetches++; // Sebelum fetch
 
-                                            <td>${i}</td>
-                                            <td class="nama-menu">${namaMenuExcel}</td>
-                                            <td class="check-cell">⏳</td>
-                                            <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
-                                            <td>${jumlahBaru}</td>
-                                        `;
-                        tbody.appendChild(tr);
+                            fetch(`/transaksi/jumlah-sebelumnya?menu=${encodeURIComponent(namaMenuExcel)}&date=${selectedDate}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    const sebelumnya = parseInt(data.jumlah || 0);
+                                    const cellJumlah = tr.querySelector('.jumlah-sebelumnya');
+                                    cellJumlah.textContent = sebelumnya;
 
-                        pendingFetches++; // Sebelum fetch
-
-                        fetch(`/transaksi/jumlah-sebelumnya?menu=${encodeURIComponent(namaMenuExcel)}&date=${selectedDate}`)
-                            .then(res => res.json())
-                            .then(data => {
-                                const sebelumnya = parseInt(data.jumlah || 0);
-                                const cellJumlah = tr.querySelector('.jumlah-sebelumnya');
-                                cellJumlah.textContent = sebelumnya;
-
-                                const checkCell = tr.querySelector('.check-cell');
-                                if (data.menu_name && data.menu_name.trim().toLowerCase() === namaMenuExcel.toLowerCase()) {
-                                    checkCell.textContent = '✅';
-                                    tr.classList.remove('table-danger');
-                                    tr.classList.add('table-success');
-                                } else {
-                                    checkCell.textContent = '❌';
-                                    tr.classList.remove('table-success');
+                                    const checkCell = tr.querySelector('.check-cell');
+                                    if (data.menu_name && data.menu_name.trim().toLowerCase() === namaMenuExcel.toLowerCase()) {
+                                        checkCell.textContent = '✅';
+                                        tr.classList.remove('table-danger');
+                                        tr.classList.add('table-success');
+                                    } else {
+                                        checkCell.textContent = '❌';
+                                        tr.classList.remove('table-success');
+                                        tr.classList.add('table-danger');
+                                    }
+                                })
+                                .catch(() => {
+                                    tr.querySelector('.jumlah-sebelumnya').textContent = '-';
+                                    tr.querySelector('.check-cell').textContent = '❌';
                                     tr.classList.add('table-danger');
-                                }
-                            })
-                            .catch(() => {
-                                tr.querySelector('.jumlah-sebelumnya').textContent = '-';
-                                tr.querySelector('.check-cell').textContent = '❌';
-                                tr.classList.add('table-danger');
-                            })
-                            .finally(() => {
-                                pendingFetches--;
-                                if (pendingFetches === 0) {
-                                    document.getElementById('loadingStatus').textContent = 'Selesai memuat semua data.';
-                                }
-                            });
+                                })
+                                .finally(() => {
+                                    pendingFetches--;
+                                    if (pendingFetches === 0) {
+                                        document.getElementById('loadingStatus').textContent = 'Selesai memuat semua data.';
+                                    }
+                                });
+                        }
 
-
+                        document.getElementById('previewTable').style.display = 'table';
                     }
-
-                    document.getElementById('previewTable').style.display = 'table';
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        function toggleModeColumns() {
-            // Kalau memang semua mode pakai kolom yang sama sekarang, cukup tampilkan saja tanpa reload
-            const updateCols = document.querySelectorAll('.preview-update-column');
-            updateCols.forEach(col => col.style.display = '');
-
-            // Tidak perlu reload ulang preview
-        }
-
-
-    </script>
-
-
-
-
-    <script>
-        document.getElementById('uploadForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            let fileInput = document.getElementById('fileInput');
-            if (!fileInput.files.length) {
-                document.getElementById('uploadMessage').innerHTML = '<div class="text-danger">Pilih file terlebih dahulu!</div>';
-                return;
+                };
+                reader.readAsArrayBuffer(file);
             }
 
-            let formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-            formData.append('_token', '{{ csrf_token() }}');
+            function toggleModeColumns() {
 
-            fetch('{{ url("/transaksi/import") }}', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('uploadMessage').innerHTML = '<div class="text-success">' + data.success + '</div>';
-                        setTimeout(() => location.reload(), 1500); // Reload setelah sukses
-                    } else {
-                        document.getElementById('uploadMessage').innerHTML = '<div class="text-danger">' + data.error + '</div>';
-                    }
+                const updateCols = document.querySelectorAll('.preview-update-column');
+                updateCols.forEach(col => col.style.display = '');
+                // Tidak perlu reload ulang preview
+            }
+
+
+        </script>
+        <script>
+            document.getElementById('uploadForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                let fileInput = document.getElementById('fileInput');
+                if (!fileInput.files.length) {
+                    document.getElementById('uploadMessage').innerHTML = '<div class="text-danger">Pilih file terlebih dahulu!</div>';
+                    return;
+                }
+
+                let formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                formData.append('_token', '{{ csrf_token() }}');
+
+                fetch('{{ url("/transaksi/import") }}', {
+                    method: 'POST',
+                    body: formData
                 })
-                .catch(error => console.error('Error:', error));
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll(".edit-btn").forEach(button => {
-                button.addEventListener("click", function () {
-                    let transaksiId = this.dataset.id;
-                    fetch(`/transaksi/${transaksiId}/edit`)
-                        .then(response => response.json())
-                        .then(data => {
-                            document.getElementById("transaksiId").value = data.id;
-                            document.getElementById("editJumlah").value = data.jumlah;
-                            $('#editModal').modal('show');
-                        });
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            document.getElementById('uploadMessage').innerHTML = '<div class="text-success">' + data.success + '</div>';
+                            setTimeout(() => location.reload(), 1500); // Reload setelah sukses
+                        } else {
+                            document.getElementById('uploadMessage').innerHTML = '<div class="text-danger">' + data.error + '</div>';
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll(".edit-btn").forEach(button => {
+                    button.addEventListener("click", function () {
+                        let transaksiId = this.dataset.id;
+                        fetch(`/transaksi/${transaksiId}/edit`)
+                            .then(response => response.json())
+                            .then(data => {
+                                document.getElementById("transaksiId").value = data.id;
+                                document.getElementById("editJumlah").value = data.jumlah;
+                                $('#editModal').modal('show');
+                            });
+                    });
+                });
+                document.getElementById("editForm").addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    let transaksiId = document.getElementById("transaksiId").value;
+                    let jumlah = document.getElementById("editJumlah").value;
+                    fetch(`/transaksi/${transaksiId}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                        },
+                        body: JSON.stringify({ jumlah: jumlah })
+                    }).then(response => response.json())
+                        .then(() => location.reload());
                 });
             });
+        </script>
+    @endpush
 
-            document.getElementById("editForm").addEventListener("submit", function (event) {
-                event.preventDefault();
-                let transaksiId = document.getElementById("transaksiId").value;
-                let jumlah = document.getElementById("editJumlah").value;
-                fetch(`/transaksi/${transaksiId}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-                    },
-                    body: JSON.stringify({ jumlah: jumlah })
-                }).then(response => response.json())
-                    .then(() => location.reload());
-            });
-        });
-    </script>
 @endsection

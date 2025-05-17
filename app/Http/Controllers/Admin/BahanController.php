@@ -217,6 +217,39 @@ class BahanController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function deleteBahanAwal(Request $request)
+    {
+        $request->validate([
+            'bahan_id' => 'required|integer',
+            'date' => 'required|date',
+        ]);
+
+        $deleted = BahanAwal::where('bahan_id', $request->bahan_id)
+            ->whereDate('date', $request->date)
+            ->delete();
+
+        return response()->json([
+            'success' => $deleted > 0
+        ]);
+    }
+
+    public function deleteBahanAkhir(Request $request)
+    {
+        $request->validate([
+            'bahan_id' => 'required|integer',
+            'date' => 'required|date',
+        ]);
+
+        $deleted = BahanAkhir::where('bahan_id', $request->bahan_id)
+            ->whereDate('date', $request->date)
+            ->delete();
+
+        return response()->json([
+            'success' => $deleted > 0
+        ]);
+    }
+
+
     public function indexBahanMKbyID(Request $request, $encryptedId)
     {
         $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);

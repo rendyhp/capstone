@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('StokBarang', 'active')
 @section('container')
+@section('title', "Manajemen Barang | BdiM’s Stock")
 
     @php
         $currentUrl = request()->path();
@@ -15,7 +16,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Stok Barang - Master</li>
+                                <li class="breadcrumb-item active" aria-current="page">Stok Barang - Manajemen Barang</li>
                             </ol>
                         </nav>
                     </div>
@@ -372,14 +373,15 @@
                                 name="image">
                             @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
- 
-                            <div class="mb-3" id="previewGambar" style="display:none;">
-                                <label for="previewGambar" class="form-label text-dark fw-bold">Gambar sebelumnya</label>
 
-                                <img id="previewImage" src="" alt="Preview Gambar" class="img-thumbnail mt-2" style="display: none; width: 100px;">
+                        <div class="mb-3" id="previewGambar" style="display:none;">
+                            <label for="previewGambar" class="form-label text-dark fw-bold">Gambar sebelumnya</label>
+
+                            <img id="previewImage" src="" alt="Preview Gambar" class="img-thumbnail mt-2"
+                                style="display: none; width: 100px;">
 
 
-                            </div>
+                        </div>
 
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
@@ -417,32 +419,34 @@
         </div>
     </div>
 
-    <script>
+    @push('addScript')
+        <script>
 
-        const checkbox = document.getElementById('toggleImageColumn');
-        const imageColumns = document.querySelectorAll('.column-gambar');
+            const checkbox = document.getElementById('toggleImageColumn');
+            const imageColumns = document.querySelectorAll('.column-gambar');
 
-        checkbox.addEventListener('change', function () {
-            imageColumns.forEach(col => {
-                col.style.display = this.checked ? '' : 'none';
+            checkbox.addEventListener('change', function () {
+                imageColumns.forEach(col => {
+                    col.style.display = this.checked ? '' : 'none';
+                });
             });
-        });
 
-    </script>
+        </script>
 
-    <script>
+        <script>
 
-        function previewImage(input) {
-            const preview = document.getElementById('previewImage');
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
+            function previewImage(input) {
+                const preview = document.getElementById('previewImage');
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    }
+                    reader.readAsDataURL(input.files[0]);
                 }
-                reader.readAsDataURL(input.files[0]);
             }
-        }
-    </script>
+        </script>
+    @endpush
 
 @endsection

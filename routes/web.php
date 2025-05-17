@@ -64,6 +64,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/bahanAwal/save', [BahanController::class, 'saveBahanAwal'])->name('bahanAwal.save');
     Route::post('/bahanAkhir/save', [BahanController::class, 'saveBahanAkhir'])->name('bahanAkhir.save');
+    Route::delete('/bahanAwal/delete', [BahanController::class, 'deleteBahanAwal'])->name('bahanAwal.delete');
+    Route::delete('/bahanAkhir/delete', [BahanController::class, 'deleteBahanAkhir'])->name('bahanAkhir.delete');
 
     Route::get('/bahan/data-bahan', [BahanController::class, 'indexDataBahan'])->name('bahan.indexDataBahan');
     Route::post('/bahan/data-bahan/store', [BahanController::class, 'storeDataBahan'])->name('bahan.storeDataBahan');

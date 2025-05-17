@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('StokBahan', 'active')
 @section('container')
+@section('title', "Master Bahan | BdiM’s Stock")
 
     @php
         $currentUrl = request()->path();
@@ -137,6 +138,98 @@
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
+                                                            <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
+                                                                class="d-inline" method="post">
+                                                                @method('PUT')
+                                                                @csrf
+                                                                <button class="btn btn-danger btn-sm" type="submit"
+                                                                    onclick="return confirm('Yakin akan Mendelete Data?')"><i
+                                                                        class="fa fa-trash"></i></button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                            </table>
+                            {{ $bahan_bars->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-xl-12">
+                <div class="card custom-card">
+                    <div class="card-header">
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Data Kitchen </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tableBahan" class="table table-bordered text-dark table-sm">
+                                <div class="mb-3">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                        data-bs-target="#barangModal2">
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data Kitchen
+                                    </button>
+                                    <div class="col-sm-3 float-end mt-3">
+
+                                        <div class="d-flex gap-2 mb-2">
+                                            <a href="/bahan/data-bahan" class="btn btn-outline-secondary btn-sm"
+                                                title="Refresh">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                            <form action="/bahan/data-bahan" method="get" class="form-inline d-flex">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                                    name="search2" placeholder="Search" value="{{ request('search2') }}">
+                                            </form>
+                                        </div>
+
+                                        <div>
+                                        </div>
+                                        <thead class="table-primary">
+                                            <tr>
+                                                <th>No.</th>
+                                                <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
+                                                <th>Nama Bahan</th>
+                                                <th>Deskripsi Bahan</th>
+                                                <th>Pengingat Stok Minimum</th>
+                                                <th>Satuan</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if ($bahan_kitchens->isEmpty())
+                                                <p>Tidak ada data yang ditemukan.</p>
+                                            @else
+                                                @foreach ($bahan_kitchens as $bahan)
+                                                    <tr>
+                                                        <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
+                                                        <td class="column-gambar" style="display:none;">
+                                                            <img src="{{ asset($bahan->image) }}"
+                                                                style="width: 100px; max-height: 100px;" alt="Img">
+                                                        </td>
+                                                        <td>{{ $bahan->name }}</td>
+                                                        <td style="max-width: 150px">{{ $bahan->description }}</td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td>{{ $bahan->satuan->name ?? '-' }}</td>
+
+                                                        <td>
+                                                            <!-- Button trigger modal -->
+                                                            <button type="button" class="btn btn-primary btn-sm btn_editbahan2"
+                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
+                                                                data-name="{{ $bahan->name ?? 'NULL' }}"
+                                                                data-description="{{ $bahan->description ?? 'NULL' }}"
+                                                                data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
+                                                                data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
+                                                                <i class="fa fa-edit" aria-hidden="true"></i>
+                                                            </button>
+
 
 
                                                             <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
@@ -161,102 +254,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-xl-12">
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title fs-5 fw-bold mt-2"> Tabel Data Kitchen </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="tableBahan" class="table table-bordered text-dark table-sm">
-                            <div class="mb-3">
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                                    data-bs-target="#barangModal2">
-                                    <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data Kitchen
-                                </button>
-                                <div class="col-sm-3 float-end mt-3">
-
-                                    <div class="d-flex gap-2 mb-2">
-                                        <a href="/bahan/data-bahan" class="btn btn-outline-secondary btn-sm"
-                                            title="Refresh">
-                                            <i class="fa fa-refresh"></i>
-                                        </a>
-                                        <form action="/bahan/data-bahan" method="get" class="form-inline d-flex">
-                                            <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                name="search2" placeholder="Search" value="{{ request('search2') }}">
-                                        </form>
-                                    </div>
-
-                                    <div>
-                                    </div>
-                                    <thead class="table-primary">
-                                        <tr>
-                                            <th>No.</th>
-                                            <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
-                                            <th>Nama Bahan</th>
-                                            <th>Deskripsi Bahan</th>
-                                            <th>Pengingat Stok Minimum</th>
-                                            <th>Satuan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if ($bahan_kitchens->isEmpty())
-                                            <p>Tidak ada data yang ditemukan.</p>
-                                        @else
-                                            @foreach ($bahan_kitchens as $bahan)
-                                                <tr>
-                                                    <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
-                                                    <td class="column-gambar" style="display:none;">
-                                                        <img src="{{ asset($bahan->image) }}"
-                                                            style="width: 100px; max-height: 100px;" alt="Img">
-                                                    </td>
-                                                    <td>{{ $bahan->name }}</td>
-                                                    <td style="max-width: 150px">{{ $bahan->description }}</td>
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
-                                                    <td>{{ $bahan->satuan->name ?? '-' }}</td>
-
-                                                    <td>
-                                                        <!-- Button trigger modal -->
-                                                        <button type="button" class="btn btn-primary btn-sm btn_editbahan2"
-                                                            data-id="{{ $bahan->id ?? 'NULL' }}"
-                                                            data-name="{{ $bahan->name ?? 'NULL' }}"
-                                                            data-description="{{ $bahan->description ?? 'NULL' }}"
-                                                            data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
-                                                            data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
-                                                            <i class="fa fa-edit" aria-hidden="true"></i>
-                                                        </button>
-
-
-
-                                                        <form action="/bahan/data-bahan/delete/{{ $bahan->id }}" class="d-inline"
-                                                            method="post">
-                                                            @method('PUT')
-                                                            @csrf
-                                                            <button class="btn btn-danger btn-sm" type="submit"
-                                                                onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                    class="fa fa-trash"></i></button>
-                                                        </form>
-
-
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
-                                    </tbody>
-                        </table>
-                        {{ $bahan_bars->onEachSide(0.5)->links('pagination::bootstrap-5') }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     </div>
 
     <!-- Modal Tambah Bahan 1-->
@@ -371,8 +368,6 @@
         </div>
     </div>
 
-
-
     <!-- Modal Edit Barang-->
     <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -435,9 +430,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-
-
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Ubah</button>
                         </div>
@@ -509,9 +501,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-
-
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary text-white" nama="SaveButton">Ubah</button>
                         </div>
@@ -521,46 +510,45 @@
         </div>
     </div>
 
-    <script>
-        function toggleInput(inputId, buttonId) {
-            let inputField = document.getElementById(inputId);
-            let button = document.getElementById(buttonId);
+    @push('addScript')
+        <script>
+            function toggleInput(inputId, buttonId) {
+                let inputField = document.getElementById(inputId);
+                let button = document.getElementById(buttonId);
 
-            if (inputField.readOnly) {
-                inputField.readOnly = false;
+                if (inputField.readOnly) {
+                    inputField.readOnly = false;
 
-                button.style.display = "none";
-                inputField.focus();
-                inputField.select();
+                    button.style.display = "none";
+                    inputField.focus();
+                    inputField.select();
 
-                inputField.addEventListener("focusout", function lockInput() {
-                    inputField.readOnly = true;
-                    button.style.display = "inline";
-                    inputField.removeEventListener("focusout", lockInput);
-                });
+                    inputField.addEventListener("focusout", function lockInput() {
+                        inputField.readOnly = true;
+                        button.style.display = "inline";
+                        inputField.removeEventListener("focusout", lockInput);
+                    });
+                }
             }
-        }
-
-        document.getElementById("toggleMinimum").addEventListener("click", function () {
-            toggleInput("minimum", "toggleMinimum");
-        });
-
-        document
-            .getElementById("toggleMinimum2")
-            .addEventListener("click", function () {
-                toggleInput("txtminimum", "toggleMinimum2");
+            document.getElementById("toggleMinimum").addEventListener("click", function () {
+                toggleInput("minimum", "toggleMinimum");
             });
-    </script>
+            document
+                .getElementById("toggleMinimum2")
+                .addEventListener("click", function () {
+                    toggleInput("txtminimum", "toggleMinimum2");
+                });
+        </script>
+        <script>
+            const checkbox = document.getElementById('toggleImageColumn');
+            const imageColumns = document.querySelectorAll('.column-gambar');
 
-    <script>
-        const checkbox = document.getElementById('toggleImageColumn');
-        const imageColumns = document.querySelectorAll('.column-gambar');
-
-        checkbox.addEventListener('change', function () {
-            imageColumns.forEach(col => {
-                col.style.display = this.checked ? '' : 'none';
+            checkbox.addEventListener('change', function () {
+                imageColumns.forEach(col => {
+                    col.style.display = this.checked ? '' : 'none';
+                });
             });
-        });
+        </script>
+    @endpush
 
-    </script>
 @endsection

@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('StokBarang', 'active')
 @section('container')
+@section('title', "Satuan Bahan | BdiM’s Stock")
 
     @php
         $currentUrl = request()->path();
@@ -139,7 +140,6 @@
         </div>
     </div>
     <!-- Modal Tambah Barang-->
-
     <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="container modal-dialog">
             <div class="modal-content">
@@ -184,7 +184,7 @@
                             @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary text-white">Ubah</button>
+                            <button type="submit" class="btn btn-primary text-white">Simpan</button>
                         </div>
                     </form>
 
