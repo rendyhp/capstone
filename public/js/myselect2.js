@@ -31,6 +31,12 @@ $("#editBarangModal").on("shown.bs.modal", function () {
     initSelect2("#txtsatuan_id", "#editBarangModal .modal-content");
 });
 
+// Modal Edit Bahan
+$("#editEditModal").on("shown.bs.modal", function () {
+    initSelect2("#id_bahan", "#editBahanModal .modal-content");
+    initSelect2("#txtsatuan_id", "#editBahanModal .modal-content");
+});
+
 // Modal Tambah Barang (Bar)
 $("#barangModal1").on("shown.bs.modal", function () {
     initSelect2("#satuan_id_bar", "#barangModal1 .modal-content");

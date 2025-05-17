@@ -75,19 +75,16 @@
                         <div class="table-responsive">
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
-
-                                    <div class="mb-3"> <a href="#" onclick="window.history.back(); return false;">
+                                    <div class="mb-3">
+                                        <a href="{{ $previousUrl }}">
                                             <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
                                         </a>
                                     </div>
-
                                     <div class="mb-3 text-center fw-bold">
                                         <img src="{{ asset($barangs->image) }}" style="width: 150px; max-height: 150px;"
                                             alt="Img">
                                         <p>{{ $barangs->name }}</p>
                                     </div>
-
-
 
                                     <!-- Tombol Tambah -->
                                     <button type="button" class="btn btn-outline-success btnTambahStok"
@@ -189,7 +186,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control" name="jumlah" required>
+                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>
@@ -200,7 +197,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Catatan barang masuk"></textarea>
+                                name="keterangan" rows="4" placeholder="Misal: Beli {{ $barangs->name ?? '' }} baru atau Beli cash"></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -231,7 +228,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control" name="jumlah" required autocomplete="off">
+                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required
+                                autocomplete="off">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>
@@ -242,7 +240,8 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganK" required
-                                name="keterangan" rows="4" placeholder="Catatan barang keluar"></textarea>
+                                name="keterangan" rows="4"
+                                placeholder="Misal: {{ $barangs->name ?? 'Barang' }} rusak"></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">

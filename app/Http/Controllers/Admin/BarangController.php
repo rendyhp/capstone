@@ -24,7 +24,7 @@ class BarangController extends Controller
     {
         $user = Auth::user();
         $role = $user->role;
-
+        session(['previous_barangmk_url' => url()->full()]);
 
         $allowedSortColumns = ['id', 'name', 'jumlah', 'created_at'];
         $allowedSortDirections = ['asc', 'desc'];
@@ -102,6 +102,7 @@ class BarangController extends Controller
     {
         $user = Auth::user();
         $role = $user->role;
+        session(['previous_barangmk_url' => url()->full()]);
 
         // Data barang awal
         $barangAwals = BarangAwal::with(['barang', 'user'])
@@ -197,6 +198,7 @@ class BarangController extends Controller
 
         $user = Auth::user();
         $role = $user->role;
+        $previousUrl = session('previous_barangmk_url', route('barang.indexMasukKeluar'));
 
         $barangs = Barang::whereNull('deleted_at')->find($id[0]);
 
@@ -278,7 +280,7 @@ class BarangController extends Controller
         );
 
         if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
-            return view('barang.indexBarangMKbyID', compact('transaksis', 'barangs'));
+            return view('barang.indexBarangMKbyID', compact('transaksis', 'barangs', 'previousUrl'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
@@ -464,32 +466,47 @@ class BarangController extends Controller
 
     }
 
-    public function updateDataBarang(Request $request, Barang $barangs)
+    public function updateDataBarang(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:barangs,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'jumlah' => 'required|integer|max:10',
             'satuan_id' => 'required',
-            'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
+            'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-        $user = Auth::user()->id;
 
         $Barang = Barang::findOrFail($request->input('id'));
-        $Barang->user_id = $user;
+        $Barang->user_id = Auth::id();
         $Barang->name = $request->input('name');
-        $Barang->description = $request->input('description' ?: '-');
-        $Barang->jumlah = $request->input('jumlah' ?: 0);
-        $Barang->satuan_id = $request->input('satuan_id' ?: '-');
-        $Barang->image = $request->input('image') ?: null;
+        $Barang->description = $request->input('description') ?? '-';
+        $Barang->jumlah = $request->input('jumlah') ?? 0;
+        $Barang->satuan_id = $request->input('satuan_id');
+
+        // Gambar hanya diubah jika ada upload baru
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($Barang->image && file_exists(public_path($Barang->image))) {
+                unlink(public_path($Barang->image));
+            }
+
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $path = 'upload/barang/';
+            $file->move(public_path($path), $filename);
+
+            $Barang->image = $path . $filename;
+        }
+
         $Barang->save();
 
-        return redirect('/barang/data-barang')->with('success', 'Data "' . $Barang->name . '" Berhasil Diubah');
+        return redirect()->back()->with('success', 'Data "' . $Barang->name . '" Berhasil Diubah');
     }
+
+
 
     public function updateSatuan(Request $request, SatuanBarang $satuans)
     {

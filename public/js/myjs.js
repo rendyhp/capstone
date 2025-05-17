@@ -67,18 +67,6 @@ inputIds.forEach(function (id) {
     }
 });
 
-///////////////////////////////////////////
-
-$(document).ready(function () {
-    $(".select2").select2({
-        placeholder: "Cari atau pilih satuan",
-        allowClear: true,
-    });
-    $(document).on("click", ".btn_editbahan", function () {
-        var satuan_id = $(this).data("satuan_id");
-        $("#satuan_id").val(satuan_id).trigger("change");
-    });
-});
 
 //////////////////////////////////////////
 

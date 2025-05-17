@@ -171,11 +171,6 @@ class TransaksiController extends Controller
         ]);
     }
 
-
-
-
-
-
     public function store(Request $request)
     {
         $request->validate([
@@ -218,15 +213,6 @@ class TransaksiController extends Controller
         }
     }
 
-
-
-    public function edit($id)
-    {
-        $transaksi = Transaksi::findOrFail($id);
-        $menus = Menu::all(); // untuk pilihan menu
-        return view('transaksi.edit', compact('transaksi', 'menus'));
-    }
-
     public function updateTransaksi(Request $request, $id)
     {
 
@@ -241,7 +227,6 @@ class TransaksiController extends Controller
         if (!$transaksi) {
             return redirect()->route('transaksi.index')->with('error', 'Transaksi tidak ditemukan.');
         }
-
 
         $transaksi->menu_id = $request->menu_id;
         $transaksi->jumlah = $request->jumlah;

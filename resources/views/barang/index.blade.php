@@ -244,7 +244,7 @@
                         <div class="mb-3">
                             <label for="jumlah" class="form-label text-dark fw-bold">Stok Awal</label>
                             <input type="number" required autocomplete="off" class="form-control number0" id="jumlah"
-                                name="jumlah" value="0" placeholder="Ketik jumlah stok">
+                                min="0" name="jumlah" value="0" placeholder="Ketik stok awal">
                         </div>
                         <div class="mb-3">
                             <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
@@ -288,7 +288,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control" name="jumlah" required>
+                            <input type="number" min="1" autocomplete="off" value="0" class="form-control number0"
+                                name="jumlah" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>
@@ -299,7 +300,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Catatan barang masuk"></textarea>
+                                name="keterangan" rows="4" placeholder="Misal: Beli baru atau Beli cash"></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -330,7 +331,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control number0" name="jumlah" required
+                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required
                                 autocomplete="off">
                         </div>
                         <div class="mb-3">
@@ -342,7 +343,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganK" required
-                                name="keterangan" rows="4" placeholder="Catatan barang keluar"></textarea>
+                                name="keterangan" rows="4" placeholder="Misal: Barang rusak"></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -376,16 +377,13 @@
 
                         <div class="mb-3" id="previewGambar" style="display:none;">
                             <label for="previewGambar" class="form-label text-dark fw-bold">Gambar sebelumnya</label>
-
                             <img id="previewImage" src="" alt="Preview Gambar" class="img-thumbnail mt-2"
                                 style="display: none; width: 100px;">
-
-
                         </div>
 
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
-                            <input type="text" required autocomplete="off"
+                            <input type="text" required autocomplete="off" placeholder="Ketik nama barang"
                                 class="form-control @error('name') is-invalid @enderror" id="txtname" name="name">
                             @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
