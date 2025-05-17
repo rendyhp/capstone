@@ -455,7 +455,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        alert('Data berhasil dihapus!');
+                        alert('Data berhasil di-reset!');
                         location.reload();
                     } else {
                         alert('Data tidak ditemukan.');
