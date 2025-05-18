@@ -105,7 +105,11 @@
                                                 <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
                                                 <th>Nama Barang</th>
                                                 <th>Deskripsi Barang</th>
-                                                <th>Stok</th>
+                                                <th>Awal</th>
+                                                <th>Masuk</th>
+                                                <th>Total Beli</th>
+                                                <th>Keluar</th>
+                                                <th>Sisa</th>
                                                 <th>Satuan</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -129,6 +133,8 @@
                                                             </a>
                                                         </td>
                                                         <td>{{ $barang->description }}</td>
+                                                        <td></td><td></td>
+                                                        <td></td><td></td>
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($barang->stok_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
@@ -176,7 +182,7 @@
                                                                         </button>
                                                                     </li>
                                                                     <li>
-                                                                        <form action="/barang/data-barang/delete/{{ $barang->id }}"
+                                                                        <form action="/barang/master/delete/{{ $barang->id }}"
                                                                             method="post"
                                                                             onsubmit="return confirm('Yakin akan Mendelete Data?')">
                                                                             @method('PUT')

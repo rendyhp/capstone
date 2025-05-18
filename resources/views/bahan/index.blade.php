@@ -126,7 +126,12 @@
                                                     <tr>
                                                         <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
                                                         </td>
-                                                        <td>{{ $bahan->name }}</td>
+                                                        <td>
+                                                            <a href="/bahan/master/{{ Hashids::encode($bahan->id) }}"
+                                                                class="text-decoration-none text-dark">
+                                                                {{ $bahan->name ?? '-' }}
+                                                            </a>
+                                                        </td>
 
                                                         <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
                                                             ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">

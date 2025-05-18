@@ -121,7 +121,10 @@ class BarangController extends Controller
                     'satuan' => $item->barang->satuanBarang->name ?? '-',
                     'created_at' => $item->created_at,
                 ];
-            });
+            })->filter(function ($item) {
+                return $item['name'] !== '-'; // hilangkan barang yang tidak valid
+            })
+            ->values();
 
         // Data barang masuk
         $barangMasuks = BarangMasuk::with(['barang', 'user'])
@@ -140,7 +143,11 @@ class BarangController extends Controller
                     'satuan' => $item->barang->satuanBarang->name ?? '-',
                     'created_at' => $item->created_at,
                 ];
-            });
+            })
+            ->filter(function ($item) {
+                return $item['name'] !== '-'; // hilangkan barang yang tidak valid
+            })
+            ->values();
 
         // Data barang keluar
         $barangKeluars = BarangKeluar::with(['barang', 'user'])
@@ -159,7 +166,11 @@ class BarangController extends Controller
                     'satuan' => $item->barang->satuanBarang->name ?? '-',
                     'created_at' => $item->created_at,
                 ];
-            });
+            })
+            ->filter(function ($item) {
+                return $item['name'] !== '-'; // hilangkan barang yang tidak valid
+            })
+            ->values();
 
         $merged = $barangMasuks->merge($barangKeluars)->merge($barangAwals)->sortByDesc('created_at')->values();
 
@@ -535,6 +546,17 @@ class BarangController extends Controller
         $barang->deleted_at = now();
         $barang->save();
 
-        return redirect('/stok-barang')->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+    }
+
+    public function deleteSatuan(Request $request)
+    {
+        $id = $request->id;
+        $barang = SatuanBarang::findOrFail($id);
+
+        $barang->deleted_at = now();
+        $barang->save();
+
+        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
     }
 }

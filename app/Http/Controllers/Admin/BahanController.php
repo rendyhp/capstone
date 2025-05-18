@@ -27,6 +27,7 @@ class BahanController extends Controller
         $user = Auth::user();
         $role = $user->role;
         $date = $request->input('date', Carbon::today()->toDateString());
+        session(['previous_bahanmk_url' => url()->full()]);
 
         // Data Bar
         $query1 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'BAR');
@@ -168,6 +169,69 @@ class BahanController extends Controller
         }
     }
 
+    public function indexById(Request $request, $encryptedId)
+{
+    $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
+    $decoded = $hashids->decode($encryptedId);
+
+    if (empty($decoded)) {
+        abort(404, 'ID tidak valid');
+    }
+
+    $bahanId = $decoded[0];
+    $bahan = Bahan::with('satuan')->where('id', $bahanId)->whereNull('deleted_at')->firstOrFail();
+
+    $user = Auth::user();
+    $role = $user->role;
+
+    $month = $request->input('month') ?? now()->month;
+    $year = $request->input('year') ?? now()->year;
+    $daysInMonth = now()->setMonth($month)->daysInMonth;
+
+    $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
+        ->whereMonth('date', $month)
+        ->whereYear('date', $year)
+        ->whereNull('deleted_at')
+        ->pluck('jumlah', 'date');
+
+    $masukData = BahanMasuk::where('bahan_id', $bahanId)
+        ->whereMonth('date', $month)
+        ->whereYear('date', $year)
+        ->whereNull('deleted_at')
+        ->pluck('jumlah', 'date');
+
+    $akhirData = BahanAkhir::where('bahan_id', $bahanId)
+        ->whereMonth('date', $month)
+        ->whereYear('date', $year)
+        ->whereNull('deleted_at')
+        ->pluck('jumlah', 'date');
+
+    // Siapkan data per tanggal
+    $history = [];
+    for ($day = 1; $day <= $daysInMonth; $day++) {
+        $date = Carbon::createFromDate($year, $month, $day)->toDateString();
+        $awal = $stokAwalData[$date] ?? null;
+        $masuk = $masukData[$date] ?? 0;
+        $akhir = $akhirData[$date] ?? null;
+
+        $pakai = null;
+        if (!is_null($awal) && !is_null($akhir)) {
+            $pakai = $awal + $masuk - $akhir;
+        }
+
+        $history[] = [
+            'tanggal' => $day,
+            'awal' => $awal,
+            'masuk' => $masuk,
+            'akhir' => $akhir,
+            'pakai' => $pakai,
+        ];
+    }
+
+    return view('bahan.indexById', compact('bahan', 'history', 'month', 'year'));
+}
+
+
     public function saveBahanAwal(Request $request)
     {
         $date = $request->input('date');
@@ -260,6 +324,7 @@ class BahanController extends Controller
 
         $user = Auth::user();
         $role = $user->role;
+        $previousUrl = session('previous_bahanmk_url', route('bahan.index'));
 
         $bahans = Bahan::whereNull('deleted_at')->find($id[0]);
 
@@ -297,7 +362,7 @@ class BahanController extends Controller
         );
 
         if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
-            return view('bahan.indexBahanMKbyID', compact('transaksis', 'bahans'));
+            return view('bahan.indexBahanMKbyID', compact('transaksis', 'bahans', 'previousUrl'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }

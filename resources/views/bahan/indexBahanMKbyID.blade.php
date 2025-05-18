@@ -11,12 +11,13 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Stok Barang</h2>
+                    <h2 class="pageheader-title ">History Input {{ $bahans->name }}</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a class="" href="/bahan/master">Stok Bahan - Manajemen Bahan</a></li>
+                                <li class="breadcrumb-item"><a class="" href="/bahan/master">Stok Bahan - Manajemen
+                                        Bahan</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">{{ $bahans->name }}</li>
                             </ol>
                         </nav>
@@ -72,7 +73,8 @@
                         <div class="table-responsive">
                             <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
                                 <div class="mb-3">
-                                    <div class="mb-3"> <a href="/bahan/master">
+                                    <div class="mb-3">
+                                        <a href="{{ $previousUrl }}">
                                             <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
                                         </a>
                                     </div>

@@ -17,7 +17,7 @@
                 <label for="" class="fw-bold">Filter Tanggal</label>
             </div>
             <div class="col-md-3">
-                <form action="{{ route('dashboard.laporan.filter') }}" method="POST">
+                <form action="/laporan/filter" method="POST">
                     @csrf
                     <div class="form-group">
                         <input type="text" name="tglawal" class="form-control datepicker-date" placeholder="Tanggal Awal">
