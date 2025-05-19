@@ -98,7 +98,7 @@
                     <form method="POST" action="{{ route('login') }}" class="form-container">
                         @csrf
                         <div>
-                            <img src="/img/login.png" alt="logo" style="height: 100px;">
+                            <img src="/img/logo-bdim.png" alt="logo" style="height: 100px;">
                         </div>
                         <div class="divider d-flex align-items-center my-4">
                             <p class="text-center fw-bold mx-3 mb-0 fs-3">LOGIN</p>

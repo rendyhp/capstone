@@ -112,7 +112,7 @@
                                                 <th>Masuk</th>
                                                 <th>Terpakai</th>
                                                 <th>Sisa</th>
-                                                <th>Akhir<br>Sebenarnya</th>
+                                                <th>Sisa Real</th>
                                                 <th>Terbuang</th>
                                                 <th>Satuan</th>
                                                 <th>Aksi</th>
@@ -227,7 +227,7 @@
                                             <th>Masuk</th>
                                             <th>Terpakai</th>
                                             <th>Sisa</th>
-                                            <th>Akhir<br>Sebenarnya</th>
+                                            <th>Sisa Real</th>
                                             <th>Terbuang</th>
                                             <th>Satuan</th>
                                             <th>Aksi</th>

@@ -10,7 +10,7 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon">
+    <link href="/img/logo-bdim.png" rel="icon">
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
@@ -52,8 +52,8 @@
         <div class="container d-flex align-items-center justify-content-between">
 
             <div class="logo">
-                <h1 class="text-primary"><img src="/img/logo1.png" style="width: 40px; height: 40px;" class="me-2"
-                        alt="Logo">Stock Opname</a></h1>
+                <h1 class="text-primary"><img src="/img/logo-bdim.png" style="width: 40px; height: 40px;" class="me-2"
+                        alt="Logo"> BdiM's Stock</a></h1>
                 <!-- Uncomment below if you prefer to use an image logo -->
                 <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>
             </div>

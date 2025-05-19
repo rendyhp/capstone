@@ -53,8 +53,7 @@
                 <a href="" class="navbar-brand mx-4 mb-3">
                     <h3 class="text-primary hide-on-print">
                         <p class="fs-5">
-                            <img src="/img/logo1.png" style="width: 35px; height: 35px;" class="me-2" alt="Logo">STOCK
-                            OPNAME
+                            <img src="/img/logo-bdim.png" style="width: 35px; height: 35px;" class="me-2" alt="Logo">BdiM's Stock
                         </p></i>
                     </h3>
                 </a>
