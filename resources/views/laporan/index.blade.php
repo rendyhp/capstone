@@ -59,7 +59,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Laporan</li>
+                                <li class="breadcrumb-item active" aria-current="page">Laporan - Bahan</li>
                             </ol>
                         </nav>
                     </div>
@@ -127,12 +127,12 @@
 
         <div>
             <a href="/laporan/bahan"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
-                Manajemen Bahan
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/bahan') ? 'active' : '' }}">
+                Bahan
             </a>
             <a href="/laporan/barang"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/data-bahan') ? 'active' : '' }}">
-                Master Bahan
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/barang') ? 'active' : '' }}">
+                Barang
             </a>
         </div>
 
@@ -140,7 +140,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan ({{ $bulanNama }} {{ $year }})</div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Bar ({{ $bulanNama }} {{ $year }})</div>
                     </div>
 
                     <div class="card-body">

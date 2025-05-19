@@ -67,6 +67,7 @@
 
 
     <h3>Laporan Stok Bahan ({{ $bulanNama }} {{ $year }})</h3>
+    <h2>BAR</h2>
 
     @php
         $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;

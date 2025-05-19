@@ -32,6 +32,7 @@ class LaporanController extends Controller
 
         $bahans = Bahan::with('satuan')
             ->whereNull('deleted_at')
+            ->where('section', 'BAR')
             ->orderBy('name', 'asc')
             ->get();
 
