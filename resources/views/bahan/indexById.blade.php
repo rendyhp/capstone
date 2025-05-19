@@ -1,22 +1,61 @@
 @extends('layouts.main')
-@section('StokBarang', 'active')
+@section('StokBahan', 'active')
 @section('container')
-@section('title', "Barang | BdiM’s Stock")
+@section('title', "Rekap Bulanan | BdiM’s Stock")
 
+    @push('addStyle')
+        <style>
+            /* Atur lebar kolom tanggal di tabel */
+            table.table-bordered tbody tr td,
+            table.table-bordered thead tr th {
+                /* Lebar minimum dan maksimum di set supaya stabil */
+                width: 12vh;
+                max-width: 12vh;
+                min-width: 12vh;
+                /* Optional agar teks rata tengah */
+                text-align: center;
+                /* Agar teks td tanggal rata tengah */
+            }
+
+            /* Tapi biarkan kolom 'Jenis' lebar otomatis */
+            table.table-bordered tbody tr td:first-child,
+            table.table-bordered thead tr th:first-child {
+                width: auto;
+                max-width: none;
+                min-width: auto;
+                text-align: left;
+            }
+
+            /* Kolom pertama (Jenis) */
+            table.table-bordered tbody tr td:first-child,
+            table.table-bordered thead tr th:first-child {
+                width: 10vh;
+                max-width: 10vh;
+                min-width: 10vh;
+                text-align: left;
+            }
+        </style>
+    @endpush
     @php
         $currentUrl = request()->path();
+
+        use Carbon\Carbon;
+        $bulanNama = Carbon::createFromDate($year, $month, 1)->locale('id')->isoFormat('MMMM'); 
     @endphp
+
+
 
     <div class="container">
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Stok Barang</h2>
+                    <h2 class="pageheader-title ">Rekap Bulanan</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Stok Barang - Master</li>
+                                <li class="breadcrumb-item"><a class="" href="/bahan/master">Manajemen Bahan</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Rekap Bulanan {{ $bahan->name }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -47,18 +86,32 @@
             </div>
         @endif
 
+        <form action="/bahan/master/{{ Hashids::encode($bahanId) }}" method="GET" class="d-flex align-items-center mb-3">
+            <div class="mb-3 row">
+                <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
+                <div class="col-sm-6">
+                    <input type="month" class="form-control" id="tanggalbahan" name="date" value="{{ $dateParam }}">
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
         <div>
-            <a href="/barang/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/master') ? 'active' : '' }}">
-                Master
+            <a href="/bahan/master"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
+                Manajemen Bahan
+            </a>
+            <a href="/bahan/data-bahan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/data-bahan') ? 'active' : '' }}">
+                Master Bahan
             </a>
 
-            <a href="/barang/masuk-keluar"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/masuk-keluar') ? 'active' : '' }}">
-                Barang Masuk/Keluar
-            </a>
-            <a href="/barang/satuan"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/satuan') ? 'active' : '' }}">
+            <a href="/bahan/satuan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/satuan') ? 'active' : '' }}">
                 Satuan
             </a>
         </div>
@@ -66,63 +119,83 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Detail Bahan </div>
+                        <h5 class="card-title fs-5 fw-bold mt-2">Rekap Bulanan: {{ $bahan->name }} ({{ $bulanNama }} {{ $year }})</h5>
                     </div>
 
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="tableBahan" class="table table-bordered text-dark table-sm">
+                            <table class="table table-bordered text-dark table-sm">
                                 <div class="mb-3">
-                                    <!-- Button trigger modal -->
-                                    <a href="#" onclick="window.history.back(); return false;">
+                                    <a href="{{ $previousUrl }}">
                                         <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
                                     </a>
-                                    <div class="col-sm-3 float-end mt-3">
-
-                                        <div class="d-flex gap-2 mb-2">
-                                            <a href="/bahan/master/{{ Hashids::encode($bahan->id) }}"
-                                                class="btn btn-outline-secondary btn-sm" title="Refresh">
-                                                <i class="fa fa-refresh"></i>
-                                            </a>
-                                        </div>
-
-                                        <div>
-                                        </div>
-                                        <thead>
-                                            <tr>
-                                                <th>Tanggal</th>
-                                                @foreach ($history as $day)
-                                                    <th>{{ $day['tanggal'] }}</th>
-                                                @endforeach
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Data Awal</td>
-                                                @foreach ($history as $day)
-                                                    <td>{{ $day['awal'] ?? '-' }}</td>
-                                                @endforeach
-                                            </tr>
-                                            <tr>
-                                                <td>Input</td>
-                                                @foreach ($history as $day)
-                                                    <td>{{ $day['masuk'] ?: '-' }}</td>
-                                                @endforeach
-                                            </tr>
-                                            <tr>
-                                                <td>Data Akhir</td>
-                                                @foreach ($history as $day)
-                                                    <td>{{ $day['akhir'] ?? '-' }}</td>
-                                                @endforeach
-                                            </tr>
-                                            <tr>
-                                                <td>Terpakai</td>
-                                                @foreach ($history as $day)
-                                                    <td>{{ $day['pakai'] ?? '-' }}</td>
-                                                @endforeach
-                                            </tr>
-                                        </tbody>
+                                </div>
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Jenis</th>
+                                        @foreach ($history as $day)
+                                            <th class="text-center">{{ $day['tanggal'] }}</th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Data Awal</strong></td>
+                                        @foreach ($history as $day)
+                                            <td class="text-center">
+                                                {{ rtrim(rtrim(number_format($day['awal'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Input</strong></td>
+                                        @foreach ($history as $day)
+                                            <td class="text-center">
+                                                {{ rtrim(rtrim(number_format($day['masuk'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Terpakai</strong></td>
+                                        @foreach ($history as $day)
+                                            <td class="text-center">
+                                                {{ rtrim(rtrim(number_format($day['terpakai'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Sisa</strong></td>
+                                        @foreach ($history as $day)
+                                            <td class="text-center">
+                                                {{ rtrim(rtrim(number_format($day['sisa'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                    <tr>
+                                        <td style="border: none !important; height: 3vh;"></td>
+                                        @foreach ($history as $day)
+                                            <td style="border: none !important;"></td>
+                                        @endforeach
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Data Akhir</strong></td>
+                                        @foreach ($history as $day)
+                                            <td class="text-center">
+                                                {{ rtrim(rtrim(number_format($day['akhir'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Terbuang</strong></td>
+                                        @foreach ($history as $day)
+                                            <td class="text-center">
+                                                {{ rtrim(rtrim(number_format($day['terbuang'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                </tbody>
                             </table>
+
 
                         </div>
                     </div>

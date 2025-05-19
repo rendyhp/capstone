@@ -42,7 +42,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/report', [NotifikasiController::class, 'indexReport'])->name('report');
 
     // Laporan
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/export', [LaporanController::class, 'exportExcel'])->name('laporan.export');
+
 
     // Stok
     // Barang

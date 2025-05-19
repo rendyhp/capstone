@@ -69,9 +69,6 @@
                     @if(Auth::check() && Auth::user()->role == 'OWNER')
                         <a href="/dashboard" class="nav-link @yield('Dashboard')"><i
                                 class="fa fa-tachometer-alt me-2 mb-2"></i>Dashboard</a>
-                        <a href="/notification" class="nav-link @yield('Notifikasi')"><i
-                                class="fa fa-tachometer-alt me-2 mb-2"></i>Notifikasi</a>
-
                         <li class="nav-header fw-bold fs-5 ms-4 mb-2">Laporan</li>
                         <a href="/laporan" class="nav-link @yield('Laporan')"><i class="fa fa-file me-2"></i>
                             Laporan</a>
@@ -113,8 +110,10 @@
                     @if(Auth::check() && Auth::user()->role == 'MANAJER')
                         <a href="/dashboard" class="nav-link @yield('Dashboard')"><i
                                 class="fa fa-tachometer-alt me-2 mb-2"></i>Dashboard</a>
-                        <a href="/notification" class="nav-link @yield('Notifikasi')"><i
-                                class="fa fa-tachometer-alt me-2 mb-2"></i>Notifikasi</a>
+                        <li class="nav-header fw-bold fs-5 ms-4 mb-2">Laporan</li>
+                        <a href="/laporan" class="nav-link @yield('Laporan')"><i class="fa fa-file me-2"></i>
+                            Laporan</a>
+
                         <div class="nav-item dropdown">
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false" aria-controls="stokMasterDropdown">Stok</a>
@@ -153,9 +152,6 @@
                     @if(Auth::check() && Auth::user()->role == 'STAF')
                         <a href="/dashboard" class="nav-link @yield('Dashboard')"><i
                                 class="fa fa-tachometer-alt me-2 mb-2"></i>Dashboard</a>
-                        <a href="/report" class="nav-link @yield('Report')"><i
-                                class="fa fa-tachometer-alt me-2 mb-2"></i>Lapor</a>
-
                         <div class="nav-item dropdown">
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false" aria-controls="stokMasterDropdown">Stok</a>

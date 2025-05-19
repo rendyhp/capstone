@@ -170,66 +170,97 @@ class BahanController extends Controller
     }
 
     public function indexById(Request $request, $encryptedId)
-{
-    $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
-    $decoded = $hashids->decode($encryptedId);
+    {
+        $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
+        $decoded = $hashids->decode($encryptedId);
 
-    if (empty($decoded)) {
-        abort(404, 'ID tidak valid');
-    }
-
-    $bahanId = $decoded[0];
-    $bahan = Bahan::with('satuan')->where('id', $bahanId)->whereNull('deleted_at')->firstOrFail();
-
-    $user = Auth::user();
-    $role = $user->role;
-
-    $month = $request->input('month') ?? now()->month;
-    $year = $request->input('year') ?? now()->year;
-    $daysInMonth = now()->setMonth($month)->daysInMonth;
-
-    $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
-        ->whereMonth('date', $month)
-        ->whereYear('date', $year)
-        ->whereNull('deleted_at')
-        ->pluck('jumlah', 'date');
-
-    $masukData = BahanMasuk::where('bahan_id', $bahanId)
-        ->whereMonth('date', $month)
-        ->whereYear('date', $year)
-        ->whereNull('deleted_at')
-        ->pluck('jumlah', 'date');
-
-    $akhirData = BahanAkhir::where('bahan_id', $bahanId)
-        ->whereMonth('date', $month)
-        ->whereYear('date', $year)
-        ->whereNull('deleted_at')
-        ->pluck('jumlah', 'date');
-
-    // Siapkan data per tanggal
-    $history = [];
-    for ($day = 1; $day <= $daysInMonth; $day++) {
-        $date = Carbon::createFromDate($year, $month, $day)->toDateString();
-        $awal = $stokAwalData[$date] ?? null;
-        $masuk = $masukData[$date] ?? 0;
-        $akhir = $akhirData[$date] ?? null;
-
-        $pakai = null;
-        if (!is_null($awal) && !is_null($akhir)) {
-            $pakai = $awal + $masuk - $akhir;
+        if (empty($decoded)) {
+            abort(404, 'ID tidak valid');
         }
 
-        $history[] = [
-            'tanggal' => $day,
-            'awal' => $awal,
-            'masuk' => $masuk,
-            'akhir' => $akhir,
-            'pakai' => $pakai,
-        ];
+        $bahanId = $decoded[0];
+        $bahan = Bahan::with('satuan')->where('id', $bahanId)->whereNull('deleted_at')->firstOrFail();
+        $previousUrl = session('previous_bahanmk_url', route('bahan.index'));
+
+        $user = Auth::user();
+        $role = $user->role;
+
+        $dateParam = $request->input('date');
+
+        if ($dateParam) {
+            // Jika ada, parsing tanggalnya
+            $date = Carbon::parse($dateParam);
+            $month = $date->month;
+            $year = $date->year;
+        } else {
+            // Default sekarang
+            $month = $request->input('month') ?? now()->month;
+            $year = $request->input('year') ?? now()->year;
+        }
+
+        $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;
+
+        $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->whereNull('deleted_at')
+            ->pluck('jumlah', 'date');
+
+        $masukData = BahanMasuk::where('bahan_id', $bahanId)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->whereNull('deleted_at')
+            ->pluck('jumlah', 'date');
+
+        $akhirData = BahanAkhir::where('bahan_id', $bahanId)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->whereNull('deleted_at')
+            ->pluck('jumlah', 'date');
+
+        $history = [];
+        $prevAkhir = null;
+
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $dateString = Carbon::createFromDate($year, $month, $day)->toDateString();
+
+            $awal = $stokAwalData[$dateString] ?? $prevAkhir;
+            $masuk = $masukData[$dateString] ?? 0;
+            $akhir = $akhirData[$dateString] ?? null;
+
+            // Hitung terpakai dari transaksi_details join transaksis di tanggal ini
+            $terpakai = DB::table('transaksi_details')
+                ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+                ->where('transaksi_details.bahan_id', $bahanId)
+                ->whereDate('transaksis.date', $dateString)
+                ->whereNull('transaksis.deleted_at')
+                ->sum('transaksi_details.jumlah');
+
+            // Terbuang = (awal + masuk - terpakai) - akhir
+            // Sama dengan: jumlah_akhir - bahan_akhir
+            $jumlah_akhir = (!is_null($awal) && !is_null($masuk) && !is_null($terpakai)) ? ($awal + $masuk - $terpakai) : null;
+
+            $terbuang = (!is_null($jumlah_akhir) && !is_null($akhir)) ? ($jumlah_akhir - $akhir) : null;
+
+            $history[] = [
+                'tanggal' => $day,
+                'awal' => $awal,
+                'masuk' => $masuk,
+                'sisa' => (!is_null($awal) && !is_null($masuk) && !is_null($terpakai)) ? ($awal + $masuk - $terpakai) : null,
+                'akhir' => $akhir,
+                'terpakai' => $terpakai,
+                'terbuang' => $terbuang,
+            ];
+
+            $prevAkhir = $akhir ?? $prevAkhir;
+        }
+
+
+        return view('bahan.indexById', compact('bahan', 'history', 'month', 'year', 'dateParam', 'bahanId', 'previousUrl'));
     }
 
-    return view('bahan.indexById', compact('bahan', 'history', 'month', 'year'));
-}
+
+
 
 
     public function saveBahanAwal(Request $request)

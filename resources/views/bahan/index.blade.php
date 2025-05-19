@@ -127,10 +127,12 @@
                                                         <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
                                                         </td>
                                                         <td>
-                                                            <a href="/bahan/master/{{ Hashids::encode($bahan->id) }}"
+                                                            <a href="/bahan/master/{{ Hashids::encode($bahan->id) }}?date={{ \Carbon\Carbon::parse($date)->format('Y-m') }}"
                                                                 class="text-decoration-none text-dark">
                                                                 {{ $bahan->name ?? '-' }}
                                                             </a>
+
+
                                                         </td>
 
                                                         <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
