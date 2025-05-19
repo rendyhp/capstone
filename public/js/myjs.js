@@ -16,10 +16,10 @@ const toggleDropdown = (urls, menuId, toggleId) => {
 
 toggleDropdown(
     [
-        "/barang/master",
+        "/barang/manajemen-barang",
         "/barang/masuk-keluar",
         "/barang/satuan",
-        "/bahan/master",
+        "/bahan/manajemen-bahan",
         "/bahan/data-bahan",
         "/bahan/satuan",
     ],
@@ -90,18 +90,19 @@ $(document).on("click", ".btn_editbarang", function (e) {
     var id = $(this).data("id");
     var name = $(this).data("name");
     var description = $(this).data("description");
+    var minimum = $(this).data("minimum");
     var jumlah = $(this).data("jumlah");
+
     var satuan_id = $(this).data("satuan_id");
     var image = $(this).data("image");
 
-    console.log(id, name, description, jumlah, satuan_id, image);
-
-    var formattedJumlah = jumlah % 1 === 0 ? parseInt(jumlah) : jumlah;
+    console.log(id, name, description, minimum, jumlah, satuan_id, image);
 
     $("#txtid").val(id);
     $("#txtname").val(name);
     $("#txtdescription").val(description);
-    $("#txtjumlah").val(formattedJumlah);
+    $("#txtminimum").val(minimum);
+    $("#txtjumlah").val(jumlah);
     $("#txtsatuan_id").val(satuan_id);
 
     if (image && image !== 'NULL') {

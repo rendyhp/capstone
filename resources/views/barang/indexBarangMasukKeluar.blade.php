@@ -49,8 +49,8 @@
         @endif
 
         <div>
-            <a href="/barang/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/master') ? 'active' : '' }}">
+            <a href="/barang/manajemen-barang"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/manajemen-barang') ? 'active' : '' }}">
                 Master
             </a>
 

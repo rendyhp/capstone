@@ -618,7 +618,7 @@ class BahanController extends Controller
         $Satuan->name = $request->input('name');
         $Satuan->save();
 
-        return redirect('/bahan/satuan')->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
+        return redirect()->back()->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
     }
 
     public function inputDelete($encryptedId)

@@ -32,25 +32,55 @@ class BarangController extends Controller
         $orderBy = in_array($request->input('orderBy'), $allowedSortColumns) ? $request->input('orderBy') : 'name';
         $sort = in_array($request->input('sort'), $allowedSortDirections) ? $request->input('sort') : 'asc';
 
-        $query = Barang::select(
-            'barangs.*',
-            DB::raw('
-                (COALESCE(barangs.jumlah, 0) +
-                COALESCE((SELECT SUM(jumlah) FROM barang_masuks WHERE barang_id = barangs.id AND deleted_at IS NULL), 0) -
-                COALESCE((SELECT SUM(jumlah) FROM barang_keluars WHERE barang_id = barangs.id AND deleted_at IS NULL), 0)
-                ) AS stok_akhir
-            ')
-        )
-            ->join('satuan_barangs', 'barangs.satuan_id', '=', 'satuan_barangs.id')
-            ->whereNull('barangs.deleted_at')
-            ->orderBy('barangs.' . $orderBy, $sort);
+        // Barang dan satuan
+        $query = Barang::with('satuanBarang')
+            ->whereNull('deleted_at')
+            ->orderBy($orderBy, $sort);
 
         if ($search = $request->input('search')) {
-            $query->where('barangs.name', 'like', '%' . $search . '%');
+            $query->where('name', 'like', '%' . $search . '%');
         }
 
-        $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
         $barangs = $query->paginate(20)->appends($request->query());
+
+        // Ambil semua id barang yang ditampilkan
+        $barangIds = $barangs->pluck('id')->toArray();
+
+        // Hitung Awal, Masuk, Keluar
+        $barangAwals = BarangAwal::whereIn('barang_id', $barangIds)
+            ->whereNull('deleted_at')
+            ->select('barang_id', DB::raw('SUM(jumlah) as total_awal'))
+            ->groupBy('barang_id')
+            ->pluck('total_awal', 'barang_id');
+
+        $barangMasuks = BarangMasuk::whereIn('barang_id', $barangIds)
+            ->whereNull('deleted_at')
+            ->select('barang_id', DB::raw('SUM(jumlah) as total_masuk'))
+            ->groupBy('barang_id')
+            ->pluck('total_masuk', 'barang_id');
+
+        $barangKeluars = BarangKeluar::whereIn('barang_id', $barangIds)
+            ->whereNull('deleted_at')
+            ->select('barang_id', DB::raw('SUM(jumlah) as total_keluar'))
+            ->groupBy('barang_id')
+            ->pluck('total_keluar', 'barang_id');
+
+        // Gabungkan data ke setiap barang
+        $barangs->getCollection()->transform(function ($barang) use ($barangAwals, $barangMasuks, $barangKeluars) {
+            $awal = $barangAwals[$barang->id] ?? 0;
+            $masuk = $barangMasuks[$barang->id] ?? 0;
+            $keluar = $barangKeluars[$barang->id] ?? 0;
+
+            $barang->awal = $awal;
+            $barang->masuk = $masuk;
+            $barang->keluar = $keluar;
+            $barang->total_beli = $awal + $masuk;
+            $barang->sisa = $barang->total_beli - $keluar;
+
+            return $barang;
+        });
+
+        $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
         if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
             return view('barang.index', compact('barangs', 'satuanBarangs'));
@@ -401,6 +431,7 @@ class BarangController extends Controller
             'date' => 'required|date',
             'description' => 'nullable|string',
             'jumlah' => 'required|integer|max:20',
+            'minimum' => 'required|Integer|max:20',
             'satuan_id' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
@@ -408,13 +439,12 @@ class BarangController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         } else {
-            $user = Auth::user()->id;
-
             $Barang = new Barang;
             $Barang->user_id = Auth::id();
             $Barang->date = $request->input('date');
             $Barang->name = $request->input('name');
             $Barang->description = $request->input('description') ?? '-';
+            $Barang->minimum = $request->input('minimum');
             $Barang->jumlah = $request->input('jumlah') ?? 0;
             $Barang->satuan_id = $request->input('satuan_id') ?? '-';
 
@@ -443,7 +473,7 @@ class BarangController extends Controller
         $data = DB::table('barangs')->paginate($dataPerPage);
         $lastPage = $data->lastPage();
 
-        return redirect('/barang/master?page=' . $lastPage . '&orderBy=id&sort=asc')
+        return redirect('/barang/manajemen-barang?page=' . $lastPage . '&orderBy=id&sort=asc')
             ->with('success', 'Barang "' . $Barang->name . '" Berhasil Ditambahkan');
     }
 
@@ -481,20 +511,19 @@ class BarangController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'id' => 'required|exists:barangs,id',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:30',
+            'date' => 'required|date',
             'description' => 'nullable|string',
-            'jumlah' => 'required|integer|max:10',
+            'minimum' => 'required|Integer|max:20',
             'satuan_id' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
-
 
         $Barang = Barang::findOrFail($request->input('id'));
         $Barang->user_id = Auth::id();
         $Barang->name = $request->input('name');
         $Barang->description = $request->input('description') ?? '-';
-        $Barang->jumlah = $request->input('jumlah') ?? 0;
+        $Barang->minimum = $request->input('minimum' ?? 0);
         $Barang->satuan_id = $request->input('satuan_id');
 
         // Gambar hanya diubah jika ada upload baru
@@ -535,7 +564,7 @@ class BarangController extends Controller
         $Satuan->name = $request->input('name');
         $Satuan->save();
 
-        return redirect('/barang/satuan')->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
+        return redirect()->back()->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
     }
 
     public function delete(Request $request)

@@ -16,7 +16,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a class="" href="/bahan/master">Stok Bahan - Manajemen
+                                <li class="breadcrumb-item"><a class="" href="/bahan/manajemen-bahan">Stok Bahan - Manajemen
                                         Bahan</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">{{ $bahans->name }}</li>
                             </ol>
@@ -50,7 +50,7 @@
         @endif
 
         <div>
-            <a href="/bahan/master"
+            <a href="/bahan/manajemen-bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
                 Manajemen Bahan
             </a>
@@ -151,7 +151,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/bahan/master/storeM'>
+                    <form method="Post" action='/bahan/manajemen-bahan/storeM'>
                         @csrf
 
                         <div class="mb-3">

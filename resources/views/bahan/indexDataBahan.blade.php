@@ -47,8 +47,8 @@
             </div>
         @endif
         <div>
-            <a href="/bahan/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
+            <a href="/bahan/manajemen-bahan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/manajemen-bahan') ? 'active' : '' }}">
                 Manajemen Bahan
             </a>
             <a href="/bahan/data-bahan"

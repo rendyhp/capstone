@@ -54,7 +54,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a class="" href="/bahan/master">Manajemen Bahan</a></li>
+                                <li class="breadcrumb-item"><a class="" href="/bahan/manajemen-bahan">Manajemen Bahan</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Rekap Bulanan {{ $bahan->name }}</li>
                             </ol>
                         </nav>
@@ -86,7 +86,7 @@
             </div>
         @endif
 
-        <form action="/bahan/master/{{ Hashids::encode($bahanId) }}" method="GET" class="d-flex align-items-center mb-3">
+        <form action="/bahan/manajemen-bahan/{{ Hashids::encode($bahanId) }}" method="GET" class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
                 <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
                 <div class="col-sm-6">
@@ -101,8 +101,8 @@
         </form>
 
         <div>
-            <a href="/bahan/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
+            <a href="/bahan/manajemen-bahan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/manajemen-bahan') ? 'active' : '' }}">
                 Manajemen Bahan
             </a>
             <a href="/bahan/data-bahan"

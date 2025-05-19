@@ -48,8 +48,8 @@
         @endif
 
         <div>
-            <a href="/barang/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/master') ? 'active' : '' }}">
+            <a href="/barang/manajemen-barang"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/manajemen-barang') ? 'active' : '' }}">
                 Master
             </a>
 
@@ -87,11 +87,11 @@
                                             </label>
                                         </div>
                                         <div class="d-flex gap-2 mb-2">
-                                            <a href="/barang/master" class="btn btn-outline-secondary btn-sm"
+                                            <a href="/barang/manajemen-barang" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/barang/master" method="get" class="form-inline d-flex">
+                                            <form action="/barang/manajemen-barang" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
                                                     name="search" placeholder="Search" value="{{ request('search') }}">
                                             </form>
@@ -127,16 +127,26 @@
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                         <td>
-                                                            <a href="/barang/master/{{ Hashids::encode($barang->id) }}"
+                                                            <a href="/barang/manajemen-barang/{{ Hashids::encode($barang->id) }}"
                                                                 class="text-decoration-none text-dark">
                                                                 {{ $barang->name ?? '-' }}
                                                             </a>
                                                         </td>
                                                         <td>{{ $barang->description }}</td>
-                                                        <td></td><td></td>
-                                                        <td></td><td></td>
                                                         <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($barang->stok_akhir, 3, ',', '.'), '0'), ',') }}
+                                                            {{ rtrim(rtrim(number_format($barang->awal, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($barang->masuk, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($barang->total_beli, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($barang->keluar, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($barang->sisa, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                         <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
 
@@ -175,6 +185,7 @@
                                                                             data-id="{{ $barang->id ?? 'NULL' }}"
                                                                             data-name="{{ $barang->name ?? 'NULL' }}"
                                                                             data-description="{{ $barang->description ?? 'NULL' }}"
+                                                                            data-minimum="{{ $barang->minimum }}"
                                                                             data-jumlah="{{ $barang->jumlah ?? 'NULL' }}"
                                                                             data-satuan_id="{{ $barang->satuan_id ?? 'NULL' }}"
                                                                             data-image="{{ $barang->image ?? 'NULL' }}">
@@ -182,7 +193,8 @@
                                                                         </button>
                                                                     </li>
                                                                     <li>
-                                                                        <form action="/barang/master/delete/{{ $barang->id }}"
+                                                                        <form
+                                                                            action="/barang/manajemen-barang/delete/{{ $barang->id }}"
                                                                             method="post"
                                                                             onsubmit="return confirm('Yakin akan Mendelete Data?')">
                                                                             @method('PUT')
@@ -245,7 +257,14 @@
                             <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
                             <textarea class="form-control" required id="description" name="description" rows="4"
                                 autocomplete="off" placeholder="Ketik deskripsi barang"></textarea>
-
+                        </div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <label for="minimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
+                            <input type="number" min="0" required autocomplete="off" class="form-control number0"
+                                id="minimum" name="minimum" value="0" readonly style="max-width: 150px;">
+                            <button type="button" class="btn btn-primary ms-2" id="toggleMinimum1">
+                                <i id="iconMinimum1" class="fa fa-edit" aria-hidden="true"></i>
+                            </button>
                         </div>
                         <div class="mb-3">
                             <label for="jumlah" class="form-label text-dark fw-bold">Stok Awal</label>
@@ -278,7 +297,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/barang/master/storeM'>
+                    <form method="Post" action='/barang/manajemen-barang/storeM'>
                         @csrf
 
                         <div class="mb-3">
@@ -324,7 +343,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/barang/master/storeK'>
+                    <form method="Post" action='/barang/manajemen-barang/storeK'>
                         @csrf
                         <input type="hidden" name="id" id="stokBarangIdK">
                         <div class="mb-3">
@@ -401,6 +420,15 @@
                                 placeholder="Ketik deskripsi barang"></textarea>
                             @error('description') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <label for="txtminimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
+                            <input type="number" min="0" required autocomplete="off"
+                                class="form-control number0 @error('minimum') is-invalid @enderror" id="txtminimum"
+                                name="minimum" value="0" readonly style="max-width: 150px;">
+                            <button type="button" class="btn btn-primary ms-2" id="toggleMinimum2">
+                                <i id="iconMinimum2" class="fa fa-edit" aria-hidden="true"></i>
+                            </button>
+                        </div>
                         <div class="mb-3">
                             <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
                             <select class="form-control select2" id="txtsatuan_id" required autocomplete="off"
@@ -450,6 +478,32 @@
                     reader.readAsDataURL(input.files[0]);
                 }
             }
+        </script>
+        <script>
+            function toggleInput(inputId, buttonId) {
+                let inputField = document.getElementById(inputId);
+                let button = document.getElementById(buttonId);
+
+                if (inputField.readOnly) {
+                    inputField.readOnly = false;
+
+                    button.style.display = "none";
+                    inputField.focus();
+                    inputField.select();
+
+                    inputField.addEventListener("focusout", function lockInput() {
+                        inputField.readOnly = true;
+                        button.style.display = "inline";
+                        inputField.removeEventListener("focusout", lockInput);
+                    });
+                }
+            }
+            document.getElementById("toggleMinimum1").addEventListener("click", function () {
+                toggleInput("minimum", "toggleMinimum1");
+            });
+            document.getElementById("toggleMinimum2").addEventListener("click", function () {
+                toggleInput("txtminimum", "toggleMinimum2");
+            });
         </script>
     @endpush
 

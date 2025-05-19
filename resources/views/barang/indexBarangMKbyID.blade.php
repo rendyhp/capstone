@@ -51,8 +51,8 @@
         @endif
 
         <div>
-            <a href="/barang/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/master') ? 'active' : '' }}">
+            <a href="/barang/manajemen-barang"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/manajemen-barang') ? 'active' : '' }}">
                 Master
             </a>
 
@@ -170,7 +170,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/barang/master/storeM'>
+                    <form method="Post" action='/barang/manajemen-barang/storeM'>
                         @csrf
 
                         <div class="mb-3">
@@ -215,7 +215,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/barang/master/storeK'>
+                    <form method="Post" action='/barang/manajemen-barang/storeK'>
                         @csrf
                         <input type="hidden" name="id" id="stokBarangIdK">
                         <div class="mb-3">

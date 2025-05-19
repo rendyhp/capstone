@@ -47,7 +47,7 @@
             </div>
         @endif
 
-        <form action="/bahan/master" method="GET" class="d-flex align-items-center mb-3">
+        <form action="/bahan/manajemen-bahan" method="GET" class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
                 <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
                 <div class="col-sm-6">
@@ -62,8 +62,8 @@
         </form>
 
         <div>
-            <a href="/bahan/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/master') ? 'active' : '' }}">
+            <a href="/bahan/manajemen-bahan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/manajemen-bahan') ? 'active' : '' }}">
                 Manajemen Bahan
             </a>
             <a href="/bahan/data-bahan"
@@ -91,11 +91,11 @@
 
                                     <div class="col-sm-3 float-end">
                                         <div class="d-flex gap-2 mb-2">
-                                            <a href="/bahan/master" class="btn btn-outline-secondary btn-sm"
+                                            <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
-                                            <form action="/bahan/master" method="get" class="form-inline d-flex">
+                                            <form action="/bahan/manajemen-bahan" method="get" class="form-inline d-flex">
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
@@ -127,7 +127,7 @@
                                                         <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
                                                         </td>
                                                         <td>
-                                                            <a href="/bahan/master/{{ Hashids::encode($bahan->id) }}?date={{ \Carbon\Carbon::parse($date)->format('Y-m') }}"
+                                                            <a href="/bahan/manajemen-bahan/{{ Hashids::encode($bahan->id) }}?date={{ \Carbon\Carbon::parse($date)->format('Y-m') }}"
                                                                 class="text-decoration-none text-dark">
                                                                 {{ $bahan->name ?? '-' }}
                                                             </a>
@@ -207,10 +207,10 @@
 
                                 <div class="col-sm-3 float-end">
                                     <div class="d-flex gap-2 mb-2">
-                                        <a href="/bahan/master" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                        <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm" title="Refresh">
                                             <i class="fa fa-refresh"></i>
                                         </a>
-                                        <form action="/bahan/master" method="get" class="form-inline d-flex">
+                                        <form action="/bahan/manajemen-bahan" method="get" class="form-inline d-flex">
                                             <input type="hidden" name="date"
                                                 value="{{ request('date', now()->toDateString()) }}">
                                             <input class="form-control form-control-sm" autocomplete="off" type="text"
@@ -347,7 +347,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="Post" action='/bahan/master/storeM'>
+                    <form method="Post" action='/bahan/manajemen-bahan/storeM'>
                         @csrf
 
                         <div class="mb-3">
@@ -388,16 +388,13 @@
 
     <script>
         function editJumlah(bahan_id, date, type, currentJumlah) {
-            // Format angka: jika bilangan bulat, tampilkan tanpa desimal
             var formattedJumlah = currentJumlah % 1 === 0 ? parseInt(currentJumlah) : currentJumlah;
 
-            // Isi form modal dengan data yang dikirim
             document.getElementById('bahan_id').value = bahan_id;
             document.getElementById('date').value = date;
             document.getElementById('type').value = type;
             document.getElementById('jumlah_input').value = formattedJumlah;
 
-            // Tampilkan modal (Bootstrap 5)
             var myModal = new bootstrap.Modal(document.getElementById('modalEditJumlah'));
             myModal.show();
         }

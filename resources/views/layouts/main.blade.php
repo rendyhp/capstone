@@ -76,9 +76,9 @@
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false" aria-controls="stokMasterDropdown">Stok</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
-                                <a href="/barang/master" class="nav-link @yield('StokBarang')"><i
+                                <a href="/barang/manajemen-barang" class="nav-link @yield('StokBarang')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Barang</a>
-                                <a href="/bahan/master" class="nav-link @yield('StokBahan')"><i
+                                <a href="/bahan/manajemen-bahan" class="nav-link @yield('StokBahan')"><i
                                         class="fa fa-file me-2"></i>Bahan</a>
                             </div>
                         </div>
@@ -117,9 +117,9 @@
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false" aria-controls="stokMasterDropdown">Stok</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
-                                <a href="/barang/master" class="nav-link @yield('StokBarang')"><i
+                                <a href="/barang/manajemen-barang" class="nav-link @yield('StokBarang')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Barang</a>
-                                <a href="/bahan/master" class="nav-link @yield('StokBahan')"><i
+                                <a href="/bahan/manajemen-bahan" class="nav-link @yield('StokBahan')"><i
                                         class="fa fa-file me-2"></i>Bahan</a>
                             </div>
                         </div>
@@ -155,9 +155,9 @@
                             <a href="#" id="stokMasterDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false" aria-controls="stokMasterDropdown">Stok</a>
                             <div class="dropdown-menu bg-transparent border-0 " id="stokDropdownMenu">
-                                <a href="/barang/master" class="nav-link @yield('StokBarang')"><i
+                                <a href="/barang/manajemen-barang" class="nav-link @yield('StokBarang')"><i
                                         class="fa fa-credit-card-alt me-2"></i>Barang</a>
-                                <a href="/bahan/master" class="nav-link @yield('StokBahan')"><i
+                                <a href="/bahan/manajemen-bahan" class="nav-link @yield('StokBahan')"><i
                                         class="fa fa-file me-2"></i>Bahan</a>
                             </div>
                         </div>

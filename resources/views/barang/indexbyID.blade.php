@@ -48,8 +48,8 @@
         @endif
 
         <div>
-            <a href="/barang/master"
-                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/master') ? 'active' : '' }}">
+            <a href="/barang/manajemen-barang"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/manajemen-barang') ? 'active' : '' }}">
                 Master
             </a>
 
@@ -85,7 +85,7 @@
                                             </label>
                                         </div>
                                         <div class="d-flex gap-2 mb-2">
-                                            <a href="/barang/master/{{ Hashids::encode($barang->id) }}"
+                                            <a href="/barang/manajemen-barang/{{ Hashids::encode($barang->id) }}"
                                                 class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
