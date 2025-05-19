@@ -30,7 +30,11 @@ class LaporanController extends Controller
         $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;
         $bulanNama = Carbon::createFromDate($year, $month, 1)->translatedFormat('F');
 
-        $bahans = Bahan::with('satuan')->whereNull('deleted_at')->get();
+        $bahans = Bahan::with('satuan')
+            ->whereNull('deleted_at')
+            ->orderBy('name', 'asc')
+            ->get();
+
         $allHistories = [];
 
         foreach ($bahans as $bahan) {
@@ -99,7 +103,7 @@ class LaporanController extends Controller
 
     public function exportExcel(Request $request)
     {
-        
+
         $month = $request->input('month') ?? now()->month;
         $bulanNama = Carbon::create()->month($month)->locale('id')->isoFormat('MMMM');
         $year = $request->input('year') ?? now()->year;
@@ -113,7 +117,11 @@ class LaporanController extends Controller
     private function generateAllHistories($month, $year)
     {
         $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;
-        $bahans = Bahan::with('satuan')->whereNull('deleted_at')->get();
+        $bahans = Bahan::with('satuan')
+            ->whereNull('deleted_at')
+            ->orderBy('name', 'asc')
+            ->get();
+
         $allHistories = [];
 
         foreach ($bahans as $bahan) {

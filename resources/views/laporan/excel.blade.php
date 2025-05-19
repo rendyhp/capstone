@@ -2,8 +2,12 @@
 <html>
 
 <head>
+    @php
+        use Carbon\Carbon;
+        $bulanNama = Carbon::create()->month($month)->locale('id')->isoFormat('MMMM');
+    @endphp
     <meta charset="UTF-8">
-    <title>Data Stok Bahan Bulanan</title>
+    <title>Data Stok Bahan {{ $bulanNama }}</title>
     <style>
         table {
             border-collapse: collapse;
@@ -47,17 +51,22 @@
             max-width: 100px;
             min-width: 100px;
         }
+
+        .bordered td {
+            border: 1px solid #000 !important;
+        }
+
+        .no-border td {
+            border: none !important;
+        }
     </style>
 
 </head>
 
 <body>
-    @php
-        use Carbon\Carbon;
-        $bulanNama = Carbon::create()->month($month)->locale('id')->isoFormat('MMMM');
-    @endphp
 
-    <h3>Laporan Bulanan ({{ $bulanNama }} {{ $year }})</h3>
+
+    <h3>Laporan Stok Bahan ({{ $bulanNama }} {{ $year }})</h3>
 
     @php
         $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;
@@ -80,40 +89,86 @@
                     @for ($i = 1; $i <= $daysInMonth; $i++)
                         <th>{{ $i }}</th>
                     @endfor
+                    <th></th>
+                    <th>{{ $bahan->name }}</th>
+                    <th>({{ $bahan->satuan->name }})</th>
                 </tr>
             </thead>
+
             <tbody>
                 {{-- Baris jenis Awal, Masuk, Terpakai, Sisa --}}
                 @php
                     $types1 = ['Awal', 'Masuk', 'Terpakai', 'Sisa'];
                 @endphp
+
                 @foreach ($types1 as $type)
-                    <tr>
+                    @php
+                        $lower = strtolower($type);
+                        $total = collect($history)->sum(fn($day) => $day[$lower] ?? 0);
+                    @endphp
+                    <tr class="{{ $bahan->name === 'Brown Sugar' ? 'bordered' : '' }}">
                         <td class="indent">{{ $type }}</td>
                         @foreach ($history as $dayData)
-                            <td>{{ is_array($dayData) && isset($dayData[strtolower($type)]) ? $dayData[strtolower($type)] : 0 }}
-                            </td>
+                            <td>{{ $dayData[$lower] ?? 0 }}</td>
                         @endforeach
+                        <td></td>
+                        <td>
+                            @if ($type === 'Masuk')
+                                {{ $total }}
+                            @elseif ($type === 'Terpakai')
+                                {{ $total }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($type === 'Masuk')
+                                Beli
+                            @elseif ($type === 'Terpakai')
+                                Terpakai
+
+                            @endif
+                        </td>
+
                     </tr>
                 @endforeach
 
+
+
                 {{-- Baris kosong --}}
-                <tr>
-                    <td colspan="{{ $daysInMonth + 1 }}" class="no-border">&nbsp;</td>
+                <tr class="no-border">
+                    <td colspan="{{ $daysInMonth + 1 }}">&nbsp;</td>
                 </tr>
+
 
                 {{-- Baris Akhir dan Terbuang --}}
                 @php
                     $types2 = ['Akhir', 'Terbuang'];
                 @endphp
+
                 @foreach ($types2 as $type)
+                    @php
+                        $lower = strtolower($type);
+                        $total = collect($history)->sum(fn($day) => $day[$lower] ?? 0);
+                    @endphp
                     <tr>
                         <td class="indent">{{ $type }}</td>
                         @foreach ($history as $dayData)
-                            <td>{{ $dayData[strtolower($type)] ?? 0 }}</td>
+                            <td>{{ $dayData[$lower] ?? 0 }}</td>
                         @endforeach
+                        <td>
+                        </td>
+                        <td>
+                            @if ($type === 'Terbuang')
+                                {{ $total }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($type === 'Terbuang')
+                                Terbuang
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
+
             </tbody>
         </table>
 
