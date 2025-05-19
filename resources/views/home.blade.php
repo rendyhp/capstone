@@ -57,6 +57,9 @@
         <p>
         BdiM’s Stock bertujuan untuk membandingkan jumlah fisik bahan dengan catatan pada aplikasi.
         </p>
+        <p>
+        Jl. Mulawarman Raya No.2a, Pedalangan, Kec. Banyumanik, Kota Semarang, Jawa Tengah 50268
+        </p>
         <!-- <a href="#" class="btn-learn-more">Learn More</a> -->
       </div>
       </div>

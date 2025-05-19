@@ -99,7 +99,7 @@
       <form method="POST" action="{{ route('user-data.registerStore') }}" class="form-container">
         @csrf
 
-        <img src="{{ asset('img/login.png') }}" alt="logo" style="height: 100px;">
+        <img src="{{ asset('img/logo-bdim.png') }}" alt="logo" style="height: 100px;">
 
         <div class="divider d-flex align-items-center my-4">
         <p class="text-center fw-bold mx-3 mb-0 fs-3">REGISTER</p>
