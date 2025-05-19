@@ -7,11 +7,9 @@
         use Carbon\Carbon;
         $currentUrl = request()->path();
 
-        $monthFormatted = sprintf('%02d', $month); // agar 1 menjadi 01
-        $dateString = $year . '-' . $monthFormatted;
 
-        $monthName = Carbon::createFromFormat('Y-m', $dateString)->translatedFormat('F Y');
-        $daysInMonth = Carbon::createFromFormat('Y-m', $dateString)->daysInMonth;
+
+
         $selectedMonth = request('month', now()->format('m'));
         $selectedYear = request('year', now()->format('Y'));
     @endphp
@@ -90,40 +88,27 @@
             </div>
         @endif
 
-        <form action="{{ route('laporan.index') }}" method="GET" class="d-flex align-items-end gap-3 mb-4">
-            <div>
-                <label for="month" class="form-label mb-1">Pilih Bulan</label>
-                <select name="month" id="month" class="form-control">
-                    @foreach (range(1, 12) as $m)
-                        <option value="{{ $m }}" {{ $selectedMonth == $m ? 'selected' : '' }}>
-                            {{ DateTime::createFromFormat('!m', $m)->format('F') }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div>
-                <label for="year" class="form-label mb-1">Pilih Tahun</label>
-                <select name="year" id="year" class="form-control">
-                    @foreach (range(now()->year - 3, now()->year + 1) as $y)
-                        <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>{{ $y }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div>
-                <button type="submit" class="btn btn-primary mt-2">
-                    <i class="fas fa-filter"></i> Tampilkan
-                </button>
-            </div>
-
-            <div>
-                <a href="{{ route('laporan.export', ['month' => $selectedMonth, 'year' => $selectedYear]) }}"
-                    class="btn btn-success mt-2">
-                    <i class="fas fa-file-excel"></i> Export Excel
-                </a>
+        <form action="{{ route('laporan.index') }}" method="GET" class="mb-4">
+            <div class="mb-3 row">
+                <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
+                <div class="col-sm-2">
+                    <input type="month" class="form-control" id="tanggalbahan" name="date" value="{{ $dateParam }}">
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-filter"></i> Tampilkan
+                    </button>
+                </div>
+                @if (!empty($dateParam))
+                    <div class="col-sm-5 text-end">
+                        <a href="{{ route('laporan.export', ['date' => $dateParam]) }}" class="btn btn-success">
+                            <i class="fas fa-file-excel"></i> Export Excel
+                        </a>
+                    </div>
+                @endif
             </div>
         </form>
+
 
         <div>
             <a href="/laporan/bahan"
@@ -140,12 +125,99 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Bar ({{ $bulanNama }} {{ $year }})</div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Bar ({{ $bulanNama }}
+                            {{ $tahunNama }})</div>
                     </div>
 
                     <div class="card-body">
                         <div class="table-responsive">
                             @foreach ($allHistories as $index => $item)
+                                <h5 class="mt-4">{{ $index + 1 }}. {{ $item['bahan']->name }}
+                                    ({{ $item['bahan']->satuan->name }})</h5>
+                                <table class="table table-bordered text-dark table-sm">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th>Jenis</th>
+                                            @foreach ($item['history'] as $day)
+                                                <th class="text-center">{{ $day['tanggal'] }}</th>
+                                            @endforeach
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Data Awal</strong></td>
+                                            @foreach ($item['history'] as $day)
+                                                <td class="text-center">
+                                                    {{ rtrim(rtrim(number_format($day['awal'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endforeach
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Input</strong></td>
+                                            @foreach ($item['history'] as $day)
+                                                <td class="text-center">
+                                                    {{ rtrim(rtrim(number_format($day['masuk'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endforeach
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Terpakai</strong></td>
+                                            @foreach ($item['history'] as $day)
+                                                <td class="text-center">
+                                                    {{ rtrim(rtrim(number_format($day['terpakai'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endforeach
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Sisa</strong></td>
+                                            @foreach ($item['history'] as $day)
+                                                <td class="text-center">
+                                                    {{ rtrim(rtrim(number_format($day['sisa'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endforeach
+                                        </tr>
+                                        <tr>
+                                            <td style="border: none !important; height: 3vh;"></td>
+                                            @foreach ($item['history'] as $day)
+                                                <td style="border: none !important;"></td>
+                                            @endforeach
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Data Akhir</strong></td>
+                                            @foreach ($item['history'] as $day)
+                                                <td class="text-center">
+                                                    {{ rtrim(rtrim(number_format($day['akhir'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endforeach
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Terbuang</strong></td>
+                                            @foreach ($item['history'] as $day)
+                                                <td class="text-center">
+                                                    {{ rtrim(rtrim(number_format($day['terbuang'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endforeach
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-xl-12">
+                <div class="card custom-card">
+                    <div class="card-header">
+                        <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Kitchen ({{ $bulanNama }}
+                            {{ $tahunNama }})</div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            @foreach ($allHistories2 as $index => $item)
                                 <h5 class="mt-4">{{ $index + 1 }}. {{ $item['bahan']->name }}
                                     ({{ $item['bahan']->satuan->name }})</h5>
                                 <table class="table table-bordered text-dark table-sm">

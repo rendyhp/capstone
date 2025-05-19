@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('jumlah');
+            $table->integer('minimum');
             $table->foreignId('satuan_id')->references('id')->on('satuan_barangs')->onDelete('cascade');
             $table->string('image')->nullable();
             $table->timestamps();

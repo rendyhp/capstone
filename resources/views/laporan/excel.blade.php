@@ -7,7 +7,7 @@
         $bulanNama = Carbon::create()->month($month)->locale('id')->isoFormat('MMMM');
     @endphp
     <meta charset="UTF-8">
-    <title>Data Stok Bahan {{ $bulanNama }}</title>
+
     <style>
         table {
             border-collapse: collapse;
@@ -67,7 +67,7 @@
 
 
     <h3>Laporan Stok Bahan ({{ $bulanNama }} {{ $year }})</h3>
-    <h2>BAR</h2>
+
 
     @php
         $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;
