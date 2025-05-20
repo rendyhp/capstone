@@ -3,6 +3,23 @@
 @section('container')
 @section('title', 'Manajemen Bahan | Bdim’s Stock')
 
+    @push('addStyle')
+        <style>
+            .card-body.maxHeightTable100 {
+                max-height: 60vh;
+                overflow-y: auto;
+            }
+
+            .widthKolom8 {
+                min-width: 8vh;
+            }
+
+            .widthKolom18 {
+                min-width: 18vh
+            }
+        </style>
+    @endpush
+
     @php
         $currentUrl = request()->path();
     @endphp
@@ -108,14 +125,14 @@
                                             <tr>
                                                 <th>No.</th>
                                                 <th>Nama Bahan</th>
-                                                <th>Awal</th>
-                                                <th>Masuk</th>
-                                                <th>Terpakai</th>
-                                                <th>Sisa</th>
-                                                <th>Sisa Real</th>
-                                                <th>Terbuang</th>
+                                                <th class="widthKolom8">Awal</th>
+                                                <th class="widthKolom8">Masuk</th>
+                                                <th class="widthKolom8">Terpakai</th>
+                                                <th class="widthKolom8">Sisa</th>
+                                                <th class="widthKolom8">Akhir Sebenarnya</th>
+                                                <th class="widthKolom8">Terbuang</th>
                                                 <th>Satuan</th>
-                                                <th>Aksi</th>
+                                                <th class="widthKolom18">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -207,7 +224,8 @@
 
                                 <div class="col-sm-3 float-end">
                                     <div class="d-flex gap-2 mb-2">
-                                        <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                        <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm"
+                                            title="Refresh">
                                             <i class="fa fa-refresh"></i>
                                         </a>
                                         <form action="/bahan/manajemen-bahan" method="get" class="form-inline d-flex">
@@ -223,14 +241,14 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Nama Bahan</th>
-                                            <th>Awal</th>
-                                            <th>Masuk</th>
-                                            <th>Terpakai</th>
-                                            <th>Sisa</th>
-                                            <th>Sisa Real</th>
-                                            <th>Terbuang</th>
+                                            <th class="widthKolom8">Awal</th>
+                                            <th class="widthKolom8">Masuk</th>
+                                            <th class="widthKolom8">Terpakai</th>
+                                            <th class="widthKolom8">Sisa</th>
+                                            <th class="widthKolom8">Akhir Sebenarnya</th>
+                                            <th class="widthKolom8">Terbuang</th>
                                             <th>Satuan</th>
-                                            <th>Aksi</th>
+                                            <th class="widthKolom18">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>

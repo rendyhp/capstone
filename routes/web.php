@@ -72,7 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bahan/data-bahan', [BahanController::class, 'indexDataBahan'])->name('bahan.indexDataBahan');
     Route::post('/bahan/data-bahan/store', [BahanController::class, 'storeDataBahan'])->name('bahan.storeDataBahan');
     Route::put('/bahan/data-bahan/edit', [BahanController::class, 'updateDataBahan'])->name('bahan.updateDataBahan');
-    Route::put('/bahan/data-bahan/delete/{id}', [BahanController::class, 'deleteDataBahan'])->name('bahan.deleteDataBahan');
+    Route::put('/bahan/data-bahan/delete/', [BahanController::class, 'deleteDataBahan'])->name('bahan.deleteDataBahan');
 
     Route::get('/bahan/satuan', [BahanController::class, 'indexSatuan'])->name('bahan.indexSatuan');
     Route::post('/bahan/satuan/store', [BahanController::class, 'storeSatuan'])->name('bahan.storeSatuan');
@@ -81,7 +81,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bahan/masuk-keluar', [BahanController::class, 'indexMasukKeluar'])->name('bahan.indexMasukKeluar');
     Route::get('/bahan/masuk-keluar/{encryptedId}', [BahanController::class, 'indexBahanMKbyID'])->name('bahan.indexBahanMKbyID');
     Route::post('/bahan/manajemen-bahan/storeM', [BahanController::class, 'storeM'])->name('bahan.storeM');
-    Route::post('/bahan/manajemen-bahan/storeK', [BahanController::class, 'storeK'])->name('bahan.storeK');
 
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');

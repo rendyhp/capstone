@@ -729,14 +729,15 @@ class BahanController extends Controller
 
     }
 
-    public function delete(Request $request)
+    public function deleteDataBahan(Request $request)
     {
         $id = $request->id;
-        $barang = Bahan::findOrFail($id);
 
+        $barang = Bahan::findOrFail($id);
         $barang->deleted_at = now();
         $barang->save();
 
-        return redirect('/data-bahan')->with('success', 'Data Berhasil Dihapus');
+        return response()->json(['message' => 'Data berhasil dihapus']);
     }
+
 }

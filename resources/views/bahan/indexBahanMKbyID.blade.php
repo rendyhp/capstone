@@ -147,7 +147,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Barang Masuk</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah {{ $bahans->name }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -167,7 +167,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control" name="jumlah" required>
+                            <input type="number" min="1" class="form-control number0" value="0" autocomplete="off" name="jumlah" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>
@@ -178,7 +178,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Catatan keterangan masuk"></textarea>
+                                name="keterangan" rows="4" placeholder="Misal: Cash"></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
