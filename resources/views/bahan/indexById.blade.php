@@ -34,6 +34,11 @@
                 min-width: 10vh;
                 text-align: left;
             }
+
+            .card-body.maxHeightTable {
+                max-height: 100vh;
+                overflow-y: auto;
+            }
         </style>
     @endpush
     @php
@@ -54,7 +59,8 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a class="" href="/bahan/manajemen-bahan">Manajemen Bahan</a></li>
+                                <li class="breadcrumb-item"><a class="" href="/bahan/manajemen-bahan">Manajemen Bahan</a>
+                                </li>
                                 <li class="breadcrumb-item active" aria-current="page">Rekap Bulanan {{ $bahan->name }}</li>
                             </ol>
                         </nav>
@@ -86,7 +92,8 @@
             </div>
         @endif
 
-        <form action="/bahan/manajemen-bahan/{{ Hashids::encode($bahanId) }}" method="GET" class="d-flex align-items-center mb-3">
+        <form action="/bahan/manajemen-bahan/{{ Hashids::encode($bahanId) }}" method="GET"
+            class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
                 <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
                 <div class="col-sm-6">
@@ -119,7 +126,8 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <h5 class="card-title fs-5 fw-bold mt-2">Rekap Bulanan: {{ $bahan->name }} ({{ $bulanNama }} {{ $year }})</h5>
+                        <h5 class="card-title fs-5 fw-bold mt-2">Rekap Bulanan: {{ $bahan->name }} ({{ $bulanNama }}
+                            {{ $year }})</h5>
                     </div>
 
                     <div class="card-body">

@@ -67,6 +67,8 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
                 $highestRow = $sheet->getHighestRow();
                 $highestColumnIndex = Coordinate::columnIndexFromString($sheet->getHighestColumn());
 
+                $daysInMonth = \Carbon\Carbon::create($this->year, $this->month, 1)->daysInMonth; // ✅ Tambahkan ini
+    
                 for ($row = 1; $row <= $highestRow; $row++) {
                     $firstCellValue = $sheet->getCellByColumnAndRow(1, $row)->getValue();
                     for ($col = 1; $col <= $highestColumnIndex; $col++) {
@@ -102,9 +104,23 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
                         }
                     }
                 }
+                for ($row = 1; $row <= $highestRow; $row++) {
+                    $firstCellValue = $sheet->getCellByColumnAndRow(1, $row)->getValue();
+
+                    // Tambahkan formula hanya untuk baris Masuk, Terpakai, dan Terbuang
+                    if (in_array($firstCellValue, ['Masuk', 'Terpakai', 'Terbuang'])) {
+                        $startCol = Coordinate::stringFromColumnIndex(2);
+                        $endCol = Coordinate::stringFromColumnIndex($daysInMonth + 1);
+                        $totalCol = Coordinate::stringFromColumnIndex($daysInMonth + 3);
+                        $sumFormula = "=SUM({$startCol}{$row}:{$endCol}{$row})";
+                        $sheet->setCellValue("{$totalCol}{$row}", $sumFormula);
+                    }
+                }
+
             },
         ];
     }
+
 
     public function styles(Worksheet $sheet)
     {

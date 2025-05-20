@@ -45,6 +45,11 @@
                 min-width: 10vh;
                 text-align: left;
             }
+
+            .card-body.maxHeightTable {
+                max-height: 68vh;
+                overflow-y: auto;
+            }
         </style>
     @endpush
 
@@ -129,7 +134,7 @@
                             {{ $tahunNama }})</div>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body maxHeightTable">
                         <div class="table-responsive">
                             @foreach ($allHistories as $index => $item)
                                 <h5 class="mt-4">{{ $index + 1 }}. {{ $item['bahan']->name }}
@@ -215,7 +220,7 @@
                             {{ $tahunNama }})</div>
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body maxHeightTable">
                         <div class="table-responsive">
                             @foreach ($allHistories2 as $index => $item)
                                 <h5 class="mt-4">{{ $index + 1 }}. {{ $item['bahan']->name }}
