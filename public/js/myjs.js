@@ -91,18 +91,18 @@ $(document).on("click", ".btn_editbarang", function (e) {
     var name = $(this).data("name");
     var description = $(this).data("description");
     var minimum = $(this).data("minimum");
-    var jumlah = $(this).data("jumlah");
+    var stok_awal = $(this).data("stok_awal");
 
     var satuan_id = $(this).data("satuan_id");
     var image = $(this).data("image");
 
-    console.log(id, name, description, minimum, jumlah, satuan_id, image);
+    console.log(id, name, description, minimum, stok_awal, satuan_id, image);
 
     $("#txtid").val(id);
     $("#txtname").val(name);
     $("#txtdescription").val(description);
     $("#txtminimum").val(minimum);
-    $("#txtjumlah").val(jumlah);
+    $("#txtstok_awal").val(stok_awal);
     $("#txtsatuan_id").val(satuan_id);
 
     if (image && image !== 'NULL') {
@@ -234,28 +234,6 @@ $(document).on("click", ".btn_editbahan2", function (e) {
     $("#txtsatuan_id2").val(satuan_id2);
 
     $("#editBarangModal2").modal("toggle");
-});
-
-
-////////////////////////////////////////////////
-
-$(document).on("click", ".btn_editstokbahan", function (e) {
-    var id = $(this).data("id");
-    var date = $(this).data("date");
-    var jumlah = $(this).data("jumlah");
-    var satuan_name = $(this).data("satuan_name");
-
-    console.log(id, date, jumlah, satuan_name);
-
-    var formattedJumlah = jumlah % 1 === 0 ? parseInt(jumlah) : jumlah;
-
-    $("#txtid").val(id);
-    $("#txtdate").val(date);
-    $("#txtjumlah").val(formattedJumlah);
-
-    $("#txtsatuan_name").val(satuan_name);
-
-    $("#editBarangModal").modal("toggle");
 });
 
 ///////////////////////////////////////////////////

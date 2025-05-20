@@ -26,7 +26,7 @@ class BarangController extends Controller
         $role = $user->role;
         session(['previous_barangmk_url' => url()->full()]);
 
-        $allowedSortColumns = ['id', 'name', 'jumlah', 'created_at'];
+        $allowedSortColumns = ['id', 'name', 'stok_awal', 'created_at'];
         $allowedSortDirections = ['asc', 'desc'];
 
         $orderBy = in_array($request->input('orderBy'), $allowedSortColumns) ? $request->input('orderBy') : 'name';
@@ -103,7 +103,7 @@ class BarangController extends Controller
         $query = Barang::select(
             'barangs.*',
             DB::raw('
-                (COALESCE(barangs.jumlah, 0) +
+                (COALESCE(barangs.stok_awal, 0) +
                 COALESCE((SELECT SUM(jumlah) FROM barang_masuks WHERE barang_id = barangs.id AND deleted_at IS NULL), 0) -
                 COALESCE((SELECT SUM(jumlah) FROM barang_keluars WHERE barang_id = barangs.id AND deleted_at IS NULL), 0)
                 ) AS stok_akhir
@@ -430,7 +430,7 @@ class BarangController extends Controller
             'name' => 'required|string|max:30',
             'date' => 'required|date',
             'description' => 'nullable|string',
-            'jumlah' => 'required|integer|max:20',
+            'stok_awal' => 'required|integer|max:20',
             'minimum' => 'required|Integer|max:20',
             'satuan_id' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
@@ -445,7 +445,7 @@ class BarangController extends Controller
             $Barang->name = $request->input('name');
             $Barang->description = $request->input('description') ?? '-';
             $Barang->minimum = $request->input('minimum');
-            $Barang->jumlah = $request->input('jumlah') ?? 0;
+            $Barang->stok_awal = $request->input('stok_awal') ?? 0;
             $Barang->satuan_id = $request->input('satuan_id') ?? '-';
 
             if ($request->hasFile('image')) {

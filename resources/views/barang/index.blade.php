@@ -186,7 +186,7 @@
                                                                             data-name="{{ $barang->name ?? 'NULL' }}"
                                                                             data-description="{{ $barang->description ?? 'NULL' }}"
                                                                             data-minimum="{{ $barang->minimum }}"
-                                                                            data-jumlah="{{ $barang->jumlah ?? 'NULL' }}"
+                                                                            data-stok_awal="{{ $barang->stok_awal ?? 'NULL' }}"
                                                                             data-satuan_id="{{ $barang->satuan_id ?? 'NULL' }}"
                                                                             data-image="{{ $barang->image ?? 'NULL' }}">
                                                                             <i class="fa fa-edit me-2"></i>Edit
@@ -245,8 +245,6 @@
                         <div class="mb-3">
                             <label for="image" class="form-label text-dark fw-bold">Gambar</label>
                             <input type="file" class="form-control" id="image" name="image" onchange="previewImage(this)">
-
-
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
@@ -267,9 +265,9 @@
                             </button>
                         </div>
                         <div class="mb-3">
-                            <label for="jumlah" class="form-label text-dark fw-bold">Stok Awal</label>
-                            <input type="number" required autocomplete="off" class="form-control number0" id="jumlah"
-                                min="0" name="jumlah" value="0" placeholder="Ketik stok awal">
+                            <label for="stok_awal" class="form-label text-dark fw-bold">Stok Awal</label>
+                            <input type="number" required autocomplete="off" class="form-control number0" id="stok_awal"
+                                min="1" name="stok_awal" value="0" placeholder="Ketik stok awal">
                         </div>
                         <div class="mb-3">
                             <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
@@ -393,7 +391,7 @@
                         @csrf
                         <div class="mb-3">
                             <input hidden type="text" name="id" id="txtid">
-                            <input hidden type="number" name="jumlah" id="txtjumlah">
+                            <input hidden type="number" name="stok_awal" id="txtstok_awal">
                             <label for="image" class="form-label text-dark fw-bold">Gambar</label>
                             <input type="file" class="form-control @error('image') is-invalid @enderror" id="txtimage"
                                 name="image">
