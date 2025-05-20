@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 20 Bulan Mei 2025 pada 06.11
+-- Waktu pembuatan: 20 Bulan Mei 2025 pada 09.09
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -51,19 +51,20 @@ INSERT INTO `bahans` (`id`, `user_id`, `name`, `description`, `section`, `minimu
 (19, 2, 'Evaporasi', 'Sunbay, Carnation', 'BAR', 500.000, 1, NULL, '2025-05-16 08:42:05', '2025-05-16 08:42:05', NULL),
 (20, 2, 'Consentrate Mangga', 'Toza', 'BAR', 500.000, 1, NULL, '2025-05-16 08:43:12', '2025-05-16 08:43:12', NULL),
 (21, 2, 'Consentrate Lemon', 'Toza', 'BAR', 500.000, 1, NULL, '2025-05-16 08:44:09', '2025-05-16 08:44:09', NULL),
-(22, 2, 'Brown Sugar', 'Boskaf', 'BAR', 500.000, 1, NULL, '2025-05-16 08:44:37', '2025-05-16 08:44:37', NULL),
+(22, 1, 'Brown Sugar', 'Boskaf', 'BAR', 1000.000, 1, NULL, '2025-05-16 08:44:37', '2025-05-20 06:59:56', NULL),
 (23, 2, 'Sirup Hazelnut', 'Tofico', 'BAR', 500.000, 1, NULL, '2025-05-16 08:45:27', '2025-05-16 08:45:27', NULL),
 (24, 2, 'Sirup Caramel', 'Tofico', 'BAR', 500.000, 1, NULL, '2025-05-16 08:46:06', '2025-05-16 08:46:06', NULL),
 (25, 2, 'Sirup Mint', 'Tofico', 'BAR', 500.000, 1, NULL, '2025-05-16 08:46:36', '2025-05-16 08:46:36', NULL),
 (26, 2, 'Sirup Lychee', 'Tofico', 'BAR', 500.000, 1, NULL, '2025-05-16 08:47:06', '2025-05-16 08:47:06', NULL),
 (27, 2, 'Soda', 'Fanta', 'BAR', 2.000, 7, NULL, '2025-05-16 08:48:03', '2025-05-16 08:48:03', NULL),
-(28, 2, 'Yakult', 'Yakult', 'BAR', 4.000, 7, NULL, '2025-05-16 08:48:32', '2025-05-16 08:48:32', NULL),
+(28, 1, 'Yakult', 'Yakult', 'BAR', 1000.000, 7, NULL, '2025-05-16 08:48:32', '2025-05-20 07:01:19', NULL),
 (29, 2, 'Kopi Blend 70:30', 'Depangi', 'BAR', 300.000, 4, NULL, '2025-05-16 08:49:26', '2025-05-16 08:49:35', NULL),
 (30, 2, 'Chocolate Powder', 'Bromo', 'BAR', 300.000, 4, NULL, '2025-05-16 08:50:47', '2025-05-16 08:50:47', NULL),
 (31, 2, 'Matcha Powder', 'Tofico', 'BAR', 300.000, 4, NULL, '2025-05-16 08:51:21', '2025-05-16 08:51:21', NULL),
 (32, 2, 'Gula Pasir', '-', 'BAR', 1000.000, 4, NULL, '2025-05-16 08:53:27', '2025-05-16 08:53:27', NULL),
-(33, 1, 'Cabe biasa', '-', 'KITCHEN', 0.000, 4, NULL, '2025-05-19 16:04:20', '2025-05-19 16:04:20', NULL),
-(34, 1, 'Cabe pedas', '-', 'KITCHEN', 0.000, 4, NULL, '2025-05-19 16:04:30', '2025-05-19 16:04:30', NULL);
+(33, 1, 'Cabe biasa', '-', 'KITCHEN', 800.000, 4, NULL, '2025-05-19 16:04:20', '2025-05-20 06:03:46', NULL),
+(34, 1, 'Cabe pedas', '-', 'KITCHEN', 300.000, 4, NULL, '2025-05-19 16:04:30', '2025-05-20 06:03:52', NULL),
+(35, 1, 'Bawang Bombay', '-', 'KITCHEN', 50.000, 4, NULL, '2025-05-20 05:56:09', '2025-05-20 06:03:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -87,7 +88,6 @@ CREATE TABLE `bahan_akhirs` (
 --
 
 INSERT INTO `bahan_akhirs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(108, 2, '2025-05-01', 22, 875.000, '2025-05-16 10:03:38', '2025-05-16 10:03:38', NULL),
 (109, 2, '2025-05-01', 30, 1000.000, '2025-05-16 10:03:42', '2025-05-16 10:03:42', NULL),
 (110, 2, '2025-05-01', 21, 1000.000, '2025-05-16 10:03:46', '2025-05-16 10:03:46', NULL),
 (111, 2, '2025-05-01', 20, 900.000, '2025-05-16 10:03:50', '2025-05-16 10:03:50', NULL),
@@ -102,7 +102,6 @@ INSERT INTO `bahan_akhirs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `crea
 (120, 2, '2025-05-01', 25, 1000.000, '2025-05-16 10:04:26', '2025-05-16 10:04:26', NULL),
 (121, 2, '2025-05-01', 27, 1000.000, '2025-05-16 10:04:30', '2025-05-16 10:04:30', NULL),
 (122, 2, '2025-05-01', 17, 8750.000, '2025-05-16 10:04:35', '2025-05-16 10:04:35', NULL),
-(123, 2, '2025-05-01', 28, 990.000, '2025-05-16 10:04:39', '2025-05-16 10:04:39', NULL),
 (124, 2, '2025-05-10', 22, 775.000, '2025-05-16 10:08:26', '2025-05-16 10:08:26', NULL),
 (125, 2, '2025-05-10', 30, 1000.000, '2025-05-16 10:08:30', '2025-05-16 10:08:30', NULL),
 (126, 2, '2025-05-10', 21, 1000.000, '2025-05-16 10:08:48', '2025-05-16 10:08:48', NULL),
@@ -135,7 +134,9 @@ INSERT INTO `bahan_akhirs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `crea
 (153, 2, '2025-05-31', 27, 1000.000, '2025-05-16 10:18:40', '2025-05-16 10:18:40', NULL),
 (154, 2, '2025-05-31', 17, 7000.000, '2025-05-16 10:18:45', '2025-05-16 10:18:45', NULL),
 (155, 2, '2025-05-31', 28, 984.000, '2025-05-16 10:18:49', '2025-05-16 10:18:49', NULL),
-(156, 1, '2025-05-01', 33, 1400.000, '2025-05-19 16:05:21', '2025-05-19 16:05:21', NULL);
+(156, 1, '2025-05-01', 33, 1400.000, '2025-05-19 16:05:21', '2025-05-19 16:05:21', NULL),
+(158, 1, '2025-05-01', 28, 990.000, '2025-05-20 05:48:58', '2025-05-20 05:48:58', NULL),
+(160, 1, '2025-05-01', 22, 1920.000, '2025-05-20 05:53:34', '2025-05-20 05:53:34', NULL);
 
 -- --------------------------------------------------------
 
@@ -206,7 +207,12 @@ INSERT INTO `bahan_masuks` (`id`, `user_id`, `date`, `bahan_id`, `keterangan`, `
 (9, 1, '2025-05-01', 33, 'Cash', 500.000, '2025-05-19 16:05:03', '2025-05-19 16:05:03', NULL),
 (10, 1, '2025-05-19', 28, '-', 200.000, '2025-05-19 16:31:45', '2025-05-19 16:31:45', NULL),
 (11, 1, '2025-05-19', 34, 'Cash', 500.000, '2025-05-19 16:32:31', '2025-05-19 16:32:31', NULL),
-(12, 1, '2025-05-19', 34, 'Cash', 500.000, '2025-05-19 16:32:31', '2025-05-19 16:32:31', NULL);
+(12, 1, '2025-05-19', 34, 'Cash', 500.000, '2025-05-19 16:32:31', '2025-05-19 16:32:31', NULL),
+(13, 1, '2025-05-01', 22, 'Cash', 500.000, '2025-05-20 05:39:27', '2025-05-20 05:39:27', NULL),
+(14, 1, '2025-05-01', 28, 'cash', 2.000, '2025-05-20 05:44:13', '2025-05-20 05:44:13', NULL),
+(15, 1, '2025-05-20', 27, 'cash', 2.000, '2025-05-20 05:44:48', '2025-05-20 05:44:48', NULL),
+(16, 1, '2025-05-20', 17, 'cash', 200.000, '2025-05-20 05:46:08', '2025-05-20 05:46:08', NULL),
+(17, 1, '2025-05-01', 22, 'cash', 555.000, '2025-05-20 05:53:06', '2025-05-20 05:53:06', NULL);
 
 -- --------------------------------------------------------
 
@@ -236,12 +242,13 @@ CREATE TABLE `barangs` (
 INSERT INTO `barangs` (`id`, `user_id`, `date`, `name`, `description`, `stok_awal`, `minimum`, `satuan_id`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, '2025-05-05', 'Piring', 'Piring baru', 20, 0, 2, 'upload/barang/1746413436.jpg', '2025-05-04 19:50:36', '2025-05-04 19:50:36', NULL),
 (2, 1, '2025-05-05', 'Gelas Kecil', '-', 12, 0, 2, 'upload/barang/1746413584.jpg', '2025-05-04 19:53:04', '2025-05-04 19:53:04', NULL),
-(3, 1, '2025-05-05', 'Gelas Besar', '-', 20, 0, 2, 'upload/barang/1746413997.webp', '2025-05-04 19:59:57', '2025-05-04 19:59:57', NULL),
+(3, 1, '2025-05-05', 'Gelas Besar', '-', 20, 0, 2, 'upload/barang/1746413997.webp', '2025-05-04 19:59:57', '2025-05-20 04:48:07', NULL),
 (4, 1, '2025-05-05', 'Meja Kafe', 'Meja baru', 10, 0, 2, 'upload/barang/1746414173.jpg', '2025-05-04 20:02:53', '2025-05-04 20:02:53', NULL),
 (5, 1, '2025-05-05', 'Kursi Kafe', '-', 20, 0, 2, 'upload/barang/1746414367.webp', '2025-05-04 20:06:07', '2025-05-04 20:06:07', NULL),
-(6, 3, '2025-05-15', 'Mangkok', '-', 10, 0, 2, NULL, '2025-05-15 00:13:13', '2025-05-15 00:13:13', NULL),
-(7, 1, '2025-01-15', 'mangkok besar', '-', 5, 5, 2, NULL, '2025-05-15 00:57:31', '2025-05-19 17:10:42', NULL),
-(8, 1, '2025-05-19', 'Sendok', '-', 20, 15, 2, NULL, '2025-05-19 16:52:38', '2025-05-19 17:10:29', NULL);
+(6, 1, '2025-05-15', 'Mangkok', '-', 10, 20, 2, NULL, '2025-05-15 00:13:13', '2025-05-20 07:04:25', NULL),
+(7, 1, '2025-01-15', 'mangkok besar', '-', 5, 5, 2, NULL, '2025-05-15 00:57:31', '2025-05-20 04:39:13', NULL),
+(8, 1, '2025-05-19', 'Sendok', '-', 20, 15, 2, NULL, '2025-05-19 16:52:38', '2025-05-20 04:48:13', NULL),
+(9, 1, '2025-05-20', 'Garpu', '-', 12, 15, 2, NULL, '2025-05-20 04:12:48', '2025-05-20 06:54:56', NULL);
 
 -- --------------------------------------------------------
 
@@ -273,7 +280,8 @@ INSERT INTO `barang_awals` (`id`, `user_id`, `date`, `barang_id`, `keterangan`, 
 (5, 1, '2025-05-05', 5, 'Stok awal Kursi Kafe', 20, '2025-05-04 20:06:07', '2025-05-04 20:06:07', NULL),
 (6, 3, '2025-05-15', 6, 'Stok awal Mangkok', 10, '2025-05-15 00:13:13', '2025-05-15 00:13:13', NULL),
 (7, 1, '2025-01-15', 7, 'Stok awal mangkok besar', 5, '2025-05-15 00:57:31', '2025-05-15 00:57:31', NULL),
-(8, 1, '2025-05-19', 8, 'Stok awal Sendok', 20, '2025-05-19 16:52:38', '2025-05-19 16:52:38', NULL);
+(8, 1, '2025-05-19', 8, 'Stok awal Sendok', 20, '2025-05-19 16:52:38', '2025-05-19 16:52:38', NULL),
+(10, 1, '2025-05-20', 9, 'Stok awal Garpu', 12, '2025-05-20 04:17:52', '2025-05-20 04:17:52', NULL);
 
 -- --------------------------------------------------------
 
@@ -300,7 +308,9 @@ CREATE TABLE `barang_keluars` (
 INSERT INTO `barang_keluars` (`id`, `user_id`, `barang_id`, `date`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 3, 2, '2025-05-15', 'Gelas pecah', 3, '2025-05-15 00:34:38', '2025-05-15 00:34:38', NULL),
 (2, 1, 7, '2025-05-14', 'pecah', 2, '2025-05-15 00:58:29', '2025-05-15 00:58:29', NULL),
-(3, 1, 3, '2025-05-20', '-', 3, '2025-05-19 17:15:29', '2025-05-19 17:15:29', NULL);
+(3, 1, 3, '2025-05-20', '-', 3, '2025-05-19 17:15:29', '2025-05-19 17:15:29', NULL),
+(4, 1, 2, '2025-05-20', 'Gelas rusak', 2, '2025-05-20 04:19:57', '2025-05-20 04:19:57', NULL),
+(5, 1, 2, '2025-05-20', 'Rusak', 2, '2025-05-20 04:20:40', '2025-05-20 04:20:40', NULL);
 
 -- --------------------------------------------------------
 
@@ -327,7 +337,9 @@ CREATE TABLE `barang_masuks` (
 INSERT INTO `barang_masuks` (`id`, `user_id`, `date`, `barang_id`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, '2025-05-05', 1, 'Beli lagi', 5, '2025-05-04 19:50:58', '2025-05-04 19:50:58', NULL),
 (2, 1, '2025-05-15', 7, '-', 5, '2025-05-15 00:58:10', '2025-05-15 00:58:10', NULL),
-(3, 1, '2025-05-20', 3, '-', 5, '2025-05-19 17:15:38', '2025-05-19 17:15:38', NULL);
+(3, 1, '2025-05-20', 3, '-', 5, '2025-05-19 17:15:38', '2025-05-19 17:15:38', NULL),
+(4, 1, '2025-05-20', 1, 'Beli cash', 2, '2025-05-20 04:19:34', '2025-05-20 04:19:34', NULL),
+(5, 1, '2025-05-20', 2, 'Beli cash', 2, '2025-05-20 04:20:25', '2025-05-20 04:20:25', NULL);
 
 -- --------------------------------------------------------
 
@@ -390,7 +402,9 @@ INSERT INTO `komposisi_menus` (`id`, `menu_id`, `bahan_id`, `jumlah`, `created_a
 (33, 10, 17, 100.000, '2025-05-16 09:00:09', '2025-05-16 09:00:09', NULL),
 (34, 11, 28, 2.000, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL),
 (35, 11, 17, 50.000, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL),
-(36, 11, 20, 20.000, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL);
+(36, 11, 20, 20.000, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL),
+(43, 13, 22, 23.000, '2025-05-20 06:46:40', '2025-05-20 06:46:40', NULL),
+(44, 13, 22, 23.000, '2025-05-20 06:46:40', '2025-05-20 06:46:40', NULL);
 
 -- --------------------------------------------------------
 
@@ -436,7 +450,8 @@ INSERT INTO `menus` (`id`, `user_id`, `name`, `description`, `image`, `created_a
 (8, 2, 'Kopi Susu Original', 'ice', NULL, '2025-05-16 08:57:36', '2025-05-16 08:57:36', NULL),
 (9, 2, 'Kopi Susu Gula Aren', 'ice', NULL, '2025-05-16 08:58:41', '2025-05-16 08:58:41', NULL),
 (10, 2, 'Greentea Latte', 'ice', NULL, '2025-05-16 09:00:09', '2025-05-16 09:00:09', NULL),
-(11, 2, 'Mango Yakult', 'ice', NULL, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL);
+(11, 2, 'Mango Yakult', 'ice', NULL, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL),
+(13, 1, 'Test', 'r', NULL, '2025-05-20 06:46:40', '2025-05-20 06:48:03', '2025-05-20 06:48:03');
 
 -- --------------------------------------------------------
 
@@ -591,8 +606,9 @@ CREATE TABLE `satuan_barangs` (
 --
 
 INSERT INTO `satuan_barangs` (`id`, `user_id`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, '-', '2025-05-04 19:47:44', '2025-05-04 19:47:44', NULL),
-(2, 1, 'Pcs', '2025-05-04 19:47:50', '2025-05-04 19:47:50', NULL);
+(1, 1, 'Pkg', '2025-05-04 19:47:44', '2025-05-20 04:25:02', NULL),
+(2, 1, 'Pcs', '2025-05-04 19:47:50', '2025-05-20 04:22:52', NULL),
+(3, 1, '-', '2025-05-20 04:22:24', '2025-05-20 04:22:38', NULL);
 
 -- --------------------------------------------------------
 
@@ -1009,13 +1025,13 @@ ALTER TABLE `user_settings`
 -- AUTO_INCREMENT untuk tabel `bahans`
 --
 ALTER TABLE `bahans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT untuk tabel `bahan_akhirs`
 --
 ALTER TABLE `bahan_akhirs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
 
 --
 -- AUTO_INCREMENT untuk tabel `bahan_awals`
@@ -1027,31 +1043,31 @@ ALTER TABLE `bahan_awals`
 -- AUTO_INCREMENT untuk tabel `bahan_masuks`
 --
 ALTER TABLE `bahan_masuks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT untuk tabel `barangs`
 --
 ALTER TABLE `barangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `barang_awals`
 --
 ALTER TABLE `barang_awals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT untuk tabel `barang_keluars`
 --
 ALTER TABLE `barang_keluars`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `barang_masuks`
 --
 ALTER TABLE `barang_masuks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `deleted_items`
@@ -1069,7 +1085,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT untuk tabel `komposisi_menus`
 --
 ALTER TABLE `komposisi_menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT untuk tabel `log_activities`
@@ -1081,7 +1097,7 @@ ALTER TABLE `log_activities`
 -- AUTO_INCREMENT untuk tabel `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT untuk tabel `migrations`
@@ -1111,7 +1127,7 @@ ALTER TABLE `satuan_bahans`
 -- AUTO_INCREMENT untuk tabel `satuan_barangs`
 --
 ALTER TABLE `satuan_barangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `tag_notifikasis`
@@ -1129,13 +1145,13 @@ ALTER TABLE `temporary_files`
 -- AUTO_INCREMENT untuk tabel `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT untuk tabel `transaksi_details`
 --
 ALTER TABLE `transaksi_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
