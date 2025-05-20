@@ -463,7 +463,7 @@ class BarangController extends Controller
             BarangAwal::create([
                 'barang_id' => $Barang->id,
                 'keterangan' => 'Stok awal ' . $request->name,
-                'jumlah' => $Barang->jumlah,
+                'jumlah' => $Barang->stok_awal,
                 'user_id' => Auth::id(),
                 'date' => $request->date,
             ]);
@@ -569,13 +569,13 @@ class BarangController extends Controller
 
     public function delete(Request $request)
     {
-        $id = $request->id;
-        $barang = Barang::findOrFail($id);
+        $request->validate(['id' => 'required|exists:barangs,id']);
 
+        $barang = Barang::findOrFail($request->id);
         $barang->deleted_at = now();
         $barang->save();
 
-        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+        return response()->json(['success' => true]);
     }
 
     public function deleteSatuan(Request $request)

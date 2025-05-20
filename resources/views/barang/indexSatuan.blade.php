@@ -111,20 +111,24 @@
 
                                                         <td>
                                                             <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary btn-sm btn_editsatuanbarang"
+                                                            <button type="button"
+                                                                class="btn btn-primary btn-sm btn_editsatuanbarang"
                                                                 data-id="{{ $satuan->id ?? 'NULL' }}"
                                                                 data-name="{{ $satuan->name ?? 'NULL' }}">
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
 
-                                                            <form action="/barang/satuan/delete/{{ $satuan->id }}" class="d-inline"
-                                                                method="post">
+                                                            <form action="{{ route('barang.deleteSatuan') }}" method="post"
+                                                                class="d-inline">
                                                                 @method('PUT')
                                                                 @csrf
+                                                                <input type="hidden" name="id" value="{{ $satuan->id }}">
                                                                 <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                        class="fa fa-trash"></i></button>
+                                                                    onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
                                                             </form>
+
                                                         </td>
                                                     </tr>
                                                 @endforeach

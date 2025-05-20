@@ -47,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
     // Barang
     Route::get('/barang/manajemen-barang', [BarangController::class, 'index'])->name('barang.index');
     Route::get('/barang/manajemen-barang/{encryptedId}', [BarangController::class, 'indexbyID'])->name('barang.indexbyId');
-    Route::PUT('/barang/manajemen-barang/delete', [BarangController::class, 'delete'])->name('barang.delete');
+    Route::post('/barang/delete', [BarangController::class, 'delete'])->name('barang.delete');
     Route::post('/barang/manajemen-barang/storeM', [BarangController::class, 'storeM'])->name('barang.storeM');
     Route::post('/barang/manajemen-barang/storeK', [BarangController::class, 'storeK'])->name('barang.storeK');
     Route::get('/barang/masuk-keluar', [BarangController::class, 'indexMasukKeluar'])->name('barang.indexMasukKeluar');
@@ -59,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/barang/satuan', [BarangController::class, 'indexSatuan'])->name('barang.indexSatuan');
     Route::post('/barang/satuan/store', [BarangController::class, 'storeSatuan'])->name('barang.storeSatuan');
     Route::put('/barang/satuan/edit', [BarangController::class, 'updateSatuan'])->name('barang.updateSatuan');
-    Route::put('/barang/satuan/delete/{id}', [BarangController::class, 'deleteSatuan'])->name('barang.deleteSatuan');
+    Route::put('/barang/satuan/delete', [BarangController::class, 'deleteSatuan'])->name('barang.deleteSatuan');
     //Bahan
     Route::get('/bahan/manajemen-bahan', [BahanController::class, 'index'])->name('bahan.index');
     Route::get('/bahan/manajemen-bahan/{encryptedId}', [BahanController::class, 'indexbyID'])->name('bahan.indexbyId');

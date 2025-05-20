@@ -182,27 +182,21 @@
                                                                     aria-labelledby="dropdownMenuButton{{ $barang->id }}">
                                                                     <li>
                                                                         <button class="dropdown-item btn_editbarang"
-                                                                            data-id="{{ $barang->id ?? 'NULL' }}"
-                                                                            data-name="{{ $barang->name ?? 'NULL' }}"
-                                                                            data-description="{{ $barang->description ?? 'NULL' }}"
+                                                                            data-id="{{ $barang->id }}"
+                                                                            data-name="{{ $barang->name }}"
+                                                                            data-description="{{ $barang->description }}"
                                                                             data-minimum="{{ $barang->minimum }}"
-                                                                            data-stok_awal="{{ $barang->stok_awal ?? 'NULL' }}"
-                                                                            data-satuan_id="{{ $barang->satuan_id ?? 'NULL' }}"
-                                                                            data-image="{{ $barang->image ?? 'NULL' }}">
+                                                                            data-stok_awal="{{ $barang->stok_awal }}"
+                                                                            data-satuan_id="{{ $barang->satuan_id }}"
+                                                                            data-image="{{ $barang->image }}">
                                                                             <i class="fa fa-edit me-2"></i>Edit
                                                                         </button>
                                                                     </li>
                                                                     <li>
-                                                                        <form
-                                                                            action="/barang/manajemen-barang/delete/{{ $barang->id }}"
-                                                                            method="post"
-                                                                            onsubmit="return confirm('Yakin akan Mendelete Data?')">
-                                                                            @method('PUT')
-                                                                            @csrf
-                                                                            <button class="dropdown-item text-danger" type="submit">
-                                                                                <i class="fa fa-trash me-2"></i>Hapus
-                                                                            </button>
-                                                                        </form>
+                                                                        <button class="dropdown-item text-danger btn_deletebarang"
+                                                                            data-id="{{ $barang->id }}">
+                                                                            <i class="fa fa-trash me-2"></i>Hapus
+                                                                        </button>
                                                                     </li>
                                                                     <li>
                                                                         <a href="/barang/masuk-keluar/{{ Hashids::encode($barang->id) }}"
@@ -449,6 +443,7 @@
         </div>
     </div>
 
+
     @push('addScript')
         <script>
 
@@ -501,6 +496,42 @@
             });
             document.getElementById("toggleMinimum2").addEventListener("click", function () {
                 toggleInput("txtminimum", "toggleMinimum2");
+            });
+        </script>
+
+        <script>
+            // Delete barang ajax
+            document.querySelectorAll('.btn_deletebarang').forEach(button => {
+                button.addEventListener('click', function () {
+                    if (!confirm('Yakin akan menghapus data barang ini?')) return;
+
+                    let id = this.dataset.id;
+                    let token = document.querySelector('input[name="_token"]').value;
+
+                    fetch('/barang/delete', {
+                        method: 'POST', // sesuaikan method dan route
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': token,
+                        },
+                        body: JSON.stringify({ id: id })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Data barang berhasil dihapus!');
+                                // Misal hapus row tabel secara langsung tanpa reload
+                                const row = this.closest('tr');
+                                if (row) row.remove();
+                            } else {
+                                alert('Gagal menghapus data barang.');
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert('Terjadi kesalahan saat menghapus data.');
+                        });
+                });
             });
         </script>
     @endpush
