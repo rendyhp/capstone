@@ -70,10 +70,6 @@
                             <table id="tableTransaksi" class="table table-bordered text-dark table-sm">
                                 <div class="mb-3">
                                     <!-- Tombol trigger modal -->
-                                    <button type="button" class="btn btn-outline-success me-2" data-bs-toggle="modal"
-                                        data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Transaksi
-                                    </button>
                                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                                         data-bs-target="#importModal">
                                         <i class="fa fa-upload me-2" aria-hidden="true"></i>Import Transaksi
@@ -138,14 +134,18 @@
                                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </button>
 
-                                                        <form action="/transaksi/delete/{{ $transaksi['transaksi_id'] }}"
-                                                            class="d-inline" method="post">
+                                                        <form action="{{ route('transaksi.delete') }}" method="POST"
+                                                            class="d-inline">
                                                             @method('DELETE')
                                                             @csrf
+                                                            <input type="hidden" name="transaksi_id"
+                                                                value="{{ $transaksi['transaksi_id'] }}">
                                                             <button class="btn btn-danger btn-sm" type="submit"
-                                                                onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                    class="fa fa-trash"></i></button>
+                                                                onclick="return confirm('Yakin akan mendelete data?')">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </form>
+
 
                                                     </td>
 
@@ -167,59 +167,6 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="container modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Transaksi</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <form method="POST" action='/transaksi'>
-                        @csrf
-                        <div class="mb-3">
-                            <label for="date" class="form-label">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="date" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="menu_id" class="form-label text-dark fw-bold">Nama Transaksi</label>
-                            <select class="form-control select2" required id="menu_id" name="menu_id">
-                                <option value="">-- Pilih Menu --</option>
-                                @foreach ($menus as $menu)
-                                    <option value="{{ $menu->id }}" data-komposisi='@json($menu->komposisi)'>
-                                        {{ $menu->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="mb-3 d-flex align-items-center">
-                            <label for="jumlah" class="form-label text-dark fw-bold me-2">Jumlah</label>
-                            <input type="number" step="1" min="1" required class="form-control number0" id="jumlahMenu"
-                                name="jumlah" value="1" style="max-width: 150px;">
-
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label text-dark fw-bold">Komposisi</label>
-                            <div class="mb-3">
-                                <ul id="komposisiPreview" class="list-group small"></ul>
-                            </div>
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary text-white" name="SaveButton">Simpan</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal -->
     <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -251,9 +198,25 @@
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="mode" id="modeUpdate" value="update">
-                                <label class="form-check-label" for="modeUpdate">Update (hapus & ganti)</label>
+                                <label class="form-check-label" for="modeUpdate">Update</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="mode" id="modeRange" value="range">
+                                <label class="form-check-label" for="modeRange">Range</label>
                             </div>
                         </div>
+
+                        <div id="rangeDateFields" style="display: none;">
+                            <div class="mb-2">
+                                <label>Dari Tanggal</label>
+                                <input type="date" name="range_start" class="form-control">
+                            </div>
+                            <div class="mb-2">
+                                <label>Sampai Tanggal</label>
+                                <input type="date" name="range_end" class="form-control">
+                            </div>
+                        </div>
+
 
                         <!-- Preview -->
                         <div class="table-responsive">
@@ -347,12 +310,12 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                                <td>${i}</td>
-                                <td class="nama-menu">${namaMenuExcel}</td>
-                                <td class="check-cell">⏳</td>
-                                <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
-                                <td>${jumlahBaru}</td>
-                            `;
+                                                                        <td>${i}</td>
+                                                                        <td class="nama-menu">${namaMenuExcel}</td>
+                                                                        <td class="check-cell">⏳</td>
+                                                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
+                                                                        <td>${jumlahBaru}</td>
+                                                                    `;
                             tbody.appendChild(tr);
 
                             pendingFetches++; // Sebelum fetch
@@ -383,7 +346,7 @@
                                 .finally(() => {
                                     pendingFetches--;
                                     if (pendingFetches === 0) {
-                                        document.getElementById('loadingStatus').textContent = 'Selesai memuat semua data.';
+                                        document.getElementById('previewTable').style.display = 'table';
                                     }
                                 });
                         }
@@ -395,11 +358,19 @@
             }
 
             function toggleModeColumns() {
+                const mode = document.querySelector('input[name="mode"]:checked').value;
+                const previewCols = document.querySelectorAll('.preview-update-column');
+                const rangeFields = document.getElementById('rangeDateFields');
 
-                const updateCols = document.querySelectorAll('.preview-update-column');
-                updateCols.forEach(col => col.style.display = '');
-                // Tidak perlu reload ulang preview
+                if (mode === 'update') {
+                    previewCols.forEach(col => col.style.display = '');
+                } else {
+                    previewCols.forEach(col => col.style.display = 'none');
+                }
+
+                rangeFields.style.display = (mode === 'range') ? 'block' : 'none';
             }
+
 
 
         </script>
@@ -432,6 +403,14 @@
                     })
                     .catch(error => console.error('Error:', error));
             });
+
+            document.querySelectorAll('input[name="mode"]').forEach(radio => {
+                radio.addEventListener('change', function () {
+                    const showRange = this.value === 'range';
+                    document.getElementById('rangeDateFields').style.display = showRange ? 'block' : 'none';
+                });
+            });
+
         </script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {

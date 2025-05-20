@@ -102,8 +102,17 @@ class TransaksiController extends Controller
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls',
             'date' => 'required|date',
-            'mode' => 'required|in:tambah,update',
+            'mode' => 'required|in:tambah,update,range',
         ]);
+
+        if ($request->mode === 'range') {
+            $request->validate([
+                'range_start' => 'required|date',
+                'range_end' => 'required|date|after_or_equal:range_start',
+            ]);
+            $rangeStart = $request->range_start;
+            $rangeEnd = $request->range_end;
+        }
 
         $file = $request->file('file');
         $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
@@ -117,38 +126,53 @@ class TransaksiController extends Controller
 
         for ($i = 1; $i < count($rows); $i++) {
             $judulProduk = trim($rows[$i][0]);
-            $jumlah = (int) $rows[$i][2];
+            $jumlahBaru = (int) $rows[$i][2];
 
-            if (!$judulProduk || $jumlah <= 0) {
+            if (!$judulProduk || $jumlahBaru <= 0) {
                 continue;
             }
 
-            $menu = Menu::whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($judulProduk))])->first();
-
-            if (!$menu) {
+            $menu = Menu::whereRaw('LOWER(TRIM(name)) = ?', [strtolower($judulProduk)])->first();
+            if (!$menu)
                 continue;
-            }
 
-            // Simpan ID menu untuk proses update
             $processedMenus[] = $menu->id;
 
-            // Jika update, hapus semua transaksi dengan tanggal & menu yang sama
             if ($mode === 'update') {
-                Transaksi::where('menu_id', $menu->id)->whereDate('date', $tanggal)->delete();
+                Transaksi::where('menu_id', $menu->id)
+                    ->whereDate('date', $tanggal)
+                    ->delete();
+                $jumlahFinal = $jumlahBaru;
+            } elseif ($mode === 'range') {
+                // Hitung total dari range
+                $totalSebelumnya = Transaksi::where('menu_id', $menu->id)
+                    ->whereBetween('date', [$rangeStart, $rangeEnd])
+                    ->sum('jumlah');
+
+                // Selisih yang akan ditambahkan
+                $jumlahFinal = $jumlahBaru - $totalSebelumnya;
+                if ($jumlahFinal <= 0) {
+                    continue;
+                }
+            } else {
+                // mode tambah
+                $jumlahFinal = $jumlahBaru;
             }
 
             $transaksi = Transaksi::create([
                 'user_id' => Auth::id(),
                 'menu_id' => $menu->id,
-                'jumlah' => $jumlah,
+                'jumlah' => $jumlahFinal,
                 'date' => $tanggal,
             ]);
 
             $this->hitungBahanTerpakai($transaksi);
         }
 
-        return redirect()->route('transaksi.index')->with('success', 'Import transaksi berhasil.');
+        return redirect()->route('transaksi.index', ['date' => $tanggal])
+            ->with('success', 'Import transaksi berhasil.');
     }
+
 
     public function jumlahSebelumnya(Request $request)
     {
@@ -244,16 +268,24 @@ class TransaksiController extends Controller
         return redirect()->back()->with('success', 'Transaksi berhasil diubah');
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $transaksi = Transaksi::find($id);
+        $transaksiId = $request->input('transaksi_id');
+        $transaksi = Transaksi::find($transaksiId);
 
         if (!$transaksi) {
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
         }
 
-        $transaksi->delete();
+        // Cari semua transaksi yang punya menu_id dan date sama
+        $menuId = $transaksi->menu_id;
+        $tanggal = $transaksi->date;
+        $menuName = $transaksi->menu->name;
 
-        return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
+        Transaksi::where('menu_id', $menuId)
+            ->whereDate('date', $tanggal)
+            ->delete();
+
+        return redirect()->back()->with('success', 'Transaksi "'. $menuName .'" berhasil dihapus.');
     }
 }
