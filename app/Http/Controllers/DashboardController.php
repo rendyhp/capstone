@@ -48,7 +48,7 @@ class DashboardController extends Controller
 
             $barang->sisa = $sisa;
             return $barang;
-        });
+        })->sortBy('name');
 
         $barangs_below_minimum = $barang_data->filter(function ($barang) {
             return $barang->sisa < $barang->minimum;
@@ -76,7 +76,10 @@ class DashboardController extends Controller
             $bahan->jumlah_akhir = $jumlah_akhir;
 
             return $bahan;
-        });
+        })->sortBy([
+                    ['section', 'asc'],
+                    ['name', 'asc'],
+                ]);
 
         $bahans_below_minimum = $bahan_data->filter(function ($bahan) {
             return $bahan->jumlah_akhir < $bahan->minimum;

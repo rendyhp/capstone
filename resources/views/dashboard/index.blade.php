@@ -110,8 +110,12 @@
                         @foreach($barangs_below_minimum as $barang)
                             <tr>
                                 <td>{{ $barang->name }}</td>
-                                <td>{{ $barang->minimum }}</td>
-                                <td class="text-danger fw-bold">{{ $barang->sisa }}</td>
+                                <td class="text-end">
+                                    {{ rtrim(rtrim(number_format($barang->minimum, 3, ',', '.'), '0'), ',') }}
+                                </td>
+                                <td class="text-end text-danger fw-bold">
+                                    {{ rtrim(rtrim(number_format($barang->sisa, 3, ',', '.'), '0'), ',') }}
+                                </td>
                                 <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
                             </tr>
                         @endforeach
@@ -129,6 +133,7 @@
                     <thead>
                         <tr>
                             <th>Nama Bahan</th>
+                            <th>Bagian</th>
                             <th>Stok Minimum</th>
                             <th>Sisa</th>
                             <th>Satuan</th>
@@ -138,8 +143,13 @@
                         @foreach($bahans_below_minimum as $bahan)
                             <tr>
                                 <td>{{ $bahan->name }}</td>
-                                <td>{{ $bahan->minimum }}</td>
-                                <td class="text-danger fw-bold">{{ $bahan->jumlah_akhir }}</td>
+                                <td>{{ $bahan->section }}</td>
+                                <td class="text-end">
+                                    {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
+                                </td>
+                                <td class="text-end text-danger fw-bold">
+                                    {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
+                                </td>
                                 <td>{{ $bahan->satuan->name ?? '-' }}</td>
                             </tr>
                         @endforeach
