@@ -124,17 +124,17 @@
                                                                 data-komposisi='@json($menu->komposisi)'>
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
-
-
-
-                                                            <form action="/daftar-menu/delete/{{ $menu->id }}" class="d-inline"
-                                                                method="post">
-                                                                @method('put')
+                                                            <form action="{{ route('daftar-menu.delete') }}" method="POST"
+                                                                class="d-inline">
+                                                                @method('PUT')
                                                                 @csrf
+                                                                <input type="hidden" name="id" value="{{ $menu->id }}">
                                                                 <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin ingin Mendelete Menu?')"><i
-                                                                        class="fa fa-trash"></i></button>
+                                                                    onclick="return confirm('Yakin ingin Mendelete Menu?')">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
                                                             </form>
+
                                                         </td>
                                                     </tr>
                                                 @endforeach

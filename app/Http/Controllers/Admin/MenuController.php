@@ -150,17 +150,20 @@ class MenuController extends Controller
                 ->with('warning', 'Bahan tidak boleh kosong!');
         }
 
-        return redirect('/daftar-menu')->with('success', 'Menu "' . $request->name . '" berhasil diperbarui');
+        return redirect()->back()->with('success', 'Menu "' . $request->name . '" berhasil diperbarui');
     }
 
     public function delete(Request $request)
     {
         $id = $request->id;
-        $barang = Menu::findOrFail($id);
 
-        $barang->deleted_at = now();
-        $barang->save();
+        $menu = Menu::findOrFail($id);
 
-        return redirect('/daftar-menu')->with('success', 'Menu Berhasil Dihapus');
+        $menuName = $menu->name;
+        $menu->deleted_at = now(); // soft delete manual
+        $menu->save();
+
+        return redirect()->back()->with('success', 'Menu "'. $menuName .'" Berhasil Dihapus');
     }
+
 }
