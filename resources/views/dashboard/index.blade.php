@@ -92,6 +92,62 @@
     </div>
     <div class="container">
 
+        <div class="mt-4">
+            <h5><i class="fa fa-exclamation-circle text-danger"></i> Barang Melewati Stok Minimum</h5>
+            @if($barangs_below_minimum->isEmpty())
+                <p class="text-success">Semua stok barang aman.</p>
+            @else
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Nama Barang</th>
+                            <th>Stok Minimum</th>
+                            <th>Sisa</th>
+                            <th>Satuan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($barangs_below_minimum as $barang)
+                            <tr>
+                                <td>{{ $barang->name }}</td>
+                                <td>{{ $barang->minimum }}</td>
+                                <td class="text-danger fw-bold">{{ $barang->sisa }}</td>
+                                <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+
+        <div class="mt-4">
+            <h5><i class="fa fa-exclamation-triangle text-warning"></i> Bahan Melewati Stok Minimum</h5>
+            @if($bahans_below_minimum->isEmpty())
+                <p class="text-success">Semua stok bahan aman.</p>
+            @else
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Nama Bahan</th>
+                            <th>Stok Minimum</th>
+                            <th>Sisa</th>
+                            <th>Satuan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($bahans_below_minimum as $bahan)
+                            <tr>
+                                <td>{{ $bahan->name }}</td>
+                                <td>{{ $bahan->minimum }}</td>
+                                <td class="text-danger fw-bold">{{ $bahan->jumlah_akhir }}</td>
+                                <td>{{ $bahan->satuan->name ?? '-' }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
+
     </div>
     <div class="container">
 
