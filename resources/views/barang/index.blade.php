@@ -127,10 +127,7 @@
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                         <td>
-                                                            <a href="/barang/manajemen-barang/{{ Hashids::encode($barang->id) }}"
-                                                                class="text-decoration-none text-dark">
-                                                                {{ $barang->name ?? '-' }}
-                                                            </a>
+                                                            {{ $barang->name ?? '-' }}
                                                         </td>
                                                         <td>{{ $barang->description }}</td>
                                                         <td class="text-end">
