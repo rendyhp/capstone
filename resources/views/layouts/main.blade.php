@@ -9,7 +9,7 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+    <link href="/img/logo-bdim.png" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -202,6 +202,13 @@
                 </a>
 
                 <div class="navbar-nav align-items-center ms-auto">
+                    @if(Auth::check() && Auth::user()->role == 'STAF')
+                        {{-- Tombol Report --}}
+                        <button class="btn btn-outline-danger btn-sm me-3" data-bs-toggle="modal"
+                            data-bs-target="#reportModal">
+                            <i class="fa fa-flag me-1"></i> Report
+                        </button>
+                    @endif
                     <div class="fs-7 fw-bold ms-4">{{Auth::user()->up_nama}}</div>
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -235,6 +242,31 @@
 
         </div>
         <!-- Content End -->
+    </div>
+    <!-- Modal Report -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{{ route('send.report') }}" method="POST">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Kirim Pesan ke Admin</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Pesan</label>
+                            <textarea name="message" class="form-control" rows="4" placeholder="Tulis pesan Anda..."
+                                required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-danger">Kirim</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     @stack('addScript')

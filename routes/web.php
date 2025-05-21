@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\BahanController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\NotifikasiController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -32,6 +33,7 @@ Route::get('/', function () {
 // Auth routes
 Auth::routes();
 Route::redirect('/my', '/my/profile');
+Route::redirect('/laporan', '/laporan/bahan');
 // Reset password
 // Tampilkan form input email untuk reset password
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -55,8 +57,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     // Laporan
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-    Route::get('/laporan/export', [LaporanController::class, 'exportExcel'])->name('laporan.export');
+    Route::get('/laporan/bahan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/bahan/export', [LaporanController::class, 'exportExcel'])->name('laporan.export');
 
 
     // Stok
@@ -120,10 +122,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my/profile', [SettingController::class, 'index'])->name('setting.index');
     Route::put('/my/profile', [SettingController::class, 'update'])->name('setting.update');
     Route::get('/my/notifikasi-api', [SettingController::class, 'indexNotifikasiApi'])->name('setting.notifikasi-api.index');
-    Route::post('/my/notifikasi-api/generate', [SettingController::class, 'generateQrCode'])->name('setting.notifikasi-api.generate');
+    Route::post('/my/notifikasi-api/connect', [SettingController::class, 'connectNotifikasiApi'])->name('setting.notifikasi-api.connect');
     Route::post('/my/notifikasi-api/disconnect', [SettingController::class, 'disconnectNotifikasiApi'])->name('setting.notifikasi-api.disconnect');
     Route::get('/my/password', [SettingController::class, 'indexPassword'])->name('setting.password.index');
     Route::post('/my/password', [SettingController::class, 'updatePassword'])->name('setting.password.update');
+
+    Route::post('/send-report', [ReportController::class, 'send'])->name('send.report');
+    Route::get('/send-wa', function () {
+        $response = Http::withHeaders([
+            'Authorization' => '49zbRGa16VLm8S44vT5E',
+        ])->post('https://api.fonnte.com/send', [
+                    'target' => '081226077106',
+                    'message' => 'ini Pesan Laravel test',
+                ]);
+
+        dd(json_decode($response, true));
+    });
+
 
 
 

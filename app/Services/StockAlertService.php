@@ -2,69 +2,69 @@
 
 namespace App\Services;
 
-use App\Models\StockAlertLog;
-use App\Http\Controllers\MessageController;
-use Illuminate\Support\Collection;
-use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Support\Facades\Http;
 
 class StockAlertService
 {
-    protected $messageService;
-
-    public function __construct()
+    public function checkAndNotify($barangData, $bahanData)
     {
-        $this->messageService = new MessageController();
-    }
+        $barangMinimum = $barangData->filter(fn($b) => $b->sisa < $b->minimum);
+        $bahanMinimum = $bahanData->filter(fn($b) => $b->jumlah_akhir < $b->minimum);
 
-    public function checkAndNotify(Collection $barangs, Collection $bahans)
-    {
-        $barangs_below_min = $barangs->filter(fn($item) => $item->sisa < $item->minimum);
-        $bahans_below_min = $bahans->filter(fn($item) => $item->jumlah_akhir < $item->minimum);
-
-        if ($barangs_below_min->isEmpty() && $bahans_below_min->isEmpty()) {
+        if ($barangMinimum->isEmpty() && $bahanMinimum->isEmpty())
             return;
-        }
 
-        // Format pesan satu kali untuk semua
-        $message = $this->messageService->formatStockMinimumMessage($barangs_below_min, $bahans_below_min);
+        $message = "*⚠️ Notifikasi Stok Menipis*\n\n";
 
-        $notified = false;
-
-        foreach ($barangs_below_min as $item) {
-            $alreadyNotified = StockAlertLog::where('stockable_id', $item->id)
-                ->where('stockable_type', get_class($item))
-                ->whereDate('alert_date', Carbon::today())
-                ->exists();
-
-            if (!$alreadyNotified) {
-                $this->logAlert($item);
-                $notified = true;
+        if ($barangMinimum->isNotEmpty()) {
+            $message .= "*Barang:*\n";
+            foreach ($barangMinimum as $b) {
+                $message .= "- {$b->name}: {$b->sisa} {$b->satuanBarang->name}, min: {$b->minimum}\n";
             }
         }
 
-        foreach ($bahans_below_min as $item) {
-            $alreadyNotified = StockAlertLog::where('stockable_id', $item->id)
-                ->where('stockable_type', get_class($item))
-                ->whereDate('alert_date', Carbon::today())
-                ->exists();
-
-            if (!$alreadyNotified) {
-                $this->logAlert($item);
-                $notified = true;
+        if ($bahanMinimum->isNotEmpty()) {
+            $message .= "\n*Bahan:*\n";
+            foreach ($bahanMinimum as $b) {
+                $message .= "- {$b->name}: {$b->jumlah_akhir} {$b->satuan->name}, min: {$b->minimum}\n";
             }
         }
 
-        if ($notified) {
-            $this->messageService->sendWhatsAppToOwnerManager($message);
+        // Kirim ke semua STAF
+        $staffs = User::where('role', 'STAF')->get();
+        foreach ($staffs as $staff) {
+            $this->sendWhatsApp($staff->wa_api_token, $message);
         }
     }
 
-    protected function logAlert($item)
+    public function sendDailyReport($ringkasan)
     {
-        StockAlertLog::create([
-            'stockable_id' => $item->id,
-            'stockable_type' => get_class($item),
-            'alert_date' => Carbon::today(),
+        $message = "*📊 Laporan Stok Harian – " . now()->format('d M Y') . "*\n\n";
+
+        foreach ($ringkasan as $kategori => $data) {
+            $message .= strtoupper($kategori) . ":\n";
+            foreach ($data as $nama => $jumlah) {
+                $message .= "- $nama: $jumlah\n";
+            }
+            $message .= "\n";
+        }
+
+        // Kirim ke OWNER dan MANAJER
+        $penerimas = User::whereIn('role', ['OWNER', 'MANAJER'])->get();
+        foreach ($penerimas as $user) {
+            $this->sendWhatsApp($user->wa_api_token, $message);
+        }
+    }
+
+    protected function sendWhatsApp($wa_token, $message)
+    {
+        // Contoh API ke Fonte
+        if (!$wa_token)
+            return;
+
+        Http::withToken($wa_token)->post('https://fonte.example/send-message', [
+            'message' => $message,
         ]);
     }
 }

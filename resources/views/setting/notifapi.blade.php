@@ -10,11 +10,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             padding: 20px;
         }
-
-        .qr-code {
-            max-width: 250px;
-            margin-top: 15px;
-        }
     </style>
 
     @if (session('success'))
@@ -25,36 +20,31 @@
     @endif
 
     <div class="container cards">
-        <a href="{{ url('/dashboard') }}"><i class="fa fa-angle-double-left me-2 mb-3"></i>Kembali | Ke dashboard</a>
+        <a href="{{ url('/dashboard') }}">
+            <i class="fa fa-angle-double-left me-2 mb-3"></i>Kembali | Ke dashboard
+        </a>
 
-        <h2 class="mt-3 text-uppercase fs-2">Hubungkan akun dengan notifikasi API WhatsApp</h2>
+        <h2 class="mt-3 text-uppercase fs-2">Notifikasi WhatsApp</h2>
 
-        @if ($isConnected)
+        @if ($user->wa_api_token)
             <p>Status: <strong class="text-success">Terhubung</strong></p>
+            <p><strong>No. HP:</strong> {{ $user->profile->phone ?? '-' }}</p>
 
             <form action="{{ route('setting.notifikasi-api.disconnect') }}" method="POST">
                 @csrf
-                <button type="submit" class="btn btn-danger">Putuskan Hubungan</button>
+                <button type="submit" class="btn btn-danger mt-2">Putuskan Hubungan</button>
             </form>
 
             <p class="mt-3">Notifikasi barang habis akan otomatis dikirim ke WhatsApp Anda.</p>
         @else
-            <p>Status: <strong class="text-danger">Belum Terhubung</strong></p>
+            <p>Status: <strong class="text-danger">Belum terhubung dengan notifikasi WhatsApp</strong></p>
+            <p>Silakan hubungi admin untuk mengatur koneksi notifikasi WA API Anda.</p>
 
-            <p>Scan QR code berikut menggunakan aplikasi WhatsApp Anda untuk menghubungkan akun dengan layanan notifikasi.</p>
-
-            @if ($qrCode)
-                <img src="data:image/png;base64,{{ $qrCode }}" alt="QR Code" class="qr-code" />
-            @else
-                <p>QR code sedang dibuat, silakan tunggu sebentar...</p>
-            @endif
-
-            <form action="{{ route('setting.notifikasi-api.generate') }}" method="POST" class="mt-3">
+            <form action="{{ route('setting.notifikasi-api.connect') }}" method="POST">
                 @csrf
-                <button type="submit" class="btn btn-primary">Generate QR Code</button>
+                <button type="submit" class="btn btn-success mt-2">Hubungkan Kembali</button>
             </form>
         @endif
-
     </div>
 
 @endsection

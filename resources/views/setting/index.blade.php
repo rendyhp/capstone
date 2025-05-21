@@ -50,6 +50,8 @@
                 <p><strong>Username:</strong> {{ $user->username }}</p>
                 <p><strong>Email:</strong> {{ $user->email }}</p>
                 <p><strong>Role:</strong> {{ $user->role }}</p>
+               
+
             </div>
             <div class="col-md-6">
                 <p><strong>No. HP:</strong> {{ $profile->phone ?? '-' }}</p>
@@ -109,6 +111,7 @@
                                 <option value="P" @selected($profile->gender == 'P')>Perempuan</option>
                             </select>
                         </div>
+                        
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -118,6 +121,5 @@
             </form>
         </div>
     </div>
-
 
 @endsection
