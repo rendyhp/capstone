@@ -126,7 +126,7 @@
                             <label for="floatingPassword">{{ __('Password') }}</label>
                         </div>
 
-                        <div class="forgot-password">
+                        <div class="forgot-password mt-3 text-start">
                             <a href="{{ route('password.request') }}">Lupa Password?</a>
                         </div>
 

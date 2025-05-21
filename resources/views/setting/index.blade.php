@@ -50,11 +50,11 @@
                 <p><strong>Username:</strong> {{ $user->username }}</p>
                 <p><strong>Email:</strong> {{ $user->email }}</p>
                 <p><strong>Role:</strong> {{ $user->role }}</p>
-               
-
             </div>
             <div class="col-md-6">
-                <p><strong>No. HP:</strong> {{ $profile->phone ?? '-' }}</p>
+                <p><strong>No. HP:</strong>
+                    {{ isset($profile->phone) && $profile->phone !== '62' ? '+' . $profile->phone : '-' }}
+                </p>
                 <p><strong>Alamat:</strong> {{ $profile->address ?? '-' }}</p>
                 <p><strong>Tanggal Lahir:</strong>
                     {{ $profile->birth_date ? \Carbon\Carbon::parse($profile->birth_date)->translatedFormat('j F Y') : '-' }}
@@ -94,9 +94,14 @@
                         </div>
                         <div class="mb-2">
                             <label>No HP</label>
-                            <input name="phone" class="form-control" value="{{ $profile->phone }}">
-                            <small class="form-text text-danger">*Dimulai dari 6281xxx</small>
+                            <div class="input-group">
+                                <span class="input-group-text">+62</span>
+                                <input name="phone" class="form-control" value="{{ substr($profile->phone, 2) }}"
+                                    placeholder="Masukkan nomor WA...">
+                            </div>
+                            <small class="form-text text-danger">*Dimulai dari 08xxxx atau 8xxxx</small>
                         </div>
+
                         <div class="mb-2">
                             <label>Alamat</label>
                             <input name="address" class="form-control" value="{{ $profile->address }}">
@@ -112,7 +117,7 @@
                                 <option value="P" @selected($profile->gender == 'P')>Perempuan</option>
                             </select>
                         </div>
-                        
+
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

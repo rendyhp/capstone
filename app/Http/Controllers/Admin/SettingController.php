@@ -38,7 +38,7 @@ class SettingController extends Controller
         $user->profile()->updateOrCreate(
             ['user_id' => $user->id],
             [
-                'phone' => $request->phone,
+                'phone' => '62' . ltrim($request->phone, '0'), // hilangkan 0 jika user input 0812...
                 'address' => $request->address,
                 'birth_date' => $request->birth_date,
                 'gender' => $request->gender

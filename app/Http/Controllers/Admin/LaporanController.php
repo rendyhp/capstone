@@ -184,7 +184,9 @@ class LaporanController extends Controller
         return view('laporan.index', compact('allHistories', 'allHistories2', 'dateParam', 'bulanNama', 'tahunNama'));
     }
 
-
+    public function indexLaporanBarang(Request $request){
+        
+    }
 
     public function exportExcel(Request $request)
     {

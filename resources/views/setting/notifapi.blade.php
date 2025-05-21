@@ -28,17 +28,17 @@
 
         @if ($user->wa_api_token)
             <p>Status: <strong class="text-success">Terhubung</strong></p>
-            <p><strong>No. HP:</strong> {{ $user->profile->phone ?? '-' }}</p>
+            <p><strong>No. HP:</strong> +{{ $user->profile->phone ?? '-' }}</p>
 
             <form action="{{ route('setting.notifikasi-api.disconnect') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-danger mt-2">Putuskan Hubungan</button>
             </form>
 
-            <p class="mt-3">Notifikasi barang habis akan otomatis dikirim ke WhatsApp Anda.</p>
+            <p class="mt-3">Notifikasi barang/bahan menipis akan otomatis dikirim ke WhatsApp Anda.</p>
         @else
             <p>Status: <strong class="text-danger">Belum terhubung dengan notifikasi WhatsApp</strong></p>
-            <p>Silakan hubungi admin untuk mengatur koneksi notifikasi WA API Anda.</p>
+            <p>Silakan hubungkan akun dengan klik tombol dibawah ini.</p>
 
             <form action="{{ route('setting.notifikasi-api.connect') }}" method="POST">
                 @csrf

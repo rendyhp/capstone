@@ -57,6 +57,7 @@
 
                 <button type="submit" class="btn btn-primary w-100" style="border-radius: 20px;">Kirim Link Reset
                     Password</button>
+                <p class="small fw-bold mt-3">Kembali <a href="/login" class="link-danger">ke halaman Login</a></p>
             </form>
         </div>
     </section>
