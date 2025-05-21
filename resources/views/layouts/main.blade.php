@@ -209,7 +209,7 @@
                             <i class="fa fa-flag me-1"></i> Report
                         </button>
                     @endif
-                    <div class="fs-7 fw-bold ms-4">{{Auth::user()->up_nama}}</div>
+
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
 
@@ -243,31 +243,94 @@
         </div>
         <!-- Content End -->
     </div>
-    <!-- Modal Report -->
-    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="{{ route('send.report') }}" method="POST">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Kirim Pesan ke Admin</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Pesan</label>
-                            <textarea name="message" class="form-control" rows="4" placeholder="Tulis pesan Anda..."
-                                required></textarea>
+
+    @if(Auth::check() && Auth::user()->role == 'STAF')
+        <!-- Modal Report -->
+        <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="{{ route('send.report') }}" method="POST">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Form Laporan ke Admin</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <!-- Kategori -->
+                            <label class="form-label">Lapor</label>
+                            <div class="mb-3 d-flex gap-3">
+                                <div>
+                                    <input type="radio" name="kategori" value="Barang" id="kategori_barang" required>
+                                    <label for="kategori_barang">Barang</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="kategori" value="Bahan" id="kategori_bahan">
+                                    <label for="kategori_bahan">Bahan</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="kategori" value="Lainnya" id="kategori_lainnya">
+                                    <label for="kategori_lainnya">Lainnya</label>
+                                </div>
+                            </div>
+                            <div class="mb-3" id="input_kategori_lainnya" style="display: none;">
+                                <input type="text" name="kategori_lainnya" class="form-control"
+                                    placeholder="Isi kategori lainnya" autocomplete="off">
+                            </div>
+
+                            <!-- Alasan -->
+                            <label class="form-label">Alasan</label>
+                            <div class="mb-3 d-flex gap-3">
+                                <div>
+                                    <input type="radio" name="alasan" value="Rusak" id="alasan_rusak" required>
+                                    <label for="alasan_rusak">Rusak</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="alasan" value="Lainnya" id="alasan_lainnya">
+                                    <label for="alasan_lainnya">Lainnya</label>
+                                </div>
+                            </div>
+                            <div class="mb-3" id="input_alasan_lainnya" style="display: none;">
+                                <input type="text" name="alasan_lainnya" class="form-control"
+                                    placeholder="Isi alasan lainnya" autocomplete="off">
+                            </div>
+
+                            <!-- Keterangan -->
+                            <div class="mb-3">
+                                <label class="form-label">Keterangan</label>
+                                <textarea name="keterangan" class="form-control" rows="4"
+                                    placeholder="Masukkan detail laporan..." required></textarea>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger">Kirim Laporan</button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-danger">Kirim</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
+
+        <script>
+            const kategoriRadios = document.querySelectorAll('input[name="kategori"]');
+            const alasanRadios = document.querySelectorAll('input[name="alasan"]');
+
+            kategoriRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    const input = document.getElementById('input_kategori_lainnya');
+                    input.style.display = this.value === 'Lainnya' ? 'block' : 'none';
+                });
+            });
+
+            alasanRadios.forEach(radio => {
+                radio.addEventListener('change', function () {
+                    const input = document.getElementById('input_alasan_lainnya');
+                    input.style.display = this.value === 'Lainnya' ? 'block' : 'none';
+                });
+            });
+        </script>
+    @endif
 
     @stack('addScript')
 

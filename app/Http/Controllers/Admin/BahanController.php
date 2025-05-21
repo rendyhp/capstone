@@ -7,10 +7,15 @@ use App\Models\Bahan;
 use App\Models\BahanAkhir;
 use App\Models\BahanAwal;
 use App\Models\BahanMasuk;
+use App\Models\Barang;
 use App\Models\HistoryInput;
 use App\Models\SatuanBahan;
+use App\Models\User;
+use App\Services\StockAlertService;
+use App\Services\StockDataService;
 use Carbon\Carbon;
 use Hashids\Hashids;
+use Http;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -287,6 +292,12 @@ class BahanController extends Controller
             'jumlah' => $request->jumlah,
         ]);
 
+        $stockService = new StockDataService();
+        $bahan = $stockService->getSingleBahan($request->bahan_id, $request->date);
+
+        $alertService = new StockAlertService();
+        $alertService->checkAndNotify(null, $bahan);
+
         return response()->json(['success' => true]);
     }
 
@@ -308,6 +319,12 @@ class BahanController extends Controller
             'date' => $request->date,
             'jumlah' => $request->jumlah,
         ]);
+
+        $stockService = new StockDataService();
+        $bahan = $stockService->getSingleBahan($request->bahan_id, $request->date);
+
+        $alertService = new StockAlertService();
+        $alertService->checkAndNotify(null, $bahan);
 
         return response()->json(['success' => true]);
     }
@@ -472,42 +489,6 @@ class BahanController extends Controller
         }
     }
 
-    public function inputStore(Request $request)
-    {
-        $validated = $request->validate([
-            'bahan_id' => 'required|string',
-            'date' => 'required|date',
-            'jumlah' => 'required|numeric|min:0',
-        ]);
-
-        try {
-
-            $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
-            $decryptedBahanId = $hashids->decode($validated['bahan_id']);
-
-            if (empty($decryptedBahanId)) {
-                return redirect()->back()->with('error', 'ID bahan tidak valid.');
-            }
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan dalam dekripsi ID.');
-        }
-
-        $bahan = Bahan::find($decryptedBahanId[0]);
-
-        if (!$bahan) {
-            return redirect()->back()->with('error', 'Bahan tidak ditemukan.');
-        }
-
-        BahanMasuk::create([
-            'user_id' => Auth::id(),
-            'bahan_id' => $decryptedBahanId[0],
-            'date' => $validated['date'],
-            'jumlah' => $validated['jumlah'],
-        ]);
-
-        return redirect()->back()->with('success', 'Input stok ' . $bahan->name . ' pada "' . $validated['date'] . '" berhasil ditambahkan.');
-    }
-
     public function storeM(Request $request)
     {
         $validated = $request->validate([
@@ -562,46 +543,6 @@ class BahanController extends Controller
             ->with('success', 'Satuan "' . $Satuan->name . '" Berhasil Ditambahkan');
     }
 
-
-    public function inputUpdate(Request $request)
-    {
-        $validated = $request->validate([
-            'id' => 'required|exists:history_inputs,id',
-            'date' => 'required|date',
-            'jumlah' => 'required|numeric|min:0',
-        ]);
-
-        try {
-
-            $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
-            $decryptedBahanId = $hashids->decode($validated['bahan_id']);
-
-            if (empty($decryptedBahanId)) {
-                return redirect()->back()->with('error', 'ID bahan tidak valid.');
-            }
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan dalam dekripsi ID.');
-        }
-
-        $bahan = Bahan::find($decryptedBahanId[0]);
-
-        if (!$bahan) {
-            return redirect()->back()->with('error', 'Bahan tidak ditemukan.');
-        }
-
-        try {
-            $historyInput = HistoryInput::findOrFail($validated['id']);
-            $historyInput->update([
-                'date' => $validated['date'],
-                'jumlah' => $validated['jumlah'],
-            ]);
-
-            return redirect()->back()->with('success', 'Input stok ' . $bahan->name . ' pada "' . $validated['date'] . '" berhasil diupdate.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal mengupdate data stok: ' . $e->getMessage());
-        }
-    }
-
     public function updateSatuan(Request $request, SatuanBahan $satuans)
     {
         $validator = Validator::make($request->all(), [
@@ -621,28 +562,6 @@ class BahanController extends Controller
         return redirect()->back()->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
     }
 
-    public function inputDelete($encryptedId)
-    {
-        $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
-
-        $decoded = $hashids->decode($encryptedId);
-        if (empty($decoded)) {
-            return redirect()->back()->with('error', 'ID tidak valid.');
-        }
-
-        $id = $decoded[0];
-
-        $historyInput = HistoryInput::with('bahan')->findOrFail($id);
-        $tanggalDelete = $historyInput->date;
-        $historyInput->deleted_at = now();
-        $historyInput->save();
-
-        $encryptedBahanId = $hashids->encode($historyInput->bahan_id);
-        $jumlahFormatted = rtrim(rtrim(number_format($historyInput->jumlah, 3, ',', '.'), '0'), ',');
-
-        return redirect()->route('stok-bahan.historyBahan', ['encryptedId' => $encryptedBahanId])
-            ->with('success', 'Data input ' . $historyInput->bahan->name . ' pada "' . $tanggalDelete . '" sebesar ' . $jumlahFormatted . ' berhasil dihapus.');
-    }
 
     public function storeDataBahan(Request $request)
     {
@@ -739,5 +658,64 @@ class BahanController extends Controller
 
         return response()->json(['message' => 'Data berhasil dihapus']);
     }
+
+    protected function notifyIfMinimumTerlewati()
+    {
+        $barangMinimum = Barang::with('satuanBarang')
+            ->whereRaw('getSisaBarang(barangs.id) < minimum')
+            ->get();
+
+        $bahanMinimum = Bahan::with('satuan')
+            ->whereRaw('getJumlahAkhir(bahans.id) < minimum')
+            ->get();
+
+        if ($barangMinimum->isEmpty() && $bahanMinimum->isEmpty()) {
+            return; // Tidak perlu kirim jika semua aman
+        }
+
+        $message = "*⚠️ Notifikasi Stok Menipis*\n\n";
+
+        if ($barangMinimum->isNotEmpty()) {
+            $message .= "Barang:\n";
+            foreach ($barangMinimum as $b) {
+                $message .= "- {$b->name}: {$b->sisa} {$b->satuanBarang->name}, min: {$b->minimum}\n";
+            }
+        }
+
+        if ($bahanMinimum->isNotEmpty()) {
+            $message .= "\nBahan:\n";
+            foreach ($bahanMinimum as $b) {
+                $message .= "- {$b->name}: {$b->jumlah_akhir} {$b->satuan->name}, min: {$b->minimum}\n";
+            }
+        }
+
+        $message .= "\n\n> Sent via fonnte.com";
+
+        // Kirim ke OWNER dan MANAJER
+        $users = User::whereIn('role', ['OWNER', 'MANAJER'])
+            ->whereNotNull('wa_api_token')
+            ->with('profile')
+            ->get();
+
+        foreach ($users as $user) {
+            $token = $user->wa_api_token;
+            $phone = $user->profile->phone ?? null;
+
+            if (!$phone)
+                continue;
+
+            $response = Http::withHeaders([
+                'Authorization' => $token,
+            ])->post('https://api.fonnte.com/send', [
+                        'target' => $phone,
+                        'message' => $message,
+                    ]);
+
+            if (!$response->successful()) {
+                \Log::error("Gagal kirim WA ke {$phone}: " . $response->body());
+            }
+        }
+    }
+
 
 }

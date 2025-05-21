@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\StockAlertService;
+use App\Services\StockDataService;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -169,6 +171,25 @@ class TransaksiController extends Controller
             $this->hitungBahanTerpakai($transaksi);
         }
 
+        $bahanIds = \App\Models\KomposisiMenu::whereIn('menu_id', $processedMenus)
+            ->pluck('bahan_id')
+            ->unique()
+            ->toArray();
+
+        $stockService = new StockDataService();
+
+        $bahanData = collect();
+
+        foreach ($bahanIds as $bahanId) {
+            $bahan = $stockService->getSingleBahan($bahanId, $tanggal);
+            if ($bahan) {
+                $bahanData = $bahanData->merge($bahan);
+            }
+        }
+
+        $alertService = new StockAlertService();
+        $alertService->checkAndNotify(null, $bahanData);
+
         return redirect()->route('transaksi.index', ['date' => $tanggal])
             ->with('success', 'Import transaksi berhasil.');
     }
@@ -286,6 +307,6 @@ class TransaksiController extends Controller
             ->whereDate('date', $tanggal)
             ->delete();
 
-        return redirect()->back()->with('success', 'Transaksi "'. $menuName .'" berhasil dihapus.');
+        return redirect()->back()->with('success', 'Transaksi "' . $menuName . '" berhasil dihapus.');
     }
 }

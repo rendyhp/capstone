@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 20 Bulan Mei 2025 pada 09.09
+-- Waktu pembuatan: 21 Bulan Mei 2025 pada 12.10
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -456,6 +456,29 @@ INSERT INTO `menus` (`id`, `user_id`, `name`, `description`, `image`, `created_a
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `target` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `filename` varchar(255) DEFAULT NULL,
+  `schedule` varchar(255) DEFAULT NULL,
+  `typing` varchar(255) DEFAULT NULL,
+  `delay` varchar(255) DEFAULT NULL,
+  `countryCode` varchar(255) DEFAULT NULL,
+  `file` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `followup` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `migrations`
 --
 
@@ -498,7 +521,11 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (28, '2025_04_22_000310_create_transaksis_table', 2),
 (29, '2025_04_22_000320_create_transaksi_details_table', 2),
 (30, '2025_05_07_023832_create_user_settings_table', 3),
-(31, '2025_05_07_023900_create_user_profiles_table', 3);
+(31, '2025_05_07_023900_create_user_profiles_table', 3),
+(32, '2025_05_21_101505_create_messages_table', 4),
+(33, '2025_05_21_102821_create_reports_table', 4),
+(34, '2025_05_21_103042_create_stock_alert_logs_table', 4),
+(35, '2025_05_21_164851_create_stock_statuses_table', 4);
 
 -- --------------------------------------------------------
 
@@ -562,6 +589,22 @@ CREATE TABLE `personal_access_tokens` (
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `reports`
+--
+
+CREATE TABLE `reports` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `category` enum('barang','bahan','lainnya') NOT NULL,
+  `type` enum('lapor_rusak','lainnya') NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `satuan_bahans`
 --
 
@@ -609,6 +652,36 @@ INSERT INTO `satuan_barangs` (`id`, `user_id`, `name`, `created_at`, `updated_at
 (1, 1, 'Pkg', '2025-05-04 19:47:44', '2025-05-20 04:25:02', NULL),
 (2, 1, 'Pcs', '2025-05-04 19:47:50', '2025-05-20 04:22:52', NULL),
 (3, 1, '-', '2025-05-20 04:22:24', '2025-05-20 04:22:38', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `stock_alert_logs`
+--
+
+CREATE TABLE `stock_alert_logs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `stockable_id` bigint(20) UNSIGNED NOT NULL,
+  `stockable_type` varchar(255) NOT NULL,
+  `alert_date` date NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `stock_statuses`
+--
+
+CREATE TABLE `stock_statuses` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `stockable_id` bigint(20) UNSIGNED NOT NULL,
+  `stockable_type` varchar(255) NOT NULL,
+  `is_below_minimum` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -770,6 +843,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` enum('OWNER','MANAJER','STAF') NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
+  `wa_api_token` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -779,10 +853,10 @@ CREATE TABLE `users` (
 -- Dumping data untuk tabel `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Rendy Hartono Putra', 'rendi45hp', 'rendi45hp@gmail.com', '2025-05-04 19:45:10', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'MANAJER', 'Qprfd2LkWsCMvU3DlSxA5AZqHVeaNX7Z8GR7OzW4wwAEuQX8W5spD9RcwPB2', '2025-05-04 19:45:10', '2025-05-04 19:45:10', NULL),
-(2, 'Maritza Septiarini', 'maritzaseptiarini', 'maritzaseptiarini@gmail.com', '2025-05-04 19:45:12', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', 'zbl9Lv458W6S6Qlu7cGDu7Lsyd4pLD0s6H2k2VKO7hy1Fuo5QYHZHF08AdZa', '2025-05-04 19:45:12', '2025-05-04 19:45:12', NULL),
-(3, 'Abida Amalia Syifa', 'abidaams', 'abidaams@gmail.com', '2025-05-04 19:45:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'CAgxl4zYl0kBXHEBXnkKb2zioHnNgr8ZxAnFkrDoEjko40Dv0SWkixYu6IAN', '2025-05-04 19:45:16', '2025-05-04 19:45:16', NULL);
+INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `wa_api_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Rendy Hartono Putra', 'rendi45hp', 'rendi45hp@gmail.com', '2025-05-04 19:45:10', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'MANAJER', 'Qprfd2LkWsCMvU3DlSxA5AZqHVeaNX7Z8GR7OzW4wwAEuQX8W5spD9RcwPB2', NULL, '2025-05-04 19:45:10', '2025-05-21 10:10:23', NULL),
+(2, 'Maritza Septiarini', 'maritzaseptiarini', 'maritzaseptiarini@gmail.com', '2025-05-04 19:45:12', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', 'zbl9Lv458W6S6Qlu7cGDu7Lsyd4pLD0s6H2k2VKO7hy1Fuo5QYHZHF08AdZa', NULL, '2025-05-04 19:45:12', '2025-05-04 19:45:12', NULL),
+(3, 'Abida Amalia Syifa', 'abidaams', 'abidaams@gmail.com', '2025-05-04 19:45:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'CAgxl4zYl0kBXHEBXnkKb2zioHnNgr8ZxAnFkrDoEjko40Dv0SWkixYu6IAN', NULL, '2025-05-04 19:45:16', '2025-05-04 19:45:16', NULL);
 
 -- --------------------------------------------------------
 
@@ -801,6 +875,15 @@ CREATE TABLE `user_profiles` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data untuk tabel `user_profiles`
+--
+
+INSERT INTO `user_profiles` (`id`, `user_id`, `phone`, `address`, `birth_date`, `gender`, `created_at`, `updated_at`) VALUES
+(1, 1, '6281226077106', 'Cokroyasan, Ngombol', '2003-03-03', 'L', NULL, '2025-05-21 10:10:23'),
+(2, 2, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 3, NULL, NULL, NULL, NULL, NULL, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -814,6 +897,15 @@ CREATE TABLE `user_settings` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data untuk tabel `user_settings`
+--
+
+INSERT INTO `user_settings` (`id`, `user_id`, `settings`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, NULL, NULL),
+(2, 2, NULL, NULL, NULL),
+(3, 3, NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -918,6 +1010,12 @@ ALTER TABLE `menus`
   ADD KEY `menus_user_id_foreign` (`user_id`);
 
 --
+-- Indeks untuk tabel `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indeks untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
@@ -952,6 +1050,13 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
+-- Indeks untuk tabel `reports`
+--
+ALTER TABLE `reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `reports_user_id_foreign` (`user_id`);
+
+--
 -- Indeks untuk tabel `satuan_bahans`
 --
 ALTER TABLE `satuan_bahans`
@@ -964,6 +1069,19 @@ ALTER TABLE `satuan_bahans`
 ALTER TABLE `satuan_barangs`
   ADD PRIMARY KEY (`id`),
   ADD KEY `satuan_barangs_user_id_foreign` (`user_id`);
+
+--
+-- Indeks untuk tabel `stock_alert_logs`
+--
+ALTER TABLE `stock_alert_logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `stock_statuses`
+--
+ALTER TABLE `stock_statuses`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_stockable` (`stockable_id`,`stockable_type`);
 
 --
 -- Indeks untuk tabel `tag_notifikasis`
@@ -1100,10 +1218,16 @@ ALTER TABLE `menus`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
+-- AUTO_INCREMENT untuk tabel `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT untuk tabel `notifikasis`
@@ -1118,6 +1242,12 @@ ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT untuk tabel `reports`
+--
+ALTER TABLE `reports`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT untuk tabel `satuan_bahans`
 --
 ALTER TABLE `satuan_bahans`
@@ -1128,6 +1258,18 @@ ALTER TABLE `satuan_bahans`
 --
 ALTER TABLE `satuan_barangs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT untuk tabel `stock_alert_logs`
+--
+ALTER TABLE `stock_alert_logs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `stock_statuses`
+--
+ALTER TABLE `stock_statuses`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `tag_notifikasis`
@@ -1163,13 +1305,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `user_profiles`
 --
 ALTER TABLE `user_profiles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_settings`
 --
 ALTER TABLE `user_settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -1250,6 +1392,12 @@ ALTER TABLE `menus`
 ALTER TABLE `notifikasis`
   ADD CONSTRAINT `notifikasis_tag_notifikasi_id_foreign` FOREIGN KEY (`tag_notifikasi_id`) REFERENCES `tag_notifikasis` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `notifikasis_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `reports`
+--
+ALTER TABLE `reports`
+  ADD CONSTRAINT `reports_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `satuan_bahans`

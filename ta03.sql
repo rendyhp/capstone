@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 21 Bulan Mei 2025 pada 06.51
+-- Waktu pembuatan: 21 Bulan Mei 2025 pada 12.10
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -524,7 +524,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (31, '2025_05_07_023900_create_user_profiles_table', 3),
 (32, '2025_05_21_101505_create_messages_table', 4),
 (33, '2025_05_21_102821_create_reports_table', 4),
-(34, '2025_05_21_103042_create_stock_alert_logs_table', 4);
+(34, '2025_05_21_103042_create_stock_alert_logs_table', 4),
+(35, '2025_05_21_164851_create_stock_statuses_table', 4);
 
 -- --------------------------------------------------------
 
@@ -667,17 +668,20 @@ CREATE TABLE `stock_alert_logs` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data untuk tabel `stock_alert_logs`
+-- Struktur dari tabel `stock_statuses`
 --
 
-INSERT INTO `stock_alert_logs` (`id`, `stockable_id`, `stockable_type`, `alert_date`, `created_at`, `updated_at`) VALUES
-(1, 9, 'App\\Models\\Barang', '2025-05-21', '2025-05-21 03:51:31', '2025-05-21 03:51:31'),
-(2, 6, 'App\\Models\\Barang', '2025-05-21', '2025-05-21 03:51:31', '2025-05-21 03:51:31'),
-(3, 22, 'App\\Models\\Bahan', '2025-05-21', '2025-05-21 03:51:31', '2025-05-21 03:51:31'),
-(4, 28, 'App\\Models\\Bahan', '2025-05-21', '2025-05-21 03:51:31', '2025-05-21 03:51:31'),
-(5, 35, 'App\\Models\\Bahan', '2025-05-21', '2025-05-21 03:51:31', '2025-05-21 03:51:31'),
-(6, 34, 'App\\Models\\Bahan', '2025-05-21', '2025-05-21 03:51:31', '2025-05-21 03:51:31');
+CREATE TABLE `stock_statuses` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `stockable_id` bigint(20) UNSIGNED NOT NULL,
+  `stockable_type` varchar(255) NOT NULL,
+  `is_below_minimum` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -839,7 +843,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` enum('OWNER','MANAJER','STAF') NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
-  `wa_api_token` varchar(255) NOT NULL,
+  `wa_api_token` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -850,9 +854,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `wa_api_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Rendy Hartono Putra', 'rendi45hp', 'rendi45hp@gmail.com', '2025-05-04 19:45:10', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'MANAJER', 'ultWtxI98rzOwhpItthKEUEx30BC13gaWDLYuAWmR0giO3LALIzLYqn0stFw', '', '2025-05-04 19:45:10', '2025-05-21 04:36:04', NULL),
-(2, 'Maritza Septiarini', 'maritzaseptiarini', 'maritzaseptiarini@gmail.com', '2025-05-04 19:45:12', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', 'zbl9Lv458W6S6Qlu7cGDu7Lsyd4pLD0s6H2k2VKO7hy1Fuo5QYHZHF08AdZa', '', '2025-05-04 19:45:12', '2025-05-04 19:45:12', NULL),
-(3, 'Abida Amalia Syifa', 'abidaams', 'abidaams@gmail.com', '2025-05-04 19:45:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'CAgxl4zYl0kBXHEBXnkKb2zioHnNgr8ZxAnFkrDoEjko40Dv0SWkixYu6IAN', '', '2025-05-04 19:45:16', '2025-05-04 19:45:16', NULL);
+(1, 'Rendy Hartono Putra', 'rendi45hp', 'rendi45hp@gmail.com', '2025-05-04 19:45:10', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'MANAJER', 'Qprfd2LkWsCMvU3DlSxA5AZqHVeaNX7Z8GR7OzW4wwAEuQX8W5spD9RcwPB2', NULL, '2025-05-04 19:45:10', '2025-05-21 10:10:23', NULL),
+(2, 'Maritza Septiarini', 'maritzaseptiarini', 'maritzaseptiarini@gmail.com', '2025-05-04 19:45:12', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', 'zbl9Lv458W6S6Qlu7cGDu7Lsyd4pLD0s6H2k2VKO7hy1Fuo5QYHZHF08AdZa', NULL, '2025-05-04 19:45:12', '2025-05-04 19:45:12', NULL),
+(3, 'Abida Amalia Syifa', 'abidaams', 'abidaams@gmail.com', '2025-05-04 19:45:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'CAgxl4zYl0kBXHEBXnkKb2zioHnNgr8ZxAnFkrDoEjko40Dv0SWkixYu6IAN', NULL, '2025-05-04 19:45:16', '2025-05-04 19:45:16', NULL);
 
 -- --------------------------------------------------------
 
@@ -876,9 +880,9 @@ CREATE TABLE `user_profiles` (
 --
 
 INSERT INTO `user_profiles` (`id`, `user_id`, `phone`, `address`, `birth_date`, `gender`, `created_at`, `updated_at`) VALUES
-(1, 1, '081226077106', 'Cokroyasan, Ngombol', '2003-03-03', 'L', '2025-05-21 04:23:31', '2025-05-21 04:23:11'),
-(2, 2, NULL, NULL, NULL, NULL, '2025-05-21 04:23:34', '2025-05-21 04:24:04'),
-(3, 3, NULL, NULL, NULL, NULL, '2025-05-21 04:23:37', '2025-05-21 04:24:07');
+(1, 1, '6281226077106', 'Cokroyasan, Ngombol', '2003-03-03', 'L', NULL, '2025-05-21 10:10:23'),
+(2, 2, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 3, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -899,9 +903,9 @@ CREATE TABLE `user_settings` (
 --
 
 INSERT INTO `user_settings` (`id`, `user_id`, `settings`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, '2025-05-21 04:23:41', '2025-05-21 04:23:44'),
-(2, 2, NULL, '2025-05-21 04:23:46', '2025-05-21 04:23:48'),
-(3, 3, NULL, '2025-05-21 04:23:50', '2025-05-21 04:23:52');
+(1, 1, NULL, NULL, NULL),
+(2, 2, NULL, NULL, NULL),
+(3, 3, NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -1073,6 +1077,13 @@ ALTER TABLE `stock_alert_logs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `stock_statuses`
+--
+ALTER TABLE `stock_statuses`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_stockable` (`stockable_id`,`stockable_type`);
+
+--
 -- Indeks untuk tabel `tag_notifikasis`
 --
 ALTER TABLE `tag_notifikasis`
@@ -1216,7 +1227,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT untuk tabel `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT untuk tabel `notifikasis`
@@ -1252,7 +1263,13 @@ ALTER TABLE `satuan_barangs`
 -- AUTO_INCREMENT untuk tabel `stock_alert_logs`
 --
 ALTER TABLE `stock_alert_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `stock_statuses`
+--
+ALTER TABLE `stock_statuses`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `tag_notifikasis`

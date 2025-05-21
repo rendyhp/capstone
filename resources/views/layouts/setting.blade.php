@@ -106,7 +106,14 @@
                 </a>
 
                 <div class="navbar-nav align-items-center ms-auto">
-                    <div class="fs-7 fw-bold ms-4">{{Auth::user()->up_nama}}</div>
+                    @if(Auth::check() && Auth::user()->role == 'STAF')
+                        {{-- Tombol Report --}}
+                        <button class="btn btn-outline-danger btn-sm me-3" data-bs-toggle="modal"
+                            data-bs-target="#reportModal">
+                            <i class="fa fa-flag me-1"></i> Report
+                        </button>
+                    @endif
+
                     <div class="nav-item dropdown">
                         <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
 
@@ -139,6 +146,56 @@
 
         </div>
         <!-- Content End -->
+        @if(Auth::check() && Auth::user()->role == 'STAF')
+            <!-- Modal Report -->
+            <!-- Modal Report -->
+            <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="{{ route('send.report') }}" method="POST">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Form Laporan ke Admin</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="mb-3">
+                                    <label class="form-label">Lapor</label>
+                                    <select name="kategori" class="form-select" required>
+                                        <option value="">-- Pilih Kategori --</option>
+                                        <option value="Barang">Barang</option>
+                                        <option value="Bahan">Bahan</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Alasan</label>
+                                    <select name="alasan" class="form-select" required>
+                                        <option value="">-- Pilih Alasan --</option>
+                                        <option value="Rusak">Rusak</option>
+                                        <option value="Lainnya">Lainnya</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Keterangan</label>
+                                    <textarea name="keterangan" class="form-control" rows="4"
+                                        placeholder="Masukkan detail laporan..." required></textarea>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-danger">Kirim Laporan</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        @endif
     </div>
 
     @stack('addScript')

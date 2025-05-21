@@ -8,6 +8,8 @@ use App\Models\BarangAwal;
 use App\Models\BarangKeluar;
 use App\Models\BarangMasuk;
 use App\Models\SatuanBarang;
+use App\Services\StockAlertService;
+use App\Services\StockDataService;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -400,6 +402,12 @@ class BarangController extends Controller
             'date' => $validated['date'],
         ]);
 
+        $stockService = new StockDataService();
+        $barang = $stockService->getSingleBarang($request->barang_id);
+
+        $alertService = new StockAlertService();
+        $alertService->checkAndNotify($barang, null);
+
         return redirect()->back()->with('success', 'Stok berhasil ditambahkan.');
     }
 
@@ -420,6 +428,12 @@ class BarangController extends Controller
             'user_id' => Auth::id(),
             'date' => $validated['date'],
         ]);
+
+        $stockService = new StockDataService();
+        $barang = $stockService->getSingleBarang($request->barang_id);
+
+        $alertService = new StockAlertService();
+        $alertService->checkAndNotify($barang, null);
 
         return redirect()->back()->with('success', 'Stok berhasil dikurangi.');
     }
@@ -587,5 +601,63 @@ class BarangController extends Controller
         $barang->save();
 
         return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+    }
+
+    protected function notifyIfMinimumTerlewati()
+    {
+        $barangMinimum = Barang::with('satuanBarang')
+            ->whereRaw('getSisaBarang(barangs.id) < minimum')
+            ->get();
+
+        $bahanMinimum = Bahan::with('satuan')
+            ->whereRaw('getJumlahAkhir(bahans.id) < minimum')
+            ->get();
+
+        if ($barangMinimum->isEmpty() && $bahanMinimum->isEmpty()) {
+            return; // Tidak perlu kirim jika semua aman
+        }
+
+        $message = "*⚠️ Notifikasi Stok Menipis*\n\n";
+
+        if ($barangMinimum->isNotEmpty()) {
+            $message .= "Barang:\n";
+            foreach ($barangMinimum as $b) {
+                $message .= "- {$b->name}: {$b->sisa} {$b->satuanBarang->name}, min: {$b->minimum}\n";
+            }
+        }
+
+        if ($bahanMinimum->isNotEmpty()) {
+            $message .= "\nBahan:\n";
+            foreach ($bahanMinimum as $b) {
+                $message .= "- {$b->name}: {$b->jumlah_akhir} {$b->satuan->name}, min: {$b->minimum}\n";
+            }
+        }
+
+        $message .= "\n\n> Sent via fonnte.com";
+
+        // Kirim ke OWNER dan MANAJER
+        $users = User::whereIn('role', ['OWNER', 'MANAJER'])
+            ->whereNotNull('wa_api_token')
+            ->with('profile')
+            ->get();
+
+        foreach ($users as $user) {
+            $token = $user->wa_api_token;
+            $phone = $user->profile->phone ?? null;
+
+            if (!$phone)
+                continue;
+
+            $response = Http::withHeaders([
+                'Authorization' => $token,
+            ])->post('https://api.fonnte.com/send', [
+                        'target' => $phone,
+                        'message' => $message,
+                    ]);
+
+            if (!$response->successful()) {
+                \Log::error("Gagal kirim WA ke {$phone}: " . $response->body());
+            }
+        }
     }
 }
