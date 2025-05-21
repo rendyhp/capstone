@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 03:39 PM
+-- Generation Time: May 21, 2025 at 04:59 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -497,13 +497,6 @@ CREATE TABLE `password_reset_tokens` (
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `password_reset_tokens`
---
-
-INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
-('rendi45hp@gmail.com', '$2y$10$Km0phKUYIpHgdqIrurNUAO4JnaV5Q7SwKbuR4aTbP842Q4PxjvPxy', '2025-05-21 13:19:29');
-
 -- --------------------------------------------------------
 
 --
@@ -589,6 +582,13 @@ CREATE TABLE `stock_alert_logs` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `stock_alert_logs`
+--
+
+INSERT INTO `stock_alert_logs` (`id`, `stockable_id`, `stockable_type`, `alert_date`, `created_at`, `updated_at`) VALUES
+(3, 19, 'App\\Models\\Bahan', '2025-05-21', '2025-05-21 13:47:53', '2025-05-21 13:47:53');
+
 -- --------------------------------------------------------
 
 --
@@ -627,7 +627,8 @@ INSERT INTO `transaksis` (`id`, `user_id`, `date`, `menu_name`, `menu_id`, `juml
 (46, 2, '2025-05-31', NULL, 10, 2, '2025-05-16 10:16:35', '2025-05-16 10:16:35', NULL),
 (47, 2, '2025-05-31', NULL, 9, 2, '2025-05-16 10:16:35', '2025-05-16 10:16:35', NULL),
 (48, 2, '2025-05-31', NULL, 8, 2, '2025-05-16 10:16:35', '2025-05-16 10:16:35', NULL),
-(49, 2, '2025-05-31', NULL, 11, 2, '2025-05-16 10:16:35', '2025-05-16 10:16:35', NULL);
+(49, 2, '2025-05-31', NULL, 11, 2, '2025-05-16 10:16:35', '2025-05-16 10:16:35', NULL),
+(59, 2, '2025-05-21', NULL, 10, 33, '2025-05-21 13:47:53', '2025-05-21 13:47:53', NULL);
 
 -- --------------------------------------------------------
 
@@ -703,7 +704,10 @@ INSERT INTO `transaksi_details` (`id`, `date`, `transaksi_id`, `menu_id`, `bahan
 (146, '2025-05-31', 48, 8, 18, 60.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
 (147, '2025-05-31', 49, 11, 28, 4.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
 (148, '2025-05-31', 49, 11, 17, 100.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(149, '2025-05-31', 49, 11, 20, 40.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35');
+(149, '2025-05-31', 49, 11, 20, 40.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
+(183, '2025-05-21', 59, 10, 31, 495.000, NULL, '2025-05-21 13:47:53', '2025-05-21 13:47:53'),
+(184, '2025-05-21', 59, 10, 19, 825.000, NULL, '2025-05-21 13:47:53', '2025-05-21 13:47:53'),
+(185, '2025-05-21', 59, 10, 17, 3300.000, NULL, '2025-05-21 13:47:53', '2025-05-21 13:47:53');
 
 -- --------------------------------------------------------
 
@@ -731,8 +735,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `wa_api_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Rendy Hartono Putra', 'rendi45hp', 'rendi45hp@gmail.com', '2025-05-04 19:45:10', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'MANAJER', 'Qprfd2LkWsCMvU3DlSxA5AZqHVeaNX7Z8GR7OzW4wwAEuQX8W5spD9RcwPB2', '49zbRGa16VLm8S44vT5E', '2025-05-04 19:45:10', '2025-05-21 13:37:37', NULL),
-(2, 'Maritza Septiarini', 'maritzaseptiarini', 'maritzaseptiarini@gmail.com', '2025-05-04 19:45:12', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', 'zbl9Lv458W6S6Qlu7cGDu7Lsyd4pLD0s6H2k2VKO7hy1Fuo5QYHZHF08AdZa', NULL, '2025-05-04 19:45:12', '2025-05-04 19:45:12', NULL),
+(1, 'Rendy Hartono Putra', 'rendi45hp', 'rendi45hp@gmail.com', '2025-05-04 19:45:10', '$2y$10$Q8Ed2iM4NzZVnrymLFP7Y.dgy30XnsT3BmxsqJnbhZ7oaUfPosi7i', 'MANAJER', 'LjxudnMWKIfCOaAAJMdVlCpeuM82S3pRXRzHV1vPUwJ32bjO8Dk3OZt5m83R', '49zbRGa16VLm8S44vT5E', '2025-05-04 19:45:10', '2025-05-21 13:49:01', NULL),
+(2, 'Maritza Septiarini', 'maritzaseptiarini', 'maritzaseptiarini@gmail.com', '2025-05-04 19:45:12', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', 'tKdXRJh3aNRxIMQwxp0HWse6AAfKQr68RA64mpGBJadj1Zz64gF4UUP94qUD', NULL, '2025-05-04 19:45:12', '2025-05-04 19:45:12', NULL),
 (3, 'Abida Amalia Syifa', 'abidaams', 'abidaams@gmail.com', '2025-05-04 19:45:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'CAgxl4zYl0kBXHEBXnkKb2zioHnNgr8ZxAnFkrDoEjko40Dv0SWkixYu6IAN', NULL, '2025-05-04 19:45:16', '2025-05-04 19:45:16', NULL);
 
 -- --------------------------------------------------------
@@ -758,7 +762,7 @@ CREATE TABLE `user_profiles` (
 
 INSERT INTO `user_profiles` (`id`, `user_id`, `phone`, `address`, `birth_date`, `gender`, `created_at`, `updated_at`) VALUES
 (1, 1, '6281226077106', 'Cokroyasan, Ngombol', '2003-03-03', 'L', NULL, '2025-05-21 13:37:32'),
-(2, 2, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 2, '62', NULL, NULL, 'P', NULL, '2025-05-21 13:46:29'),
 (3, 3, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
@@ -1057,19 +1061,19 @@ ALTER TABLE `satuan_barangs`
 -- AUTO_INCREMENT for table `stock_alert_logs`
 --
 ALTER TABLE `stock_alert_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `transaksi_details`
 --
 ALTER TABLE `transaksi_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=183;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
 
 --
 -- AUTO_INCREMENT for table `users`
