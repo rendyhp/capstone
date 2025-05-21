@@ -58,18 +58,23 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="password" class="form-label">New Password</label>
+                    <label for="password" class="form-label">Password Baru</label>
                     <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
                         name="password" required autocomplete="new-password" minlength="8" maxlength="20">
-                    @error('password')
-                        <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                    @enderror
+                    <small class="form-text text-muted">*Minimal 8 dan maksimal 20 karakter.</small>
+                    <p>
+                        @error('password')
+                            <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                        @enderror
+                    </p>
+
                 </div>
 
                 <div class="mb-3">
-                    <label for="password-confirm" class="form-label">Confirm New Password</label>
+                    <label for="password-confirm" class="form-label">Konfirmasi Password Baru</label>
                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required
                         autocomplete="new-password" minlength="8" maxlength="20">
+                    <small class="form-text text-muted">*Harus sama persis dengan password baru.</small>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100" style="border-radius: 20px;">Reset Password</button>

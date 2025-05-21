@@ -34,7 +34,7 @@
 
             <div class="mb-3">
                 <label for="new_password" class="form-label">Password Baru</label>
-                <input type="password" class="form-control" name="new_password" required>
+                <input type="password" class="form-control" name="new_password" minlength="8" maxlength="20" required>
                 <small class="form-text text-muted">*Minimal 8 dan maksimal 20 karakter.</small>
                 <p>
                     @error('new_password') <small class="text-danger">{{ $message }}</small> @enderror
@@ -44,7 +44,8 @@
 
             <div class="mb-3">
                 <label for="new_password_confirmation" class="form-label">Konfirmasi Password Baru</label>
-                <input type="password" class="form-control" name="new_password_confirmation" required>
+                <input type="password" class="form-control" name="new_password_confirmation" minlength="8" maxlength="20"
+                    required>
                 <small class="form-text text-muted">*Harus sama persis dengan password baru.</small>
             </div>
 
