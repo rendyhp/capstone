@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\NotifikasiController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\TransaksiController;
@@ -30,6 +32,18 @@ Route::get('/', function () {
 // Auth routes
 Auth::routes();
 Route::redirect('/my', '/my/profile');
+// Reset password
+// Tampilkan form input email untuk reset password
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+
+// Kirim email reset password
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+
+// Tampilkan form reset password dengan token
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+// Proses simpan password baru
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 // Authenticated routes
 Route::middleware(['auth'])->group(function () {
@@ -101,6 +115,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/protected/user-data/registerStore', [UserController::class, 'registerStore'])->name('user-data.registerStore');
     Route::get('/protected/user/{id}', [UserController::class, 'getEmail'])->name('user.getEmail');
     Route::put('/protected/user/{id}/delete', [UserController::class, 'delete'])->name('user.delete');
+    Route::put('/protected/user/{id}/reset-password', [UserController::class, 'resetPassword'])->name('user.resetPassword');
+
 
     // Setting pages
     Route::get('/my/profile', [SettingController::class, 'index'])->name('setting.index');
@@ -110,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/my/notifikasi-api/disconnect', [SettingController::class, 'disconnectNotifikasiApi'])->name('setting.notifikasi-api.disconnect');
     Route::get('/my/password', [SettingController::class, 'indexPassword'])->name('setting.password.index');
     Route::post('/my/password', [SettingController::class, 'updatePassword'])->name('setting.password.update');
+
 
 
 

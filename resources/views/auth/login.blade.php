@@ -126,6 +126,10 @@
                             <label for="floatingPassword">{{ __('Password') }}</label>
                         </div>
 
+                        <div class="forgot-password">
+                            <a href="{{ route('password.request') }}">Lupa Password?</a>
+                        </div>
+
                         <div class="text-center text-lg-start mt-4 pt-2">
                             <button type="submit" class="btn btn-primary btn-lg"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem; width: 400px; border-radius: 20px;">

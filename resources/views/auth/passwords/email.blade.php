@@ -1,47 +1,63 @@
-@extends('layouts.app')
+@extends('layouts.header')
+@section('container')
+@section('title', 'Lupa Password | Bdim’s Stock')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+    @push('addStyle')
+        <style>
+            .form-container {
+                border: 2px solid #ccc;
+                border-radius: 10px;
+                padding: 20px;
+                max-width: 450px;
+                margin: 50px auto;
+            }
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+            .alert {
+                padding: 15px;
+                margin-bottom: 20px;
+                border: 1px solid transparent;
+                border-radius: 10px;
+            }
 
-                    <form method="POST" action="{{ route('password.email') }}">
-                        @csrf
+            .alert-success {
+                color: #3c763d;
+                background-color: #dff0d8;
+                border-color: #d6e9c6;
+            }
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+            .alert-danger {
+                color: #a94442;
+                background-color: #f2dede;
+                border-color: #ebccd1;
+            }
+        </style>
+    @endpush
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+    <section class="vh-100 d-flex justify-content-center align-items-center">
+        <div class="form-container">
+            <h3 class="mb-4 text-center">Lupa Password</h3>
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
                 </div>
-            </div>
+            @endif
+
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email"
+                        value="{{ old('email') }}" required autocomplete="email" autofocus>
+                    @error('email')
+                        <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
+                    @enderror
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100" style="border-radius: 20px;">Kirim Link Reset
+                    Password</button>
+            </form>
         </div>
-    </div>
-</div>
+    </section>
 @endsection

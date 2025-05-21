@@ -117,6 +117,7 @@
 
 
                                                         <td>
+                                                            {{-- Tombol Delete --}}
                                                             @if (auth()->user()->role == 'OWNER' && ($user->role == 'MANAJER' || $user->role == 'STAF'))
                                                                 <form action="/protected/user/{{ $user->id }}/delete" class="d-inline"
                                                                     method="post">
@@ -138,7 +139,24 @@
                                                                     </button>
                                                                 </form>
                                                             @endif
+
+                                                            {{-- Tombol Reset Password --}}
+                                                            @if (
+                                                                    (auth()->user()->role == 'OWNER' && ($user->role == 'MANAJER' || $user->role == 'STAF')) ||
+                                                                    (auth()->user()->role == 'MANAJER' && $user->role == 'STAF')
+                                                                )
+                                                                <form action="/protected/user/{{ $user->id }}/reset-password"
+                                                                    class="d-inline" method="post">
+                                                                    @method('PUT')
+                                                                    @csrf
+                                                                    <button class="btn btn-warning btn-sm" type="submit"
+                                                                        onclick="return confirm('Reset password ke default?')">
+                                                                        <i class="fa fa-key"></i> Reset
+                                                                    </button>
+                                                                </form>
+                                                            @endif
                                                         </td>
+
                                                     </tr>
                                                 @endforeach
                                             @endif
