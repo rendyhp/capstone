@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>@yield('title', "BdiM’s Stock")</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="{{ url('css/swap.css') }}" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="{{ url('fontawesome/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ url('/font/bootstrap-icons.css') }}" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{ url('lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url('lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css')}}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ url('css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Tambahanku -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="vendor/select2/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href="{{url('css/style.css')}}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link href="{{ url('css/mycss.css') }}" rel="stylesheet">
+    @stack('addStyle')
+</head>
+
+<body>
+    <div class="position-relative bg-white d-flex p-0">
+        @stack('spinner')
+
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+            <nav class="navbar bg-light navbar-light">
+                <a href="" class="navbar-brand mx-4 mb-3">
+                    <h3 class="text-primary hide-on-print">
+                        <p class="fs-5">
+                            <img src="/img/logo-bdim.png" style="width: 35px; height: 35px;" class="me-2"
+                                alt="Logo">BdiM's Stock
+                        </p></i>
+                    </h3>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4">
+                    <i class="fa fa-user fs-4 ms-2"></i>
+                    <div class="ms-3">
+                        <h6 class="mb-0">{{ Auth::user()->name }} </h6>
+                        <span>{{ Auth::user()->role }}</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100">
+                    @if(Auth::check() && (Auth::user()->role == 'OWNER' || Auth::user()->role == 'MANAJER'))
+                        <li class="nav-header fw-bold fs-5 ms-4 mb-2">Setting</li>
+                        <a href="/my/profile" class="nav-link @yield('Profile')">Profil</a>
+                        <a href="/my/notifikasi-api" class="nav-link @yield('Notifapi')">API Notifikasi</a>
+                        <a href="/my/password" class="nav-link @yield('Password')">Password</a>
+                    @endif
+
+                    @if(Auth::check() && Auth::user()->role == 'STAF')
+                        <li class="nav-header fw-bold fs-5 ms-4 mb-2">Setting</li>
+                        <a href="/my/profile" class="nav-link @yield('Profile')">Profil</a>
+                        <a href="/my/password" class="nav-link @yield('Password')">Password</a>
+                    @endif
+
+
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                        </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0  hide-on-print"
+                style="width: 100%; height: 60px;">
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+
+                <div class="navbar-nav align-items-center ms-auto">
+                    <div class="fs-7 fw-bold ms-4">{{Auth::user()->up_nama}}</div>
+                    <div class="nav-item dropdown">
+                        <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+
+                            <span class="d-none d-lg-inline-flex">{{ Auth::user()->name }}</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/my">
+                                Setting
+                            </a>
+                            <a class="dropdown-item" href="/" onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+            <!-- Widgets Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    @yield('container')
+                </div>
+            </div>
+            <!-- Widgets End -->
+
+        </div>
+        <!-- Content End -->
+    </div>
+
+    @stack('addScript')
+
+    <!-- JavaScript Libraries -->
+    <script src="{{ url('js/jquery-3.4.1.min.js')}}"></script>
+    <script src="{{ url('js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{ url('lib/chart/chart.min.js')}}"></script>
+    <script src="{{ url('lib/easing/easing.min.js')}}"></script>
+    <script src="{{ url('lib/waypoints/waypoints.min.js')}}"></script>
+    <script src="{{ url('lib/owlcarousel/owl.carousel.min.js')}}"></script>
+    <script src="{{ url('lib/tempusdominus/js/moment.min.js')}}"></script>
+    <script src="{{ url('lib/tempusdominus/js/moment-timezone.min.js')}}"></script>
+    <script src="{{ url('lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+    <script src="{{ url('js/popper.min.js') }} "></script>
+    <script src="{{ url('js/bootstrap.min.js')}}"></script>
+
+    <!-- tambahanku -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="vendor/select2/dist/js/select2.min.js"></script>
+    <!-- Template Javascript -->
+    <script src="{{ url('js/main.js')}}"></script>
+    <!-- ... (other script tags) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- My Select2 script-->
+    <script src="{{ url('js/myselect2.js')}}"></script>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script src="{{ url('js/myjs.js')}}"></script>
+</body>
+
+</html>

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['OWNER', 'MANAJER', 'STAF']);
             $table->rememberToken();
+            $table->string('wa_api_token')->nullable()->after('remember_token');
             $table->timestamps();
             $table->softDeletes();
         });

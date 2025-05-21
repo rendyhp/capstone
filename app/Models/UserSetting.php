@@ -11,9 +11,15 @@ class UserSetting extends Model
 
     protected $fillable = [
         'user_id',
-        'phone',
-        'address',
-        'birth_date',
-        'gender'
+        'settings'
     ];
+
+    protected $casts = [
+        'settings' => 'array',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

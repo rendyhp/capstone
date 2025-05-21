@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
+use App\Models\UserProfile;
+use App\Models\UserSetting;
 use Auth;
 use Hash;
 use Illuminate\Http\Request;
@@ -93,17 +95,14 @@ class UserController extends Controller
         ]);
 
         if ($role == 'OWNER') {
-            // OWNER bisa membuat role OWNER, MANAGER, atau STAFF
             if (!in_array($request->role, ['OWNER', 'MANAJER', 'STAF'])) {
                 abort(403, 'Anda tidak memiliki akses!');
             }
         } elseif ($role == 'MANAJER') {
-            // MANAJER hanya bisa membuat STAF
             if ($request->role != 'STAF') {
                 abort(403, 'Anda tidak memiliki akses!');
             }
         } else {
-            // Selain OWNER dan MANAJER tidak boleh mengakses
             abort(403, 'Anda tidak memiliki akses!');
         }
 
@@ -114,6 +113,19 @@ class UserController extends Controller
             'email' => $request->email,
             'role' => $request->role,
             'password' => Hash::make($request->password),
+        ]);
+
+        // Simpan ke user_profiles dengan default null/null
+        UserProfile::create([
+            'user_id' => $user->id,
+            'phone' => null,
+            'address' => null,
+            'birth_date' => null,
+            'gender' => null,
+        ]);
+        UserSetting::create([
+            'user_id' => $user->id,
+            'settings' => json_encode([]), // atau array default
         ]);
 
         return redirect('/protected/user-data')->with('message', 'Registrasi Akun ' . $user->name . ' Berhasil!');

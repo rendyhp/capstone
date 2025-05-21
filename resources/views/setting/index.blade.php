@@ -1,0 +1,123 @@
+@extends('layouts.setting')
+@section('Profile', 'active')
+@section('container')
+@section('title', "Transaksi | BdiM’s Stock")
+
+    <style>
+        .cards {
+            height: auto;
+            background-color: #f7fcfb;
+            /* Warna biru muda */
+            border-radius: 10px;
+            /* Sudut card membulat */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            /* Efek bayangan card */
+            padding: 20px;
+            /* Ruang dalam card */
+        }
+
+        .cards h3 {
+            color: #333;
+            /* Warna teks */
+        }
+
+        .cards p {
+            color: #555;
+            /* Warna teks */
+        }
+    </style>
+
+    {{-- Alerts --}}
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible">{{ session('error') }}</div>
+    @endif
+
+    <div class="container cards">
+        <a href="{{ url('/dashboard') }}"><i class="fa fa-angle-double-left me-2 mb-3"></i>Kembali | Ke dashboard</a>
+
+
+
+        {{-- Judul --}}
+        <h2 class="mt-3 text-uppercase fs-2">Profil</h2>
+
+        {{-- Info --}}
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <p><strong>Nama:</strong> {{ $user->name }}</p>
+                <p><strong>Username:</strong> {{ $user->username }}</p>
+                <p><strong>Email:</strong> {{ $user->email }}</p>
+                <p><strong>Role:</strong> {{ $user->role }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>No. HP:</strong> {{ $profile->phone ?? '-' }}</p>
+                <p><strong>Alamat:</strong> {{ $profile->address ?? '-' }}</p>
+                <p><strong>Tanggal Lahir:</strong>
+                    {{ $profile->birth_date ? \Carbon\Carbon::parse($profile->birth_date)->translatedFormat('j F Y') : '-' }}
+                </p>
+                <p><strong>Jenis Kelamin:</strong>
+                    @if($profile->gender == 'L')
+                        Laki-laki
+                    @elseif($profile->gender == 'P')
+                        Perempuan
+                    @else
+                        -
+                    @endif
+                </p>
+
+            </div>
+        </div>
+
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit
+            Profil</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('setting.update') }}">
+                @csrf
+                @method('PUT')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Profil</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label>Nama</label>
+                            <input name="name" class="form-control" value="{{ $user->name }}">
+                        </div>
+                        <div class="mb-2">
+                            <label>No HP</label>
+                            <input name="phone" class="form-control" value="{{ $profile->phone }}">
+                        </div>
+                        <div class="mb-2">
+                            <label>Alamat</label>
+                            <input name="address" class="form-control" value="{{ $profile->address }}">
+                        </div>
+                        <div class="mb-2">
+                            <label>Tanggal Lahir</label>
+                            <input type="date" name="birth_date" class="form-control" value="{{ $profile->birth_date }}">
+                        </div>
+                        <div class="mb-2">
+                            <label>Jenis Kelamin</label>
+                            <select name="gender" class="form-control">
+                                <option value="L" @selected($profile->gender == 'L')>Laki-laki</option>
+                                <option value="P" @selected($profile->gender == 'P')>Perempuan</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+@endsection

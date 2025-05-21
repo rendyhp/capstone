@@ -97,8 +97,8 @@
             @if($barangs_below_minimum->isEmpty())
                 <p class="text-success">Semua stok barang aman.</p>
             @else
-                <table class="table table-bordered table-sm">
-                    <thead>
+                <table class="table table-bordered text-dark table-sm">
+                    <thead class="table-primary">
                         <tr>
                             <th>Nama Barang</th>
                             <th>Stok Minimum</th>
@@ -129,8 +129,8 @@
             @if($bahans_below_minimum->isEmpty())
                 <p class="text-success">Semua stok bahan aman.</p>
             @else
-                <table class="table table-bordered table-sm">
-                    <thead>
+                <table class="table table-bordered text-dark table-sm">
+                    <thead class="table-primary">
                         <tr>
                             <th>Nama Bahan</th>
                             <th>Bagian</th>

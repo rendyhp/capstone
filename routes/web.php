@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\NotifikasiController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\TransaksiController;
@@ -28,6 +29,7 @@ Route::get('/', function () {
 
 // Auth routes
 Auth::routes();
+Route::redirect('/my', '/my/profile');
 
 // Authenticated routes
 Route::middleware(['auth'])->group(function () {
@@ -99,6 +101,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/protected/user-data/registerStore', [UserController::class, 'registerStore'])->name('user-data.registerStore');
     Route::get('/protected/user/{id}', [UserController::class, 'getEmail'])->name('user.getEmail');
     Route::put('/protected/user/{id}/delete', [UserController::class, 'delete'])->name('user.delete');
+
+    // Setting pages
+    Route::get('/my/profile', [SettingController::class, 'index'])->name('setting.index');
+    Route::put('/my/profile', [SettingController::class, 'update'])->name('setting.update');
+    Route::get('/my/notifikasi-api', [SettingController::class, 'indexNotifikasiApi'])->name('setting.notifikasi-api.index');
+    Route::post('/my/notifikasi-api/generate', [SettingController::class, 'generateQrCode'])->name('setting.notifikasi-api.generate');
+    Route::post('/my/notifikasi-api/disconnect', [SettingController::class, 'disconnectNotifikasiApi'])->name('setting.notifikasi-api.disconnect');
+    Route::get('/my/password', [SettingController::class, 'indexPassword'])->name('setting.password.index');
+    Route::post('/my/password', [SettingController::class, 'updatePassword'])->name('setting.password.update');
+
+
 
     // Resource routes
     Route::resource('/daftar-menu', \App\Http\Controllers\Admin\MenuController::class);

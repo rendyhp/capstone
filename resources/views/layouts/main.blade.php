@@ -53,7 +53,8 @@
                 <a href="" class="navbar-brand mx-4 mb-3">
                     <h3 class="text-primary hide-on-print">
                         <p class="fs-5">
-                            <img src="/img/logo-bdim.png" style="width: 35px; height: 35px;" class="me-2" alt="Logo">BdiM's Stock
+                            <img src="/img/logo-bdim.png" style="width: 35px; height: 35px;" class="me-2"
+                                alt="Logo">BdiM's Stock
                         </p></i>
                     </h3>
                 </a>
@@ -208,6 +209,9 @@
                             <span class="d-none d-lg-inline-flex">{{ Auth::user()->name }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/my">
+                                Setting
+                            </a>
                             <a class="dropdown-item" href="/" onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
                                 {{ __('Logout') }}

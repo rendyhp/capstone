@@ -19,6 +19,8 @@ use App\Models\Barang;
 use App\Models\Transaksi;
 use PDF;
 use Illuminate\Support\Facades\DB;
+use App\Services\StockAlertService;
+
 class DashboardController extends Controller
 {
     /**
@@ -80,6 +82,9 @@ class DashboardController extends Controller
                     ['section', 'asc'],
                     ['name', 'asc'],
                 ]);
+
+        $stockAlert = new StockAlertService();
+        $stockAlert->checkAndNotify($barang_data, $bahan_data);
 
         $bahans_below_minimum = $bahan_data->filter(function ($bahan) {
             return $bahan->jumlah_akhir < $bahan->minimum;
