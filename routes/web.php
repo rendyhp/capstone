@@ -115,8 +115,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/protected/user-data/registerStore', [UserController::class, 'registerStore'])->name('user-data.registerStore');
     Route::get('/protected/user/{id}', [UserController::class, 'getEmail'])->name('user.getEmail');
     Route::put('/protected/user/{id}/delete', [UserController::class, 'delete'])->name('user.delete');
-    Route::put('/protected/user/{id}/reset-password', [UserController::class, 'resetPassword'])->name('user.resetPassword');
-
 
     // Setting pages
     Route::get('/my/profile', [SettingController::class, 'index'])->name('setting.index');

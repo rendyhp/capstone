@@ -166,16 +166,4 @@ class UserController extends Controller
 
         return redirect()->back();
     }
-
-    public function resetPassword($id)
-    {
-        $targetUser = User::findOrFail($id);
-        $targetUser->password = Hash::make('password');
-        $targetUser->remember_token = Str::random(60); // Ganti token agar sesi lama invalid
-        $targetUser->save();
-
-        return redirect()->back()->with('success', 'Password user telah di-reset ke default.');
-    }
-
-
 }
