@@ -95,6 +95,7 @@
                         <div class="mb-2">
                             <label>No HP</label>
                             <input name="phone" class="form-control" value="{{ $profile->phone }}">
+                            <small class="form-text text-danger">*Dimulai dari 6281xxx</small>
                         </div>
                         <div class="mb-2">
                             <label>Alamat</label>

@@ -402,12 +402,6 @@ class BarangController extends Controller
             'date' => $validated['date'],
         ]);
 
-        $stockService = new StockDataService();
-        $barang = $stockService->getSingleBarang($request->barang_id);
-
-        $alertService = new StockAlertService();
-        $alertService->checkAndNotify($barang, null);
-
         return redirect()->back()->with('success', 'Stok berhasil ditambahkan.');
     }
 
@@ -415,7 +409,6 @@ class BarangController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:barangs,id',
-
             'keterangan' => 'nullable',
             'jumlah' => 'required|numeric|min:0',
             'date' => 'required|date',
@@ -430,13 +423,24 @@ class BarangController extends Controller
         ]);
 
         $stockService = new StockDataService();
-        $barang = $stockService->getSingleBarang($request->barang_id);
+        $barang = $stockService->getSingleBarang($validated['id']);
+
+        // Jika $barang adalah collection, ambil item pertama saja:
+        if ($barang instanceof \Illuminate\Support\Collection) {
+            $barang = $barang->first();
+        }
+
+        $barangData = collect();
+        if ($barang) {
+            $barangData->push($barang);
+        }
 
         $alertService = new StockAlertService();
-        $alertService->checkAndNotify($barang, null);
+        $alertService->checkAndNotify($barangData, null);
 
         return redirect()->back()->with('success', 'Stok berhasil dikurangi.');
     }
+
 
     public function storeDataBarang(Request $request)
     {
