@@ -59,7 +59,9 @@ Route::middleware(['auth'])->group(function () {
     // Laporan
     Route::get('/laporan/bahan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/bahan/export', [LaporanController::class, 'exportExcel'])->name('laporan.export');
-
+    Route::get('/laporan/barang', [LaporanController::class, 'indexLaporanBarang'])->name('laporan.indexLaporanBarang');
+    Route::get('/laporan/barang/export-pdf', [LaporanController::class, 'exportPdf'])->name('laporan.exportBarangPdf');
+    Route::get('/laporan/barang/export-word', [LaporanController::class, 'exportWord'])->name('laporan.exportBarangWord');
 
     // Stok
     // Barang
@@ -128,16 +130,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/my/password', [SettingController::class, 'updatePassword'])->name('setting.password.update');
 
     Route::post('/send-report', [ReportController::class, 'send'])->name('send.report');
-    Route::get('/send-wa', function () {
-        $response = Http::withHeaders([
-            'Authorization' => '49zbRGa16VLm8S44vT5E',
-        ])->post('https://api.fonnte.com/send', [
-                    'target' => '081226077106',
-                    'message' => 'ini Pesan Laravel test',
-                ]);
 
-        dd(json_decode($response, true));
-    });
+
+    // Route::get('/send-wa', function () {
+    //     $response = Http::withHeaders([
+    //         'Authorization' => '49zbRGa16VLm8S44vT5E',
+    //     ])->post('https://api.fonnte.com/send', [
+    //                 'target' => '081226077106',
+    //                 'message' => 'ini Pesan Laravel test',
+    //             ]);
+
+    //     dd(json_decode($response, true));
+    // });
 
 
 
