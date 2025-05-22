@@ -126,7 +126,7 @@
                                         <th>No.</th>
                                         <th>Nama Barang</th>
                                         <th>Awal</th>
-                                        <th>Masuk</th>
+                                        <th>Stok Masuk</th>
                                         <th>Total Beli</th>
                                         <th>Keluar</th>
                                         <th>Sisa</th>

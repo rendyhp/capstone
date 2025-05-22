@@ -158,7 +158,7 @@
                                             @endforeach
                                         </tr>
                                         <tr>
-                                            <td><strong>Input</strong></td>
+                                            <td><strong>Stok Masuk</strong></td>
                                             @foreach ($item['history'] as $day)
                                                 <td class="text-center">
                                                     {{ rtrim(rtrim(number_format($day['masuk'] ?? 0, 3, ',', '.'), '0'), ',') }}
