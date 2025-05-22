@@ -62,23 +62,30 @@ class LaporanController extends Controller
                 foreach ($bahans as $bahan) {
                     $bahanId = $bahan->id;
 
-                    $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
+                    $stokAwalData = BahanAwal::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
+                        ->where('bahan_id', $bahanId)
                         ->whereMonth('date', $selectedMonth)
                         ->whereYear('date', $selectedYear)
                         ->whereNull('deleted_at')
-                        ->pluck('jumlah', 'date');
+                        ->groupBy(DB::raw('DATE(date)'))
+                        ->pluck('total', 'tanggal');
 
-                    $masukData = BahanMasuk::where('bahan_id', $bahanId)
+                    $masukData = BahanMasuk::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
+                        ->where('bahan_id', $bahanId)
                         ->whereMonth('date', $selectedMonth)
                         ->whereYear('date', $selectedYear)
                         ->whereNull('deleted_at')
-                        ->pluck('jumlah', 'date');
+                        ->groupBy(DB::raw('DATE(date)'))
+                        ->pluck('total', 'tanggal');
 
-                    $akhirData = BahanAkhir::where('bahan_id', $bahanId)
+                    $akhirData = BahanAkhir::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
+                        ->where('bahan_id', $bahanId)
                         ->whereMonth('date', $selectedMonth)
                         ->whereYear('date', $selectedYear)
                         ->whereNull('deleted_at')
-                        ->pluck('jumlah', 'date');
+                        ->groupBy(DB::raw('DATE(date)'))
+                        ->pluck('total', 'tanggal');
+
 
                     $history = [];
                     $prevAkhir = null;
@@ -364,6 +371,7 @@ class LaporanController extends Controller
             ->groupBy('barang_id')
             ->pluck('total_keluar', 'barang_id');
 
+
         $barangs->transform(function ($barang) use ($barangAwals, $barangMasuks, $barangKeluars) {
             $awal = $barangAwals[$barang->id] ?? 0;
             $masuk = $barangMasuks[$barang->id] ?? 0;
@@ -396,23 +404,30 @@ class LaporanController extends Controller
         foreach ($bahans as $bahan) {
             $bahanId = $bahan->id;
 
-            $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
+            $stokAwalData = BahanAwal::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
+                ->where('bahan_id', $bahanId)
                 ->whereMonth('date', $month)
                 ->whereYear('date', $year)
                 ->whereNull('deleted_at')
-                ->pluck('jumlah', 'date');
+                ->groupBy(DB::raw('DATE(date)'))
+                ->pluck('total', 'tanggal');
 
-            $masukData = BahanMasuk::where('bahan_id', $bahanId)
+            $masukData = BahanMasuk::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
+                ->where('bahan_id', $bahanId)
                 ->whereMonth('date', $month)
                 ->whereYear('date', $year)
                 ->whereNull('deleted_at')
-                ->pluck('jumlah', 'date');
+                ->groupBy(DB::raw('DATE(date)'))
+                ->pluck('total', 'tanggal');
 
-            $akhirData = BahanAkhir::where('bahan_id', $bahanId)
+            $akhirData = BahanAkhir::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
+                ->where('bahan_id', $bahanId)
                 ->whereMonth('date', $month)
                 ->whereYear('date', $year)
                 ->whereNull('deleted_at')
-                ->pluck('jumlah', 'date');
+                ->groupBy(DB::raw('DATE(date)'))
+                ->pluck('total', 'tanggal');
+
 
             $history = [];
             $prevAkhir = null;
