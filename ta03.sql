@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2025 at 11:39 AM
+-- Generation Time: May 23, 2025 at 12:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,7 +48,7 @@ CREATE TABLE `bahans` (
 INSERT INTO `bahans` (`id`, `user_id`, `name`, `description`, `minimum`, `section`, `satuan_id`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 1, 'Susu UHT', 'Indomilk', 500.000, 'BAR', 1, NULL, '2025-05-23 08:57:38', '2025-05-23 08:57:38', NULL),
 (2, 1, 'Kopi Espresso', 'Espresso KNK', 500.000, 'BAR', 1, NULL, '2025-05-23 08:58:06', '2025-05-23 08:58:06', NULL),
-(3, 1, 'Evaporasi', 'Sunbay, Carnation', 500.000, 'BAR', 1, NULL, '2025-05-23 08:58:32', '2025-05-23 08:58:32', NULL),
+(3, 1, 'Evaporasi', 'Sunbay, Carnation', 500.000, 'BAR', 1, NULL, '2025-05-23 08:58:32', '2025-05-23 10:56:53', NULL),
 (4, 1, 'Consentrate Mangga', 'Toza', 500.000, 'BAR', 1, 'upload/bahan/1747991493.jpeg', '2025-05-23 08:59:00', '2025-05-23 09:11:33', NULL),
 (5, 1, 'Cabai Setan', '-', 0.000, 'KITCHEN', 4, 'upload/bahan/1747991659.jpg', '2025-05-23 09:12:41', '2025-05-23 09:14:19', NULL),
 (6, 1, 'Bawang Bombay', '-', 0.000, 'KITCHEN', 4, NULL, '2025-05-23 09:13:04', '2025-05-23 09:13:04', NULL),
@@ -129,6 +129,13 @@ CREATE TABLE `barangs` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `barangs`
+--
+
+INSERT INTO `barangs` (`id`, `user_id`, `date`, `name`, `description`, `stok_awal`, `minimum`, `satuan_id`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(2, 1, '2025-05-23', 'Piring', '-', 20, 0, 1, 'upload/barang/1747996039.jpg', '2025-05-23 10:27:19', '2025-05-23 10:27:19', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -146,6 +153,13 @@ CREATE TABLE `barang_awals` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `barang_awals`
+--
+
+INSERT INTO `barang_awals` (`id`, `user_id`, `date`, `barang_id`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(2, 1, '2025-05-23', 2, 'Stok awal Piring', 20, '2025-05-23 10:27:19', '2025-05-23 10:27:19', NULL);
 
 -- --------------------------------------------------------
 
@@ -363,7 +377,7 @@ CREATE TABLE `satuan_barangs` (
 --
 
 INSERT INTO `satuan_barangs` (`id`, `user_id`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'Pcs', '2025-05-23 09:28:31', '2025-05-23 09:28:59', NULL);
+(1, 1, 'Pcs', '2025-05-23 09:28:31', '2025-05-23 10:17:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -490,7 +504,7 @@ CREATE TABLE `user_settings` (
 --
 
 INSERT INTO `user_settings` (`id`, `user_id`, `settings`, `created_at`, `updated_at`) VALUES
-(1, 1, '\"{\\\"show_image_barang\\\":false,\\\"pagination_barang\\\":20,\\\"filter_barang\\\":null,\\\"show_image_bahan\\\":false,\\\"show_keterangan\\\":\\\"0\\\",\\\"show_awal\\\":\\\"1\\\",\\\"show_masuk\\\":\\\"1\\\",\\\"show_terpakai\\\":\\\"1\\\",\\\"show_sisa\\\":\\\"1\\\",\\\"show_akhir\\\":\\\"1\\\",\\\"show_terbuang\\\":\\\"1\\\",\\\"show_minimum\\\":\\\"0\\\",\\\"pagination_bahanBar\\\":\\\"20\\\",\\\"pagination_bahanKitchen\\\":\\\"20\\\",\\\"show_image_bahan2\\\":true,\\\"pagination_bahanBar2\\\":\\\"20\\\",\\\"pagination_bahanKitchen2\\\":\\\"20\\\"}\"', '2025-05-23 08:40:07', '2025-05-23 09:06:55'),
+(1, 1, '\"{\\\"show_image_barang\\\":false,\\\"pagination_barang\\\":20,\\\"filter_barang\\\":null,\\\"show_image_bahan\\\":false,\\\"show_keterangan\\\":\\\"0\\\",\\\"show_awal\\\":\\\"1\\\",\\\"show_masuk\\\":\\\"1\\\",\\\"show_terpakai\\\":\\\"1\\\",\\\"show_sisa\\\":\\\"1\\\",\\\"show_akhir\\\":\\\"1\\\",\\\"show_terbuang\\\":\\\"1\\\",\\\"show_minimum\\\":\\\"0\\\",\\\"pagination_bahanBar\\\":\\\"20\\\",\\\"pagination_bahanKitchen\\\":\\\"20\\\",\\\"show_image_bahan2\\\":true,\\\"pagination_bahanBar2\\\":\\\"20\\\",\\\"pagination_bahanKitchen2\\\":\\\"20\\\",\\\"show_keteranganB\\\":\\\"0\\\",\\\"show_awalB\\\":\\\"1\\\",\\\"show_masukB\\\":\\\"1\\\",\\\"show_total_beliB\\\":\\\"1\\\",\\\"show_keluarB\\\":\\\"1\\\",\\\"show_sisaB\\\":\\\"1\\\",\\\"show_minimumB\\\":\\\"0\\\"}\"', '2025-05-23 08:40:07', '2025-05-23 10:31:03'),
 (2, 2, NULL, '2025-05-23 08:43:12', '2025-05-23 08:43:12'),
 (3, 3, NULL, '2025-05-23 08:43:14', '2025-05-23 08:43:14');
 
@@ -700,25 +714,25 @@ ALTER TABLE `bahan_masuks`
 -- AUTO_INCREMENT for table `barangs`
 --
 ALTER TABLE `barangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `barang_awals`
 --
 ALTER TABLE `barang_awals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `barang_keluars`
 --
 ALTER TABLE `barang_keluars`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `barang_masuks`
 --
 ALTER TABLE `barang_masuks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -730,13 +744,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `komposisi_menus`
 --
 ALTER TABLE `komposisi_menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -766,19 +780,19 @@ ALTER TABLE `satuan_barangs`
 -- AUTO_INCREMENT for table `stock_alert_logs`
 --
 ALTER TABLE `stock_alert_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `transaksi_details`
 --
 ALTER TABLE `transaksi_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`

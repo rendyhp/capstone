@@ -72,6 +72,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/barang/manajemen-barang/storeK', [BarangController::class, 'storeK'])->name('barang.storeK');
     Route::get('/barang/masuk-keluar', [BarangController::class, 'indexMasukKeluar'])->name('barang.indexMasukKeluar');
     Route::get('/barang/masuk-keluar/{encryptedId}', [BarangController::class, 'indexBarangMKbyID'])->name('barang.indexBarangMKbyID');
+    Route::put('/barang/masuk-keluar/deleteM', [BarangController::class, 'deleteBarangMasukbyID'])->name('barang.deleteBarangMKbyIDmasuk');
+     Route::put('/barang/masuk-keluar/deleteK', [BarangController::class, 'deleteBarangKeluarbyID'])->name('barang.deleteBarangMKbyIDkeluar');
     Route::post('/barang/masuk-keluar/store', [BarangController::class, 'storeMasukKeluar'])->name('barang.storeMasukKeluar');
     Route::put('/barang/masuk-keluar/edit', [BarangController::class, 'updateMasukKeluar'])->name('barang.updateMasukKeluar');
     Route::post('/barang/data-barang/store', [BarangController::class, 'storeDataBarang'])->name('barang.storeDataBarang');

@@ -124,6 +124,9 @@
                                                 <th>Satuan</th>
                                                 <th>Keterangan</th>
                                                 <th>User</th>
+                                                @if (auth()->user()->role === 'OWNER' || auth()->user()->role === 'MANAJER')
+                                                    <th>Aksi</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -145,6 +148,35 @@
                                                     <td>{{ $trx['satuan'] }}</td>
                                                     <td>{{ $trx['keterangan'] }}</td>
                                                     <td>{{ $trx['user'] }}</td>
+                                                    @if (auth()->user()->role === 'OWNER' || auth()->user()->role === 'MANAJER')
+                                                        <td>
+                                                            @if ($trx['tipe'] === 'MASUK')
+                                                                <form action="{{ route('barang.deleteBarangMKbyIDmasuk') }}" method="post"
+                                                                    class="d-inline">
+                                                                    @method('PUT')
+                                                                    @csrf
+                                                                    <input type="hidden" name="id" value="{{ $trx['id'] }}">
+                                                                    <button class="btn btn-danger btn-sm" type="submit"
+                                                                        onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                            @if ($trx['tipe'] === 'KELUAR')
+                                                                <form action="{{ route('barang.deleteBarangMKbyIDkeluar') }}" method="post"
+                                                                    class="d-inline">
+                                                                    @method('PUT')
+                                                                    @csrf
+                                                                    <input type="hidden" name="id" value="{{ $trx['id'] }}">
+                                                                    <button class="btn btn-danger btn-sm" type="submit"
+                                                                        onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            @endif
+                                                        </td>
+                                                    @endif
+
                                                 </tr>
                                             @endforeach
                                             @if($transaksis->isEmpty())

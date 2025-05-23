@@ -52,13 +52,17 @@ class MenuController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
+            'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
 
         // Cek jika tidak ada bahan
-        if (empty($request->bahan) || empty($request->bahan_id)) {
-            return redirect('/daftar-menu')
-                ->with('warning', 'Bahan tidak boleh kosong!');
+        if (empty($request->bahan)) {
+            return redirect()->back()->with('warning', 'Bahan tidak boleh kosong!');
+        }
+        foreach ($request->bahan as $bahan) {
+            if (empty($bahan['id']) || empty($bahan['jumlah'])) {
+                return redirect()->back()->with('warning', 'Bahan tidak boleh kosong!');
+            }
         }
 
         $userId = Auth::id();
@@ -81,6 +85,7 @@ class MenuController extends Controller
         $menu = Menu::create($menuData);
 
         foreach ($request->bahan as $bahan) {
+
             KomposisiMenu::create([
                 'menu_id' => $menu->id,
                 'bahan_id' => $bahan['id'],
@@ -109,40 +114,45 @@ class MenuController extends Controller
 
         $menu = Menu::findOrFail($id);
 
-        if ($request->bahan != null) {
-            if ($request->has('image')) {
-                $file = $request->file('image');
-                $extension = $file->getClientOriginalExtension();
-
-                $filename = time() . '.' . $extension;
-
-                $path = 'upload/menu/';
-                $file->move($path, $filename);
-
-                $menu->update([
-                    'name' => $request->name,
-                    'description' => $request->description,
-                    'image' => $path . $filename,
-                ]);
-            } else {
-                $menu->update([
-                    'name' => $request->name,
-                    'description' => $request->description,
-                ]);
+        if (empty($request->bahan)) {
+            return redirect()->back()->with('warning', 'Bahan tidak boleh kosong!');
+        }
+        foreach ($request->bahan as $bahan) {
+            if (empty($bahan['id']) || empty($bahan['jumlah'])) {
+                return redirect()->back()->with('warning', 'Bahan tidak boleh kosong!');
             }
+        }
 
-            KomposisiMenu::where('menu_id', $id)->delete();
 
-            foreach ($request->input('bahan', []) as $bahan) {
-                KomposisiMenu::create([
-                    'menu_id' => $menu->id,
-                    'bahan_id' => $bahan['id'],
-                    'jumlah' => $bahan['jumlah'],
-                ]);
-            }
+        if ($request->has('image')) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+
+            $filename = time() . '.' . $extension;
+
+            $path = 'upload/menu/';
+            $file->move($path, $filename);
+
+            $menu->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'image' => $path . $filename,
+            ]);
         } else {
-            return redirect('/daftar-menu')
-                ->with('warning', 'Bahan tidak boleh kosong!');
+            $menu->update([
+                'name' => $request->name,
+                'description' => $request->description,
+            ]);
+        }
+
+        KomposisiMenu::where('menu_id', $id)->delete();
+
+        foreach ($request->input('bahan', []) as $bahan) {
+            KomposisiMenu::create([
+                'menu_id' => $menu->id,
+                'bahan_id' => $bahan['id'],
+                'jumlah' => $bahan['jumlah'],
+            ]);
         }
 
         return redirect()->back()->with('success', 'Menu "' . $request->name . '" berhasil diperbarui');

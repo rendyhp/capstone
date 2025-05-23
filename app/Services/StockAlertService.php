@@ -52,7 +52,7 @@ class StockAlertService
         if ($bahanMinimum->isNotEmpty()) {
             $message .= "\n*Bahan:*\n";
             foreach ($bahanMinimum as $b) {
-                $message .= "- {$b->name}: formatNumber($b->jumlah_akhir) {$b->satuan->name}, minimal: formatNumber($b->minimum)\n";
+                $message .= "- {$b->name}: " . $this->formatNumber($b->jumlah_akhir) . " {$b->satuan->name}, minimal: " . $this->formatNumber($b->minimum) . "\n";
                 StockAlertLog::create([
                     'stockable_id' => $b->id,
                     'stockable_type' => 'App\Models\Bahan',
@@ -60,6 +60,7 @@ class StockAlertService
                 ]);
             }
         }
+
 
         // Ambil semua user yang perlu dikirimi WA
         $users = User::whereIn('role', ['OWNER', 'MANAJER'])
@@ -80,13 +81,9 @@ class StockAlertService
 
     private function formatNumber($number)
     {
-        $formatted = number_format($number, 3, ',', '');
-
-        $formatted = rtrim($formatted, '0');
-        $formatted = rtrim($formatted, ',');
-
-        return $formatted;
+        return number_format($number, 0, ',', '.');
     }
+
 
     protected function sendWhatsApp($phone, $token, $message)
     {

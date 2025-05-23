@@ -103,15 +103,29 @@
                                                 <th
                                                     style="{{ ($settings['show_image_barang'] ?? false) ? '' : 'display: none;' }}">
                                                     Gambar</th>
-
                                                 <th>Nama Barang</th>
-                                                <th>Deskripsi Barang</th>
-                                                <th>Awal</th>
-                                                <th>Masuk</th>
-                                                <th>Total Beli</th>
-                                                <th>Keluar</th>
-                                                <th>Sisa</th>
-                                                <th>Satuan</th>
+                                                @if ($settings['show_keteranganB'] ?? true)
+                                                    <th>Deskripsi Barang</th>
+                                                @endif
+                                                @if ($settings['show_awalB'] ?? true)
+                                                    <th class="text-center">Awal</th>
+                                                @endif
+                                                @if ($settings['show_masukB'] ?? true)
+                                                    <th class="text-center">Stok Masuk</th>
+                                                @endif
+                                                @if ($settings['show_total_beliB'] ?? true)
+                                                    <th class="text-center">Total Beli</th>
+                                                @endif
+                                                @if ($settings['show_keluarB'] ?? true)
+                                                    <th class="text-center">Keluar</th>
+                                                @endif
+                                                @if ($settings['show_sisaB'] ?? true)
+                                                    <th class="text-center">Sisa</th>
+                                                @endif
+                                                @if ($settings['show_minimumB'] ?? true)
+                                                    <th class="text-center">Minimum</th>
+                                                @endif
+                                                <th class="text-center">Satuan</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -128,22 +142,39 @@
                                                     <td>
                                                         {{ $barang->name ?? '-' }}
                                                     </td>
-                                                    <td>{{ $barang->description }}</td>
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($barang->awal, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($barang->masuk, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($barang->total_beli, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($barang->keluar, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($barang->sisa, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    @if ($settings['show_keteranganB'] ?? true)
+                                                        <td>{{ $barang->description }}</td>
+                                                    @endif
+                                                    @if ($settings['show_awalB'] ?? true)
+                                                        <td class="text-center">
+                                                            {{ rtrim(rtrim(number_format($barang->awal, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+                                                    @if ($settings['show_masukB'] ?? true)
+                                                        <td class="text-center">
+                                                            {{ rtrim(rtrim(number_format($barang->masuk, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+                                                    @if ($settings['show_total_beliB'] ?? true)
+                                                        <td class="text-center">
+                                                            {{ rtrim(rtrim(number_format($barang->total_beli, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+                                                    @if ($settings['show_keluarB'] ?? true)
+                                                        <td class="text-center">
+                                                            {{ rtrim(rtrim(number_format($barang->keluar, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+                                                    @if ($settings['show_sisaB'] ?? true)
+                                                        <td class="text-center">
+                                                            {{ rtrim(rtrim(number_format($barang->sisa, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+                                                    @if ($settings['show_minimumB'] ?? true)
+                                                        <td class="text-center">
+                                                            {{ rtrim(rtrim(number_format($barang->minimum, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
                                                     <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
 
                                                     <td>
@@ -328,7 +359,7 @@
             </form>
         </div>
     </div>
-    
+
     <div class="modal fade" id="barangModalK" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="container modal-dialog">
             <div class="modal-content">
@@ -467,6 +498,31 @@
                                 Tampilkan Gambar
                             </label>
                         </div>
+
+                        {{-- Checkbox Kolom --}}
+                        @php
+                            $columns = [
+                                'show_keteranganB' => ['label' => 'Deskripsi barang', 'default' => true],
+                                'show_awalB' => ['label' => 'Awal', 'default' => true],
+                                'show_masukB' => ['label' => 'Masuk', 'default' => true],
+                                'show_total_beliB' => ['label' => 'Total Beli', 'default' => true],
+                                'show_keluarB' => ['label' => 'Keluar', 'default' => true],
+                                'show_sisaB' => ['label' => 'Sisa', 'default' => true],
+                                'show_minimumB' => ['label' => 'Minimum', 'default' => false],
+                            ];
+                        @endphp
+
+                        <label class="form-label">Tampilkan Kolom:</label>
+                        @foreach ($columns as $key => $column)
+                            <div class="form-check">
+                                <input type="hidden" name="{{ $key }}" value="0">
+                                <input class="form-check-input" type="checkbox" name="{{ $key }}" value="1" id="{{ $key }}" {{ ($settings[$key] ?? $column['default']) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="{{ $key }}">
+                                    {{ $column['label'] }}
+                                </label>
+                            </div>
+                        @endforeach
+                        <hr>
 
                         {{-- Select Pagination --}}
                         <div class="mb-3">

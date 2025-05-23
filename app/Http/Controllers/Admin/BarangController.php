@@ -467,38 +467,36 @@ class BarangController extends Controller
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        } else {
-            $Barang = new Barang;
-            $Barang->user_id = Auth::id();
-            $Barang->date = $request->input('date');
-            $Barang->name = $request->input('name');
-            $Barang->description = $request->input('description') ?? '-';
-            $Barang->minimum = $request->input('minimum');
-            $Barang->stok_awal = $request->input('stok_awal') ?? 0;
-            $Barang->satuan_id = $request->input('satuan_id') ?? '-';
 
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $extension = $file->getClientOriginalExtension();
-                $filename = time() . '.' . $extension;
-                $path = 'upload/barang/';
-                $file->move($path, $filename);
-                $Barang->image = $path . $filename;
-            }
+        $Barang = new Barang;
+        $Barang->user_id = Auth::id();
+        $Barang->date = $request->input('date');
+        $Barang->name = $request->input('name');
+        $Barang->description = $request->input('description') ?? '-';
+        $Barang->minimum = $request->input('minimum');
+        $Barang->stok_awal = $request->input('stok_awal') ?? 0;
+        $Barang->satuan_id = $request->input('satuan_id') ?? '-';
 
-            $Barang->save();
-
-
-            BarangAwal::create([
-                'barang_id' => $Barang->id,
-                'keterangan' => 'Stok awal ' . $request->name,
-                'jumlah' => $Barang->stok_awal,
-                'user_id' => Auth::id(),
-                'date' => $request->date,
-            ]);
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $path = 'upload/barang/';
+            $file->move($path, $filename);
+            $Barang->image = $path . $filename;
         }
+
+        $Barang->save();
+
+
+        BarangAwal::create([
+            'barang_id' => $Barang->id,
+            'keterangan' => 'Stok awal ' . $request->name,
+            'jumlah' => $Barang->stok_awal,
+            'user_id' => Auth::id(),
+            'date' => $request->date,
+        ]);
+
 
         $dataPerPage = 20;
         $data = DB::table('barangs')->paginate($dataPerPage);
@@ -598,16 +596,28 @@ class BarangController extends Controller
         return redirect()->back()->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
     }
 
-    public function delete(Request $request)
+    public function deleteBarangMasukByID(Request $request)
     {
-        $request->validate(['id' => 'required|exists:barangs,id']);
 
-        $barang = Barang::findOrFail($request->id);
-        $barang->deleted_at = now();
-        $barang->save();
 
-        return response()->json(['success' => true]);
+        $barangMasuk = BarangMasuk::findOrFail($request->id);
+        $barangMasuk->deleted_at = now();
+        $barangMasuk->save();
+
+        return redirect()->back()->with('success', 'Data "' . $barangMasuk->name . '" Berhasil Diubah');
     }
+    public function deleteBarangKeluarByID(Request $request)
+    {
+
+
+        $barangKeluar = BarangKeluar::findOrFail($request->id);
+        $barangKeluar->deleted_at = now();
+        $barangKeluar->save();
+
+        return redirect()->back()->with('success', 'Data "' . $barangKeluar->name . '" Berhasil Diubah');
+    }
+
+
 
     public function deleteSatuan(Request $request)
     {
