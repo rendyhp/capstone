@@ -254,171 +254,172 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row mb-3">
-        <div class="col-xl-12">
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title fs-5 fw-bold mt-2"> Tabel Kitchen </div>
-                </div>
+        <div class="row mb-3">
+            <div class="col-xl-12">
+                <div class="card custom-card">
+                    <div class="card-header">
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Kitchen </div>
+                    </div>
 
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
-                            <div class="mb-3">
-                                <div class="col-sm-4 float-end">
-                                    <div class="d-flex gap-2 mb-2">
-                                        <button class="btn btn-secondary filterCustom" data-bs-toggle="modal"
-                                            data-bs-target="#filterModal">
-                                            <i class="fa fa-filter"></i>
-                                        </button>
-                                        <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm"
-                                            title="Refresh">
-                                            <i class="fa fa-refresh"></i>
-                                        </a>
-                                        <form action="/bahan/manajemen-bahan" method="get" class="form-inline d-flex">
-                                            <input type="hidden" name="date"
-                                                value="{{ request('date', now()->toDateString()) }}">
-                                            <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                name="search2" placeholder="Search" value="{{ request('search2') }}">
-                                        </form>
-                                    </div>
-                                    <div>
-                                    </div>
-                                    <thead class="table-primary">
-                                        <tr>
-                                            <th>No.</th>
-                                            <th
-                                                style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
-                                                Gambar</th>
-                                            <th>Nama Bahan</th>
-                                            @if ($settings['show_keterangan'] ?? false)
-                                                <th class="widthKolom8">Keterangan</th>
-                                            @endif
-                                            @if ($settings['show_awal'] ?? true)
-                                                <th class="widthKolom8">Awal</th>
-                                            @endif
-                                            @if ($settings['show_masuk'] ?? true)
-                                                <th class="widthKolom8">Masuk</th>
-                                            @endif
-                                            @if ($settings['show_terpakai'] ?? true)
-                                                <th class="widthKolom8">Terpakai</th>
-                                            @endif
-                                            @if ($settings['show_sisa'] ?? true)
-                                                <th class="widthKolom8">Sisa</th>
-                                            @endif
-                                            @if ($settings['show_akhir'] ?? true)
-                                                <th class="widthKolom8">Akhir Sebenarnya</th>
-                                            @endif
-                                            @if ($settings['show_terbuang'] ?? true)
-                                                <th class="widthKolom8">Terbuang</th>
-                                            @endif
-                                            @if ($settings['show_minimum'] ?? false)
-                                                <th class="widthKolom8">Minimum</th>
-                                            @endif
-                                            <th>Satuan</th>
-                                            <th class="widthKolom18">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($bahan_kitchens as $bahan)
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tableBahan" class="table table-bordered text-dark table-sm" style="" border="1">
+                                <div class="mb-3">
+                                    <div class="col-sm-4 float-end">
+                                        <div class="d-flex gap-2 mb-2">
+                                            <button class="btn btn-secondary filterCustom" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal">
+                                                <i class="fa fa-filter"></i>
+                                            </button>
+                                            <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm"
+                                                title="Refresh">
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                            <form action="/bahan/manajemen-bahan" method="get" class="form-inline d-flex">
+                                                <input type="hidden" name="date"
+                                                    value="{{ request('date', now()->toDateString()) }}">
+                                                <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                                    name="search2" placeholder="Search" value="{{ request('search2') }}">
+                                            </form>
+                                        </div>
+                                        <div>
+                                        </div>
+                                        <thead class="table-primary">
                                             <tr>
-                                                <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
-                                                </td>
-                                                <td
+                                                <th>No.</th>
+                                                <th
                                                     style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
-                                                    <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
-                                                        style="width: 100px; max-height: 100px;" alt="Img">
-                                                </td>
-                                                <td>
-                                                    <a class="text-dark text-decoration-none"
-                                                        href="{{ route('bahan.indexbyId', ['encryptedId' => Hashids::encode($bahan->id)]) }}">
-                                                        {{ $bahan->name }}
-                                                    </a>
-                                                </td>
-                                                @if ($settings['show_keterangan'] ?? true)
-                                                    <td>
-                                                        {{ $bahan->keterangan }}
-                                                    </td>
+                                                    Gambar</th>
+                                                <th>Nama Bahan</th>
+                                                @if ($settings['show_keterangan'] ?? false)
+                                                    <th class="widthKolom8">Keterangan</th>
                                                 @endif
-
-
                                                 @if ($settings['show_awal'] ?? true)
-                                                    <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
-                                                        ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
-                                                        {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    <th class="widthKolom8">Awal</th>
                                                 @endif
-
                                                 @if ($settings['show_masuk'] ?? true)
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    <th class="widthKolom8">Masuk</th>
                                                 @endif
-
                                                 @if ($settings['show_terpakai'] ?? true)
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    <th class="widthKolom8">Terpakai</th>
                                                 @endif
-
                                                 @if ($settings['show_sisa'] ?? true)
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    <th class="widthKolom8">Sisa</th>
                                                 @endif
-
                                                 @if ($settings['show_akhir'] ?? true)
-                                                    <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
-                                                        ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
-                                                        {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    <th class="widthKolom8">Akhir Sebenarnya</th>
                                                 @endif
-
                                                 @if ($settings['show_terbuang'] ?? true)
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    <th class="widthKolom8">Terbuang</th>
                                                 @endif
-
                                                 @if ($settings['show_minimum'] ?? false)
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    <th class="widthKolom8">Minimum</th>
                                                 @endif
-                                                <td>{{ $bahan->satuan->name ?? '-' }}</td>
+                                                <th>Satuan</th>
+                                                <th class="widthKolom18">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($bahan_kitchens as $bahan)
+                                                <tr>
+                                                    <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
+                                                    </td>
+                                                    <td
+                                                        style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
+                                                        <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
+                                                            style="width: 100px; max-height: 100px;" alt="Img">
+                                                    </td>
+                                                    <td>
+                                                        <a class="text-dark text-decoration-none"
+                                                            href="{{ route('bahan.indexbyId', ['encryptedId' => Hashids::encode($bahan->id)]) }}">
+                                                            {{ $bahan->name }}
+                                                        </a>
+                                                    </td>
+                                                    @if ($settings['show_keterangan'] ?? true)
+                                                        <td>
+                                                            {{ $bahan->keterangan }}
+                                                        </td>
+                                                    @endif
 
-                                                <td>
-                                                    <button type="button" class="btn btn-outline-success btnTambahStok"
-                                                        data-id="{{ $bahan->id ?? 'NULL' }}"
-                                                        data-name="{{ $bahan->name ?? 'NULL'}}"
-                                                        data-satuan="{{ $bahan->satuan->name ?? '-' }}" data-bs-toggle="modal"
-                                                        data-bs-target="#barangModalM">
-                                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                                    </button>
-                                                    <button type="button" class="btn btn-outline-secondary"
-                                                        onclick="window.location.href='{{ route('bahan.indexBahanMKbyID', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
-                                                        <i class="fa fa-info me-2"></i>History
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        @if ($bahan_kitchens->isEmpty())
-                                            <tr>
-                                                <td colspan="100%" class="text-center text-muted py-3">Tidak ada data yang
-                                                    ditemukan.</td>
-                                            </tr>
-                                        @endif
-                                    </tbody>
+
+                                                    @if ($settings['show_awal'] ?? true)
+                                                        <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+
+                                                    @if ($settings['show_masuk'] ?? true)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+
+                                                    @if ($settings['show_terpakai'] ?? true)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+
+                                                    @if ($settings['show_sisa'] ?? true)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+
+                                                    @if ($settings['show_akhir'] ?? true)
+                                                        <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
+                                                            {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+
+                                                    @if ($settings['show_terbuang'] ?? true)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+
+                                                    @if ($settings['show_minimum'] ?? false)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
+                                                    <td>{{ $bahan->satuan->name ?? '-' }}</td>
+
+                                                    <td>
+                                                        <button type="button" class="btn btn-outline-success btnTambahStok"
+                                                            data-id="{{ $bahan->id ?? 'NULL' }}"
+                                                            data-name="{{ $bahan->name ?? 'NULL'}}"
+                                                            data-satuan="{{ $bahan->satuan->name ?? '-' }}"
+                                                            data-bs-toggle="modal" data-bs-target="#barangModalM">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-secondary"
+                                                            onclick="window.location.href='{{ route('bahan.indexBahanMKbyID', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
+                                                            <i class="fa fa-info me-2"></i>History
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            @if ($bahan_kitchens->isEmpty())
+                                                <tr>
+                                                    <td colspan="100%" class="text-center text-muted py-3">Tidak ada data yang
+                                                        ditemukan.</td>
+                                                </tr>
+                                            @endif
+                                        </tbody>
+                                    </div>
                                 </div>
-                            </div>
-                        </table>
-                        {{ $bahan_kitchens->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                            </table>
+                            {{ $bahan_kitchens->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        
     </div>
 
     <!-- Input bahan awal dan akhir dengandouble click -->
