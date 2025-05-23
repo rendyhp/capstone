@@ -31,6 +31,19 @@ class BarangController extends Controller
         $allowedSortColumns = ['id', 'name', 'stok_awal', 'created_at'];
         $allowedSortDirections = ['asc', 'desc'];
 
+        // Ambil settings dari user
+        $settings = json_decode($user->setting->settings ?? '[]', true);
+
+        // Default jika setting tidak ada
+        $showImage = $settings['show_image_barang'] ?? false;
+        $pagination = $settings['pagination_barang'] ?? 20;
+
+        // Validasi pagination supaya aman
+        $allowedPagination = [20, 50, 100];
+        if (!in_array($pagination, $allowedPagination)) {
+            $pagination = 20;
+        }
+
         $orderBy = in_array($request->input('orderBy'), $allowedSortColumns) ? $request->input('orderBy') : 'name';
         $sort = in_array($request->input('sort'), $allowedSortDirections) ? $request->input('sort') : 'asc';
 
@@ -43,7 +56,7 @@ class BarangController extends Controller
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        $barangs = $query->paginate(20)->appends($request->query());
+        $barangs = $query->paginate($pagination)->appends($request->query());
 
         // Ambil semua id barang yang ditampilkan
         $barangIds = $barangs->pluck('id')->toArray();
@@ -85,7 +98,7 @@ class BarangController extends Controller
         $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
         if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
-            return view('barang.index', compact('barangs', 'satuanBarangs'));
+            return view('barang.index', compact('barangs', 'satuanBarangs', 'settings'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }

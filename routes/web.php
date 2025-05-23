@@ -123,6 +123,10 @@ Route::middleware(['auth'])->group(function () {
     // Setting pages
     Route::get('/my/profile', [SettingController::class, 'index'])->name('setting.index');
     Route::put('/my/profile', [SettingController::class, 'update'])->name('setting.update');
+    Route::post('/verify-phone', [SettingController::class, 'verifyPhone'])->name('verify.phone');
+    Route::post('/update-email', [SettingController::class, 'updateEmail'])->name('email.update');
+    Route::post('/verify-email', [SettingController::class, 'verifyEmail'])->name('verify.email');
+
     Route::get('/my/notifikasi-api', [SettingController::class, 'indexNotifikasiApi'])->name('setting.notifikasi-api.index');
     Route::post('/my/notifikasi-api/connect', [SettingController::class, 'connectNotifikasiApi'])->name('setting.notifikasi-api.connect');
     Route::post('/my/notifikasi-api/disconnect', [SettingController::class, 'disconnectNotifikasiApi'])->name('setting.notifikasi-api.disconnect');
@@ -130,6 +134,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/my/password', [SettingController::class, 'updatePassword'])->name('setting.password.update');
 
     Route::post('/send-report', [ReportController::class, 'send'])->name('send.report');
+
+    Route::post('/user/setting/update/', [SettingController::class, 'updateFilterSetting'])->name('user.setting.update');
+
+
 
 
     // Route::get('/send-wa', function () {

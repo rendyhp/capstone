@@ -48,7 +48,6 @@ class SettingController extends Controller
         return back()->with('success', 'Profil berhasil diperbarui.');
     }
 
-
     public function indexPassword()
     {
         return view('setting.password');
@@ -109,6 +108,30 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Notifikasi WhatsApp berhasil dihubungkan kembali.');
     }
+
+
+    public function updateFilterSetting(Request $request)
+    {
+        $user = Auth::user();
+        $settings = json_decode($user->setting->settings ?? '{}', true);
+
+        foreach ($request->except('_token', '_method') as $key => $value) {
+            if (in_array($key, ['show_image_barang', 'show_image_bahan'])) {
+                $settings[$key] = ($value === '1' || $value === true);
+            } elseif (in_array($key, ['pagination_barang', 'pagination_bahan'])) {
+                $settings[$key] = (int) $value;
+            } else {
+                $settings[$key] = $value;
+            }
+        }
+
+        $user->setting->update([
+            'settings' => json_encode($settings)
+        ]);
+
+        return redirect()->back()->with('status', 'Pengaturan diperbarui.');
+    }
+
 
 
 }

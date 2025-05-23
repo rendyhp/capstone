@@ -5,11 +5,6 @@
 
     @push('addStyle')
         <style>
-            .card-body.maxHeightTable100 {
-                max-height: 60vh;
-                overflow-y: auto;
-            }
-
             .widthKolom8 {
                 min-width: 8vh;
             }
@@ -107,6 +102,11 @@
                                 <div class="mb-3">
 
                                     <div class="col-sm-3 float-end">
+                                        <!-- Tombol Buka Modal -->
+                                        <div class="form-check mb-2">
+                                            <button class="btn btn-secondary mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal">Filter</button>
+                                        </div>
                                         <div class="d-flex gap-2 mb-2">
                                             <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
@@ -124,13 +124,31 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
+                                                <th
+                                                    style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
+                                                    Gambar</th>
                                                 <th>Nama Bahan</th>
-                                                <th class="widthKolom8">Awal</th>
-                                                <th class="widthKolom8">Masuk</th>
-                                                <th class="widthKolom8">Terpakai</th>
-                                                <th class="widthKolom8">Sisa</th>
-                                                <th class="widthKolom8">Akhir Sebenarnya</th>
-                                                <th class="widthKolom8">Terbuang</th>
+                                                @if ($settings['show_awal'] ?? true)
+                                                    <th class="widthKolom8">Awal</th>
+                                                @endif
+                                                @if ($settings['show_masuk'] ?? true)
+                                                    <th class="widthKolom8">Masuk</th>
+                                                @endif
+                                                @if ($settings['show_terpakai'] ?? true)
+                                                    <th class="widthKolom8">Terpakai</th>
+                                                @endif
+                                                @if ($settings['show_sisa'] ?? true)
+                                                    <th class="widthKolom8">Sisa</th>
+                                                @endif
+                                                @if ($settings['show_akhir'] ?? true)
+                                                    <th class="widthKolom8">Akhir Sebenarnya</th>
+                                                @endif
+                                                @if ($settings['show_terbuang'] ?? true)
+                                                    <th class="widthKolom8">Terbuang</th>
+                                                @endif
+                                                @if ($settings['show_minimum'] ?? true)
+                                                    <th class="widthKolom8">Minimum</th>
+                                                @endif
                                                 <th>Satuan</th>
                                                 <th class="widthKolom18">Aksi</th>
                                             </tr>
@@ -143,40 +161,58 @@
                                                     <tr>
                                                         <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
                                                         </td>
+                                                        <td
+                                                            style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
+                                                            <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
+                                                                style="width: 100px; max-height: 100px;" alt="Img">
+                                                        </td>
                                                         <td>
-                                                            <a href="/bahan/manajemen-bahan/{{ Hashids::encode($bahan->id) }}?date={{ \Carbon\Carbon::parse($date)->format('Y-m') }}"
-                                                                class="text-decoration-none text-dark">
-                                                                {{ $bahan->name ?? '-' }}
-                                                            </a>
-
-
+                                                            <a>{{ $bahan->name ?? '-' }}</a>
                                                         </td>
 
-                                                        <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
+                                                        @if ($settings['show_awal'] ?? true)
+                                                            <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
+                                                                ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
+                                                                {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
+                                                            </td>
+                                                        @endif
 
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
+                                                        @if ($settings['show_masuk'] ?? true)
+                                                            <td class="text-end">
+                                                                {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
+                                                            </td>
+                                                        @endif
 
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
+                                                        @if ($settings['show_terpakai'] ?? true)
+                                                            <td class="text-end">
+                                                                {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
+                                                            </td>
+                                                        @endif
 
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
+                                                        @if ($settings['show_sisa'] ?? true)
+                                                            <td class="text-end">
+                                                                {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
+                                                            </td>
+                                                        @endif
 
-                                                        <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
-                                                            {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
+                                                        @if ($settings['show_akhir'] ?? true)
+                                                            <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
+                                                                ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
+                                                                {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
+                                                            </td>
+                                                        @endif
 
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
+                                                        @if ($settings['show_terbuang'] ?? true)
+                                                            <td class="text-end">
+                                                                {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
+                                                            </td>
+                                                        @endif
+
+                                                        @if ($settings['show_minimum'] ?? true)
+                                                            <td class="text-end">
+                                                                {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
+                                                            </td>
+                                                        @endif
 
                                                         <td>{{ $bahan->satuan->name ?? '-' }}</td>
 
@@ -223,6 +259,11 @@
                             <div class="mb-3">
 
                                 <div class="col-sm-3 float-end">
+                                    <!-- Tombol Buka Modal -->
+                                    <div class="form-check mb-2">
+                                        <button class="btn btn-secondary mb-3" data-bs-toggle="modal"
+                                            data-bs-target="#filterModal">Filter</button>
+                                    </div>
                                     <div class="d-flex gap-2 mb-2">
                                         <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm"
                                             title="Refresh">
@@ -240,13 +281,52 @@
                                     <thead class="table-primary">
                                         <tr>
                                             <th>No.</th>
+                                            <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
                                             <th>Nama Bahan</th>
-                                            <th class="widthKolom8">Awal</th>
-                                            <th class="widthKolom8">Masuk</th>
-                                            <th class="widthKolom8">Terpakai</th>
-                                            <th class="widthKolom8">Sisa</th>
-                                            <th class="widthKolom8">Akhir Sebenarnya</th>
-                                            <th class="widthKolom8">Terbuang</th>
+
+                                            @if ($settings['show_awal'] ?? true)
+                                                <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
+                                                    ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
+                                                    {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endif
+
+                                            @if ($settings['show_masuk'] ?? true)
+                                                <td class="text-end">
+                                                    {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endif
+
+                                            @if ($settings['show_terpakai'] ?? true)
+                                                <td class="text-end">
+                                                    {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endif
+
+                                            @if ($settings['show_sisa'] ?? true)
+                                                <td class="text-end">
+                                                    {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endif
+
+                                            @if ($settings['show_akhir'] ?? true)
+                                                <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
+                                                    ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
+                                                    {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endif
+
+                                            @if ($settings['show_terbuang'] ?? true)
+                                                <td class="text-end">
+                                                    {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endif
+
+                                            @if ($settings['show_minimum'] ?? true)
+                                                <td class="text-end">
+                                                    {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
+                                                </td>
+                                            @endif
                                             <th>Satuan</th>
                                             <th class="widthKolom18">Aksi</th>
                                         </tr>
@@ -259,35 +339,56 @@
                                                 <tr>
                                                     <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
                                                     </td>
+                                                    <td
+                                                        style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
+                                                        <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
+                                                            style="width: 100px; max-height: 100px;" alt="Img">
+                                                    </td>
                                                     <td>{{ $bahan->name }}</td>
 
-                                                    <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
-                                                        ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
-                                                        {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    @if ($settings['show_awal'] ?? true)
+                                                        <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
 
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    @if ($settings['show_masuk'] ?? true)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
 
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    @if ($settings['show_terpakai'] ?? true)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
 
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    @if ($settings['show_sisa'] ?? true)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
 
-                                                    <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
-                                                        ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
-                                                        {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    @if ($settings['show_akhir'] ?? true)
+                                                        <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
+                                                            {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
 
-                                                    <td class="text-end">
-                                                        {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
-                                                    </td>
+                                                    @if ($settings['show_terbuang'] ?? true)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
 
-
+                                                    @if ($settings['show_minimum'] ?? true)
+                                                        <td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    @endif
                                                     <td>{{ $bahan->satuan->name ?? '-' }}</td>
 
                                                     <td>
@@ -404,90 +505,191 @@
         </div>
     </div>
 
-    <script>
-        function editJumlah(bahan_id, date, type, currentJumlah) {
-            var formattedJumlah = currentJumlah % 1 === 0 ? parseInt(currentJumlah) : currentJumlah;
 
-            document.getElementById('bahan_id').value = bahan_id;
-            document.getElementById('date').value = date;
-            document.getElementById('type').value = type;
-            document.getElementById('jumlah_input').value = formattedJumlah;
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('user.setting.update') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalLabel">Filter Tampilan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
 
-            var myModal = new bootstrap.Modal(document.getElementById('modalEditJumlah'));
-            myModal.show();
-        }
+                    <div class="modal-body">
+
+                        {{-- Checkbox Gambar --}}
+                        <div class="form-check mb-3">
+                            <input type="hidden" name="show_image_bahan" value="0">
+                            <input class="form-check-input" type="checkbox" name="show_image_bahan" value="1"
+                                id="toggleImageColumnModal" {{ ($settings['show_image_bahan'] ?? false) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="toggleImageColumnModal">
+                                Tampilkan Gambar
+                            </label>
+                        </div>
+
+                        {{-- Checkbox Kolom --}}
+                        @php
+                            $columns = [
+                                'show_awal' => 'Awal',
+                                'show_masuk' => 'Masuk',
+                                'show_terpakai' => 'Terpakai',
+                                'show_sisa' => 'Sisa',
+                                'show_akhir' => 'Akhir Sebenarnya',
+                                'show_terbuang' => 'Terbuang',
+                                'show_minimum' => 'Minimum',
+                            ];
+                        @endphp
+
+                        <label class="form-label">Tampilkan Kolom:</label>
+                        @foreach ($columns as $key => $label)
+                            <div class="form-check">
+                                <input type="hidden" name="{{ $key }}" value="0">
+                                <input class="form-check-input" type="checkbox" name="{{ $key }}" value="1" id="{{ $key }}" {{ ($settings[$key] ?? true) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="{{ $key }}">
+                                    {{ $label }}
+                                </label>
+                            </div>
+                        @endforeach
+                        <hr>
+
+                        {{-- Select Pagination --}}
+                        <div class="mb-3">
+                            <label for="paginationSelectBar" class="form-label">Jumlah Per Halaman (BAR)</label>
+                            <select class="form-select" name="pagination_bahanBar" id="paginationSelectBar">
+                                <option value="5" {{ ($settings['pagination_bahanBar'] ?? 5) == 5 ? 'selected' : '' }}>5
+                                </option>
+                                <option value="20" {{ ($settings['pagination_bahanBar'] ?? 20) == 20 ? 'selected' : '' }}>20
+                                </option>
+                                <option value="50" {{ ($settings['pagination_bahanBar'] ?? 20) == 50 ? 'selected' : '' }}>50
+                                </option>
+                                <option value="100" {{ ($settings['pagination_bahanBar'] ?? 20) == 100 ? 'selected' : '' }}>
+                                    100</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="paginationSelectKitchen" class="form-label">Jumlah Per Halaman (KITCHEN)</label>
+                            <select class="form-select" name="pagination_bahanKitchen" id="paginationSelectKitchen">
+                                <option value="5" {{ ($settings['pagination_bahanKitchen'] ?? 5) == 5 ? 'selected' : '' }}>5
+                                </option>
+                                <option value="20" {{ ($settings['pagination_bahanKitchen'] ?? 20) == 20 ? 'selected' : '' }}>
+                                    20</option>
+                                <option value="50" {{ ($settings['pagination_bahanKitchen'] ?? 20) == 50 ? 'selected' : '' }}>
+                                    50</option>
+                                <option value="100" {{ ($settings['pagination_bahanKitchen'] ?? 20) == 100 ? 'selected' : '' }}>100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
-        document.getElementById('formEditJumlah').addEventListener('submit', function (e) {
-            e.preventDefault();
 
-            let form = e.target;
-            let bahan_id = form.bahan_id.value;
-            let date = form.date.value;
-            let type = form.type.value; // 'awal' or 'akhir'
-            let jumlah = form.jumlah.value;
-            let _token = form.querySelector('input[name="_token"]').value;
+    @push('addScript')
+        <script>
 
-            let url = type === 'awal' ? '/bahanAwal/save' : '/bahanAkhir/save';
+            const checkbox = document.getElementById('toggleImageColumn');
+            const imageColumns = document.querySelectorAll('.column-gambar');
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': _token
-                },
-                body: JSON.stringify({ bahan_id, date, jumlah })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Data berhasil disimpan!');
-                        location.reload(); // refresh page supaya update data muncul
-                    } else if (data.error2) {
-                        alert('Hanya bisa edit Bahan Awal pada Tanggal 01')
-                    } else {
-                        alert('Gagal menyimpan data');
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Terjadi kesalahan.');
+            checkbox.addEventListener('change', function () {
+                imageColumns.forEach(col => {
+                    col.style.display = this.checked ? '' : 'none';
                 });
-        });
-    </script>
-    <script>
-        document.getElementById('resetJumlahBtn').addEventListener('click', function () {
-            const bahan_id = document.getElementById('bahan_id').value;
-            const date = document.getElementById('date').value;
-            const type = document.getElementById('type').value;
-            const _token = document.querySelector('input[name="_token"]').value;
+            });
 
-            if (!confirm('Yakin ingin menghapus jumlah ini?')) return;
+        </script>
+        <script>
+            function editJumlah(bahan_id, date, type, currentJumlah) {
+                var formattedJumlah = currentJumlah % 1 === 0 ? parseInt(currentJumlah) : currentJumlah;
 
-            let url = type === 'awal' ? '/bahanAwal/delete' : '/bahanAkhir/delete';
+                document.getElementById('bahan_id').value = bahan_id;
+                document.getElementById('date').value = date;
+                document.getElementById('type').value = type;
+                document.getElementById('jumlah_input').value = formattedJumlah;
 
-            fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': _token
-                },
-                body: JSON.stringify({ bahan_id, date })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Data berhasil di-reset!');
-                        location.reload();
-                    } else {
-                        alert('Data tidak ditemukan.');
-                    }
+                var myModal = new bootstrap.Modal(document.getElementById('modalEditJumlah'));
+                myModal.show();
+            }
+
+
+            document.getElementById('formEditJumlah').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                let form = e.target;
+                let bahan_id = form.bahan_id.value;
+                let date = form.date.value;
+                let type = form.type.value; // 'awal' or 'akhir'
+                let jumlah = form.jumlah.value;
+                let _token = form.querySelector('input[name="_token"]').value;
+
+                let url = type === 'awal' ? '/bahanAwal/save' : '/bahanAkhir/save';
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': _token
+                    },
+                    body: JSON.stringify({ bahan_id, date, jumlah })
                 })
-                .catch(err => {
-                    console.error(err);
-                    alert('Terjadi kesalahan saat menghapus data.');
-                });
-        });
-    </script>
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Data berhasil disimpan!');
+                            location.reload(); // refresh page supaya update data muncul
+                        } else if (data.error2) {
+                            alert('Hanya bisa edit Bahan Awal pada Tanggal 01')
+                        } else {
+                            alert('Gagal menyimpan data');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Terjadi kesalahan.');
+                    });
+            });
+        </script>
+        <script>
+            document.getElementById('resetJumlahBtn').addEventListener('click', function () {
+                const bahan_id = document.getElementById('bahan_id').value;
+                const date = document.getElementById('date').value;
+                const type = document.getElementById('type').value;
+                const _token = document.querySelector('input[name="_token"]').value;
+
+                if (!confirm('Yakin ingin menghapus jumlah ini?')) return;
+
+                let url = type === 'awal' ? '/bahanAwal/delete' : '/bahanAkhir/delete';
+
+                fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': _token
+                    },
+                    body: JSON.stringify({ bahan_id, date })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Data berhasil di-reset!');
+                            location.reload();
+                        } else {
+                            alert('Data tidak ditemukan.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Terjadi kesalahan saat menghapus data.');
+                    });
+            });
+        </script>
+    @endpush
 
 @endsection

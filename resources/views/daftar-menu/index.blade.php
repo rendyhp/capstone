@@ -99,7 +99,7 @@
                                                         <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
                                                         </td>
                                                         <td>
-                                                            <img src="{{ asset($menu->image) }}"
+                                                            <img src="{{ asset($menu->image ?? 'img/dummy/ss_menu.png') }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                         <td>{{ $menu->name }}</td>

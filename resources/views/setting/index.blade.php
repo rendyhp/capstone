@@ -48,7 +48,9 @@
             <div class="col-md-6">
                 <p><strong>Nama:</strong> {{ $user->name }}</p>
                 <p><strong>Username:</strong> {{ $user->username }}</p>
-                <p><strong>Email:</strong> {{ $user->email }}</p>
+                <p><strong>Email:</strong> {{ $user->email }}
+                </p>
+
                 <p><strong>Role:</strong> {{ $user->role }}</p>
             </div>
             <div class="col-md-6">

@@ -117,7 +117,7 @@
                                                     <tr>
                                                         <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
                                                         <td class="column-gambar" style="display:none;">
-                                                            <img src="{{ asset($bahan->image) }}"
+                                                            <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                         <td>{{ $bahan->name }}</td>
@@ -209,7 +209,7 @@
                                                     <tr>
                                                         <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
                                                         <td class="column-gambar" style="display:none;">
-                                                            <img src="{{ asset($bahan->image) }}"
+                                                            <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                         <td>{{ $bahan->name }}</td>

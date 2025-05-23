@@ -92,7 +92,7 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th class="column-gambar" style="width: 110px;">Gambar</th>
+                                                <th style="width: 110px;">Gambar</th>
                                                 <th>Nama Menu</th>
                                                 <th>Jumlah</th>
                                                 <th>Bahan</th>
@@ -104,8 +104,8 @@
                                             @forelse ($paginated as $key => $transaksi)
                                                 <tr>
                                                     <td>{{ $key + 1 }}</td>
-                                                    <td class="column-gambar">
-                                                        <img src="{{ asset($transaksi['menu_image']) }}"
+                                                    <td>
+                                                        <img src="{{ asset($transaksi['menu_image'] ?? 'img/dummy/ss_menu.png') }}"
                                                             style="width: 100px; max-height: 100px;" alt="Img">
                                                     </td>
                                                     <td>{{ $transaksi['menu_name'] }}</td>
@@ -310,12 +310,12 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                                                                        <td>${i}</td>
-                                                                        <td class="nama-menu">${namaMenuExcel}</td>
-                                                                        <td class="check-cell">⏳</td>
-                                                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
-                                                                        <td>${jumlahBaru}</td>
-                                                                    `;
+                                                                                <td>${i}</td>
+                                                                                <td class="nama-menu">${namaMenuExcel}</td>
+                                                                                <td class="check-cell">⏳</td>
+                                                                                <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
+                                                                                <td>${jumlahBaru}</td>
+                                                                            `;
                             tbody.appendChild(tr);
 
                             pendingFetches++; // Sebelum fetch

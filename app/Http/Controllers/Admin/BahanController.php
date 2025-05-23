@@ -34,6 +34,18 @@ class BahanController extends Controller
         $date = $request->input('date', Carbon::today()->toDateString());
         session(['previous_bahanmk_url' => url()->full()]);
 
+        // Ambil settings dari user
+        $settings = json_decode($user->setting->settings ?? '[]', true);
+
+        $showImage = $settings['show_image_bahan'] ?? false;
+        $paginationBar = $settings['pagination_bahanBar'] ?? 20;
+        $paginationKitchen = $settings['pagination_bahanKitchen'] ?? 20;
+
+        // Validasi pagination supaya aman
+        $allowedPagination = [5, 20, 50, 100];
+        if (!in_array($paginationBar, $allowedPagination)) {
+            $paginationBar = 20;
+        }
         // Data Bar
         $query1 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'BAR');
 
@@ -41,7 +53,7 @@ class BahanController extends Controller
             $query1->where('name', 'like', '%' . $search1 . '%');
         }
 
-        $bahan_bars = $query1->paginate(20)->appends($request->query());
+        $bahan_bars = $query1->paginate($paginationBar)->appends($request->query());
 
         foreach ($bahan_bars as $bahan) {
             $bahan_awal = BahanAwal::where('bahan_id', $bahan->id)
@@ -98,14 +110,21 @@ class BahanController extends Controller
             return response()->json($bahan_bars);
         }
 
+
         // Data Kitchen
+        // Validasi pagination supaya aman
+        $allowedPagination = [5, 20, 50, 100];
+        if (!in_array($paginationKitchen, $allowedPagination)) {
+            $paginationKitchen = 20;
+        }
+
         $query2 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'KITCHEN');
 
         if ($search2 = $request->input('search2')) {
             $query2->where('name', 'like', '%' . $search2 . '%');
         }
 
-        $bahan_kitchens = $query2->paginate(20)->appends($request->query());
+        $bahan_kitchens = $query2->paginate($paginationKitchen)->appends($request->query());
 
         foreach ($bahan_kitchens as $bahan) {
             $bahan_awal = BahanAwal::where('bahan_id', $bahan->id)
@@ -168,6 +187,7 @@ class BahanController extends Controller
                 'bahan_kitchens' => $bahan_kitchens,
                 'satuan_bahans' => SatuanBahan::whereNull('deleted_at')->orderBy('name')->get(),
                 'date' => $date,
+                'settings' => $settings,
             ]);
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -424,6 +444,13 @@ class BahanController extends Controller
         $orderBy = $request->input('orderBy', 'name');
         $direction = $request->input('direction', 'asc');
 
+         // Ambil settings dari user
+        $settings = json_decode($user->setting->settings ?? '[]', true);
+
+        $showImage = $settings['show_image_bahan'] ?? false;
+        $paginationBar = $settings['pagination_bahanBar'] ?? 20;
+        $paginationKitchen = $settings['pagination_bahanKitchen'] ?? 20;
+
         $query1 = Bahan::with('satuan')
             ->whereNull('deleted_at')->where('section', 'BAR');
         $query1->orderBy($orderBy, $direction);
@@ -445,8 +472,8 @@ class BahanController extends Controller
         }
 
         if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
-            $bahan_bars = $query1->paginate(20);
-            $bahan_kitchens = $query2->paginate(20);
+            $bahan_bars = $query1->paginate($paginationBar);
+            $bahan_kitchens = $query2->paginate($paginationKitchen);
 
             return view('bahan.indexDataBahan', [
                 'bahan_bars' => $bahan_bars,

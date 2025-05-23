@@ -80,12 +80,12 @@
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
+                                        <!-- Tombol Buka Modal -->
                                         <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" value="" id="toggleImageColumn">
-                                            <label class="form-check-label" for="toggleImageColumn">
-                                                Tampilkan Gambar
-                                            </label>
+                                            <button class="btn btn-secondary mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal">Filter</button>
                                         </div>
+
                                         <div class="d-flex gap-2 mb-2">
                                             <a href="/barang/manajemen-barang" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
@@ -102,7 +102,10 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
+                                                <th
+                                                    style="{{ ($settings['show_image_barang'] ?? false) ? '' : 'display: none;' }}">
+                                                    Gambar</th>
+
                                                 <th>Nama Barang</th>
                                                 <th>Deskripsi Barang</th>
                                                 <th>Awal</th>
@@ -122,8 +125,9 @@
                                                     <tr>
                                                         <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
                                                         </td>
-                                                        <td class="column-gambar" style="display:none;">
-                                                            <img src="{{ asset($barang->image) }}"
+                                                        <td
+                                                            style="{{ ($settings['show_image_barang'] ?? false) ? '' : 'display: none;' }}">
+                                                            <img src="{{ asset($barang->image ?? 'img/dummy/ss_barang.png') }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                         <td>
@@ -440,6 +444,49 @@
         </div>
     </div>
 
+    <!-- Modal Filter Barang -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('user.setting.update', 'filter_barang') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalLabel">Filter Tampilan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        {{-- Checkbox Gambar --}}
+                        <div class="form-check mb-3">
+                            <input type="hidden" name="show_image_barang" value="0">
+                            <input class="form-check-input" type="checkbox" name="show_image_barang" value="1"
+                                id="toggleImageColumnModal" {{ ($settings['show_image_barang'] ?? false) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="toggleImageColumnModal">
+                                Tampilkan Gambar
+                            </label>
+                        </div>
+
+                        {{-- Select Pagination --}}
+                        <div class="mb-3">
+                            <label for="paginationSelect" class="form-label">Jumlah Per Halaman</label>
+                            <select class="form-select" name="pagination_barang" id="paginationSelect">
+                                <option value="20" {{ ($settings['pagination_barang'] ?? 20) == 20 ? 'selected' : '' }}>20
+                                </option>
+                                <option value="50" {{ ($settings['pagination_barang'] ?? 20) == 50 ? 'selected' : '' }}>50
+                                </option>
+                                <option value="100" {{ ($settings['pagination_barang'] ?? 20) == 100 ? 'selected' : '' }}>100
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     @push('addScript')
         <script>
