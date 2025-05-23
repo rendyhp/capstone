@@ -81,8 +81,8 @@
                                         </a>
                                     </div>
                                     <div class="mb-3 text-center fw-bold">
-                                        <img src="{{ asset($barangs->image) }}" style="width: 150px; max-height: 150px;"
-                                            alt="Img">
+                                        <img src="{{ asset($barang->image ?? 'img/dummy/ss_barang.png') }}"
+                                            style="width: 150px; max-height: 150px;" alt="Img">
                                         <p>{{ $barangs->name }}</p>
                                     </div>
 
@@ -151,8 +151,8 @@
                                                     @if (auth()->user()->role === 'OWNER' || auth()->user()->role === 'MANAJER')
                                                         <td>
                                                             @if ($trx['tipe'] === 'MASUK')
-                                                                <form action="{{ route('barang.deleteBarangMKbyIDmasuk') }}" method="post"
-                                                                    class="d-inline">
+                                                                <form action="{{ route('barang.deleteBarangMKbyIDmasuk') }}"
+                                                                    method="post" class="d-inline">
                                                                     @method('PUT')
                                                                     @csrf
                                                                     <input type="hidden" name="id" value="{{ $trx['id'] }}">
@@ -163,8 +163,8 @@
                                                                 </form>
                                                             @endif
                                                             @if ($trx['tipe'] === 'KELUAR')
-                                                                <form action="{{ route('barang.deleteBarangMKbyIDkeluar') }}" method="post"
-                                                                    class="d-inline">
+                                                                <form action="{{ route('barang.deleteBarangMKbyIDkeluar') }}"
+                                                                    method="post" class="d-inline">
                                                                     @method('PUT')
                                                                     @csrf
                                                                     <input type="hidden" name="id" value="{{ $trx['id'] }}">
