@@ -248,7 +248,7 @@
                                             @endif
                                         </tbody>
                             </table>
-                            {{ $bahan_bars->onEachSide(0.5)->links('pagination::bootstrap-5') }}
+                            {{ $bahan_kitchens->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>
