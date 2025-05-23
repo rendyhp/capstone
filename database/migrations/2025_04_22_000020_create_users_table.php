@@ -20,13 +20,12 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('username')->unique()->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['OWNER', 'MANAJER', 'STAF']);
             $table->rememberToken();
-            $table->string('wa_api_token')->nullable()->after('remember_token');
+            $table->string('wa_api_token')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

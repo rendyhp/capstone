@@ -37,7 +37,6 @@ class BahanController extends Controller
         // Ambil settings dari user
         $settings = json_decode($user->setting->settings ?? '[]', true);
 
-        $showImage = $settings['show_image_bahan'] ?? false;
         $paginationBar = $settings['pagination_bahanBar'] ?? 20;
         $paginationKitchen = $settings['pagination_bahanKitchen'] ?? 20;
 
@@ -445,11 +444,12 @@ class BahanController extends Controller
         $direction = $request->input('direction', 'asc');
 
          // Ambil settings dari user
+        // Ambil settings dari user
         $settings = json_decode($user->setting->settings ?? '[]', true);
 
-        $showImage = $settings['show_image_bahan'] ?? false;
-        $paginationBar = $settings['pagination_bahanBar'] ?? 20;
-        $paginationKitchen = $settings['pagination_bahanKitchen'] ?? 20;
+        $showImage = $settings['show_image_bahan2'] ?? false;
+        $paginationBar2 = $settings['pagination_bahanBar2'] ?? 20;
+        $paginationKitchen2 = $settings['pagination_bahanKitchen2'] ?? 20;
 
         $query1 = Bahan::with('satuan')
             ->whereNull('deleted_at')->where('section', 'BAR');
@@ -472,13 +472,14 @@ class BahanController extends Controller
         }
 
         if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
-            $bahan_bars = $query1->paginate($paginationBar);
-            $bahan_kitchens = $query2->paginate($paginationKitchen);
+            $bahan_bars = $query1->paginate($paginationBar2);
+            $bahan_kitchens = $query2->paginate($paginationKitchen2);
 
             return view('bahan.indexDataBahan', [
                 'bahan_bars' => $bahan_bars,
                 'bahan_kitchens' => $bahan_kitchens,
-                'satuans' => $satuans
+                'satuans' => $satuans,
+                'settings' => $settings
             ]);
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');

@@ -63,7 +63,6 @@
     align-items: center;
     overflow-y: auto;
     max-height: 80vh;
-    width: 55vh;
     }
 
 
@@ -116,15 +115,6 @@
           autocomplete="off">
         <label for="name">Nama</label>
         @error('name')
-      <div class="text-danger small mt-1">{{ $message }}</div>
-      @enderror
-        </div>
-        <div class="form-floating mt-3">
-        <input type="text" class="form-control @error('username') is-invalid @enderror" name="username"
-          value="{{ old('username') }}" placeholder="Username" style="border-radius: 20px; width: 400px;" required
-          autocomplete="off">
-        <label for="username">Username</label>
-        @error('username')
       <div class="text-danger small mt-1">{{ $message }}</div>
       @enderror
         </div>

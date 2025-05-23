@@ -102,7 +102,7 @@ class TransaksiController extends Controller
     public function importTransaksi(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls',
+            'file' => 'required|file|mimes:xlsx,xls,csv',
             'date' => 'required|date',
             'mode' => 'required|in:tambah,update,range',
         ]);

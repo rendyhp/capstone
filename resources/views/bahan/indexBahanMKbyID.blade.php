@@ -108,31 +108,34 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($transaksis->isEmpty())
-                                                <p>Tidak ada data yang ditemukan.</p>
-                                            @else
-                                                @foreach ($transaksis as $index => $trx)
-                                                    <tr>
-                                                        <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
-                                                        </td>
-                                                        <td>{{ \Carbon\Carbon::parse($trx['date'])->translatedFormat('d F Y') }}
-                                                        </td>
-                                                        <td>{{ $trx['name'] ?? '-' }}</td>
-                                                        <td class="text-center">
-                                                            <span
-                                                                class="badge {{ $trx['tipe'] === 'MASUK' ? 'bg-success' : ($trx['tipe'] === 'KELUAR' ? 'bg-danger' : ($trx['tipe'] === 'AWAL' ? 'bg-warning text-dark' : 'bg-secondary')) }}">
-                                                                {{ $trx['tipe'] }}
-                                                            </span>
-                                                        </td>
+                                            @foreach ($transaksis as $index => $trx)
+                                                <tr>
+                                                    <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
+                                                    </td>
+                                                    <td>{{ \Carbon\Carbon::parse($trx['date'])->translatedFormat('d F Y') }}
+                                                    </td>
+                                                    <td>{{ $trx['name'] ?? '-' }}</td>
+                                                    <td class="text-center">
+                                                        <span
+                                                            class="badge {{ $trx['tipe'] === 'MASUK' ? 'bg-success' : ($trx['tipe'] === 'KELUAR' ? 'bg-danger' : ($trx['tipe'] === 'AWAL' ? 'bg-warning text-dark' : 'bg-secondary')) }}">
+                                                            {{ $trx['tipe'] }}
+                                                        </span>
+                                                    </td>
 
-                                                        <td class="text-end">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
-                                                        <td>{{ $trx['satuan'] }}</td>
-                                                        <td>{{ $trx['keterangan'] }}</td>
-                                                        <td>{{ $trx['user'] }}</td>
-                                                    </tr>
-                                                @endforeach
+                                                    <td class="text-end">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
+                                                    <td>{{ $trx['satuan'] }}</td>
+                                                    <td>{{ $trx['keterangan'] }}</td>
+                                                    <td>{{ $trx['user'] }}</td>
+                                                </tr>
+                                            @endforeach
+                                            @if ($transaksis->isEmpty())
+                                                <tr>
+                                                    <td colspan="100%" class="text-center text-muted py-3">Tidak ada data yang
+                                                        ditemukan.</td>
+                                                </tr>
                                             @endif
                                         </tbody>
+                                    </div>
                             </table>
                             {{ $transaksis->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
@@ -167,7 +170,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control number0" value="0" autocomplete="off" name="jumlah" required>
+                            <input type="number" min="1" class="form-control number0" value="0" autocomplete="off"
+                                name="jumlah" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>

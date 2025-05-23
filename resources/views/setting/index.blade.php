@@ -7,13 +7,9 @@
         .cards {
             height: auto;
             background-color: #f7fcfb;
-            /* Warna biru muda */
             border-radius: 10px;
-            /* Sudut card membulat */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            /* Efek bayangan card */
             padding: 20px;
-            /* Ruang dalam card */
         }
 
         .cards h3 {
@@ -23,11 +19,9 @@
 
         .cards p {
             color: #555;
-            /* Warna teks */
         }
     </style>
 
-    {{-- Alerts --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible">{{ session('success') }}</div>
     @endif
@@ -37,17 +31,11 @@
 
     <div class="container cards">
         <a href="{{ url('/dashboard') }}"><i class="fa fa-angle-double-left me-2 mb-3"></i>Kembali | Ke dashboard</a>
-
-
-
-        {{-- Judul --}}
         <h2 class="mt-3 text-uppercase fs-2">Profil</h2>
 
-        {{-- Info --}}
         <div class="row mt-4">
             <div class="col-md-6">
                 <p><strong>Nama:</strong> {{ $user->name }}</p>
-                <p><strong>Username:</strong> {{ $user->username }}</p>
                 <p><strong>Email:</strong> {{ $user->email }}
                 </p>
 
@@ -95,7 +83,7 @@
                             <input name="name" class="form-control" value="{{ $user->name }}">
                         </div>
                         <div class="mb-2">
-                            <label>No HP</label>
+                            <label>No. HP (WA)</label>
                             <div class="input-group">
                                 <span class="input-group-text">+62</span>
                                 <input name="phone" class="form-control" value="{{ substr($profile->phone, 2) }}"
@@ -103,10 +91,10 @@
                             </div>
                             <small class="form-text text-danger">*Dimulai dari 08xxxx atau 8xxxx</small>
                         </div>
-
                         <div class="mb-2">
                             <label>Alamat</label>
-                            <input name="address" class="form-control" value="{{ $profile->address }}">
+                            <textarea type="text" name="address" class="form-control" rows="4" autocomplete="off"
+                                value="{{ $profile->address }}" placeholder="Masukkan alamat..."></textarea>
                         </div>
                         <div class="mb-2">
                             <label>Tanggal Lahir</label>
@@ -114,7 +102,7 @@
                         </div>
                         <div class="mb-2">
                             <label>Jenis Kelamin</label>
-                            <select name="gender" class="form-control">
+                            <select name="gender" class="form-control select2">
                                 <option value="L" @selected($profile->gender == 'L')>Laki-laki</option>
                                 <option value="P" @selected($profile->gender == 'P')>Perempuan</option>
                             </select>
@@ -129,5 +117,17 @@
             </form>
         </div>
     </div>
+
+    @push("addScript")
+        <script>
+            $(document).ready(function () {
+                $('.select2').select2({
+                    placeholder: "Pilih Jenis Kelamin",
+                    allowClear: true,
+                    width: '100%'
+                });
+            });
+        </script>
+    @endpush
 
 @endsection

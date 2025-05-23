@@ -89,7 +89,6 @@ class UserController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'role' => 'required|in:OWNER,MANAJER,STAF',
             'password' => 'required|string|min:8|confirmed',
@@ -107,16 +106,13 @@ class UserController extends Controller
             abort(403, 'Anda tidak memiliki akses!');
         }
 
-        // Simpan user
         $user = User::create([
             'name' => $request->name,
-            'username' => $request->username,
             'email' => $request->email,
             'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
 
-        // Simpan ke user_profiles dengan default null/null
         UserProfile::create([
             'user_id' => $user->id,
             'phone' => null,
@@ -126,7 +122,7 @@ class UserController extends Controller
         ]);
         UserSetting::create([
             'user_id' => $user->id,
-            'settings' => json_encode([]), // atau array default
+            'settings' => json_encode([]), 
         ]);
 
         return redirect('/protected/user-data')->with('message', 'Registrasi Akun ' . $user->name . ' Berhasil!');

@@ -104,8 +104,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
-
                                             <tr>
                                                 <td>{{ $barang->id }}
                                                 </td>

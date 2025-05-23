@@ -181,14 +181,13 @@
 
                         <div class="mb-3">
                             <label for="file">File Excel</label>
-                            <input type="file" name="file" id="fileInput" class="form-control" required>
+                            <input type="file" name="file" id="fileInput" class="form-control" accept=".xlsx,.csv" required>
+                            <small class="form-text text-danger ml-2">*Format .xlsx, .xls, .csv</small>
                         </div>
-
                         <div class="mb-3">
                             <label for="date">Tanggal Transaksi</label>
                             <input type="date" name="date" class="form-control" required value="{{ $date }}">
                         </div>
-
                         <div class="mb-3">
                             <label>Mode Import</label><br>
                             <div class="form-check form-check-inline">
@@ -310,12 +309,12 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                                                                                <td>${i}</td>
-                                                                                <td class="nama-menu">${namaMenuExcel}</td>
-                                                                                <td class="check-cell">⏳</td>
-                                                                                <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
-                                                                                <td>${jumlahBaru}</td>
-                                                                            `;
+                                                                                        <td>${i}</td>
+                                                                                        <td class="nama-menu">${namaMenuExcel}</td>
+                                                                                        <td class="check-cell">⏳</td>
+                                                                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
+                                                                                        <td>${jumlahBaru}</td>
+                                                                                    `;
                             tbody.appendChild(tr);
 
                             pendingFetches++; // Sebelum fetch

@@ -116,9 +116,9 @@ class SettingController extends Controller
         $settings = json_decode($user->setting->settings ?? '{}', true);
 
         foreach ($request->except('_token', '_method') as $key => $value) {
-            if (in_array($key, ['show_image_barang', 'show_image_bahan'])) {
+            if (in_array($key, ['show_image_barang', 'show_image_bahan', 'show_image_bahan2'])) {
                 $settings[$key] = ($value === '1' || $value === true);
-            } elseif (in_array($key, ['pagination_barang', 'pagination_bahan'])) {
+            } elseif (in_array($key, ['pagination_barang', 'pagination_bahan', 'pagination_bahan2'])) {
                 $settings[$key] = (int) $value;
             } else {
                 $settings[$key] = $value;

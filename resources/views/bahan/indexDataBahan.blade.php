@@ -78,14 +78,12 @@
                                         data-bs-target="#barangModal1">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data Bar
                                     </button>
-                                    <div class="col-sm-3 float-end mt-3">
-                                        <div class="form-check mb-2">
-                                            <input class="form-check-input" type="checkbox" value="" id="toggleImageColumn">
-                                            <label class="form-check-label" for="toggleImageColumn">
-                                                Tampilkan Gambar
-                                            </label>
-                                        </div>
+                                    <div class="col-sm-4 float-end mt-3">
                                         <div class="d-flex gap-2 mb-2">
+                                            <button class="btn btn-secondary filterCustom" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal">
+                                                <i class="fa fa-filter"></i>
+                                            </button>
                                             <a href="/bahan/data-bahan" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
@@ -101,7 +99,9 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
+                                                <th
+                                                    style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
+                                                    Gambar</th>
                                                 <th>Nama Bahan</th>
                                                 <th>Deskripsi Bahan</th>
                                                 <th>Pengingat Stok Minimum</th>
@@ -110,47 +110,51 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach ($bahan_bars as $bahan)
+                                                <tr>
+                                                    <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
+                                                    <td
+                                                        style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
+                                                        <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
+                                                            style="width: 100px; max-height: 100px;" alt="Img">
+                                                    </td>
+                                                    <td>{{ $bahan->name }}</td>
+                                                    <td style="max-width: 150px">{{ $bahan->description }}</td>
+                                                    <td class="text-end">
+                                                        {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+                                                    <td>{{ $bahan->satuan->name ?? '-' }}</td>
+
+                                                    <td>
+                                                        <!-- Button trigger modal -->
+                                                        <button type="button" class="btn btn-primary btn-sm btn_editbahan"
+                                                            data-id="{{ $bahan->id ?? 'NULL' }}"
+                                                            data-name="{{ $bahan->name ?? 'NULL' }}"
+                                                            data-description="{{ $bahan->description ?? 'NULL' }}"
+                                                            data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
+                                                            data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
+                                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                                        </button>
+
+                                                        <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
+                                                            class="d-inline" method="post">
+                                                            @method('PUT')
+                                                            @csrf
+                                                            <button class="btn btn-danger btn-sm" type="submit"
+                                                                onclick="return confirm('Yakin akan Mendelete Data?')"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             @if ($bahan_bars->isEmpty())
-                                                <p>Tidak ada data yang ditemukan.</p>
-                                            @else
-                                                @foreach ($bahan_bars as $bahan)
-                                                    <tr>
-                                                        <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
-                                                        <td class="column-gambar" style="display:none;">
-                                                            <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
-                                                                style="width: 100px; max-height: 100px;" alt="Img">
-                                                        </td>
-                                                        <td>{{ $bahan->name }}</td>
-                                                        <td style="max-width: 150px">{{ $bahan->description }}</td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td>{{ $bahan->satuan->name ?? '-' }}</td>
-
-                                                        <td>
-                                                            <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary btn-sm btn_editbahan"
-                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
-                                                                data-name="{{ $bahan->name ?? 'NULL' }}"
-                                                                data-description="{{ $bahan->description ?? 'NULL' }}"
-                                                                data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
-                                                                data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
-                                                                <i class="fa fa-edit" aria-hidden="true"></i>
-                                                            </button>
-
-                                                            <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
-                                                                class="d-inline" method="post">
-                                                                @method('PUT')
-                                                                @csrf
-                                                                <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                        class="fa fa-trash"></i></button>
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                                <tr>
+                                                    <td colspan="100%" class="text-center text-muted py-3">Tidak ada data yang
+                                                        ditemukan.</td>
+                                                </tr>
                                             @endif
                                         </tbody>
+                                    </div>
                             </table>
                             {{ $bahan_bars->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
@@ -175,9 +179,12 @@
                                         data-bs-target="#barangModal2">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data Kitchen
                                     </button>
-                                    <div class="col-sm-3 float-end mt-3">
-
+                                    <div class="col-sm-4 float-end mt-3">
                                         <div class="d-flex gap-2 mb-2">
+                                            <button class="btn btn-secondary filterCustom" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal">
+                                                <i class="fa fa-filter"></i>
+                                            </button>
                                             <a href="/bahan/data-bahan" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
@@ -193,7 +200,9 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th class="column-gambar" style="width: 110px; display: none;">Gambar</th>
+                                                <th
+                                                    style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
+                                                    Gambar</th>
                                                 <th>Nama Bahan</th>
                                                 <th>Deskripsi Bahan</th>
                                                 <th>Pengingat Stok Minimum</th>
@@ -202,51 +211,56 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+
+                                            @foreach ($bahan_kitchens as $bahan)
+                                                <tr>
+                                                    <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
+                                                    <td
+                                                        style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
+                                                        <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
+                                                            style="width: 100px; max-height: 100px;" alt="Img">
+                                                    </td>
+                                                    <td>{{ $bahan->name }}</td>
+                                                    <td style="max-width: 150px">{{ $bahan->description }}</td>
+                                                    <td class="text-end">
+                                                        {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+                                                    <td>{{ $bahan->satuan->name ?? '-' }}</td>
+
+                                                    <td>
+                                                        <!-- Button trigger modal -->
+                                                        <button type="button" class="btn btn-primary btn-sm btn_editbahan2"
+                                                            data-id="{{ $bahan->id ?? 'NULL' }}"
+                                                            data-name="{{ $bahan->name ?? 'NULL' }}"
+                                                            data-description="{{ $bahan->description ?? 'NULL' }}"
+                                                            data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
+                                                            data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
+                                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                                        </button>
+
+
+
+                                                        <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
+                                                            class="d-inline" method="post">
+                                                            @method('PUT')
+                                                            @csrf
+                                                            <button class="btn btn-danger btn-sm" type="submit"
+                                                                onclick="return confirm('Yakin akan Mendelete Data?')"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </form>
+
+
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             @if ($bahan_kitchens->isEmpty())
-                                                <p>Tidak ada data yang ditemukan.</p>
-                                            @else
-                                                @foreach ($bahan_kitchens as $bahan)
-                                                    <tr>
-                                                        <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
-                                                        <td class="column-gambar" style="display:none;">
-                                                            <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
-                                                                style="width: 100px; max-height: 100px;" alt="Img">
-                                                        </td>
-                                                        <td>{{ $bahan->name }}</td>
-                                                        <td style="max-width: 150px">{{ $bahan->description }}</td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td>{{ $bahan->satuan->name ?? '-' }}</td>
-
-                                                        <td>
-                                                            <!-- Button trigger modal -->
-                                                            <button type="button" class="btn btn-primary btn-sm btn_editbahan2"
-                                                                data-id="{{ $bahan->id ?? 'NULL' }}"
-                                                                data-name="{{ $bahan->name ?? 'NULL' }}"
-                                                                data-description="{{ $bahan->description ?? 'NULL' }}"
-                                                                data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
-                                                                data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
-                                                                <i class="fa fa-edit" aria-hidden="true"></i>
-                                                            </button>
-
-
-
-                                                            <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
-                                                                class="d-inline" method="post">
-                                                                @method('PUT')
-                                                                @csrf
-                                                                <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                        class="fa fa-trash"></i></button>
-                                                            </form>
-
-
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                                <tr>
+                                                    <td colspan="100%" class="text-center text-muted py-3">Tidak ada data yang
+                                                        ditemukan.</td>
+                                                </tr>
                                             @endif
                                         </tbody>
+                                    </div>
                             </table>
                             {{ $bahan_kitchens->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
@@ -507,6 +521,65 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('user.setting.update') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalLabel">Filter Tampilan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        {{-- Checkbox Gambar --}}
+                        <div class="form-check mb-3">
+                            <input type="hidden" name="show_image_bahan2" value="0">
+                            <input class="form-check-input" type="checkbox" name="show_image_bahan2" value="1"
+                                id="toggleImageColumnModal2" {{ ($settings['show_image_bahan2'] ?? false) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="toggleImageColumnModal2">
+                                Tampilkan Gambar
+                            </label>
+                        </div>
+
+                        {{-- Select Pagination --}}
+                        <div class="mb-3">
+                            <label for="paginationSelectBar2" class="form-label">Jumlah Per Halaman (BAR)</label>
+                            <select class="form-select" name="pagination_bahanBar2" id="paginationSelectBar2">
+                                <option value="5" {{ ($settings['pagination_bahanBar2'] ?? 20) == 5 ? 'selected' : '' }}>5
+                                </option>
+                                <option value="20" {{ ($settings['pagination_bahanBar2'] ?? 20) == 20 ? 'selected' : '' }}>20
+                                </option>
+                                <option value="50" {{ ($settings['pagination_bahanBar2'] ?? 20) == 50 ? 'selected' : '' }}>50
+                                </option>
+                                <option value="100" {{ ($settings['pagination_bahanBar2'] ?? 20) == 100 ? 'selected' : '' }}>
+                                    100</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="paginationSelectKitchen2" class="form-label">Jumlah Per Halaman (KITCHEN)</label>
+                            <select class="form-select" name="pagination_bahanKitchen2" id="paginationSelectKitchen2">
+                                <option value="5" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 5 ? 'selected' : '' }}>5
+                                </option>
+                                <option value="20" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 20 ? 'selected' : '' }}>
+                                    20</option>
+                                <option value="50" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 50 ? 'selected' : '' }}>
+                                    50</option>
+                                <option value="100" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 100 ? 'selected' : '' }}>100</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

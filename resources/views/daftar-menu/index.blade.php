@@ -69,7 +69,7 @@
                                         data-bs-target="#barangModal">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah menu
                                     </button>
-                                    <div class="col-sm-2 float-end mt-3">
+                                    <div class="col-sm-3 float-end mt-3">
                                         <div class="d-flex gap-2">
                                             <a href="/daftar-menu" class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>

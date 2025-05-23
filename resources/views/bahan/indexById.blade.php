@@ -127,7 +127,8 @@
                 <div class="card custom-card">
                     <div class="card-header">
                         <h5 class="card-title fs-5 fw-bold mt-2">Rekap Bulanan: {{ $bahan->name }} ({{ $bulanNama }}
-                            {{ $year }})</h5>
+                            {{ $year }})
+                        </h5>
                     </div>
 
                     <div class="card-body">
@@ -203,8 +204,6 @@
                                     </tr>
                                 </tbody>
                             </table>
-
-
                         </div>
                     </div>
                 </div>

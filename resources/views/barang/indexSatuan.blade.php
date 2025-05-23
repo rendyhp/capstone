@@ -100,40 +100,44 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($satuans->isEmpty())
-                                                <p>Tidak ada data yang ditemukan.</p>
-                                            @else
-                                                @foreach ($satuans as $satuan)
-                                                    <tr>
-                                                        <td>{{ ($satuans->currentPage() - 1) * $satuans->perPage() + $loop->iteration }}
-                                                        </td>
-                                                        <td>{{ $satuan->name }}</td>
 
-                                                        <td>
-                                                            <!-- Button trigger modal -->
-                                                            <button type="button"
-                                                                class="btn btn-primary btn-sm btn_editsatuanbarang"
-                                                                data-id="{{ $satuan->id ?? 'NULL' }}"
-                                                                data-name="{{ $satuan->name ?? 'NULL' }}">
-                                                                <i class="fa fa-edit" aria-hidden="true"></i>
+                                            @foreach ($satuans as $satuan)
+                                                <tr>
+                                                    <td>{{ ($satuans->currentPage() - 1) * $satuans->perPage() + $loop->iteration }}
+                                                    </td>
+                                                    <td>{{ $satuan->name }}</td>
+
+                                                    <td>
+                                                        <!-- Button trigger modal -->
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-sm btn_editsatuanbarang"
+                                                            data-id="{{ $satuan->id ?? 'NULL' }}"
+                                                            data-name="{{ $satuan->name ?? 'NULL' }}">
+                                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                                        </button>
+
+                                                        <form action="{{ route('barang.deleteSatuan') }}" method="post"
+                                                            class="d-inline">
+                                                            @method('PUT')
+                                                            @csrf
+                                                            <input type="hidden" name="id" value="{{ $satuan->id }}">
+                                                            <button class="btn btn-danger btn-sm" type="submit"
+                                                                onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                <i class="fa fa-trash"></i>
                                                             </button>
+                                                        </form>
 
-                                                            <form action="{{ route('barang.deleteSatuan') }}" method="post"
-                                                                class="d-inline">
-                                                                @method('PUT')
-                                                                @csrf
-                                                                <input type="hidden" name="id" value="{{ $satuan->id }}">
-                                                                <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin akan Mendelete Data?')">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </button>
-                                                            </form>
-
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            @if($satuans->isEmpty())
+                                                <tr>
+                                                    <td colspan="100%" class="text-center text-muted py-3">Tidak ada data yang
+                                                        ditemukan.</td>
+                                                </tr>
                                             @endif
                                         </tbody>
+                                    </div>
                             </table>
                             {{ $satuans->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>

@@ -79,14 +79,12 @@
                                         data-bs-target="#barangModal">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Data
                                     </button>
-                                    <div class="col-sm-3 float-end mt-3">
-                                        <!-- Tombol Buka Modal -->
-                                        <div class="form-check mb-2">
-                                            <button class="btn btn-secondary mb-3" data-bs-toggle="modal"
-                                                data-bs-target="#filterModal">Filter</button>
-                                        </div>
-
+                                    <div class="col-sm-4 float-end mt-3">
                                         <div class="d-flex gap-2 mb-2">
+                                            <button class="btn btn-secondary filterCustom" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal">
+                                                <i class="fa fa-filter"></i>
+                                            </button>
                                             <a href="/barang/manajemen-barang" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>
@@ -118,101 +116,103 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($barangs->isEmpty())
-                                                <p>Tidak ada data yang ditemukan.</p>
-                                            @else
-                                                @foreach ($barangs as $barang)
-                                                    <tr>
-                                                        <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
-                                                        </td>
-                                                        <td
-                                                            style="{{ ($settings['show_image_barang'] ?? false) ? '' : 'display: none;' }}">
-                                                            <img src="{{ asset($barang->image ?? 'img/dummy/ss_barang.png') }}"
-                                                                style="width: 100px; max-height: 100px;" alt="Img">
-                                                        </td>
-                                                        <td>
-                                                            {{ $barang->name ?? '-' }}
-                                                        </td>
-                                                        <td>{{ $barang->description }}</td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($barang->awal, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($barang->masuk, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($barang->total_beli, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($barang->keluar, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($barang->sisa, 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                        <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
+                                            @foreach ($barangs as $barang)
+                                                <tr>
+                                                    <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
+                                                    </td>
+                                                    <td
+                                                        style="{{ ($settings['show_image_barang'] ?? false) ? '' : 'display: none;' }}">
+                                                        <img src="{{ asset($barang->image ?? 'img/dummy/ss_barang.png') }}"
+                                                            style="width: 100px; max-height: 100px;" alt="Img">
+                                                    </td>
+                                                    <td>
+                                                        {{ $barang->name ?? '-' }}
+                                                    </td>
+                                                    <td>{{ $barang->description }}</td>
+                                                    <td class="text-end">
+                                                        {{ rtrim(rtrim(number_format($barang->awal, 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{ rtrim(rtrim(number_format($barang->masuk, 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{ rtrim(rtrim(number_format($barang->total_beli, 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{ rtrim(rtrim(number_format($barang->keluar, 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        {{ rtrim(rtrim(number_format($barang->sisa, 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+                                                    <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
 
-                                                        <td>
-                                                            <!-- Tombol Tambah -->
-                                                            <button type="button" class="btn btn-outline-success btnTambahStok"
-                                                                data-id="{{ $barang->id ?? 'NULL' }}"
-                                                                data-name="{{ $barang->name ?? 'NULL'}}"
-                                                                data-satuan="{{ $barang->satuanBarang->name ?? '-' }}"
-                                                                data-bs-toggle="modal" data-bs-target="#barangModalM">
-                                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    <td>
+                                                        <!-- Tombol Tambah -->
+                                                        <button type="button" class="btn btn-outline-success btnTambahStok"
+                                                            data-id="{{ $barang->id ?? 'NULL' }}"
+                                                            data-name="{{ $barang->name ?? 'NULL'}}"
+                                                            data-satuan="{{ $barang->satuanBarang->name ?? '-' }}"
+                                                            data-bs-toggle="modal" data-bs-target="#barangModalM">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </button>
+
+
+                                                        <!-- Tombol Kurangi -->
+                                                        <button type="button" class="btn btn-outline-success btnKurangStok"
+                                                            data-id="{{ $barang->id ?? 'NULL' }}"
+                                                            data-name="{{ $barang->name ?? 'NULL'}}"
+                                                            data-satuan="{{ $barang->satuanBarang->name ?? '-' }}"
+                                                            data-bs-toggle="modal" data-bs-target="#barangModalK">
+                                                            <i class="fa fa-minus " aria-hidden="true"></i>
+                                                        </button>
+
+                                                        <!-- Tombol 3 -->
+                                                        <div class="dropdown" style="display:initial;">
+                                                            <button class="btn btn-secondary btn-sm dropdown-toggle"
+                                                                type="button" id="dropdownMenuButton{{ $barang->id }}"
+                                                                data-bs-toggle="dropdown" aria-expanded="false"
+                                                                style="height: 36px;">
+                                                                &#8942;
                                                             </button>
-
-
-                                                            <!-- Tombol Kurangi -->
-                                                            <button type="button" class="btn btn-outline-success btnKurangStok"
-                                                                data-id="{{ $barang->id ?? 'NULL' }}"
-                                                                data-name="{{ $barang->name ?? 'NULL'}}"
-                                                                data-satuan="{{ $barang->satuanBarang->name ?? '-' }}"
-                                                                data-bs-toggle="modal" data-bs-target="#barangModalK">
-                                                                <i class="fa fa-minus " aria-hidden="true"></i>
-                                                            </button>
-
-                                                            <!-- Tombol 3 -->
-                                                            <div class="dropdown" style="display:initial;">
-                                                                <button class="btn btn-secondary btn-sm dropdown-toggle"
-                                                                    type="button" id="dropdownMenuButton{{ $barang->id }}"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false"
-                                                                    style="height: 36px;">
-                                                                    &#8942;
-                                                                </button>
-                                                                <ul class="dropdown-menu"
-                                                                    aria-labelledby="dropdownMenuButton{{ $barang->id }}">
-                                                                    <li>
-                                                                        <button class="dropdown-item btn_editbarang"
-                                                                            data-id="{{ $barang->id }}"
-                                                                            data-name="{{ $barang->name }}"
-                                                                            data-description="{{ $barang->description }}"
-                                                                            data-minimum="{{ $barang->minimum }}"
-                                                                            data-stok_awal="{{ $barang->stok_awal }}"
-                                                                            data-satuan_id="{{ $barang->satuan_id }}"
-                                                                            data-image="{{ $barang->image }}">
-                                                                            <i class="fa fa-edit me-2"></i>Edit
-                                                                        </button>
-                                                                    </li>
-                                                                    <li>
-                                                                        <button class="dropdown-item text-danger btn_deletebarang"
-                                                                            data-id="{{ $barang->id }}">
-                                                                            <i class="fa fa-trash me-2"></i>Hapus
-                                                                        </button>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="/barang/masuk-keluar/{{ Hashids::encode($barang->id) }}"
-                                                                            class="dropdown-item">
-                                                                            <i class="fa fa-eye me-2"></i>Lihat Masuk/Keluar
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                                            <ul class="dropdown-menu"
+                                                                aria-labelledby="dropdownMenuButton{{ $barang->id }}">
+                                                                <li>
+                                                                    <button class="dropdown-item btn_editbarang"
+                                                                        data-id="{{ $barang->id }}"
+                                                                        data-name="{{ $barang->name }}"
+                                                                        data-description="{{ $barang->description }}"
+                                                                        data-minimum="{{ $barang->minimum }}"
+                                                                        data-stok_awal="{{ $barang->stok_awal }}"
+                                                                        data-satuan_id="{{ $barang->satuan_id }}"
+                                                                        data-image="{{ $barang->image }}">
+                                                                        <i class="fa fa-edit me-2"></i>Edit
+                                                                    </button>
+                                                                </li>
+                                                                <li>
+                                                                    <button class="dropdown-item text-danger btn_deletebarang"
+                                                                        data-id="{{ $barang->id }}">
+                                                                        <i class="fa fa-trash me-2"></i>Hapus
+                                                                    </button>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/barang/masuk-keluar/{{ Hashids::encode($barang->id) }}"
+                                                                        class="dropdown-item">
+                                                                        <i class="fa fa-eye me-2"></i>Lihat Masuk/Keluar
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            @if($barangs->isEmpty())
+                                                <tr>
+                                                    <td colspan="100%" class="text-center text-muted py-3">Tidak ada data yang
+                                                        ditemukan.</td>
+                                                </tr>
                                             @endif
                                         </tbody>
+                                    </div>
                             </table>
                             {{ $barangs->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
@@ -461,6 +461,7 @@
                             <input type="hidden" name="show_image_barang" value="0">
                             <input class="form-check-input" type="checkbox" name="show_image_barang" value="1"
                                 id="toggleImageColumnModal" {{ ($settings['show_image_barang'] ?? false) ? 'checked' : '' }}>
+
                             <label class="form-check-label" for="toggleImageColumnModal">
                                 Tampilkan Gambar
                             </label>

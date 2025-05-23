@@ -48,57 +48,52 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
-
+        // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
         ]);
-        $user = Auth::user()->id;
 
-        if ($request->bahan != null) {
-            if ($request->has('image')) {
-                $file = $request->file('image');
-                $extension = $file->getClientOriginalExtension();
-
-                $filename = time() . '.' . $extension;
-
-                $path = 'upload/menu/';
-                $file->move($path, $filename);
-
-                $menu = Menu::create([
-                    'user_id' => $user,
-                    'name' => $request->name,
-                    'description' => $request->description,
-                    'image' => $path . $filename,
-                ]);
-            } else {
-                $menu = Menu::create([
-                    'user_id' => $user,
-                    'name' => $request->name,
-                    'description' => $request->description,
-                ]);
-            }
-
-            foreach ($request->bahan as $bahan) {
-                KomposisiMenu::create([
-                    'menu_id' => $menu->id,
-                    'bahan_id' => $bahan['id'],
-                    'jumlah' => $bahan['jumlah'],
-                ]);
-            }
-        } else {
+        // Cek jika tidak ada bahan
+        if (empty($request->bahan) || empty($request->bahan_id)) {
             return redirect('/daftar-menu')
                 ->with('warning', 'Bahan tidak boleh kosong!');
         }
 
-        $dataPerPage = 20;
-        $data = DB::table('menus')->paginate($dataPerPage);
-        $lastPage = $data->lastPage();
+        $userId = Auth::id();
+        $menuData = [
+            'user_id' => $userId,
+            'name' => $request->name,
+            'description' => $request->description,
+        ];
+
+        // Simpan file gambar jika ada
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $path = 'upload/menu/';
+            $file->move($path, $filename);
+            $menuData['image'] = $path . $filename;
+        }
+
+        // Simpan menu
+        $menu = Menu::create($menuData);
+
+        foreach ($request->bahan as $bahan) {
+            KomposisiMenu::create([
+                'menu_id' => $menu->id,
+                'bahan_id' => $bahan['id'],
+                'jumlah' => $bahan['jumlah'],
+            ]);
+        }
+
+        $lastPage = DB::table('menus')->paginate(20)->lastPage();
 
         return redirect('/daftar-menu?page=' . $lastPage . '&orderBy=id&direction=asc')
-            ->with('success', 'Data "' . $menu->name . '" Berhasil Ditambahkan');
+            ->with('success', 'Data "' . $menu->name . '" berhasil ditambahkan');
     }
+
 
     public function show($slug)
     {
@@ -163,7 +158,7 @@ class MenuController extends Controller
         $menu->deleted_at = now(); // soft delete manual
         $menu->save();
 
-        return redirect()->back()->with('success', 'Menu "'. $menuName .'" Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Menu "' . $menuName . '" Berhasil Dihapus');
     }
 
 }
