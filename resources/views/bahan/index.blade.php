@@ -466,7 +466,7 @@
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
                             <label class="form-label fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="stokDateM" required>
+                            <input type="date" class="form-control" name="date" id="stokDateM" value="{{ $date }}" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Nama Barang</label>
