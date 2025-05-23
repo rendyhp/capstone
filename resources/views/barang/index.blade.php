@@ -328,6 +328,7 @@
             </form>
         </div>
     </div>
+    
     <div class="modal fade" id="barangModalK" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="container modal-dialog">
             <div class="modal-content">

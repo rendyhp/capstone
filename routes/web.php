@@ -97,9 +97,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bahan/satuan', [BahanController::class, 'indexSatuan'])->name('bahan.indexSatuan');
     Route::post('/bahan/satuan/store', [BahanController::class, 'storeSatuan'])->name('bahan.storeSatuan');
     Route::put('/bahan/satuan/edit', [BahanController::class, 'updateSatuan'])->name('bahan.updateSatuan');
+    Route::put('/bahan/satuan/delete', [BahanController::class, 'deleteSatuan'])->name('bahan.deleteSatuan');
 
-    Route::get('/bahan/masuk-keluar', [BahanController::class, 'indexMasukKeluar'])->name('bahan.indexMasukKeluar');
     Route::get('/bahan/masuk-keluar/{encryptedId}', [BahanController::class, 'indexBahanMKbyID'])->name('bahan.indexBahanMKbyID');
+    Route::put('/bahan/masuk-keluar/delete', [BahanController::class, 'deleteBahanMKbyID'])->name('bahan.deleteBahanMKbyID');
     Route::post('/bahan/manajemen-bahan/storeM', [BahanController::class, 'storeM'])->name('bahan.storeM');
 
     // Menu & transaksi

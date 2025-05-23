@@ -114,13 +114,15 @@
                                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </button>
 
-                                                        <form action="/bahan/satuan/delete/{{ $satuan->id }}" class="d-inline"
-                                                            method="post">
+                                                        <form action="{{ route('bahan.deleteSatuan') }}" method="post"
+                                                            class="d-inline">
                                                             @method('PUT')
                                                             @csrf
+                                                            <input type="hidden" name="id" value="{{ $satuan->id }}">
                                                             <button class="btn btn-danger btn-sm" type="submit"
-                                                                onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                    class="fa fa-trash"></i></button>
+                                                                onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </form>
                                                     </td>
                                                 </tr>

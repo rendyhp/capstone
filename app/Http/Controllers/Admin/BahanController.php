@@ -443,7 +443,7 @@ class BahanController extends Controller
         $orderBy = $request->input('orderBy', 'name');
         $direction = $request->input('direction', 'asc');
 
-         // Ambil settings dari user
+        // Ambil settings dari user
         // Ambil settings dari user
         $settings = json_decode($user->setting->settings ?? '[]', true);
 
@@ -598,15 +598,21 @@ class BahanController extends Controller
             'description' => 'nullable|string',
             'minimum' => 'required|integer',
             'satuan_id' => 'required',
+            'section' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        $settings = json_decode($user->setting->settings ?? '[]', true);
+
+        $showImage = $settings['show_image_bahan2'] ?? false;
+        $paginationBar2 = $settings['pagination_bahanBar2'] ?? 20;
+        $paginationKitchen2 = $settings['pagination_bahanKitchen2'] ?? 20;
 
         // Cek apakah nama bahan (case insensitive) sudah ada
-        $existing = Bahan::whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
+        $existing = Bahan::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
         if ($existing) {
             $dataPerPage = 20;
             $data = DB::table('bahans')->paginate($dataPerPage);
@@ -659,6 +665,8 @@ class BahanController extends Controller
             'description' => 'nullable|string',
             'minimum' => 'required|integer|max:20',
             'satuan_id' => 'required',
+            'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
+            'section' => 'required',
         ]);
 
         $user = Auth::user()->id;
@@ -670,79 +678,61 @@ class BahanController extends Controller
         $Bahan->description = $request->input('description' ?: '-');
         $Bahan->minimum = $request->input('minimum' ?: 0);
         $Bahan->satuan_id = $request->input('satuan_id' ?: '-');
+        $Bahan->section = $request->input('section' ?: '-');
+
+        // Gambar hanya diubah jika ada upload baru
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($Bahan->image && file_exists(public_path($Bahan->image))) {
+                unlink(public_path($Bahan->image));
+            }
+
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $path = 'upload/bahan/';
+            $file->move(public_path($path), $filename);
+
+            $Bahan->image = $path . $filename;
+        }
+
+
         $Bahan->save();
 
         return redirect('/bahan/data-bahan')->with('success', 'Data Berhasil Diubah');
 
     }
 
-    public function deleteDataBahan(Request $request)
+    public function deleteBahanMKbyID(Request $request)
     {
         $id = $request->id;
+        $barang = BahanMasuk::findOrFail($id);
 
-        $barang = Bahan::findOrFail($id);
         $barang->deleted_at = now();
         $barang->save();
 
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        return redirect()->back()->with('success', 'Data "' . $barang->bahan->name . '" Berhasil Dihapus');
     }
 
-    protected function notifyIfMinimumTerlewati()
+    public function deleteDataBahan(Request $request)
     {
-        $barangMinimum = Barang::with('satuanBarang')
-            ->whereRaw('getSisaBarang(barangs.id) < minimum')
-            ->get();
+        $id = $request->id;
+        $barang = Bahan::findOrFail($id);
 
-        $bahanMinimum = Bahan::with('satuan')
-            ->whereRaw('getJumlahAkhir(bahans.id) < minimum')
-            ->get();
+        $barang->deleted_at = now();
+        $barang->save();
 
-        if ($barangMinimum->isEmpty() && $bahanMinimum->isEmpty()) {
-            return; // Tidak perlu kirim jika semua aman
-        }
+        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+    }
 
-        $message = "*⚠️ Notifikasi Stok Menipis*\n\n";
+    public function deleteSatuan(Request $request)
+    {
+        $id = $request->id;
+        $barang = SatuanBahan::findOrFail($id);
 
-        if ($barangMinimum->isNotEmpty()) {
-            $message .= "Barang:\n";
-            foreach ($barangMinimum as $b) {
-                $message .= "- {$b->name}: {$b->sisa} {$b->satuanBarang->name}, min: {$b->minimum}\n";
-            }
-        }
+        $barang->deleted_at = now();
+        $barang->save();
 
-        if ($bahanMinimum->isNotEmpty()) {
-            $message .= "\nBahan:\n";
-            foreach ($bahanMinimum as $b) {
-                $message .= "- {$b->name}: {$b->jumlah_akhir} {$b->satuan->name}, min: {$b->minimum}\n";
-            }
-        }
-
-        $message .= "\n\n> Sent via fonnte.com";
-
-        // Kirim ke OWNER dan MANAJER
-        $users = User::whereIn('role', ['OWNER', 'MANAJER'])
-            ->whereNotNull('wa_api_token')
-            ->with('profile')
-            ->get();
-
-        foreach ($users as $user) {
-            $token = $user->wa_api_token;
-            $phone = $user->profile->phone ?? null;
-
-            if (!$phone)
-                continue;
-
-            $response = Http::withHeaders([
-                'Authorization' => $token,
-            ])->post('https://api.fonnte.com/send', [
-                        'target' => $phone,
-                        'message' => $message,
-                    ]);
-
-            if (!$response->successful()) {
-                \Log::error("Gagal kirim WA ke {$phone}: " . $response->body());
-            }
-        }
+        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
     }
 
 

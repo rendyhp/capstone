@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2025 at 04:59 PM
+-- Generation Time: May 23, 2025 at 11:39 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,10 +30,10 @@ SET time_zone = "+00:00";
 CREATE TABLE `bahans` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(30) NOT NULL,
   `description` text DEFAULT NULL,
-  `section` enum('BAR','KITCHEN') NOT NULL,
   `minimum` decimal(15,3) NOT NULL,
+  `section` enum('BAR','KITCHEN') NOT NULL,
   `satuan_id` bigint(20) UNSIGNED NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -45,26 +45,15 @@ CREATE TABLE `bahans` (
 -- Dumping data for table `bahans`
 --
 
-INSERT INTO `bahans` (`id`, `user_id`, `name`, `description`, `section`, `minimum`, `satuan_id`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(17, 2, 'Susu UHT', 'Indomilk', 'BAR', 3000.000, 1, NULL, '2025-05-16 08:39:05', '2025-05-16 08:39:05', NULL),
-(18, 2, 'Kopi Espresso', 'Espresso KNK', 'BAR', 500.000, 1, NULL, '2025-05-16 08:40:26', '2025-05-16 08:40:26', NULL),
-(19, 2, 'Evaporasi', 'Sunbay, Carnation', 'BAR', 500.000, 1, NULL, '2025-05-16 08:42:05', '2025-05-16 08:42:05', NULL),
-(20, 2, 'Consentrate Mangga', 'Toza', 'BAR', 500.000, 1, NULL, '2025-05-16 08:43:12', '2025-05-16 08:43:12', NULL),
-(21, 2, 'Consentrate Lemon', 'Toza', 'BAR', 500.000, 1, NULL, '2025-05-16 08:44:09', '2025-05-16 08:44:09', NULL),
-(22, 1, 'Brown Sugar', 'Boskaf', 'BAR', 1000.000, 1, NULL, '2025-05-16 08:44:37', '2025-05-20 06:59:56', NULL),
-(23, 2, 'Sirup Hazelnut', 'Tofico', 'BAR', 500.000, 1, NULL, '2025-05-16 08:45:27', '2025-05-16 08:45:27', NULL),
-(24, 2, 'Sirup Caramel', 'Tofico', 'BAR', 500.000, 1, NULL, '2025-05-16 08:46:06', '2025-05-16 08:46:06', NULL),
-(25, 2, 'Sirup Mint', 'Tofico', 'BAR', 500.000, 1, NULL, '2025-05-16 08:46:36', '2025-05-16 08:46:36', NULL),
-(26, 2, 'Sirup Lychee', 'Tofico', 'BAR', 500.000, 1, NULL, '2025-05-16 08:47:06', '2025-05-16 08:47:06', NULL),
-(27, 2, 'Soda', 'Fanta', 'BAR', 2.000, 7, NULL, '2025-05-16 08:48:03', '2025-05-16 08:48:03', NULL),
-(28, 1, 'Yakult', 'Yakult', 'BAR', 1000.000, 7, NULL, '2025-05-16 08:48:32', '2025-05-20 07:01:19', NULL),
-(29, 2, 'Kopi Blend 70:30', 'Depangi', 'BAR', 300.000, 4, NULL, '2025-05-16 08:49:26', '2025-05-16 08:49:35', NULL),
-(30, 2, 'Chocolate Powder', 'Bromo', 'BAR', 300.000, 4, NULL, '2025-05-16 08:50:47', '2025-05-16 08:50:47', NULL),
-(31, 2, 'Matcha Powder', 'Tofico', 'BAR', 300.000, 4, NULL, '2025-05-16 08:51:21', '2025-05-16 08:51:21', NULL),
-(32, 2, 'Gula Pasir', '-', 'BAR', 1000.000, 4, NULL, '2025-05-16 08:53:27', '2025-05-16 08:53:27', NULL),
-(33, 1, 'Cabe biasa', '-', 'KITCHEN', 800.000, 4, NULL, '2025-05-19 16:04:20', '2025-05-20 06:03:46', NULL),
-(34, 1, 'Cabe pedas', '-', 'KITCHEN', 300.000, 4, NULL, '2025-05-19 16:04:30', '2025-05-20 06:03:52', NULL),
-(35, 1, 'Bawang Bombay', '-', 'KITCHEN', 50.000, 4, NULL, '2025-05-20 05:56:09', '2025-05-20 06:03:41', NULL);
+INSERT INTO `bahans` (`id`, `user_id`, `name`, `description`, `minimum`, `section`, `satuan_id`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 'Susu UHT', 'Indomilk', 500.000, 'BAR', 1, NULL, '2025-05-23 08:57:38', '2025-05-23 08:57:38', NULL),
+(2, 1, 'Kopi Espresso', 'Espresso KNK', 500.000, 'BAR', 1, NULL, '2025-05-23 08:58:06', '2025-05-23 08:58:06', NULL),
+(3, 1, 'Evaporasi', 'Sunbay, Carnation', 500.000, 'BAR', 1, NULL, '2025-05-23 08:58:32', '2025-05-23 08:58:32', NULL),
+(4, 1, 'Consentrate Mangga', 'Toza', 500.000, 'BAR', 1, 'upload/bahan/1747991493.jpeg', '2025-05-23 08:59:00', '2025-05-23 09:11:33', NULL),
+(5, 1, 'Cabai Setan', '-', 0.000, 'KITCHEN', 4, 'upload/bahan/1747991659.jpg', '2025-05-23 09:12:41', '2025-05-23 09:14:19', NULL),
+(6, 1, 'Bawang Bombay', '-', 0.000, 'KITCHEN', 4, NULL, '2025-05-23 09:13:04', '2025-05-23 09:13:04', NULL),
+(7, 1, 'Consentrate Lemon', 'Toza', 500.000, 'BAR', 1, 'upload/bahan/1747991967.jpg', '2025-05-23 09:19:27', '2025-05-23 09:30:11', NULL),
+(8, 1, 'Bawang Putih', '-', 0.000, 'KITCHEN', 4, 'upload/bahan/1747992033.webp', '2025-05-23 09:20:33', '2025-05-23 09:20:33', NULL);
 
 -- --------------------------------------------------------
 
@@ -82,61 +71,6 @@ CREATE TABLE `bahan_akhirs` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `bahan_akhirs`
---
-
-INSERT INTO `bahan_akhirs` (`id`, `user_id`, `date`, `bahan_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(109, 2, '2025-05-01', 30, 1000.000, '2025-05-16 10:03:42', '2025-05-16 10:03:42', NULL),
-(110, 2, '2025-05-01', 21, 1000.000, '2025-05-16 10:03:46', '2025-05-16 10:03:46', NULL),
-(111, 2, '2025-05-01', 20, 900.000, '2025-05-16 10:03:50', '2025-05-16 10:03:50', NULL),
-(112, 2, '2025-05-01', 19, 750.000, '2025-05-16 10:03:55', '2025-05-16 10:03:55', NULL),
-(113, 2, '2025-05-01', 32, 1000.000, '2025-05-16 10:04:00', '2025-05-16 10:04:00', NULL),
-(114, 2, '2025-05-01', 29, 1000.000, '2025-05-16 10:04:03', '2025-05-16 10:04:03', NULL),
-(115, 2, '2025-05-01', 18, 790.000, '2025-05-16 10:04:07', '2025-05-16 10:04:07', NULL),
-(116, 2, '2025-05-01', 31, 955.000, '2025-05-16 10:04:11', '2025-05-16 10:04:11', NULL),
-(117, 2, '2025-05-01', 24, 1000.000, '2025-05-16 10:04:15', '2025-05-16 10:04:15', NULL),
-(118, 2, '2025-05-01', 23, 1000.000, '2025-05-16 10:04:19', '2025-05-16 10:04:19', NULL),
-(119, 2, '2025-05-01', 26, 1000.000, '2025-05-16 10:04:23', '2025-05-16 10:04:23', NULL),
-(120, 2, '2025-05-01', 25, 1000.000, '2025-05-16 10:04:26', '2025-05-16 10:04:26', NULL),
-(121, 2, '2025-05-01', 27, 1000.000, '2025-05-16 10:04:30', '2025-05-16 10:04:30', NULL),
-(122, 2, '2025-05-01', 17, 8750.000, '2025-05-16 10:04:35', '2025-05-16 10:04:35', NULL),
-(124, 2, '2025-05-10', 22, 775.000, '2025-05-16 10:08:26', '2025-05-16 10:08:26', NULL),
-(125, 2, '2025-05-10', 30, 1000.000, '2025-05-16 10:08:30', '2025-05-16 10:08:30', NULL),
-(126, 2, '2025-05-10', 21, 1000.000, '2025-05-16 10:08:48', '2025-05-16 10:08:48', NULL),
-(127, 2, '2025-05-10', 20, 880.000, '2025-05-16 10:08:54', '2025-05-16 10:08:54', NULL),
-(128, 2, '2025-05-10', 19, 500.000, '2025-05-16 10:08:57', '2025-05-16 10:08:57', NULL),
-(129, 2, '2025-05-10', 32, 1000.000, '2025-05-16 10:09:01', '2025-05-16 10:09:01', NULL),
-(130, 2, '2025-05-10', 29, 1000.000, '2025-05-16 10:09:05', '2025-05-16 10:09:05', NULL),
-(131, 2, '2025-05-10', 18, 550.000, '2025-05-16 10:09:09', '2025-05-16 10:09:09', NULL),
-(132, 2, '2025-05-10', 31, 925.000, '2025-05-16 10:09:16', '2025-05-16 10:09:16', NULL),
-(133, 2, '2025-05-10', 24, 1000.000, '2025-05-16 10:09:20', '2025-05-16 10:09:20', NULL),
-(134, 2, '2025-05-10', 23, 1000.000, '2025-05-16 10:09:25', '2025-05-16 10:09:25', NULL),
-(135, 2, '2025-05-10', 26, 1000.000, '2025-05-16 10:09:32', '2025-05-16 10:09:32', NULL),
-(136, 2, '2025-05-10', 25, 1000.000, '2025-05-16 10:09:37', '2025-05-16 10:09:37', NULL),
-(137, 2, '2025-05-10', 27, 1000.000, '2025-05-16 10:09:41', '2025-05-16 10:09:41', NULL),
-(138, 2, '2025-05-10', 17, 7700.000, '2025-05-16 10:09:46', '2025-05-16 10:09:46', NULL),
-(139, 2, '2025-05-10', 28, 988.000, '2025-05-16 10:09:50', '2025-05-16 10:09:50', NULL),
-(140, 2, '2025-05-31', 22, 725.000, '2025-05-16 10:17:47', '2025-05-16 10:17:47', NULL),
-(141, 2, '2025-05-31', 30, 1000.000, '2025-05-16 10:17:51', '2025-05-16 10:17:51', NULL),
-(142, 2, '2025-05-31', 21, 1000.000, '2025-05-16 10:17:55', '2025-05-16 10:17:55', NULL),
-(143, 2, '2025-05-31', 20, 840.000, '2025-05-16 10:18:00', '2025-05-16 10:18:00', NULL),
-(144, 2, '2025-05-31', 19, 350.000, '2025-05-16 10:18:05', '2025-05-16 10:18:05', NULL),
-(145, 2, '2025-05-31', 32, 1000.000, '2025-05-16 10:18:09', '2025-05-16 10:18:09', NULL),
-(146, 2, '2025-05-31', 29, 1000.000, '2025-05-16 10:18:13', '2025-05-16 10:18:13', NULL),
-(147, 2, '2025-05-31', 18, 430.000, '2025-05-16 10:18:18', '2025-05-16 10:18:18', NULL),
-(148, 2, '2025-05-31', 31, 895.000, '2025-05-16 10:18:22', '2025-05-16 10:18:22', NULL),
-(149, 2, '2025-05-31', 24, 1000.000, '2025-05-16 10:18:26', '2025-05-16 10:18:26', NULL),
-(150, 2, '2025-05-31', 23, 1000.000, '2025-05-16 10:18:29', '2025-05-16 10:18:29', NULL),
-(151, 2, '2025-05-31', 26, 1000.000, '2025-05-16 10:18:32', '2025-05-16 10:18:32', NULL),
-(152, 2, '2025-05-31', 25, 1000.000, '2025-05-16 10:18:36', '2025-05-16 10:18:36', NULL),
-(153, 2, '2025-05-31', 27, 1000.000, '2025-05-16 10:18:40', '2025-05-16 10:18:40', NULL),
-(154, 2, '2025-05-31', 17, 7000.000, '2025-05-16 10:18:45', '2025-05-16 10:18:45', NULL),
-(155, 2, '2025-05-31', 28, 984.000, '2025-05-16 10:18:49', '2025-05-16 10:18:49', NULL),
-(156, 1, '2025-05-01', 33, 1400.000, '2025-05-19 16:05:21', '2025-05-19 16:05:21', NULL),
-(158, 1, '2025-05-01', 28, 990.000, '2025-05-20 05:48:58', '2025-05-20 05:48:58', NULL),
-(160, 1, '2025-05-01', 22, 1920.000, '2025-05-20 05:53:34', '2025-05-20 05:53:34', NULL);
 
 -- --------------------------------------------------------
 
@@ -156,31 +90,6 @@ CREATE TABLE `bahan_awals` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `bahan_awals`
---
-
-INSERT INTO `bahan_awals` (`id`, `user_id`, `date`, `bahan_id`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(68, 2, '2025-05-01', 22, NULL, 1000.000, '2025-05-16 09:46:01', '2025-05-16 09:46:01', NULL),
-(69, 2, '2025-05-01', 30, NULL, 1000.000, '2025-05-16 09:46:06', '2025-05-16 09:46:06', NULL),
-(70, 2, '2025-05-01', 21, NULL, 1000.000, '2025-05-16 09:46:12', '2025-05-16 09:46:12', NULL),
-(71, 2, '2025-05-01', 20, NULL, 1000.000, '2025-05-16 09:46:19', '2025-05-16 09:46:19', NULL),
-(72, 2, '2025-05-01', 19, NULL, 1000.000, '2025-05-16 09:46:24', '2025-05-16 09:46:24', NULL),
-(73, 2, '2025-05-01', 32, NULL, 1000.000, '2025-05-16 09:46:29', '2025-05-16 09:46:29', NULL),
-(74, 2, '2025-05-01', 29, NULL, 1000.000, '2025-05-16 09:46:35', '2025-05-16 09:46:35', NULL),
-(75, 2, '2025-05-01', 18, NULL, 1000.000, '2025-05-16 09:46:40', '2025-05-16 09:46:40', NULL),
-(76, 2, '2025-05-01', 31, NULL, 1000.000, '2025-05-16 09:46:45', '2025-05-16 09:46:45', NULL),
-(77, 2, '2025-05-01', 24, NULL, 1000.000, '2025-05-16 09:46:50', '2025-05-16 09:46:50', NULL),
-(78, 2, '2025-05-01', 23, NULL, 1000.000, '2025-05-16 09:46:57', '2025-05-16 09:46:57', NULL),
-(79, 2, '2025-05-01', 26, NULL, 1000.000, '2025-05-16 09:47:02', '2025-05-16 09:47:02', NULL),
-(80, 2, '2025-05-01', 25, NULL, 1000.000, '2025-05-16 09:47:07', '2025-05-16 09:47:07', NULL),
-(81, 2, '2025-05-01', 27, NULL, 1000.000, '2025-05-16 09:47:14', '2025-05-16 09:47:14', NULL),
-(83, 2, '2025-05-01', 17, NULL, 10000.000, '2025-05-16 09:47:25', '2025-05-16 09:47:25', NULL),
-(84, 2, '2025-05-01', 28, NULL, 1000.000, '2025-05-16 09:47:30', '2025-05-16 09:47:30', NULL),
-(86, 2, '2025-06-01', 22, NULL, 725.000, '2025-05-16 10:19:23', '2025-05-16 10:19:23', NULL),
-(87, 1, '2025-05-01', 33, NULL, 1000.000, '2025-05-19 16:04:45', '2025-05-19 16:04:45', NULL),
-(88, 1, '2025-05-01', 34, NULL, 1000.000, '2025-05-19 16:04:49', '2025-05-19 16:04:49', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -199,21 +108,6 @@ CREATE TABLE `bahan_masuks` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `bahan_masuks`
---
-
-INSERT INTO `bahan_masuks` (`id`, `user_id`, `date`, `bahan_id`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(9, 1, '2025-05-01', 33, 'Cash', 500.000, '2025-05-19 16:05:03', '2025-05-19 16:05:03', NULL),
-(10, 1, '2025-05-19', 28, '-', 200.000, '2025-05-19 16:31:45', '2025-05-19 16:31:45', NULL),
-(11, 1, '2025-05-19', 34, 'Cash', 500.000, '2025-05-19 16:32:31', '2025-05-19 16:32:31', NULL),
-(12, 1, '2025-05-19', 34, 'Cash', 500.000, '2025-05-19 16:32:31', '2025-05-19 16:32:31', NULL),
-(13, 1, '2025-05-01', 22, 'Cash', 500.000, '2025-05-20 05:39:27', '2025-05-20 05:39:27', NULL),
-(14, 1, '2025-05-01', 28, 'cash', 2.000, '2025-05-20 05:44:13', '2025-05-20 05:44:13', NULL),
-(15, 1, '2025-05-20', 27, 'cash', 2.000, '2025-05-20 05:44:48', '2025-05-20 05:44:48', NULL),
-(16, 1, '2025-05-20', 17, 'cash', 200.000, '2025-05-20 05:46:08', '2025-05-20 05:46:08', NULL),
-(17, 1, '2025-05-01', 22, 'cash', 555.000, '2025-05-20 05:53:06', '2025-05-20 05:53:06', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -224,31 +118,16 @@ CREATE TABLE `barangs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `date` date DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(30) NOT NULL,
   `description` text DEFAULT NULL,
-  `stok_awal` int(12) NOT NULL,
-  `minimum` int(12) NOT NULL,
+  `stok_awal` int(11) NOT NULL,
+  `minimum` int(11) NOT NULL,
   `satuan_id` bigint(20) UNSIGNED NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `barangs`
---
-
-INSERT INTO `barangs` (`id`, `user_id`, `date`, `name`, `description`, `stok_awal`, `minimum`, `satuan_id`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, '2025-05-05', 'Piring', 'Piring baru', 20, 0, 2, 'upload/barang/1746413436.jpg', '2025-05-04 19:50:36', '2025-05-04 19:50:36', NULL),
-(2, 1, '2025-05-05', 'Gelas Kecil', '-', 12, 0, 2, 'upload/barang/1746413584.jpg', '2025-05-04 19:53:04', '2025-05-04 19:53:04', NULL),
-(3, 1, '2025-05-05', 'Gelas Besar', '-', 20, 0, 2, 'upload/barang/1746413997.webp', '2025-05-04 19:59:57', '2025-05-20 04:48:07', NULL),
-(4, 1, '2025-05-05', 'Meja Kafe', 'Meja baru', 10, 0, 2, 'upload/barang/1746414173.jpg', '2025-05-04 20:02:53', '2025-05-04 20:02:53', NULL),
-(5, 1, '2025-05-05', 'Kursi Kafe', '-', 20, 0, 2, 'upload/barang/1746414367.webp', '2025-05-04 20:06:07', '2025-05-04 20:06:07', NULL),
-(6, 1, '2025-05-15', 'Mangkok', '-', 10, 20, 2, NULL, '2025-05-15 00:13:13', '2025-05-20 07:04:25', NULL),
-(7, 1, '2025-01-15', 'mangkok besar', '-', 5, 5, 2, NULL, '2025-05-15 00:57:31', '2025-05-20 04:39:13', NULL),
-(8, 1, '2025-05-19', 'Sendok', '-', 20, 15, 2, NULL, '2025-05-19 16:52:38', '2025-05-20 04:48:13', NULL),
-(9, 1, '2025-05-20', 'Garpu', '-', 12, 15, 2, NULL, '2025-05-20 04:12:48', '2025-05-20 06:54:56', NULL);
 
 -- --------------------------------------------------------
 
@@ -268,21 +147,6 @@ CREATE TABLE `barang_awals` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `barang_awals`
---
-
-INSERT INTO `barang_awals` (`id`, `user_id`, `date`, `barang_id`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, '2025-05-05', 1, 'Stok awal Piring', 20, '2025-05-04 19:50:36', '2025-05-04 19:50:36', NULL),
-(2, 1, '2025-05-05', 2, 'Stok awal Gelas Kecil', 12, '2025-05-04 19:53:04', '2025-05-04 19:53:04', NULL),
-(3, 1, '2025-05-05', 3, 'Stok awal Gelas Besar', 20, '2025-05-04 19:59:57', '2025-05-04 19:59:57', NULL),
-(4, 1, '2025-05-05', 4, 'Stok awal Meja Kafe', 10, '2025-05-04 20:02:53', '2025-05-04 20:02:53', NULL),
-(5, 1, '2025-05-05', 5, 'Stok awal Kursi Kafe', 20, '2025-05-04 20:06:07', '2025-05-04 20:06:07', NULL),
-(6, 3, '2025-05-15', 6, 'Stok awal Mangkok', 10, '2025-05-15 00:13:13', '2025-05-15 00:13:13', NULL),
-(7, 1, '2025-01-15', 7, 'Stok awal mangkok besar', 5, '2025-05-15 00:57:31', '2025-05-15 00:57:31', NULL),
-(8, 1, '2025-05-19', 8, 'Stok awal Sendok', 20, '2025-05-19 16:52:38', '2025-05-19 16:52:38', NULL),
-(10, 1, '2025-05-20', 9, 'Stok awal Garpu', 12, '2025-05-20 04:17:52', '2025-05-20 04:17:52', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -292,25 +156,14 @@ INSERT INTO `barang_awals` (`id`, `user_id`, `date`, `barang_id`, `keterangan`, 
 CREATE TABLE `barang_keluars` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `barang_id` bigint(20) UNSIGNED NOT NULL,
   `date` date NOT NULL,
+  `barang_id` bigint(20) UNSIGNED NOT NULL,
   `keterangan` text DEFAULT NULL,
   `jumlah` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `barang_keluars`
---
-
-INSERT INTO `barang_keluars` (`id`, `user_id`, `barang_id`, `date`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 3, 2, '2025-05-15', 'Gelas pecah', 3, '2025-05-15 00:34:38', '2025-05-15 00:34:38', NULL),
-(2, 1, 7, '2025-05-14', 'pecah', 2, '2025-05-15 00:58:29', '2025-05-15 00:58:29', NULL),
-(3, 1, 3, '2025-05-20', '-', 3, '2025-05-19 17:15:29', '2025-05-19 17:15:29', NULL),
-(4, 1, 2, '2025-05-20', 'Gelas rusak', 2, '2025-05-20 04:19:57', '2025-05-20 04:19:57', NULL),
-(5, 1, 2, '2025-05-20', 'Rusak', 2, '2025-05-20 04:20:40', '2025-05-20 04:20:40', NULL);
 
 -- --------------------------------------------------------
 
@@ -329,17 +182,6 @@ CREATE TABLE `barang_masuks` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `barang_masuks`
---
-
-INSERT INTO `barang_masuks` (`id`, `user_id`, `date`, `barang_id`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, '2025-05-05', 1, 'Beli lagi', 5, '2025-05-04 19:50:58', '2025-05-04 19:50:58', NULL),
-(2, 1, '2025-05-15', 7, '-', 5, '2025-05-15 00:58:10', '2025-05-15 00:58:10', NULL),
-(3, 1, '2025-05-20', 3, '-', 5, '2025-05-19 17:15:38', '2025-05-19 17:15:38', NULL),
-(4, 1, '2025-05-20', 1, 'Beli cash', 2, '2025-05-20 04:19:34', '2025-05-20 04:19:34', NULL),
-(5, 1, '2025-05-20', 2, 'Beli cash', 2, '2025-05-20 04:20:25', '2025-05-20 04:20:25', NULL);
 
 -- --------------------------------------------------------
 
@@ -373,27 +215,6 @@ CREATE TABLE `komposisi_menus` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `komposisi_menus`
---
-
-INSERT INTO `komposisi_menus` (`id`, `menu_id`, `bahan_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(24, 8, 19, 25.000, '2025-05-16 08:57:36', '2025-05-16 08:57:36', NULL),
-(25, 8, 17, 100.000, '2025-05-16 08:57:36', '2025-05-16 08:57:36', NULL),
-(26, 8, 18, 30.000, '2025-05-16 08:57:36', '2025-05-16 08:57:36', NULL),
-(27, 9, 22, 25.000, '2025-05-16 08:58:41', '2025-05-16 08:58:41', NULL),
-(28, 9, 19, 25.000, '2025-05-16 08:58:41', '2025-05-16 08:58:41', NULL),
-(29, 9, 17, 100.000, '2025-05-16 08:58:41', '2025-05-16 08:58:41', NULL),
-(30, 9, 18, 30.000, '2025-05-16 08:58:41', '2025-05-16 08:58:41', NULL),
-(31, 10, 31, 15.000, '2025-05-16 09:00:09', '2025-05-16 09:00:09', NULL),
-(32, 10, 19, 25.000, '2025-05-16 09:00:09', '2025-05-16 09:00:09', NULL),
-(33, 10, 17, 100.000, '2025-05-16 09:00:09', '2025-05-16 09:00:09', NULL),
-(34, 11, 28, 2.000, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL),
-(35, 11, 17, 50.000, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL),
-(36, 11, 20, 20.000, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL),
-(43, 13, 22, 23.000, '2025-05-20 06:46:40', '2025-05-20 06:46:40', NULL),
-(44, 13, 22, 23.000, '2025-05-20 06:46:40', '2025-05-20 06:46:40', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -403,24 +224,13 @@ INSERT INTO `komposisi_menus` (`id`, `menu_id`, `bahan_id`, `jumlah`, `created_a
 CREATE TABLE `menus` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(30) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `menus`
---
-
-INSERT INTO `menus` (`id`, `user_id`, `name`, `description`, `image`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(8, 2, 'Kopi Susu Original', 'ice', NULL, '2025-05-16 08:57:36', '2025-05-16 08:57:36', NULL),
-(9, 2, 'Kopi Susu Gula Aren', 'ice', NULL, '2025-05-16 08:58:41', '2025-05-16 08:58:41', NULL),
-(10, 2, 'Greentea Latte', 'ice', NULL, '2025-05-16 09:00:09', '2025-05-16 09:00:09', NULL),
-(11, 2, 'Mango Yakult', 'ice', NULL, '2025-05-16 09:01:39', '2025-05-16 09:01:39', NULL),
-(13, 1, 'Test', 'r', NULL, '2025-05-20 06:46:40', '2025-05-20 06:48:03', '2025-05-20 06:48:03');
 
 -- --------------------------------------------------------
 
@@ -449,29 +259,19 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (8, '2025_04_22_000040_create_bahans_table', 1),
 (9, '2025_04_22_000050_create_bahan_awals_table', 1),
 (10, '2025_04_22_000060_create_bahan_masuks_table', 1),
-(11, '2025_04_22_000070_create_bahan_keluars_table', 1),
-(12, '2025_04_22_000080_create_bahan_akhirs_table', 1),
-(13, '2025_04_22_000080_create_bahan_stoks_table', 1),
-(14, '2025_04_22_000110_create_satuan_barangs_table', 1),
-(15, '2025_04_22_000120_create_barangs_table', 1),
-(16, '2025_04_22_000129_create_barang_awals_table', 1),
-(17, '2025_04_22_000130_create_barang_masuks_table', 1),
-(18, '2025_04_22_000140_create_barang_keluars_table', 1),
-(19, '2025_04_22_000210_create_menus_table', 1),
-(20, '2025_04_22_000220_create_komposisi_menus_table', 1),
-(23, '2025_04_22_900010_create_temporary_files_table', 1),
-(24, '2025_04_22_900020_create_deleted_items_table', 1),
-(25, '2025_04_22_900029_create_tag_notifikasis_table', 1),
-(26, '2025_04_22_900030_create_notifikasis_table', 1),
-(27, '2025_04_22_900040_create_log_activities_table', 1),
-(28, '2025_04_22_000310_create_transaksis_table', 2),
-(29, '2025_04_22_000320_create_transaksi_details_table', 2),
-(30, '2025_05_07_023832_create_user_settings_table', 3),
-(31, '2025_05_07_023900_create_user_profiles_table', 3),
-(32, '2025_05_21_101505_create_messages_table', 4),
-(33, '2025_05_21_102821_create_reports_table', 4),
-(34, '2025_05_21_103042_create_stock_alert_logs_table', 4),
-(35, '2025_05_21_164851_create_stock_statuses_table', 4);
+(11, '2025_04_22_000080_create_bahan_akhirs_table', 1),
+(12, '2025_04_22_000110_create_satuan_barangs_table', 1),
+(13, '2025_04_22_000120_create_barangs_table', 1),
+(14, '2025_04_22_000129_create_barang_awals_table', 1),
+(15, '2025_04_22_000130_create_barang_masuks_table', 1),
+(16, '2025_04_22_000140_create_barang_keluars_table', 1),
+(17, '2025_04_22_000210_create_menus_table', 1),
+(18, '2025_04_22_000220_create_komposisi_menus_table', 1),
+(19, '2025_04_22_000310_create_transaksis_table', 1),
+(20, '2025_04_22_000320_create_transaksi_details_table', 1),
+(21, '2025_05_07_023832_create_user_settings_table', 1),
+(22, '2025_05_07_023900_create_user_profiles_table', 1),
+(23, '2025_05_21_103042_create_stock_alert_logs_table', 1);
 
 -- --------------------------------------------------------
 
@@ -525,7 +325,7 @@ CREATE TABLE `personal_access_tokens` (
 CREATE TABLE `satuan_bahans` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(20) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -536,12 +336,12 @@ CREATE TABLE `satuan_bahans` (
 --
 
 INSERT INTO `satuan_bahans` (`id`, `user_id`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'mL', '2025-05-04 20:13:44', '2025-05-04 20:13:44', NULL),
-(2, 2, 'kg', '2025-05-04 20:13:53', '2025-05-16 00:33:23', NULL),
-(3, 1, 'lembar', '2025-05-04 20:18:21', '2025-05-04 20:18:21', NULL),
-(4, 1, 'gram', '2025-05-04 20:40:54', '2025-05-04 20:40:54', NULL),
-(5, 1, 'potong', '2025-05-04 21:03:43', '2025-05-04 21:03:43', NULL),
-(7, 2, 'botol', '2025-05-16 08:47:50', '2025-05-16 08:47:50', NULL);
+(1, 1, 'mL', '2025-05-23 08:50:56', '2025-05-23 08:50:56', NULL),
+(2, 1, 'kg', '2025-05-23 08:51:01', '2025-05-23 08:55:25', NULL),
+(3, 1, 'lembar', '2025-05-23 08:56:24', '2025-05-23 08:56:24', NULL),
+(4, 1, 'gram', '2025-05-23 08:56:34', '2025-05-23 08:56:39', NULL),
+(5, 1, 'potong', '2025-05-23 08:56:58', '2025-05-23 08:56:58', NULL),
+(6, 1, 'botol', '2025-05-23 08:57:03', '2025-05-23 08:57:03', NULL);
 
 -- --------------------------------------------------------
 
@@ -552,7 +352,7 @@ INSERT INTO `satuan_bahans` (`id`, `user_id`, `name`, `created_at`, `updated_at`
 CREATE TABLE `satuan_barangs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(20) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -563,9 +363,7 @@ CREATE TABLE `satuan_barangs` (
 --
 
 INSERT INTO `satuan_barangs` (`id`, `user_id`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 'Pkg', '2025-05-04 19:47:44', '2025-05-20 04:25:02', NULL),
-(2, 1, 'Pcs', '2025-05-04 19:47:50', '2025-05-20 04:22:52', NULL),
-(3, 1, '-', '2025-05-20 04:22:24', '2025-05-20 04:22:38', NULL);
+(1, 1, 'Pcs', '2025-05-23 09:28:31', '2025-05-23 09:28:59', NULL);
 
 -- --------------------------------------------------------
 
@@ -581,13 +379,6 @@ CREATE TABLE `stock_alert_logs` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `stock_alert_logs`
---
-
-INSERT INTO `stock_alert_logs` (`id`, `stockable_id`, `stockable_type`, `alert_date`, `created_at`, `updated_at`) VALUES
-(3, 19, 'App\\Models\\Bahan', '2025-05-21', '2025-05-21 13:47:53', '2025-05-21 13:47:53');
 
 -- --------------------------------------------------------
 
@@ -607,29 +398,6 @@ CREATE TABLE `transaksis` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `transaksis`
---
-
-INSERT INTO `transaksis` (`id`, `user_id`, `date`, `menu_name`, `menu_id`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(30, 2, '2025-05-01', NULL, 10, 3, '2025-05-16 09:47:49', '2025-05-16 09:47:49', NULL),
-(31, 2, '2025-05-01', NULL, 9, 5, '2025-05-16 09:47:49', '2025-05-16 09:47:49', NULL),
-(32, 2, '2025-05-01', NULL, 8, 2, '2025-05-16 09:47:49', '2025-05-16 09:47:49', NULL),
-(33, 2, '2025-05-01', NULL, 11, 5, '2025-05-16 09:47:49', '2025-05-16 09:47:49', NULL),
-(34, 2, '2025-05-02', NULL, 10, 1, '2025-05-16 09:58:53', '2025-05-16 09:58:53', NULL),
-(35, 2, '2025-05-02', NULL, 9, 2, '2025-05-16 09:58:53', '2025-05-16 09:58:53', NULL),
-(36, 2, '2025-05-02', NULL, 8, 1, '2025-05-16 09:58:53', '2025-05-16 09:58:53', NULL),
-(37, 2, '2025-05-02', NULL, 11, 1, '2025-05-16 09:58:53', '2025-05-16 09:58:53', NULL),
-(38, 2, '2025-05-10', NULL, 10, 2, '2025-05-16 10:06:36', '2025-05-16 10:06:36', NULL),
-(39, 2, '2025-05-10', NULL, 9, 4, '2025-05-16 10:06:36', '2025-05-16 10:06:36', NULL),
-(40, 2, '2025-05-10', NULL, 8, 4, '2025-05-16 10:06:36', '2025-05-16 10:06:36', NULL),
-(41, 2, '2025-05-10', NULL, 11, 1, '2025-05-16 10:06:36', '2025-05-16 10:06:36', NULL),
-(46, 2, '2025-05-31', NULL, 10, 2, '2025-05-16 10:16:35', '2025-05-16 10:16:35', NULL),
-(47, 2, '2025-05-31', NULL, 9, 2, '2025-05-16 10:16:35', '2025-05-16 10:16:35', NULL),
-(48, 2, '2025-05-31', NULL, 8, 2, '2025-05-16 10:16:35', '2025-05-16 10:16:35', NULL),
-(49, 2, '2025-05-31', NULL, 11, 2, '2025-05-16 10:16:35', '2025-05-16 10:16:35', NULL),
-(59, 2, '2025-05-21', NULL, 10, 33, '2025-05-21 13:47:53', '2025-05-21 13:47:53', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -648,67 +416,6 @@ CREATE TABLE `transaksi_details` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `transaksi_details`
---
-
-INSERT INTO `transaksi_details` (`id`, `date`, `transaksi_id`, `menu_id`, `bahan_id`, `jumlah`, `satuan`, `created_at`, `updated_at`) VALUES
-(85, '2025-05-01', 30, 10, 31, 45.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(86, '2025-05-01', 30, 10, 19, 75.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(87, '2025-05-01', 30, 10, 17, 300.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(88, '2025-05-01', 31, 9, 22, 125.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(89, '2025-05-01', 31, 9, 19, 125.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(90, '2025-05-01', 31, 9, 17, 500.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(91, '2025-05-01', 31, 9, 18, 150.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(92, '2025-05-01', 32, 8, 19, 50.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(93, '2025-05-01', 32, 8, 17, 200.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(94, '2025-05-01', 32, 8, 18, 60.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(95, '2025-05-01', 33, 11, 28, 10.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(96, '2025-05-01', 33, 11, 17, 250.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(97, '2025-05-01', 33, 11, 20, 100.000, NULL, '2025-05-16 09:47:49', '2025-05-16 09:47:49'),
-(98, '2025-05-02', 34, 10, 31, 15.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(99, '2025-05-02', 34, 10, 19, 25.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(100, '2025-05-02', 34, 10, 17, 100.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(101, '2025-05-02', 35, 9, 22, 50.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(102, '2025-05-02', 35, 9, 19, 50.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(103, '2025-05-02', 35, 9, 17, 200.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(104, '2025-05-02', 35, 9, 18, 60.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(105, '2025-05-02', 36, 8, 19, 25.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(106, '2025-05-02', 36, 8, 17, 100.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(107, '2025-05-02', 36, 8, 18, 30.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(108, '2025-05-02', 37, 11, 28, 2.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(109, '2025-05-02', 37, 11, 17, 50.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(110, '2025-05-02', 37, 11, 20, 20.000, NULL, '2025-05-16 09:58:53', '2025-05-16 09:58:53'),
-(111, '2025-05-10', 38, 10, 31, 30.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(112, '2025-05-10', 38, 10, 19, 50.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(113, '2025-05-10', 38, 10, 17, 200.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(114, '2025-05-10', 39, 9, 22, 100.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(115, '2025-05-10', 39, 9, 19, 100.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(116, '2025-05-10', 39, 9, 17, 400.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(117, '2025-05-10', 39, 9, 18, 120.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(118, '2025-05-10', 40, 8, 19, 100.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(119, '2025-05-10', 40, 8, 17, 400.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(120, '2025-05-10', 40, 8, 18, 120.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(121, '2025-05-10', 41, 11, 28, 2.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(122, '2025-05-10', 41, 11, 17, 50.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(123, '2025-05-10', 41, 11, 20, 20.000, NULL, '2025-05-16 10:06:36', '2025-05-16 10:06:36'),
-(137, '2025-05-31', 46, 10, 31, 30.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(138, '2025-05-31', 46, 10, 19, 50.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(139, '2025-05-31', 46, 10, 17, 200.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(140, '2025-05-31', 47, 9, 22, 50.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(141, '2025-05-31', 47, 9, 19, 50.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(142, '2025-05-31', 47, 9, 17, 200.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(143, '2025-05-31', 47, 9, 18, 60.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(144, '2025-05-31', 48, 8, 19, 50.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(145, '2025-05-31', 48, 8, 17, 200.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(146, '2025-05-31', 48, 8, 18, 60.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(147, '2025-05-31', 49, 11, 28, 4.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(148, '2025-05-31', 49, 11, 17, 100.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(149, '2025-05-31', 49, 11, 20, 40.000, NULL, '2025-05-16 10:16:35', '2025-05-16 10:16:35'),
-(183, '2025-05-21', 59, 10, 31, 495.000, NULL, '2025-05-21 13:47:53', '2025-05-21 13:47:53'),
-(184, '2025-05-21', 59, 10, 19, 825.000, NULL, '2025-05-21 13:47:53', '2025-05-21 13:47:53'),
-(185, '2025-05-21', 59, 10, 17, 3300.000, NULL, '2025-05-21 13:47:53', '2025-05-21 13:47:53');
-
 -- --------------------------------------------------------
 
 --
@@ -717,14 +424,13 @@ INSERT INTO `transaksi_details` (`id`, `date`, `transaksi_id`, `menu_id`, `bahan
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `username` varchar(255) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `email` varchar(50) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) NOT NULL,
+  `password` varchar(72) NOT NULL,
   `role` enum('OWNER','MANAJER','STAF') NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
-  `wa_api_token` text DEFAULT NULL,
+  `wa_api_token` varchar(50) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -734,10 +440,10 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `wa_api_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Rendy Hartono Putra', 'rendi45hp', 'rendi45hp@gmail.com', '2025-05-04 19:45:10', '$2y$10$Q8Ed2iM4NzZVnrymLFP7Y.dgy30XnsT3BmxsqJnbhZ7oaUfPosi7i', 'MANAJER', 'LjxudnMWKIfCOaAAJMdVlCpeuM82S3pRXRzHV1vPUwJ32bjO8Dk3OZt5m83R', '49zbRGa16VLm8S44vT5E', '2025-05-04 19:45:10', '2025-05-21 13:49:01', NULL),
-(2, 'Maritza Septiarini', 'maritzaseptiarini', 'maritzaseptiarini@gmail.com', '2025-05-04 19:45:12', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'STAF', 'tKdXRJh3aNRxIMQwxp0HWse6AAfKQr68RA64mpGBJadj1Zz64gF4UUP94qUD', NULL, '2025-05-04 19:45:12', '2025-05-04 19:45:12', NULL),
-(3, 'Abida Amalia Syifa', 'abidaams', 'abidaams@gmail.com', '2025-05-04 19:45:16', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'OWNER', 'CAgxl4zYl0kBXHEBXnkKb2zioHnNgr8ZxAnFkrDoEjko40Dv0SWkixYu6IAN', NULL, '2025-05-04 19:45:16', '2025-05-04 19:45:16', NULL);
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `wa_api_token`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Rendy Hartono Putra', 'rendi45hp@gmail.com', '2025-05-23 08:40:07', '$2y$10$n63ng293/yFfJxu9Z31nX.X.CYgoSQMXwAiEhl.Tb6ZC3b/JuSsTe', 'MANAJER', 'TkxPgtfLyC', '49zbRGa16VLm8S44vT5E', '2025-05-23 08:40:07', '2025-05-23 08:44:38', NULL),
+(2, 'Maritza Septiarini', 'maritzaseptiarini@gmail.com', '2025-05-23 08:43:12', '$2y$10$0P2C9151GpQQDGdmdzMuLusE8AucW1/qlUs1MLjljYbXBtGRr1D5C', 'STAF', 'ojwqVdXD1U', NULL, '2025-05-23 08:43:12', '2025-05-23 08:43:12', NULL),
+(3, 'Abida Amalia Syifa', 'abidaams@gmail.com', '2025-05-23 08:43:14', '$2y$10$2UxJUG3qMrg05iI3Siwn/eDclsSMNZFyKO.2YwNMZWWgIUt0tnR3m', 'OWNER', '2bap39EHIY', NULL, '2025-05-23 08:43:14', '2025-05-23 08:43:14', NULL);
 
 -- --------------------------------------------------------
 
@@ -748,10 +454,10 @@ INSERT INTO `users` (`id`, `name`, `username`, `email`, `email_verified_at`, `pa
 CREATE TABLE `user_profiles` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `phone` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
+  `phone` varchar(14) DEFAULT NULL,
+  `address` text DEFAULT NULL,
   `birth_date` date DEFAULT NULL,
-  `gender` varchar(255) DEFAULT NULL,
+  `gender` enum('L','P') DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -761,9 +467,9 @@ CREATE TABLE `user_profiles` (
 --
 
 INSERT INTO `user_profiles` (`id`, `user_id`, `phone`, `address`, `birth_date`, `gender`, `created_at`, `updated_at`) VALUES
-(1, 1, '6281226077106', 'Cokroyasan, Ngombol', '2003-03-03', 'L', NULL, '2025-05-21 13:37:32'),
-(2, 2, '62', NULL, NULL, 'P', NULL, '2025-05-21 13:46:29'),
-(3, 3, NULL, NULL, NULL, NULL, NULL, NULL);
+(1, 1, '6281226077106', NULL, NULL, 'L', '2025-05-23 08:40:07', '2025-05-23 08:44:35'),
+(2, 2, NULL, NULL, NULL, NULL, '2025-05-23 08:43:12', '2025-05-23 08:43:12'),
+(3, 3, NULL, NULL, NULL, NULL, '2025-05-23 08:43:14', '2025-05-23 08:43:14');
 
 -- --------------------------------------------------------
 
@@ -784,9 +490,9 @@ CREATE TABLE `user_settings` (
 --
 
 INSERT INTO `user_settings` (`id`, `user_id`, `settings`, `created_at`, `updated_at`) VALUES
-(1, 1, NULL, NULL, NULL),
-(2, 2, NULL, NULL, NULL),
-(3, 3, NULL, NULL, NULL);
+(1, 1, '\"{\\\"show_image_barang\\\":false,\\\"pagination_barang\\\":20,\\\"filter_barang\\\":null,\\\"show_image_bahan\\\":false,\\\"show_keterangan\\\":\\\"0\\\",\\\"show_awal\\\":\\\"1\\\",\\\"show_masuk\\\":\\\"1\\\",\\\"show_terpakai\\\":\\\"1\\\",\\\"show_sisa\\\":\\\"1\\\",\\\"show_akhir\\\":\\\"1\\\",\\\"show_terbuang\\\":\\\"1\\\",\\\"show_minimum\\\":\\\"0\\\",\\\"pagination_bahanBar\\\":\\\"20\\\",\\\"pagination_bahanKitchen\\\":\\\"20\\\",\\\"show_image_bahan2\\\":true,\\\"pagination_bahanBar2\\\":\\\"20\\\",\\\"pagination_bahanKitchen2\\\":\\\"20\\\"}\"', '2025-05-23 08:40:07', '2025-05-23 09:06:55'),
+(2, 2, NULL, '2025-05-23 08:43:12', '2025-05-23 08:43:12'),
+(3, 3, NULL, '2025-05-23 08:43:14', '2025-05-23 08:43:14');
 
 --
 -- Indexes for dumped tables
@@ -946,8 +652,7 @@ ALTER TABLE `transaksi_details`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`),
-  ADD UNIQUE KEY `users_username_unique` (`username`);
+  ADD UNIQUE KEY `users_email_unique` (`email`);
 
 --
 -- Indexes for table `user_profiles`
@@ -971,49 +676,49 @@ ALTER TABLE `user_settings`
 -- AUTO_INCREMENT for table `bahans`
 --
 ALTER TABLE `bahans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `bahan_akhirs`
 --
 ALTER TABLE `bahan_akhirs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bahan_awals`
 --
 ALTER TABLE `bahan_awals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bahan_masuks`
 --
 ALTER TABLE `bahan_masuks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `barangs`
 --
 ALTER TABLE `barangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `barang_awals`
 --
 ALTER TABLE `barang_awals`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `barang_keluars`
 --
 ALTER TABLE `barang_keluars`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `barang_masuks`
 --
 ALTER TABLE `barang_masuks`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1025,19 +730,19 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `komposisi_menus`
 --
 ALTER TABLE `komposisi_menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -1049,37 +754,37 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `satuan_bahans`
 --
 ALTER TABLE `satuan_bahans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `satuan_barangs`
 --
 ALTER TABLE `satuan_barangs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `stock_alert_logs`
 --
 ALTER TABLE `stock_alert_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `transaksis`
 --
 ALTER TABLE `transaksis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `transaksi_details`
 --
 ALTER TABLE `transaksi_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=186;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `user_profiles`

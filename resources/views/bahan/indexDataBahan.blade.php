@@ -136,13 +136,15 @@
                                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </button>
 
-                                                        <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
-                                                            class="d-inline" method="post">
+                                                        <form action="{{ route('bahan.deleteDataBahan') }}" method="post"
+                                                            class="d-inline">
                                                             @method('PUT')
                                                             @csrf
+                                                            <input type="hidden" name="id" value="{{ $bahan->id }}">
                                                             <button class="btn btn-danger btn-sm" type="submit"
-                                                                onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                    class="fa fa-trash"></i></button>
+                                                                onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </form>
                                                     </td>
                                                 </tr>
@@ -238,15 +240,15 @@
                                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </button>
 
-
-
-                                                        <form action="/bahan/data-bahan/delete/{{ $bahan->id }}"
-                                                            class="d-inline" method="post">
+                                                        <form action="{{ route('bahan.deleteDataBahan') }}" method="post"
+                                                            class="d-inline">
                                                             @method('PUT')
                                                             @csrf
+                                                            <input type="hidden" name="id" value="{{ $bahan->id }}">
                                                             <button class="btn btn-danger btn-sm" type="submit"
-                                                                onclick="return confirm('Yakin akan Mendelete Data?')"><i
-                                                                    class="fa fa-trash"></i></button>
+                                                                onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </form>
 
 
@@ -398,6 +400,12 @@
                         <div class="mb-3">
                             <input hidden type="text" name="section" value="BAR">
                             <input hidden type="text" name="id" id="txtid">
+                            <label for="image" class="form-label text-dark fw-bold">Gambar</label>
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="txtimage"
+                                name="image">
+                            @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Bahan Baku</label>
                             <input type="text" autocomplete="off" required
                                 class="form-control @error('name') is-invalid @enderror" id="txtname" name="name">
@@ -469,6 +477,12 @@
                         <div class="mb-3">
                             <input hidden type="text" name="section" value="KITCHEN">
                             <input hidden type="text" name="id" id="txtid2">
+                            <label for="image" class="form-label text-dark fw-bold">Gambar</label>
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="txtimage2"
+                                name="image">
+                            @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Bahan Baku</label>
                             <input type="text" autocomplete="off" required
                                 class="form-control @error('name') is-invalid @enderror" id="txtname2" name="name">
@@ -540,10 +554,7 @@
                         <div class="form-check mb-3">
                             <input type="hidden" name="show_image_bahan2" value="0">
                             <input class="form-check-input" type="checkbox" name="show_image_bahan2" value="1"
-                                id="toggleImageColumnModal2" {{ ($settings['show_image_bahan2'] ?? false) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="toggleImageColumnModal2">
-                                Tampilkan Gambar
-                            </label>
+                                id="toggleImageColumnModal2" {{ ($settings['show_image_bahan2'] ?? false) ? 'checked' : '' }}><label class="form-check-label" for="toggleImageColumnModal2">Tampilkan Gambar</label>
                         </div>
 
                         {{-- Select Pagination --}}
@@ -566,10 +577,8 @@
                             <select class="form-select" name="pagination_bahanKitchen2" id="paginationSelectKitchen2">
                                 <option value="5" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 5 ? 'selected' : '' }}>5
                                 </option>
-                                <option value="20" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 20 ? 'selected' : '' }}>
-                                    20</option>
-                                <option value="50" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 50 ? 'selected' : '' }}>
-                                    50</option>
+                                <option value="20" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 20 ? 'selected' : '' }}>20</option>
+                                <option value="50" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 50 ? 'selected' : '' }}>50</option>
                                 <option value="100" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 100 ? 'selected' : '' }}>100</option>
                             </select>
                         </div>

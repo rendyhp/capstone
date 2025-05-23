@@ -22,6 +22,7 @@ class Bahan extends Model
         'description',
         'minimum',
         'satuan_id',
+        'image',
     ];
 
     // Relasi ke tabel satuan

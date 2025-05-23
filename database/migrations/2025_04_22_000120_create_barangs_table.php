@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->date('date')->nullable();
             $table->string('name', 30);
             $table->text('description')->nullable();
-            $table->integer('jumlah');
+            $table->integer('stok_awal');
             $table->integer('minimum');
             $table->foreignId('satuan_id')->references('id')->on('satuan_barangs')->onDelete('cascade');
             $table->string('image')->nullable();
