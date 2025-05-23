@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('satuan_barangs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('name');
+            $table->string('name', 20);
             $table->timestamps();
             $table->softDeletes();
         });

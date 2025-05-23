@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('bahans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('name');
+            $table->string('name', 30);
             $table->text('description')->nullable();
             $table->decimal('minimum', 15, 3);
             $table->enum('section', ['BAR', 'KITCHEN']);

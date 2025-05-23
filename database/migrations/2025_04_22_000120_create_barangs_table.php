@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->date('date')->nullable();
-            $table->string('name');
+            $table->string('name', 30);
             $table->text('description')->nullable();
             $table->integer('jumlah');
             $table->integer('minimum');
