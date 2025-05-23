@@ -42,7 +42,7 @@
                 <p><strong>Role:</strong> {{ $user->role }}</p>
             </div>
             <div class="col-md-6">
-                <p><strong>No. HP:</strong>
+                <p><strong>No. HP (WA):</strong>
                     {{ isset($profile->phone) && $profile->phone !== '62' ? '+' . $profile->phone : '-' }}
                 </p>
                 <p><strong>Alamat:</strong> {{ $profile->address ?? '-' }}</p>
