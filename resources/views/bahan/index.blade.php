@@ -59,19 +59,14 @@
             </div>
         @endif
 
-        <form action="/bahan/manajemen-bahan" method="GET" class="d-flex align-items-center mb-3">
+        <div class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
-                <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
-                <div class="col-sm-6">
+                <label for="tanggalbahan" class="col-sm-3 col-form-label me-2">Tanggal</label>
+                <div class="col-sm-8">
                     <input type="date" class="form-control" id="tanggalbahan" name="date" value="{{ $date }}">
                 </div>
-                <div class="col-sm-2">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-filter"></i>
-                    </button>
-                </div>
             </div>
-        </form>
+        </div>
 
         <div>
             <a href="/bahan/manajemen-bahan"
@@ -419,7 +414,7 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 
     <!-- Input bahan awal dan akhir dengandouble click -->
@@ -688,6 +683,15 @@
                         console.error(err);
                         alert('Terjadi kesalahan saat menghapus data.');
                     });
+            });
+        </script>
+        <script>
+            document.getElementById('tanggalbahan').addEventListener('change', function () {
+                const selectedDate = this.value;
+                if (selectedDate) {
+                    const baseUrl = "{{ url('/bahan/manajemen-bahan') }}";
+                    window.location.href = `${baseUrl}?date=${selectedDate}`;
+                }
             });
         </script>
     @endpush

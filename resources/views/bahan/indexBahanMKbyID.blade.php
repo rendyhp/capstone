@@ -78,6 +78,11 @@
                                             <i class="fa fa-angle-double-left me-2" aria-hidden="true"></i>Kembali
                                         </a>
                                     </div>
+                                    <div class="mb-3 text-center fw-bold">
+                                        <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
+                                            style="width: 150px; max-height: 150px;" alt="Img">
+                                        <p>{{ $bahans->name }}</p>
+                                    </div>
                                     <!-- Tombol Tambah -->
                                     <button type="button" class="btn btn-outline-success btnTambahStok"
                                         data-id="{{ $bahans->id ?? 'NULL' }}" data-name="{{ $bahans->name ?? 'NULL'}}"
