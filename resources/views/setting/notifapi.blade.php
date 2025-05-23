@@ -28,7 +28,7 @@
 
         @if ($user->wa_api_token)
             <p>Status: <strong class="text-success">Terhubung</strong></p>
-            <p><strong>No. HP:</strong> +{{ $user->profile->phone ?? '-' }}</p>
+            <p><strong>No. WA terhubung:</strong><br> +{{ $user->profile->phone ?? '-' }}</p>
 
             <form action="{{ route('setting.notifikasi-api.disconnect') }}" method="POST">
                 @csrf
