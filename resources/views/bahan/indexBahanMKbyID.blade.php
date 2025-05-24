@@ -79,7 +79,7 @@
                                         </a>
                                     </div>
                                     <div class="mb-3 text-center fw-bold">
-                                        <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
+                                        <img src="{{ asset($bahans->image ?? 'img/dummy/ss_bahan.png') }}"
                                             style="width: 150px; max-height: 150px;" alt="Img">
                                         <p>{{ $bahans->name }}</p>
                                     </div>

@@ -87,7 +87,7 @@
                             <div class="input-group">
                                 <span class="input-group-text">+62</span>
                                 <input name="phone" class="form-control" value="{{ substr($profile->phone, 2) }}"
-                                    placeholder="Masukkan nomor WA...">
+                                    maxlength="13" placeholder="Masukkan nomor WA...">
                             </div>
                             <small class="form-text text-danger">*Dimulai dari 08xxxx atau 8xxxx</small>
                         </div>

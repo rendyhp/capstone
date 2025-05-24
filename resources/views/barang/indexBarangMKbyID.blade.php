@@ -81,7 +81,7 @@
                                         </a>
                                     </div>
                                     <div class="mb-3 text-center fw-bold">
-                                        <img src="{{ asset($barang->image ?? 'img/dummy/ss_barang.png') }}"
+                                        <img src="{{ asset($barangs->image ?? 'img/dummy/ss_barang.png') }}"
                                             style="width: 150px; max-height: 150px;" alt="Img">
                                         <p>{{ $barangs->name }}</p>
                                     </div>
