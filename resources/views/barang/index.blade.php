@@ -429,6 +429,9 @@
                             <label for="previewGambar" class="form-label text-dark fw-bold">Gambar sebelumnya</label>
                             <img id="previewImage" src="" alt="Preview Gambar" class="img-thumbnail mt-2"
                                 style="display: none; width: 100px;">
+                            <button type="button" class="btn btn-danger btn-sm mt-2 ms-2" id="btnHapusGambar">
+                                <i class="fa fa-trash"></i> Hapus Gambar
+                            </button>
                         </div>
 
                         <div class="mb-3">
@@ -548,31 +551,25 @@
 
     @push('addScript')
         <script>
-
-            const checkbox = document.getElementById('toggleImageColumn');
-            const imageColumns = document.querySelectorAll('.column-gambar');
-
-            checkbox.addEventListener('change', function () {
-                imageColumns.forEach(col => {
-                    col.style.display = this.checked ? '' : 'none';
-                });
-            });
-
-        </script>
-
-        <script>
-
             function previewImage(input) {
                 const preview = document.getElementById('previewImage');
+                const btnHapus = document.getElementById('btnHapusGambar');
                 if (input.files && input.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         preview.src = e.target.result;
-                        preview.style.display = 'block';
+                        preview.style.display = 'inline-block';
                     }
                     reader.readAsDataURL(input.files[0]);
                 }
             }
+
+            document.getElementById("btnHapusGambar").addEventListener("click", function () {
+                const id = document.getElementById("txtid").value;
+                if (confirm("Yakin ingin menghapus gambar ini?")) {
+                    window.location.href = `/barang/data-barang/delete-image/${id}`;
+                }
+            });
         </script>
         <script>
             function toggleInput(inputId, buttonId) {
@@ -602,7 +599,6 @@
         </script>
 
         <script>
-            // Delete barang ajax
             document.querySelectorAll('.btn_deletebarang').forEach(button => {
                 button.addEventListener('click', function () {
                     if (!confirm('Yakin akan menghapus data barang ini?')) return;
@@ -611,7 +607,7 @@
                     let token = document.querySelector('input[name="_token"]').value;
 
                     fetch('/barang/delete', {
-                        method: 'POST', // sesuaikan method dan route
+                        method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': token,
@@ -622,7 +618,6 @@
                         .then(data => {
                             if (data.success) {
                                 alert('Data barang berhasil dihapus!');
-                                // Misal hapus row tabel secara langsung tanpa reload
                                 const row = this.closest('tr');
                                 if (row) row.remove();
                             } else {

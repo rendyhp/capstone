@@ -143,6 +143,11 @@
                 </div>
             </div>
             <!-- Widgets End -->
+            <footer class="bg-gray-200 py-4 me-5">
+                <p class="text-end text-gray-700 text-sm">
+                    &copy;2025 B.di.M Cafe & Chill Mulawarman
+                </p>
+            </footer>
 
         </div>
         <!-- Content End -->

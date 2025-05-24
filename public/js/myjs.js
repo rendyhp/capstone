@@ -192,12 +192,13 @@ $(document).on("click", ".btn_editbahan", function (e) {
     var description = $(this).data("description");
     var minimum = $(this).data("minimum");
     var satuan_id = $(this).data("satuan_id");
+    var image = $(this).data("image");
 
     if (!description || description.trim() === "") {
         description = "-";
     }
 
-    console.log(id, name, description, minimum, satuan_id);
+    console.log(id, name, description, minimum, satuan_id, image);
 
     var formattedMinimum = minimum % 1 === 0 ? parseInt(minimum) : minimum;
 
@@ -206,6 +207,18 @@ $(document).on("click", ".btn_editbahan", function (e) {
     $("#txtdescription").val(description);
     $("#txtminimum").val(formattedMinimum);
     $("#txtsatuan_id").val(satuan_id);
+
+    if (image && image !== 'NULL') {
+        $("#previewGambar")
+            .show();
+        $("#previewImage")
+            .attr("src", "/" + image) // pastikan path benar, misal "upload/bahan/xxx.jpg"
+            .show();
+    } else {
+        $("#previewGambar")
+            .hide();
+        $("#previewImage").hide();
+    }
 
     $("#editBarangModal").modal("toggle");
 });
@@ -218,12 +231,13 @@ $(document).on("click", ".btn_editbahan2", function (e) {
     var description2 = $(this).data("description");
     var minimum2 = $(this).data("minimum");
     var satuan_id2 = $(this).data("satuan_id");
+    var image2 = $(this).data("image");
 
     if (!description2 || description2.trim() === "") {
         description2 = "-";
     }
 
-    console.log(id2, name2, description2, minimum2, satuan_id2);
+    console.log(id2, name2, description2, minimum2, satuan_id2, image2);
 
     var formattedMinimum2 = minimum2 % 1 === 0 ? parseInt(minimum2) : minimum2;
 
@@ -232,6 +246,18 @@ $(document).on("click", ".btn_editbahan2", function (e) {
     $("#txtdescription2").val(description2);
     $("#txtminimum2").val(formattedMinimum2);
     $("#txtsatuan_id2").val(satuan_id2);
+
+    if (image2 && image2 !== 'NULL') {
+        $("#previewGambar2")
+            .show();
+        $("#previewImage2")
+            .attr("src", "/" + image2) // pastikan path benar, misal "upload/bahan/xxx.jpg"
+            .show();
+    } else {
+        $("#previewGambar2")
+            .hide();
+        $("#previewImage2").hide();
+    }
 
     $("#editBarangModal2").modal("toggle");
 });
@@ -336,6 +362,7 @@ $(document).ready(function () {
         const id = $(this).data("id");
         const name = $(this).data("name");
         const description = $(this).data("description");
+        const image = $(this).data("image");
         let komposisi = $(this).data("komposisi");
 
         if (typeof komposisi === "string") komposisi = JSON.parse(komposisi);
@@ -344,6 +371,18 @@ $(document).ready(function () {
         $("#editMenuId").val(id);
         $("#editMenuName").val(name);
         $("#editMenuDescription").val(description);
+
+        if (image && image !== 'NULL') {
+            $("#previewGambar")
+                .show();
+            $("#previewImage")
+                .attr("src", "/" + image) // pastikan path benar, misal "upload/bahan/xxx.jpg"
+                .show();
+        } else {
+            $("#previewGambar")
+                .hide();
+            $("#previewImage").hide();
+        }
 
         const container = $("#editBahanContainer");
         container.empty();

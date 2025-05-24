@@ -575,6 +575,21 @@ class BarangController extends Controller
         return redirect()->back()->with('success', 'Data "' . $Barang->name . '" Berhasil Diubah');
     }
 
+    public function deleteImageBarang($id)
+    {
+        $barang = Barang::findOrFail($id);
+
+        if ($barang->image && file_exists(public_path($barang->image))) {
+            unlink(public_path($barang->image)); // Hapus dari folder
+        }
+
+        $barang->image = null; // Kosongkan di database
+        $barang->save();
+
+        return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
+    }
+
+
 
 
     public function updateSatuan(Request $request, SatuanBarang $satuans)

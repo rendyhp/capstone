@@ -121,6 +121,7 @@
                                                             <button type="button" class="btn btn-primary btn-sm btn_editmenu"
                                                                 data-id="{{ $menu->id }}" data-name="{{ $menu->name }}"
                                                                 data-description="{{ $menu->description }}"
+                                                                data-image="{{ $menu->image }}"
                                                                 data-komposisi='@json($menu->komposisi)'>
                                                                 <i class="fa fa-edit" aria-hidden="true"></i>
                                                             </button>
@@ -147,6 +148,7 @@
                 </div>
             </div>
         </div>
+
 
         <!-- Hidden HTML untuk bahan dropdown -->
         <div id="bahanOptions" class="d-none">
@@ -221,8 +223,16 @@
 
                             <div class="mb-3">
                                 <label for="image" class="form-label text-dark fw-bold">Gambar</label>
-                                <img src="" alt="img" id="previewEditImage">
                                 <input type="file" class="form-control" id="image" name="image">
+                            </div>
+
+                            <div class="mb-3" id="previewGambar" style="display:none;">
+                                <label for="previewGambar" class="form-label text-dark fw-bold">Gambar sebelumnya</label>
+                                <img id="previewImage" src="" alt="Preview Gambar" class="img-thumbnail mt-2"
+                                    style="display: none; width: 100px;">
+                                <button type="button" class="btn btn-danger btn-sm mt-2 ms-2" id="btnHapusGambar">
+                                    <i class="fa fa-trash"></i> Hapus Gambar
+                                </button>
                             </div>
 
                             <div class="mb-3">
@@ -253,8 +263,31 @@
                 </div>
             </div>
         </div>
-
-
     </div>
+
+
+    @push('addScript')
+        <script>
+            function previewImage(input) {
+                const preview = document.getElementById('previewImage');
+                const btnHapus = document.getElementById('btnHapusGambar');
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'inline-block';
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            document.getElementById("btnHapusGambar").addEventListener("click", function () {
+                const id = document.getElementById("editMenuId").value;
+                if (confirm("Yakin ingin menghapus gambar ini?")) {
+                    window.location.href = `/daftar-menu/delete-image/${id}`;
+                }
+            });
+        </script>
+    @endpush
 
 @endsection

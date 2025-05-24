@@ -171,4 +171,18 @@ class MenuController extends Controller
         return redirect()->back()->with('success', 'Menu "' . $menuName . '" Berhasil Dihapus');
     }
 
+    public function deleteImageMenu($id)
+    {
+        $barang = Menu::findOrFail($id);
+
+        if ($barang->image && file_exists(public_path($barang->image))) {
+            unlink(public_path($barang->image)); // Hapus dari folder
+        }
+
+        $barang->image = null; // Kosongkan di database
+        $barang->save();
+
+        return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
+    }
+
 }

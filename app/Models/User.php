@@ -27,6 +27,7 @@ class User extends Authenticatable
         'name',
         'username',
         'email',
+        'email_verified_at',
         'password',
         'role',
         'wa_api_token'

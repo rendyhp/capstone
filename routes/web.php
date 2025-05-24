@@ -78,6 +78,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/barang/masuk-keluar/edit', [BarangController::class, 'updateMasukKeluar'])->name('barang.updateMasukKeluar');
     Route::post('/barang/data-barang/store', [BarangController::class, 'storeDataBarang'])->name('barang.storeDataBarang');
     Route::put('/barang/data-barang/edit', [BarangController::class, 'updateDataBarang'])->name('barang.updateDataBarang');
+    Route::get('/barang/data-barang/delete-image/{id}', [BarangController::class, 'deleteImageBarang'])->name('barang.deleteImage');
+
     Route::get('/barang/satuan', [BarangController::class, 'indexSatuan'])->name('barang.indexSatuan');
     Route::post('/barang/satuan/store', [BarangController::class, 'storeSatuan'])->name('barang.storeSatuan');
     Route::put('/barang/satuan/edit', [BarangController::class, 'updateSatuan'])->name('barang.updateSatuan');
@@ -95,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/bahan/data-bahan/store', [BahanController::class, 'storeDataBahan'])->name('bahan.storeDataBahan');
     Route::put('/bahan/data-bahan/edit', [BahanController::class, 'updateDataBahan'])->name('bahan.updateDataBahan');
     Route::put('/bahan/data-bahan/delete', [BahanController::class, 'deleteDataBahan'])->name('bahan.deleteDataBahan');
+    Route::get('/bahan/data-bahan/delete-image/{id}', [BahanController::class, 'deleteImageBahan'])->name('bahan.deleteImage');
 
     Route::get('/bahan/satuan', [BahanController::class, 'indexSatuan'])->name('bahan.indexSatuan');
     Route::post('/bahan/satuan/store', [BahanController::class, 'storeSatuan'])->name('bahan.storeSatuan');
@@ -108,7 +111,7 @@ Route::middleware(['auth'])->group(function () {
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');
     Route::put('/daftar-menu/delete', [MenuController::class, 'delete'])->name('daftar-menu.delete');
-
+    Route::get('/daftar-menu/delete-image/{id}', [MenuController::class, 'deleteImageMenu'])->name('daftar-menu.deleteImage');
 
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
     Route::post('/transaksi/import', [TransaksiController::class, 'importTransaksi'])->name('transaksi.import');

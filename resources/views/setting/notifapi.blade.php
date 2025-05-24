@@ -16,8 +16,11 @@
         <div class="alert alert-success alert-dismissible">{{ session('success') }}</div>
     @endif
     @if (session('error'))
-        <div class="alert alert-danger alert-dismissible">{{ session('error') }}</div>
+        <div class="alert alert-danger text-sm alert-dismissible">
+            {!! session('error') !!}
+        </div>
     @endif
+
 
     <div class="container cards">
         <a href="{{ url('/dashboard') }}">

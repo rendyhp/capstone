@@ -132,7 +132,8 @@
                                                             data-name="{{ $bahan->name ?? 'NULL' }}"
                                                             data-description="{{ $bahan->description ?? 'NULL' }}"
                                                             data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
-                                                            data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
+                                                            data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}"
+                                                            data-image="{{ $bahan->image ?? 'NULL' }}">
                                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </button>
 
@@ -236,7 +237,8 @@
                                                             data-name="{{ $bahan->name ?? 'NULL' }}"
                                                             data-description="{{ $bahan->description ?? 'NULL' }}"
                                                             data-minimum="{{ $bahan->minimum ?? 'NULL' }}"
-                                                            data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}">
+                                                            data-satuan_id="{{ $bahan->satuan_id ?? 'NULL' }}"
+                                                            data-image="{{ $bahan->image ?? 'NULL' }}">
                                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                                         </button>
 
@@ -403,6 +405,14 @@
                                 name="image">
                             @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
+                        <div class="mb-3" id="previewGambar" style="display:none;">
+                            <label for="previewGambar" class="form-label text-dark fw-bold">Gambar sebelumnya</label>
+                            <img id="previewImage" src="" alt="Preview Gambar" class="img-thumbnail mt-2"
+                                style="display: none; width: 100px;">
+                            <button type="button" class="btn btn-danger btn-sm mt-2 ms-2" id="btnHapusGambar">
+                                <i class="fa fa-trash"></i> Hapus Gambar
+                            </button>
+                        </div>
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Bahan Baku</label>
                             <input type="text" autocomplete="off" required
@@ -479,6 +489,14 @@
                             <input type="file" class="form-control @error('image') is-invalid @enderror" id="txtimage2"
                                 name="image">
                             @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
+                        </div>
+                        <div class="mb-3" id="previewGambar2" style="display:none;">
+                            <label for="previewGambar2" class="form-label text-dark fw-bold">Gambar sebelumnya</label>
+                            <img id="previewImage2" src="" alt="Preview Gambar" class="img-thumbnail mt-2"
+                                style="display: none; width: 100px;">
+                            <button type="button" class="btn btn-danger btn-sm mt-2 ms-2" id="btnHapusGambar2">
+                                <i class="fa fa-trash"></i> Hapus Gambar
+                            </button>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Bahan Baku</label>
@@ -592,6 +610,33 @@
 
     @push('addScript')
         <script>
+            function previewImage(input) {
+                const preview = document.getElementById('previewImage');
+                const btnHapus = document.getElementById('btnHapusGambar');
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'inline-block';
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            document.getElementById("btnHapusGambar").addEventListener("click", function () {
+                const id = document.getElementById("txtid").value;
+                if (confirm("Yakin ingin menghapus gambar ini?")) {
+                    window.location.href = `/bahan/data-bahan/delete-image/${id}`;
+                }
+            });
+            document.getElementById("btnHapusGambar2").addEventListener("click", function () {
+                const id = document.getElementById("txtid2").value;
+                if (confirm("Yakin ingin menghapus gambar ini?")) {
+                    window.location.href = `/bahan/data-bahan/delete-image/${id}`;
+                }
+            });
+        </script>
+        <script>
             function toggleInput(inputId, buttonId) {
                 let inputField = document.getElementById(inputId);
                 let button = document.getElementById(buttonId);
@@ -621,16 +666,6 @@
             });
             document.getElementById("toggleMinimum4").addEventListener("click", function () {
                 toggleInput("txtminimum2", "toggleMinimum4");
-            });
-        </script>
-        <script>
-            const checkbox = document.getElementById('toggleImageColumn');
-            const imageColumns = document.querySelectorAll('.column-gambar');
-
-            checkbox.addEventListener('change', function () {
-                imageColumns.forEach(col => {
-                    col.style.display = this.checked ? '' : 'none';
-                });
             });
         </script>
     @endpush

@@ -10,6 +10,7 @@ use Auth;
 use Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Models\LogActivity as LogActivityModel;
@@ -111,6 +112,7 @@ class UserController extends Controller
             'email' => $request->email,
             'role' => $request->role,
             'password' => Hash::make($request->password),
+            'email_verified_at' => Carbon::now(),
         ]);
 
         UserProfile::create([

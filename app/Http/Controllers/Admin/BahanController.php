@@ -702,6 +702,20 @@ class BahanController extends Controller
 
     }
 
+    public function deleteImageBahan($id)
+    {
+        $barang = Bahan::findOrFail($id);
+
+        if ($barang->image && file_exists(public_path($barang->image))) {
+            unlink(public_path($barang->image)); // Hapus dari folder
+        }
+
+        $barang->image = null; // Kosongkan di database
+        $barang->save();
+
+        return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
+    }
+
     public function deleteBahanMKbyID(Request $request)
     {
         $id = $request->id;

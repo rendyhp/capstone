@@ -95,9 +95,17 @@ class SettingController extends Controller
         return redirect()->route('setting.notifikasi-api.index')
             ->with('success', 'Hubungan notifikasi WhatsApp berhasil diputuskan.');
     }
+
     public function connectNotifikasiApi(Request $request)
     {
         $user = Auth::user();
+
+        $phone = $user->profile->phone;
+
+        if (is_null($phone) || $phone === '62') {
+            return redirect()->back()->with('error', 'No. HP (WhatsApp) Anda belum terisi. Silakan menuju <a href="/my/profile">menu profil</a> terlebih dahulu.');
+        }
+
 
         if (!in_array($user->role, ['OWNER', 'MANAJER'])) {
             abort(403, 'Anda tidak memiliki akses ke fitur ini.');
