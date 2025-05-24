@@ -166,7 +166,7 @@
                                                         </a>
                                                     </td>
 
-                                                    @if ($settings['show_keterangan'] ?? true)
+                                                    @if ($settings['show_keterangan'] ?? false)
                                                         <td>
                                                             {{ $bahan->keterangan }}
                                                         </td>
@@ -210,7 +210,7 @@
                                                         </td>
                                                     @endif
 
-                                                    @if ($settings['show_minimum'] ?? true)
+                                                    @if ($settings['show_minimum'] ?? false)
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
                                                         </td>
@@ -331,7 +331,7 @@
                                                             {{ $bahan->name }}
                                                         </a>
                                                     </td>
-                                                    @if ($settings['show_keterangan'] ?? true)
+                                                    @if ($settings['show_keterangan'] ?? false)
                                                         <td>
                                                             {{ $bahan->keterangan }}
                                                         </td>
