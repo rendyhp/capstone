@@ -66,7 +66,6 @@ Route::middleware(['auth'])->group(function () {
     // Stok
     // Barang
     Route::get('/barang/manajemen-barang', [BarangController::class, 'index'])->name('barang.index');
-    Route::get('/barang/manajemen-barang/{encryptedId}', [BarangController::class, 'indexbyID'])->name('barang.indexbyId');
     Route::post('/barang/delete', [BarangController::class, 'delete'])->name('barang.delete');
     Route::post('/barang/manajemen-barang/storeM', [BarangController::class, 'storeM'])->name('barang.storeM');
     Route::post('/barang/manajemen-barang/storeK', [BarangController::class, 'storeK'])->name('barang.storeK');

@@ -104,45 +104,6 @@ class BarangController extends Controller
         }
     }
 
-    public function indexbyId(Request $request, $encryptedId)
-    {
-        $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
-        $id = $hashids->decode($encryptedId);
-        if (empty($id)) {
-            abort(404, 'ID tidak valid');
-        }
-
-        $user = Auth::user();
-        $role = $user->role;
-
-        $query = Barang::select(
-            'barangs.*',
-            DB::raw('
-                (COALESCE(barangs.stok_awal, 0) +
-                COALESCE((SELECT SUM(jumlah) FROM barang_masuks WHERE barang_id = barangs.id AND deleted_at IS NULL), 0) -
-                COALESCE((SELECT SUM(jumlah) FROM barang_keluars WHERE barang_id = barangs.id AND deleted_at IS NULL), 0)
-                ) AS stok_akhir
-            ')
-        )
-            ->join('satuan_barangs', 'barangs.satuan_id', '=', 'satuan_barangs.id')
-            ->where('barangs.id', $id[0])
-            ->whereNull('barangs.deleted_at')
-            ->firstOrFail();
-
-        if ($search = $request->input('search')) {
-            $query->where('barangs.name', 'like', '%' . $search . '%');
-        }
-
-        $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
-        $barang = $query;
-
-        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
-            return view('barang.indexbyId', compact('barang', 'satuanBarangs'));
-        } else {
-            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
-    }
-
     public function indexMasukKeluar(Request $request)
     {
         $user = Auth::user();

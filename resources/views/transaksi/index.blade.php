@@ -258,7 +258,7 @@
                             <label for="menu_name" class="form-label">Nama Menu</label>
                             <input type="text" readonly name="menu_name" id="txtname" class="form-control">
                             <label for="jumlah" class="form-label">Jumlah</label>
-                            <input type="number" name="jumlah" id="txtjumlahMenu" class="form-control" required>
+                            <input type="number" name="jumlah" id="txtjumlahMenu" class="form-control" required max="999999999">
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Ubah</button>
@@ -304,12 +304,12 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                                                                                                        <td>${i}</td>
-                                                                                                        <td class="nama-menu">${namaMenuExcel}</td>
-                                                                                                        <td class="check-cell">⏳</td>
-                                                                                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
-                                                                                                        <td>${jumlahBaru}</td>
-                                                                                                    `;
+                                        <td>${i}</td>
+                                        <td class="nama-menu">${namaMenuExcel}</td>
+                                        <td class="check-cell">⏳</td>
+                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
+                                        <td>${jumlahBaru}</td>
+                                    `;
                             tbody.appendChild(tr);
 
                             pendingFetches++; // Sebelum fetch

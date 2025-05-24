@@ -284,15 +284,15 @@
                         </div>
                         <div class="mb-3 d-flex align-items-center">
                             <label for="minimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
-                            <input type="number" min="0" required autocomplete="off" class="form-control number0"
+                            <input type="number" min="0" required autocomplete="off" class="form-control number0" max="999999999"
                                 id="minimum" name="minimum" value="0" readonly style="max-width: 150px;">
                             <button type="button" class="btn btn-primary ms-2" id="toggleMinimum1">
                                 <i id="iconMinimum1" class="fa fa-edit" aria-hidden="true"></i>
                             </button>
                         </div>
                         <div class="mb-3">
-                            <label for="stok_awal" class="form-label text-dark fw-bold">Stok Awal</label>
-                            <input type="number" required autocomplete="off" class="form-control number0" id="stok_awal"
+                            <label for="stok_awal" class="form-label text-dark fw-bold">Stok Awal</label> 
+                            <input type="number" required autocomplete="off" class="form-control number0" id="stok_awal" max="999999999"
                                 min="1" name="stok_awal" value="0" placeholder="Ketik stok awal">
                         </div>
                         <div class="mb-3">
@@ -337,7 +337,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" autocomplete="off" value="0" class="form-control number0"
+                            <input type="number" min="1" autocomplete="off" value="0" class="form-control number0" max="999999999"
                                 name="jumlah" required>
                         </div>
                         <div class="mb-3">
@@ -381,7 +381,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required
+                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required max="999999999"
                                 autocomplete="off">
                         </div>
                         <div class="mb-3">
@@ -451,7 +451,7 @@
                         <div class="mb-3 d-flex align-items-center">
                             <label for="txtminimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
                             <input type="number" min="0" required autocomplete="off"
-                                class="form-control number0 @error('minimum') is-invalid @enderror" id="txtminimum"
+                                class="form-control number0 @error('minimum') is-invalid @enderror" id="txtminimum" max="999999999"
                                 name="minimum" value="0" readonly style="max-width: 150px;">
                             <button type="button" class="btn btn-primary ms-2" id="toggleMinimum2">
                                 <i id="iconMinimum2" class="fa fa-edit" aria-hidden="true"></i>

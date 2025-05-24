@@ -434,7 +434,7 @@
 
                         <div class="mb-3">
                             <label for="jumlah_input" class="form-label">Jumlah:</label>
-                            <input type="number" step="0.001" min="0" id="jumlah_input" name="jumlah"
+                            <input type="number" step="0.001" min="0" id="jumlah_input" name="jumlah" max="99999999999.999"
                                 class="form-control number0" required>
                         </div>
 
@@ -476,7 +476,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0"
+                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0" max="99999999999.999"
                                 required>
                         </div>
                         <div class="mb-3">

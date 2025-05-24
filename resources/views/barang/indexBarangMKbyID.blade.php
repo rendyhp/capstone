@@ -221,7 +221,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required>
+                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required max="999999999">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>
@@ -264,7 +264,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required
+                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required max="999999999"
                                 autocomplete="off">
                         </div>
                         <div class="mb-3">
