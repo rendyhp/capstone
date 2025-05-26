@@ -101,6 +101,8 @@
                             <a href="#" id="lainnyaDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
                             <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
+                                <a href="/protected/temporary-delete" class="nav-link @yield('TemporaryDelete')"><i
+                                        class="fa fa-file me-2"></i>Temporary</a>
                                 <a href="/protected/user-data" class="nav-link @yield('UserData')"><i
                                         class="fa fa-file me-2"></i>Data User</a>
                             </div>
@@ -143,6 +145,8 @@
                             <a href="#" id="lainnyaDropdown" class="nav-link dropdown-toggle fs-5 text-secondary mt-2"
                                 data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
                             <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
+                                <a href="/protected/temporary-delete" class="nav-link @yield('TemporaryDelete')"><i
+                                        class="fa fa-file me-2"></i>Temporary</a>
                                 <a href="/protected/user-data" class="nav-link @yield('UserData')"><i
                                         class="fa fa-file me-2"></i>Data User</a>
                             </div>

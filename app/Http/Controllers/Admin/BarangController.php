@@ -8,8 +8,10 @@ use App\Models\BarangAwal;
 use App\Models\BarangKeluar;
 use App\Models\BarangMasuk;
 use App\Models\SatuanBarang;
+use App\Models\User;
 use App\Services\StockAlertService;
 use App\Services\StockDataService;
+use Http;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -516,9 +518,7 @@ class BarangController extends Controller
         $Barang->minimum = $request->input('minimum' ?? 0);
         $Barang->satuan_id = $request->input('satuan_id');
 
-        // Gambar hanya diubah jika ada upload baru
         if ($request->hasFile('image')) {
-            // Hapus gambar lama jika ada
             if ($Barang->image && file_exists(public_path($Barang->image))) {
                 unlink(public_path($Barang->image));
             }
@@ -572,6 +572,17 @@ class BarangController extends Controller
         return redirect()->back()->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
     }
 
+    public function deleteDataBarang(Request $request)
+    {
+        $id = $request->id;
+        $barang = Barang::findOrFail($id);
+
+        $barang->deleted_at = now();
+        $barang->save();
+
+        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+    }
+
     public function deleteBarangMasukByID(Request $request)
     {
 
@@ -584,16 +595,12 @@ class BarangController extends Controller
     }
     public function deleteBarangKeluarByID(Request $request)
     {
-
-
         $barangKeluar = BarangKeluar::findOrFail($request->id);
         $barangKeluar->deleted_at = now();
         $barangKeluar->save();
 
         return redirect()->back()->with('success', 'Data "' . $barangKeluar->name . '" Berhasil Diubah');
     }
-
-
 
     public function deleteSatuan(Request $request)
     {
@@ -604,63 +611,5 @@ class BarangController extends Controller
         $barang->save();
 
         return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
-    }
-
-    protected function notifyIfMinimumTerlewati()
-    {
-        $barangMinimum = Barang::with('satuanBarang')
-            ->whereRaw('getSisaBarang(barangs.id) < minimum')
-            ->get();
-
-        $bahanMinimum = Bahan::with('satuan')
-            ->whereRaw('getJumlahAkhir(bahans.id) < minimum')
-            ->get();
-
-        if ($barangMinimum->isEmpty() && $bahanMinimum->isEmpty()) {
-            return; // Tidak perlu kirim jika semua aman
-        }
-
-        $message = "*⚠️ Notifikasi Stok Menipis*\n\n";
-
-        if ($barangMinimum->isNotEmpty()) {
-            $message .= "Barang:\n";
-            foreach ($barangMinimum as $b) {
-                $message .= "- {$b->name}: {$b->sisa} {$b->satuanBarang->name}, min: {$b->minimum}\n";
-            }
-        }
-
-        if ($bahanMinimum->isNotEmpty()) {
-            $message .= "\nBahan:\n";
-            foreach ($bahanMinimum as $b) {
-                $message .= "- {$b->name}: {$b->jumlah_akhir} {$b->satuan->name}, min: {$b->minimum}\n";
-            }
-        }
-
-        $message .= "\n\n> Sent via fonnte.com";
-
-        // Kirim ke OWNER dan MANAJER
-        $users = User::whereIn('role', ['OWNER', 'MANAJER'])
-            ->whereNotNull('wa_api_token')
-            ->with('profile')
-            ->get();
-
-        foreach ($users as $user) {
-            $token = $user->wa_api_token;
-            $phone = $user->profile->phone ?? null;
-
-            if (!$phone)
-                continue;
-
-            $response = Http::withHeaders([
-                'Authorization' => $token,
-            ])->post('https://api.fonnte.com/send', [
-                        'target' => $phone,
-                        'message' => $message,
-                    ]);
-
-            if (!$response->successful()) {
-                \Log::error("Gagal kirim WA ke {$phone}: " . $response->body());
-            }
-        }
     }
 }

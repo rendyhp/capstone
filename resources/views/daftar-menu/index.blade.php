@@ -106,12 +106,12 @@
 
                                                         <td>
                                                             <ul>
-                                                                @foreach($menu->komposisi as $komposisi)
-                                                                    <li>{{ $komposisi->bahan->name }} -
-                                                                        {{ rtrim(rtrim(number_format($komposisi->jumlah, 3, ',', '.'), '0'), ',') }}
-                                                                        {{ $komposisi->bahan->satuan->name }}
-                                                                    </li>
-                                                                @endforeach
+                                                                @foreach($menu->komposisi as $komposisi)<li
+                                                                    class="{{ $komposisi->bahan->deleted_at ? 'text-danger' : '' }}">
+                                                                    {{ $komposisi->bahan->name }} -
+                                                                    {{ rtrim(rtrim(number_format($komposisi->jumlah, 3, ',', '.'), '0'), ',') }}
+                                                                    {{ $komposisi->bahan->satuan->name }}
+                                                                </li>@endforeach
                                                             </ul>
                                                         </td>
 
@@ -247,14 +247,14 @@
                                     autocomplete="off"></textarea>
                             </div>
 
-                            <div id="editBahanContainer" class="mb-3">
-                                <label for="editMenuDescription" class="form-label text-dark fw-bold">Bahan</label>
-                                <!-- Komposisi menu akan diisi dengan JavaScript -->
+                            <div class="mb-3">
+                                <label class="form-label text-dark fw-bold">Bahan</label>
+                                <div id="editBahanContainer">
+                                    <!-- Komposisi menu akan diisi dengan JavaScript -->
+                                </div>
+                                <button type="button" class="btn btn-success" id="addEditBahan">+ Tambah Bahan</button>
                             </div>
-                            <button type="button" class="btn btn-success" id="addEditBahan">+ Tambah Bahan</button>
-
-
-
+                            
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                             </div>

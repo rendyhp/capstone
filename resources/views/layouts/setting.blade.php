@@ -69,6 +69,7 @@
                     @if(Auth::check() && (Auth::user()->role == 'OWNER' || Auth::user()->role == 'MANAJER'))
                         <li class="nav-header fw-bold fs-5 ms-4 mb-2">Setting</li>
                         <a href="/my/profile" class="nav-link @yield('Profile')">Profil</a>
+                        <a href="/my/set-api-token" class="nav-link @yield('SetApiToken')">Atur Token API</a>
                         <a href="/my/notifikasi-api" class="nav-link @yield('Notifapi')">API Notifikasi</a>
                         <a href="/my/password" class="nav-link @yield('Password')">Ubah Password</a>
                     @endif

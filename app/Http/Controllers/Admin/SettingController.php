@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SetApiToken;
 use App\Services\FonnteService;
 use Auth;
 use Hash;
@@ -71,10 +72,10 @@ class SettingController extends Controller
 
         return back()->with('success', 'Password berhasil diperbarui.');
     }
-    // Tampilkan halaman notifikasi API
+
     public function indexNotifikasiApi()
     {
-        $user = auth()->user()->load('profile'); // pastikan relasi 'profile' sudah didefinisikan
+        $user = auth()->user()->load('profile');
         return view('setting.notifapi', [
             'user' => $user,
         ]);
@@ -100,22 +101,65 @@ class SettingController extends Controller
     {
         $user = Auth::user();
 
-        $phone = $user->profile->phone;
+        if (!in_array($user->role, ['OWNER', 'MANAJER'])) {
+            abort(403, 'Anda tidak memiliki akses ke fitur ini.');
+        }
+
+        $phone = $user->profile->phone ?? null;
 
         if (is_null($phone) || $phone === '62') {
             return redirect()->back()->with('error', 'No. HP (WhatsApp) Anda belum terisi. Silakan menuju <a href="/my/profile">menu profil</a> terlebih dahulu.');
         }
 
+        // Ambil token_name dari tabel set_api_tokens
+        $apiToken = SetApiToken::first();
 
-        if (!in_array($user->role, ['OWNER', 'MANAJER'])) {
-            abort(403, 'Anda tidak memiliki akses ke fitur ini.');
+        if (!$apiToken || !$apiToken->token_name) {
+            return redirect()->back()->with('error', 'Token API belum tersedia. Silakan atur terlebih dahulu.');
         }
 
-        $user->wa_api_token = '49zbRGa16VLm8S44vT5E';
+        $user->wa_api_token = $apiToken->token_name;
         $user->save();
 
-        return redirect()->back()->with('success', 'Notifikasi WhatsApp berhasil dihubungkan kembali.');
+        return redirect()->back()->with('success', 'Notifikasi WhatsApp berhasil dihubungkan menggunakan token API.');
     }
+
+    public function indexSetAPItoken()
+    {
+        $setApiToken = SetApiToken::first();
+        $user = auth()->user()->load('profile');
+        return view('setting.setAPItoken', [
+            'user' => $user,
+            'setApiToken' => $setApiToken,
+        ]);
+    }
+
+    public function updateSetAPItoken(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:13',
+            'token_name' => 'required|string|max:255',
+        ]);
+
+        $formattedPhone = '62' . ltrim($request->phone, '0');
+
+        SetApiToken::updateOrCreate(
+            ['id' => 1],
+            [
+                'name' => $request->name,
+                'phone' => $formattedPhone,
+                'token_name' => $request->token_name,
+            ]
+        );
+
+        \App\Models\User::whereNotNull('wa_api_token')->update([
+            'wa_api_token' => $request->token_name
+        ]);
+
+        return back()->with('success', 'Token berhasil diperbarui dan disinkronkan ke semua pengguna.');
+    }
+
 
 
     public function updateFilterSetting(Request $request)

@@ -3,12 +3,11 @@
 use App\Http\Controllers\Admin\BahanController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\MenuController;
-use App\Http\Controllers\Admin\NotifikasiController;
-use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Admin\TemporaryDeleteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\Admin\TransaksiController;
@@ -34,6 +33,7 @@ Route::get('/', function () {
 Auth::routes();
 Route::redirect('/my', '/my/profile');
 Route::redirect('/laporan', '/laporan/bahan');
+Route::redirect('/protected/temporary-delete', '/protected/temporary-delete/bahan');
 // Reset password
 // Tampilkan form input email untuk reset password
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -72,11 +72,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/barang/masuk-keluar', [BarangController::class, 'indexMasukKeluar'])->name('barang.indexMasukKeluar');
     Route::get('/barang/masuk-keluar/{encryptedId}', [BarangController::class, 'indexBarangMKbyID'])->name('barang.indexBarangMKbyID');
     Route::put('/barang/masuk-keluar/deleteM', [BarangController::class, 'deleteBarangMasukbyID'])->name('barang.deleteBarangMKbyIDmasuk');
-     Route::put('/barang/masuk-keluar/deleteK', [BarangController::class, 'deleteBarangKeluarbyID'])->name('barang.deleteBarangMKbyIDkeluar');
+    Route::put('/barang/masuk-keluar/deleteK', [BarangController::class, 'deleteBarangKeluarbyID'])->name('barang.deleteBarangMKbyIDkeluar');
     Route::post('/barang/masuk-keluar/store', [BarangController::class, 'storeMasukKeluar'])->name('barang.storeMasukKeluar');
     Route::put('/barang/masuk-keluar/edit', [BarangController::class, 'updateMasukKeluar'])->name('barang.updateMasukKeluar');
     Route::post('/barang/data-barang/store', [BarangController::class, 'storeDataBarang'])->name('barang.storeDataBarang');
     Route::put('/barang/data-barang/edit', [BarangController::class, 'updateDataBarang'])->name('barang.updateDataBarang');
+    Route::put('/barang/data-barang/delete', [BarangController::class, 'deleteDataBarang'])->name('barang.deleteDataBarang');
     Route::get('/barang/data-barang/delete-image/{id}', [BarangController::class, 'deleteImageBarang'])->name('barang.deleteImage');
 
     Route::get('/barang/satuan', [BarangController::class, 'indexSatuan'])->name('barang.indexSatuan');
@@ -135,6 +136,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my/notifikasi-api', [SettingController::class, 'indexNotifikasiApi'])->name('setting.notifikasi-api.index');
     Route::post('/my/notifikasi-api/connect', [SettingController::class, 'connectNotifikasiApi'])->name('setting.notifikasi-api.connect');
     Route::post('/my/notifikasi-api/disconnect', [SettingController::class, 'disconnectNotifikasiApi'])->name('setting.notifikasi-api.disconnect');
+    Route::get('/my/set-api-token', [SettingController::class, 'indexSetAPItoken'])->name('setting.set-api-token.index');
+    Route::put('/my/set-api-token', [SettingController::class, 'updateSetAPItoken'])->name('setting.set-api-token.update');
     Route::get('/my/password', [SettingController::class, 'indexPassword'])->name('setting.password.index');
     Route::post('/my/password', [SettingController::class, 'updatePassword'])->name('setting.password.update');
 
@@ -163,4 +166,19 @@ Route::middleware(['auth'])->group(function () {
     // Resource routes
     Route::resource('/daftar-menu', \App\Http\Controllers\Admin\MenuController::class);
     Route::resource('/transaksi', \App\Http\Controllers\Admin\TransaksiController::class);
+});
+
+Route::prefix('protected/temporary-delete')->middleware(['auth'])->group(function () {
+
+    // Bahan
+    Route::get('bahan', [TemporaryDeleteController::class, 'indexBahan'])->name('temporary-delete.bahan.index');
+    Route::post('bahan/restore/{id}', [TemporaryDeleteController::class, 'restoreBahan'])->name('temporary-delete.bahan.restore');
+
+    // Barang
+    Route::get('barang', [TemporaryDeleteController::class, 'indexBarang'])->name('temporary-delete.barang.index');
+    Route::post('barang/restore/{id}', [TemporaryDeleteController::class, 'restoreBarang'])->name('temporary-delete.barang.restore');
+
+    // Menu
+    Route::get('menu', [TemporaryDeleteController::class, 'indexMenu'])->name('temporary-delete.menu.index');
+    Route::post('menu/restore/{id}', [TemporaryDeleteController::class, 'restoreMenu'])->name('temporary-delete.menu.restore');
 });

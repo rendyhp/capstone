@@ -220,10 +220,16 @@
                                                                     </button>
                                                                 </li>
                                                                 <li>
-                                                                    <button class="dropdown-item text-danger btn_deletebarang"
-                                                                        data-id="{{ $barang->id }}">
-                                                                        <i class="fa fa-trash me-2"></i>Hapus
-                                                                    </button>
+                                                                    <form action="{{ route('barang.deleteDataBarang') }}"
+                                                                        method="post">
+                                                                        @method('PUT')
+                                                                        @csrf
+                                                                        <input type="hidden" name="id" value="{{ $barang->id }}">
+                                                                        <button class="btn btn-danger btn-sm dropdown-item text-danger" type="submit"
+                                                                            onclick="return confirm('Yakin akan Mendelete Data?')">
+                                                                            <i class="fa fa-trash me-2"></i>Hapus
+                                                                        </button>
+                                                                    </form>
                                                                 </li>
                                                                 <li>
                                                                     <a href="/barang/masuk-keluar/{{ Hashids::encode($barang->id) }}"
@@ -284,16 +290,16 @@
                         </div>
                         <div class="mb-3 d-flex align-items-center">
                             <label for="minimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
-                            <input type="number" min="0" required autocomplete="off" class="form-control number0" max="999999999"
-                                id="minimum" name="minimum" value="0" readonly style="max-width: 150px;">
+                            <input type="number" min="0" required autocomplete="off" class="form-control number0"
+                                max="999999999" id="minimum" name="minimum" value="0" readonly style="max-width: 150px;">
                             <button type="button" class="btn btn-primary ms-2" id="toggleMinimum1">
                                 <i id="iconMinimum1" class="fa fa-edit" aria-hidden="true"></i>
                             </button>
                         </div>
                         <div class="mb-3">
-                            <label for="stok_awal" class="form-label text-dark fw-bold">Stok Awal</label> 
-                            <input type="number" required autocomplete="off" class="form-control number0" id="stok_awal" max="999999999"
-                                min="1" name="stok_awal" value="0" placeholder="Ketik stok awal">
+                            <label for="stok_awal" class="form-label text-dark fw-bold">Stok Awal</label>
+                            <input type="number" required autocomplete="off" class="form-control number0" id="stok_awal"
+                                max="999999999" min="1" name="stok_awal" value="0" placeholder="Ketik stok awal">
                         </div>
                         <div class="mb-3">
                             <label for="satuan_id" class="form-label text-dark fw-bold">Satuan</label>
@@ -337,8 +343,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" autocomplete="off" value="0" class="form-control number0" max="999999999"
-                                name="jumlah" required>
+                            <input type="number" min="1" autocomplete="off" value="0" class="form-control number0"
+                                max="999999999" name="jumlah" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>
@@ -381,8 +387,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required max="999999999"
-                                autocomplete="off">
+                            <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required
+                                max="999999999" autocomplete="off">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>
@@ -451,8 +457,8 @@
                         <div class="mb-3 d-flex align-items-center">
                             <label for="txtminimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
                             <input type="number" min="0" required autocomplete="off"
-                                class="form-control number0 @error('minimum') is-invalid @enderror" id="txtminimum" max="999999999"
-                                name="minimum" value="0" readonly style="max-width: 150px;">
+                                class="form-control number0 @error('minimum') is-invalid @enderror" id="txtminimum"
+                                max="999999999" name="minimum" value="0" readonly style="max-width: 150px;">
                             <button type="button" class="btn btn-primary ms-2" id="toggleMinimum2">
                                 <i id="iconMinimum2" class="fa fa-edit" aria-hidden="true"></i>
                             </button>

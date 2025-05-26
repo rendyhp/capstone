@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\SetApiToken;
 use App\Models\User;
 use App\Models\UserProfile;
 use App\Models\UserSetting;

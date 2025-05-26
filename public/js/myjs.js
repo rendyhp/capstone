@@ -33,7 +33,7 @@ toggleDropdown(
     "menuTransaksiDropdown"
 );
 toggleDropdown(
-    ["/protected/user-data"],
+    ["/protected/user-data", "protected/temporary-delete"],
     "lainnyaDropdownMenu",
     "lainnyaDropdown"
 );
@@ -421,16 +421,20 @@ $(document).ready(function () {
         const container = $("#bahanContainer");
         const index = container.find(".bahan-item").length;
         appendBahanRowWithSelect2(container, index, $("#bahanContainer"));
+
+        refreshSatuan($("#bahanContainer"));
     });
 
     $("#addEditBahan").on("click", function () {
         const container = $("#editBahanContainer");
         const index = container.find(".bahan-item").length;
-        appendBahanRowWithSelect2(container, index, $("#editBarangModal"));
+        appendBahanRowWithSelect2(container, index, $("#editBahanContainer"));
+
+        refreshSatuan($("#editBahanContainer"));
     });
 
-    refreshSatuan($("#bahanContainer"));
-    refreshSatuan($("#editBahanContainer"));
+    
+    
 });
 
 ////////////////////////////////////////////////////////
