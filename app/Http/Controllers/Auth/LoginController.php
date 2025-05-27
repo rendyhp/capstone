@@ -77,14 +77,13 @@ class LoginController extends Controller
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
         if ($user) {
-            // Pengecekan apakah password yang dimasukkan benar atau salah
             if (!Auth::getProvider()->validateCredentials($user, $credentials)) {
-                session()->flash('error', 'Password salah.');
+                session()->flash('error', 'Email atau Password salah!');
             } else {
-                session()->flash('error', 'Email atau Password salah.');
+                session()->flash('error', 'Email atau Password salah!');
             }
         } else {
-            session()->flash('error', 'Email dan Password invalid');
+            session()->flash('error', 'Email atau Password salah!');
         }
 
         return false;
