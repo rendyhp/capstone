@@ -34,7 +34,7 @@
         <p><strong>No. WA Pengirim:</strong><br> +{{ $setApiToken->phone ?? '-' }}</p>
         <p><strong>Token terhubung:</strong><br>{{ $setApiToken->token_name ?? '-' }}</p>
 
-        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editTokenAPIModal">Ubah
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editTokenAPIModal">Edit
             Token</button>
 
     </div>
@@ -46,7 +46,7 @@
                 @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Profil</h5>
+                        <h5 class="modal-title">Edit Token</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
                     <div class="modal-body">
