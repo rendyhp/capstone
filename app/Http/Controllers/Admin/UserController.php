@@ -124,7 +124,7 @@ class UserController extends Controller
         ]);
         UserSetting::create([
             'user_id' => $user->id,
-            'settings' => json_encode([]), 
+            'settings' => json_encode([]),
         ]);
 
         return redirect('/protected/user-data')->with('message', 'Registrasi Akun ' . $user->name . ' Berhasil!');
@@ -151,11 +151,25 @@ class UserController extends Controller
             abort(403, 'Anda tidak memiliki akses!');
         }
 
+        $originalEmail = $targetUser->email;
+
+        // Ambil bagian domain email
+        $parts = explode('@', $originalEmail);
+        $base = $parts[0];
+        $domain = $parts[1] ?? 'example.com'; // fallback
+
+        // Generate email unik pakai timestamp
+        $newEmail = time() . '_' . $base . '@' . $domain;
+
+        // Update user
+        $targetUser->email = $newEmail;
         $targetUser->deleted_at = now();
         $targetUser->save();
 
-        return redirect()->back()->with('success', 'Data ' . $targetUser->name . ' berhasil dihapus');
+        return redirect()->back()->with('success', 'User ' . $targetUser->name . ' berhasil dihapus.');
     }
+
+
 
     public function clearTmp()
     {

@@ -66,19 +66,23 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('temporary-delete.barang.index') }}" method="get" class="d-flex mb-3">
-                            <input type="text" name="search" class="form-control form-control-sm me-2"
-                                placeholder="Cari barang..." value="{{ request('search') }}">
-                            <button class="btn btn-outline-secondary btn-sm" type="submit">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </form>
-
                         <div class="table-responsive">
                             <table class="table table-bordered table-sm text-dark">
+                                <div class="d-flex gap-2 mb-2 col-sm-4 float-end">
+                                    <a href="{{ route('temporary-delete.barang.index') }}"
+                                        class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                        <i class="fa fa-refresh"></i>
+                                    </a>
+                                    <form action="{{ route('temporary-delete.barang.index') }}" method="get"
+                                        class="form-inline d-flex">
+                                        <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                            name="search" placeholder="Cari barang..." value="{{ request('search') }}">
+                                    </form>
+                                </div>
                                 <thead class="table-primary">
                                     <tr>
                                         <th>No.</th>
+                                        <th>Tanggal Hapus</th>
                                         <th>Nama Barang</th>
                                         <th>Satuan</th>
                                         <th>Aksi</th>
@@ -89,6 +93,8 @@
                                         <tr>
                                             <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
                                             </td>
+                                            <td>{{ \Carbon\Carbon::parse($barang->deleted_at)->translatedFormat('d F Y, H:i') }}
+                                                WIB</td>
                                             <td>{{ $barang->name }}</td>
                                             <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
                                             <td>
@@ -100,11 +106,21 @@
                                                         <i class="fa fa-undo"></i> Restore
                                                     </button>
                                                 </form>
+                                                <form action="{{ route('temporary-delete.barang.force-delete') }}" method="POST"
+                                                    onsubmit="return confirm('Yakin ingin menghapus barang ini secara permanen dari tampilan?')">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="id" value="{{ $barang->id }}">
+                                                    <button type="submit" class="btn btn-danger btn-sm mt-1">
+                                                        <i class="fa fa-trash"></i> Hapus
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="4" class="text-center text-muted py-3">Tidak ada barang terhapus.</td>
+                                            <td colspan="100%" class="text-center text-muted py-3">Tidak ada barang terhapus.
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>

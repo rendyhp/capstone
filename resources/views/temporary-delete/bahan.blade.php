@@ -83,17 +83,22 @@
 
                     <div class="card-body">
                         <div class="table-responsive">
-                            <form action="{{ route('temporary-delete.bahan.index') }}" method="get" class="d-flex mb-3">
-                                <input type="text" name="search" class="form-control form-control-sm me-2" autocomplete="off"
-                                    placeholder="Cari bahan..." value="{{ request('search') }}">
-                                <button class="btn btn-outline-secondary btn-sm" type="submit"><i
-                                        class="fa fa-search"></i></button>
-                            </form>
-
                             <table class="table table-bordered table-sm text-dark">
+                                <div class="d-flex gap-2 mb-2 col-sm-4 float-end">
+                                    <a href="{{ route('temporary-delete.bahan.index') }}"
+                                        class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                        <i class="fa fa-refresh"></i>
+                                    </a>
+                                    <form action="{{ route('temporary-delete.bahan.index') }}" method="get"
+                                        class="form-inline d-flex">
+                                        <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                            name="search" placeholder="Cari bahan..." value="{{ request('search') }}">
+                                    </form>
+                                </div>
                                 <thead class="table-primary">
                                     <tr>
                                         <th>No.</th>
+                                        <th>Tanggal Hapus</th>
                                         <th>Nama Bahan</th>
                                         <th>Bagian</th>
                                         <th>Satuan</th>
@@ -104,6 +109,8 @@
                                     @forelse ($bahans as $bahan)
                                         <tr>
                                             <td>{{ ($bahans->currentPage() - 1) * $bahans->perPage() + $loop->iteration }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($bahan->deleted_at)->translatedFormat('d F Y, H:i') }}
+                                                WIB</td>
                                             <td>{{ $bahan->name }}</td>
                                             <td>{{ $bahan->section }}</td>
                                             <td>{{ $bahan->satuan->name ?? '-' }}</td>
@@ -116,11 +123,21 @@
                                                         <i class="fa fa-undo"></i> Restore
                                                     </button>
                                                 </form>
+                                                <form action="{{ route('temporary-delete.bahan.force-delete') }}" method="POST"
+                                                    onsubmit="return confirm('Yakin ingin menghapus bahan ini secara permanen dari tampilan?')">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="id" value="{{ $bahan->id }}">
+                                                    <button type="submit" class="btn btn-danger btn-sm mt-1">
+                                                        <i class="fa fa-trash"></i> Hapus
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="4" class="text-center text-muted py-3">Tidak ada bahan terhapus.</td>
+                                            <td colspan="100%" class="text-center text-muted py-3">Tidak ada bahan terhapus.
+                                            </td>
                                         </tr>
                                     @endforelse
                                 </tbody>

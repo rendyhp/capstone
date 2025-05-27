@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Bahan;
@@ -23,11 +24,13 @@ class TemporaryDeleteController extends Controller
     {
         $this->checkAccess();
 
-        $orderBy = $request->input('orderBy', 'name');
-        $direction = $request->input('direction', 'asc');
+        $orderBy = $request->input('orderBy', 'deleted_at');
+        $direction = $request->input('direction', 'desc');
+        $cutoffDate = Carbon::today()->subDays(30);
 
         $query = Bahan::with('satuan')
             ->whereNotNull('deleted_at')
+            ->where('deleted_at', '>=', $cutoffDate)
             ->orderBy($orderBy, $direction);
 
         if ($search = $request->input('search')) {
@@ -55,11 +58,13 @@ class TemporaryDeleteController extends Controller
     {
         $this->checkAccess();
 
-        $orderBy = $request->input('orderBy', 'name');
-        $direction = $request->input('direction', 'asc');
+        $orderBy = $request->input('orderBy', 'deleted_at');
+        $direction = $request->input('direction', 'desc');
+        $cutoffDate = Carbon::today()->subDays(30);
 
         $query = Barang::with('satuanBarang')
             ->whereNotNull('deleted_at')
+            ->where('deleted_at', '>=', $cutoffDate)
             ->orderBy($orderBy, $direction);
 
         if ($search = $request->input('search')) {
@@ -88,11 +93,13 @@ class TemporaryDeleteController extends Controller
     {
         $this->checkAccess();
 
-        $orderBy = $request->input('orderBy', 'name');
-        $direction = $request->input('direction', 'asc');
+        $orderBy = $request->input('orderBy', 'deleted_at');
+        $direction = $request->input('direction', 'desc');
+        $cutoffDate = Carbon::today()->subDays(30);
 
         $query = Menu::with('komposisi.bahan.satuan')
             ->whereNotNull('deleted_at')
+            ->where('deleted_at', '>=', $cutoffDate)
             ->orderBy($orderBy, $direction);
 
         if ($search = $request->input('search')) {
@@ -115,4 +122,33 @@ class TemporaryDeleteController extends Controller
         return redirect()->back()->with('success', 'Menu "' . $menu->name . '" berhasil direstore.');
     }
 
+    // Force Delete Bahan
+    public function forceDeleteBahan(Request $request)
+    {
+        $this->checkAccess();
+        $bahan = Bahan::findOrFail($request->id);
+        $bahan->deleted_at = Carbon::parse('2015-05-15');
+        $bahan->save();
+        return redirect()->back()->with('success', 'Bahan "' . $bahan->name . '". dihapus permanen.');
+    }
+
+    // Force Delete Barang
+    public function forceDeleteBarang(Request $request)
+    {
+        $this->checkAccess();
+        $barang = Barang::findOrFail($request->id);
+        $barang->deleted_at = Carbon::parse('2015-05-15');
+        $barang->save();
+        return redirect()->back()->with('success', 'Barang "' . $barang->name . '". dihapus permanen.');
+    }
+
+    // Force Delete Menu
+    public function forceDeleteMenu(Request $request)
+    {
+        $this->checkAccess();
+        $menu = Menu::findOrFail($request->id);
+        $menu->deleted_at = Carbon::parse('2015-05-15');
+        $menu->save();
+        return redirect()->back()->with('success', 'Menu "' . $menu->name . '". dihapus permanen.');
+    }
 }

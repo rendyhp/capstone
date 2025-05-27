@@ -66,19 +66,23 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('temporary-delete.menu.index') }}" method="get" class="d-flex mb-3">
-                            <input type="text" name="search" class="form-control form-control-sm me-2"
-                                placeholder="Cari menu..." value="{{ request('search') }}">
-                            <button class="btn btn-outline-secondary btn-sm" type="submit">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </form>
-
                         <div class="table-responsive">
                             <table class="table table-bordered table-sm text-dark">
+                                <div class="d-flex gap-2 mb-2 col-sm-4 float-end">
+                                    <a href="{{ route('temporary-delete.menu.index') }}"
+                                        class="btn btn-outline-secondary btn-sm" title="Refresh">
+                                        <i class="fa fa-refresh"></i>
+                                    </a>
+                                    <form action="{{ route('temporary-delete.menu.index') }}" method="get"
+                                        class="form-inline d-flex">
+                                        <input class="form-control form-control-sm" autocomplete="off" type="text"
+                                            name="search" placeholder="Cari menu..." value="{{ request('search') }}">
+                                    </form>
+                                </div>
                                 <thead class="table-primary">
                                     <tr>
                                         <th>No.</th>
+                                        <th>Tanggal Hapus</th>
                                         <th>Gambar</th>
                                         <th>Nama Menu</th>
                                         <th>Komposisi</th>
@@ -89,6 +93,8 @@
                                     @forelse ($menus as $menu)
                                         <tr>
                                             <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($menu->deleted_at)->translatedFormat('d F Y, H:i') }}
+                                                WIB</td>
                                             <td>
                                                 <img src="{{ asset($menu->image ?? 'img/dummy/ss_menu.png') }}"
                                                     style="width: 100px; max-height: 100px;" alt="Img">
@@ -117,11 +123,21 @@
                                                         <i class="fa fa-undo"></i> Restore
                                                     </button>
                                                 </form>
+
+                                                <form action="{{ route('temporary-delete.menu.force-delete') }}" method="POST"
+                                                    onsubmit="return confirm('Yakin ingin menghapus menu ini secara permanen dari tampilan?')">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="hidden" name="id" value="{{ $menu->id }}">
+                                                    <button type="submit" class="btn btn-danger btn-sm mt-1">
+                                                        <i class="fa fa-trash"></i> Hapus
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="4" class="text-center text-muted py-3">Tidak ada menu terhapus.</td>
+                                            <td colspan="100%" class="text-center text-muted py-3">Tidak ada menu terhapus.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

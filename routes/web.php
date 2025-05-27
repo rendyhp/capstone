@@ -169,16 +169,18 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::prefix('protected/temporary-delete')->middleware(['auth'])->group(function () {
-
     // Bahan
     Route::get('bahan', [TemporaryDeleteController::class, 'indexBahan'])->name('temporary-delete.bahan.index');
     Route::post('bahan/restore/{id}', [TemporaryDeleteController::class, 'restoreBahan'])->name('temporary-delete.bahan.restore');
+    Route::put('bahan/force-delete', [TemporaryDeleteController::class, 'forceDeleteBahan'])->name('temporary-delete.bahan.force-delete');
 
     // Barang
     Route::get('barang', [TemporaryDeleteController::class, 'indexBarang'])->name('temporary-delete.barang.index');
     Route::post('barang/restore/{id}', [TemporaryDeleteController::class, 'restoreBarang'])->name('temporary-delete.barang.restore');
+    Route::put('barang/force-delete', [TemporaryDeleteController::class, 'forceDeleteBarang'])->name('temporary-delete.barang.force-delete');
 
     // Menu
     Route::get('menu', [TemporaryDeleteController::class, 'indexMenu'])->name('temporary-delete.menu.index');
     Route::post('menu/restore/{id}', [TemporaryDeleteController::class, 'restoreMenu'])->name('temporary-delete.menu.restore');
+    Route::put('menu/force-delete', [TemporaryDeleteController::class, 'forceDeleteMenu'])->name('temporary-delete.menu.force-delete');
 });
