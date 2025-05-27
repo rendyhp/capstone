@@ -134,7 +134,9 @@ class TransaksiController extends Controller
                 continue;
             }
 
-            $menu = Menu::whereRaw('LOWER(TRIM(name)) = ?', [strtolower($judulProduk)])->first();
+            $menu = Menu::whereRaw('LOWER(TRIM(name)) = ?', [strtolower($judulProduk)])
+                ->whereNull('deleted_at')
+                ->first();
             if (!$menu)
                 continue;
 
@@ -200,7 +202,9 @@ class TransaksiController extends Controller
         $menuName = $request->input('menu');
         $date = $request->input('date');
 
-        $menu = Menu::whereRaw('LOWER(TRIM(name)) = ?', [strtolower(trim($menuName))])->first();
+        $menu = Menu::whereRaw('LOWER(TRIM(name)) = ?', [strtolower($menuName)])
+            ->whereNull('deleted_at')
+            ->first();
 
         if (!$menu) {
             return response()->json(['jumlah' => 0, 'menu_name' => null]);
