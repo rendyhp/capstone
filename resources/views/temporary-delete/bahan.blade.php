@@ -84,6 +84,13 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-sm text-dark">
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Data terhapus hanya tersimpan selama 30 hari">
+                                        <i class="fa fa-info-circle me-2" aria-hidden="true"></i>Data terhapus hanya
+                                        tersimpan selama 30 hari
+                                    </button>
+                                </div>
                                 <div class="d-flex gap-2 mb-2 col-sm-4 float-end">
                                     <a href="{{ route('temporary-delete.bahan.index') }}"
                                         class="btn btn-outline-secondary btn-sm" title="Refresh">
@@ -115,23 +122,26 @@
                                             <td>{{ $bahan->section }}</td>
                                             <td>{{ $bahan->satuan->name ?? '-' }}</td>
                                             <td>
-                                                <form action="{{ route('temporary-delete.bahan.restore', $bahan->id) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('Yakin ingin mengembalikan bahan ini?')">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-success btn-sm">
-                                                        <i class="fa fa-undo"></i> Restore
-                                                    </button>
-                                                </form>
-                                                <form action="{{ route('temporary-delete.bahan.force-delete') }}" method="POST"
-                                                    onsubmit="return confirm('Yakin ingin menghapus bahan ini secara permanen dari tampilan?')">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <input type="hidden" name="id" value="{{ $bahan->id }}">
-                                                    <button type="submit" class="btn btn-danger btn-sm mt-1">
-                                                        <i class="fa fa-trash"></i> Hapus
-                                                    </button>
-                                                </form>
+                                                <div class="d-flex flex-column flex-sm-row gap-2">
+                                                    <form action="{{ route('temporary-delete.bahan.restore', $bahan->id) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Yakin ingin mengembalikan bahan ini?')">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success btn-sm">
+                                                            <i class="fa fa-undo"></i> Restore
+                                                        </button>
+                                                    </form>
+                                                    <form action="{{ route('temporary-delete.bahan.force-delete') }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Yakin ingin menghapus bahan ini secara permanen dari tampilan?')">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="id" value="{{ $bahan->id }}">
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            <i class="fa fa-trash"></i> Hapus
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     @empty

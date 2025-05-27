@@ -158,8 +158,44 @@
             @endif
         </div>
 
+        <div class="mb-3 ms-3">
+            <div id="serverTime" class="mt-2 text-muted" style="font-size: 0.9rem;">
+                Waktu server: {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }},
+                {{ \Carbon\Carbon::now()->format('H:i:s') }} WIB
+            </div>
+        </div>
+
     </div>
     <div class="container">
 
     </div>
+    @push('addScript')
+        <script>
+            let serverTime = new Date("{{ \Carbon\Carbon::now()->toDateTimeString() }}").getTime();
+
+            function padZero(num) {
+                return num.toString().padStart(2, '0');
+            }
+
+            function updateTime() {
+                serverTime += 1000;
+                const date = new Date(serverTime);
+
+                const day = date.getDate();
+                const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                const month = monthNames[date.getMonth()];
+                const year = date.getFullYear();
+
+                const hours = padZero(date.getHours());
+                const minutes = padZero(date.getMinutes());
+                const seconds = padZero(date.getSeconds());
+
+                const formatted = `${day} ${month} ${year}, ${hours}:${minutes}:${seconds} WIB`;
+
+                document.getElementById('serverTime').innerText = "Waktu server: " + formatted;
+            }
+
+            setInterval(updateTime, 1000);
+        </script>
+    @endpush
 @endsection

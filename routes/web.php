@@ -159,10 +159,6 @@ Route::middleware(['auth'])->group(function () {
     //     dd(json_decode($response, true));
     // });
 
-
-
-
-
     // Resource routes
     Route::resource('/daftar-menu', \App\Http\Controllers\Admin\MenuController::class);
     Route::resource('/transaksi', \App\Http\Controllers\Admin\TransaksiController::class);

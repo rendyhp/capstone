@@ -122,7 +122,6 @@ class TemporaryDeleteController extends Controller
         return redirect()->back()->with('success', 'Menu "' . $menu->name . '" berhasil direstore.');
     }
 
-    // Force Delete Bahan
     public function forceDeleteBahan(Request $request)
     {
         $this->checkAccess();
@@ -132,7 +131,6 @@ class TemporaryDeleteController extends Controller
         return redirect()->back()->with('success', 'Bahan "' . $bahan->name . '". dihapus permanen.');
     }
 
-    // Force Delete Barang
     public function forceDeleteBarang(Request $request)
     {
         $this->checkAccess();
@@ -142,7 +140,6 @@ class TemporaryDeleteController extends Controller
         return redirect()->back()->with('success', 'Barang "' . $barang->name . '". dihapus permanen.');
     }
 
-    // Force Delete Menu
     public function forceDeleteMenu(Request $request)
     {
         $this->checkAccess();
