@@ -50,7 +50,7 @@ class TemporaryDeleteController extends Controller
         $bahan->deleted_at = null;
         $bahan->save();
 
-        return redirect()->back()->with('success', 'Bahan "' . $bahan->name . '" berhasil direstore.');
+        return redirect()->back()->with('success', 'Bahan "' . $bahan->name . '" berhasil dikembalikan.');
     }
 
 
@@ -84,7 +84,7 @@ class TemporaryDeleteController extends Controller
         $barang->deleted_at = null;
         $barang->save();
 
-        return redirect()->back()->with('success', 'Barang "' . $barang->name . '" berhasil direstore.');
+        return redirect()->back()->with('success', 'Barang "' . $barang->name . '" berhasil dikembalikan.');
     }
 
 
@@ -119,7 +119,7 @@ class TemporaryDeleteController extends Controller
         $menu->deleted_at = null;
         $menu->save();
 
-        return redirect()->back()->with('success', 'Menu "' . $menu->name . '" berhasil direstore.');
+        return redirect()->back()->with('success', 'Menu "' . $menu->name . '" berhasil dikembalikan.');
     }
 
     public function forceDeleteBahan(Request $request)

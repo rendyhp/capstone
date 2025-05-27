@@ -76,7 +76,8 @@
                                             </a>
                                             <form action="/daftar-menu" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Search" value="{{ request('search') }}">
+                                                    name="search" placeholder="Cari menu..."
+                                                    value="{{ request('search') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -170,7 +171,7 @@
 
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Menu</h1>
+                        <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Tambah Menu</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -212,7 +213,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Menu</h5>
+                        <h5 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Edit Menu</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -256,7 +257,7 @@
                                 </div>
                                 <button type="button" class="btn btn-success" id="addEditBahan">+ Tambah Bahan</button>
                             </div>
-                            
+
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                             </div>

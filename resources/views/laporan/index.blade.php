@@ -93,28 +93,19 @@
             </div>
         @endif
 
-        <form action="{{ route('laporan.index') }}" method="GET" class="mb-4">
-            <div class="mb-3 row">
-                <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
-                <div class="col-sm-2">
-                    <input type="month" class="form-control" id="tanggalbahan" name="date" value="{{ $dateParam }}">
-                </div>
-                <div class="col-sm-2">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-filter"></i> Tampilkan
-                    </button>
-                </div>
-                @if (!empty($dateParam))
-                    <div class="col-sm-5 text-end">
-                        <a href="{{ route('laporan.export', ['date' => $dateParam]) }}" class="btn btn-success">
-                            <i class="fas fa-file-excel"></i> Export Excel
-                        </a>
-                    </div>
-                @endif
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center">
+                <label for="tanggalbahan" class="col-form-label me-2">Tanggal</label>
+                <input type="month" class="form-control" id="tanggalbahan" name="date" value="{{ $dateParam }}">
             </div>
-        </form>
 
-
+            @if (!empty($dateParam))
+                <a href="{{ route('laporan.export', ['date' => $dateParam]) }}" class="btn btn-success">
+                    <i class="fas fa-file-excel"></i> Export Excel
+                </a>
+            @endif
+        </div>
         <div>
             <a href="/laporan/bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/bahan') ? 'active' : '' }}">
@@ -131,7 +122,8 @@
                 <div class="card custom-card">
                     <div class="card-header">
                         <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Bar ({{ $bulanNama }}
-                            {{ $tahunNama }})</div>
+                            {{ $tahunNama }})
+                        </div>
                     </div>
 
                     <div class="card-body maxHeightTable">
@@ -217,7 +209,8 @@
                 <div class="card custom-card">
                     <div class="card-header">
                         <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Kitchen ({{ $bulanNama }}
-                            {{ $tahunNama }})</div>
+                            {{ $tahunNama }})
+                        </div>
                     </div>
 
                     <div class="card-body maxHeightTable">
@@ -298,5 +291,17 @@
             </div>
         </div>
     </div>
+
+    @push('addScript')
+        <script>
+            document.getElementById('tanggalbahan').addEventListener('change', function () {
+                const selectedDate = this.value;
+                if (selectedDate) {
+                    const baseUrl = "{{ route('laporan.index') }}";
+                    window.location.href = `${baseUrl}?date=${selectedDate}`;
+                }
+            });
+        </script>
+    @endpush
 
 @endsection

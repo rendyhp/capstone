@@ -87,7 +87,7 @@
                                             </a>
                                             <form action="/barang/satuan" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Search" value="{{ request('search') }}">
+                                                    name="search" placeholder="Cari satuan..." value="{{ request('search') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -152,7 +152,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Stok Barang</h1>
+                    <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Tambah Stok Barang</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -161,7 +161,7 @@
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Satuan</label>
                             <input type="text" required autocomplete="off" class="form-control" id="name" name="name"
-                                placeholder="Ketik nama satuan">
+                                placeholder="Ketik nama satuan...">
                         </div>
                 </div>
                 <div class="modal-footer">

@@ -91,7 +91,7 @@
                                             </a>
                                             <form action="/barang/manajemen-barang" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Search" value="{{ request('search') }}">
+                                                    name="search" placeholder="Cari barang..." value="{{ request('search') }}">
                                             </form>
                                         </div>
 
@@ -267,14 +267,14 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Barang</h1>
+                    <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Tambah Data Barang</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form method="Post" action='/barang/data-barang/store' enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Tanggal</label>
+                            <label class="form-label text-dark fw-bold">Tanggal</label>
                             <input type="date" class="form-control" name="date" required id="date">
                         </div>
                         <div class="mb-3">
@@ -285,12 +285,12 @@
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
                             <input type="text" required autocomplete="off" class="form-control" id="name" name="name"
-                                placeholder="Ketik nama barang">
+                                placeholder="Ketik nama barang...">
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
                             <textarea class="form-control" required id="description" name="description" rows="4"
-                                autocomplete="off" placeholder="Ketik deskripsi barang"></textarea>
+                                autocomplete="off" placeholder="Ketik deskripsi barang..."></textarea>
                         </div>
                         <div class="mb-3 d-flex align-items-center">
                             <label for="minimum" class="form-label text-dark fw-bold me-2">Pengingat Stok Minimum</label>
@@ -327,7 +327,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Barang Masuk</h1>
+                    <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Barang Masuk</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -336,22 +336,22 @@
 
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
-                            <label class="form-label fw-bold">Tanggal</label>
+                            <label class="form-label text-dark fw-bold">Tanggal</label>
                             <input type="date" class="form-control" name="date" id="stokDateM" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Barang</label>
+                            <label class="form-label text-dark fw-bold">Nama Barang</label>
                             <input type="text" disabled class="form-control  @error('name') is-invalid @enderror"
                                 id="stokBarangNameM">
                             @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Jumlah</label>
+                            <label class="form-label text-dark fw-bold">Jumlah</label>
                             <input type="number" min="1" autocomplete="off" value="0" class="form-control number0"
                                 max="999999999" name="jumlah" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Satuan</label>
+                            <label class="form-label text-dark fw-bold">Satuan</label>
                             <input type="text" disabled class="form-control  @error('satuan') is-invalid @enderror"
                                 id="stokBarangSatuanM">
                             @error('satuan') <div class="alert alert-danger">{{ $message }}</div> @enderror
@@ -359,7 +359,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Misal: Beli baru atau Beli cash"></textarea>
+                                name="keterangan" rows="4" placeholder="Misal: Beli baru atau Beli cash..."></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -374,7 +374,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Barang Keluar</h1>
+                    <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Barang Keluar</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -382,15 +382,15 @@
                         @csrf
                         <input type="hidden" name="id" id="stokBarangIdK">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Tanggal</label>
+                            <label class="form-label text-dark fw-bold">Tanggal</label>
                             <input type="date" class="form-control" name="date" id="stokDateK" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Barang</label>
+                            <label class="form-label text-dark fw-bold">Nama Barang</label>
                             <input type="text" readonly class="form-control" id="stokBarangNameK">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Jumlah</label>
+                            <label class="form-label text-dark fw-bold">Jumlah</label>
                             <input type="number" min="1" value="0" class="form-control number0" name="jumlah" required
                                 max="999999999" autocomplete="off">
                         </div>
@@ -401,9 +401,9 @@
                             @error('satuan_id') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
+                            <label for="keterangan" class="form-label  text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganK" required
-                                name="keterangan" rows="4" placeholder="Misal: Barang rusak"></textarea>
+                                name="keterangan" rows="4" placeholder="Misal: Barang rusak..."></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">

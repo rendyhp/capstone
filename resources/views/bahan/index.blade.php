@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Manajemen Bahan</h2>
+                    <h2 class="pageheader-title ">Stok Bahan</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
@@ -109,7 +109,7 @@
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search1" placeholder="Search" value="{{ request('search1') }}">
+                                                    name="search1" placeholder="Cari bahan bar..." value="{{ request('search1') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -275,7 +275,7 @@
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search2" placeholder="Search" value="{{ request('search2') }}">
+                                                    name="search2" placeholder="Cari bahan dapur..." value="{{ request('search2') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -433,7 +433,7 @@
                         <input type="hidden" name="type" id="type">
 
                         <div class="mb-3">
-                            <label for="jumlah_input" class="form-label">Jumlah:</label>
+                            <label for="jumlah_input" class="form-label text-dark fw-bold">Jumlah:</label>
                             <input type="number" step="0.001" min="0" id="jumlah_input" name="jumlah" max="99999999999.999"
                                 class="form-control number0" required>
                         </div>
@@ -461,22 +461,22 @@
 
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
-                            <label class="form-label fw-bold">Tanggal</label>
+                            <label class="form-label text-dark fw-bold">Tanggal</label>
                             <input type="date" class="form-control" name="date" id="stokDateM" value="{{ $date }}" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Barang</label>
+                            <label class="form-label text-dark fw-bold">Nama Barang</label>
                             <input type="text" disabled class="form-control  @error('name') is-invalid @enderror"
                                 id="stokBarangNameM">
                             @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Jumlah</label>
+                            <label class="form-label text-dark fw-bold">Jumlah</label>
                             <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0"
                                 max="99999999999.999" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Satuan</label>
+                            <label class="form-label text-dark fw-bold">Satuan</label>
                             <input type="text" disabled class="form-control  @error('satuan') is-invalid @enderror"
                                 id="stokBarangSatuanM">
                             @error('satuan') <div class="alert alert-danger">{{ $message }}</div> @enderror
@@ -484,7 +484,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Misalnya: Cash"></textarea>
+                                name="keterangan" rows="4" placeholder="Misalnya: Cash..."></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">

@@ -72,7 +72,7 @@
                                             </a>
                                             <form action="/protected/user-data" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Search" value="{{ request('search') }}">
+                                                    name="search" placeholder="Cari nama user..." value="{{ request('search') }}">
                                             </form>
                                         </div>
 

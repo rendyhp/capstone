@@ -172,7 +172,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah {{ $bahans->name }}</h1>
+                    <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Tambah {{ $bahans->name }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -181,22 +181,22 @@
 
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
-                            <label class="form-label fw-bold">Tanggal</label>
+                            <label class="form-label text-dark fw-bold">Tanggal</label>
                             <input type="date" class="form-control" name="date" id="stokDateM" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Nama Bahan</label>
+                            <label class="form-label text-dark fw-bold">Nama Bahan</label>
                             <input type="text" disabled class="form-control  @error('name') is-invalid @enderror"
                                 id="stokBarangNameM">
                             @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Jumlah</label>
+                            <label class="form-label text-dark fw-bold">Jumlah</label>
                             <input type="number" min="1" class="form-control number0" value="0" autocomplete="off" max="99999999999.999"
                                 name="jumlah" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Satuan</label>
+                            <label class="form-label text-dark fw-bold">Satuan</label>
                             <input type="text" disabled class="form-control  @error('satuan') is-invalid @enderror"
                                 id="stokBarangSatuanM">
                             @error('satuan') <div class="alert alert-danger">{{ $message }}</div> @enderror
@@ -204,7 +204,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Misal: Cash"></textarea>
+                                name="keterangan" rows="4" placeholder="Misal: Cash..."></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">

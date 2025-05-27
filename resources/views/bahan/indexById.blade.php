@@ -92,20 +92,14 @@
             </div>
         @endif
 
-        <form action="/bahan/manajemen-bahan/{{ Hashids::encode($bahanId) }}" method="GET"
-            class="d-flex align-items-center mb-3">
+        <div class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
-                <label for="tanggalbahan" class="col-sm-2 col-form-label me-2">Tanggal</label>
-                <div class="col-sm-6">
+                <label for="tanggalbahan" class="col-sm-3 col-form-label me-2">Tanggal</label>
+                <div class="col-sm-8">
                     <input type="month" class="form-control" id="tanggalbahan" name="date" value="{{ $dateParam }}">
                 </div>
-                <div class="col-sm-2">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-filter"></i>
-                    </button>
-                </div>
             </div>
-        </form>
+        </div>
 
         <div>
             <a href="/bahan/manajemen-bahan"
@@ -213,13 +207,13 @@
 
     @push('addScript')
         <script>
-            const checkbox = document.getElementById('toggleImageColumn');
-            const imageColumns = document.querySelectorAll('.column-gambar');
-
-            checkbox.addEventListener('change', function () {
-                imageColumns.forEach(col => {
-                    col.style.display = this.checked ? '' : 'none';
-                });
+            document.getElementById('tanggalbahan').addEventListener('change', function () {
+                const selectedDate = this.value;
+                if (selectedDate) {
+                    const bahanIdEncoded = "{{ \Hashids::encode($bahanId) }}";
+                    const baseUrl = "{{ url('/bahan/manajemen-bahan') }}/" + bahanIdEncoded;
+                    window.location.href = `${baseUrl}?date=${selectedDate}`;
+                }
             });
         </script>
     @endpush

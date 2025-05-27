@@ -83,7 +83,7 @@
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Search" value="{{ request('search') }}">
+                                                    name="search" placeholder="Cari barang masuk/keluar..." value="{{ request('search') }}">
                                             </form>
                                         </div>
 

@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Master Bahan</h2>
+                    <h2 class="pageheader-title ">Stok Bahan</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
@@ -90,7 +90,7 @@
                                             </a>
                                             <form action="/bahan/data-bahan" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search1" placeholder="Search" value="{{ request('search1') }}">
+                                                    name="search1" placeholder="Cari bahan bar..." value="{{ request('search1') }}">
                                             </form>
                                         </div>
 
@@ -194,7 +194,7 @@
                                             </a>
                                             <form action="/bahan/data-bahan" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search2" placeholder="Search" value="{{ request('search2') }}">
+                                                    name="search2" placeholder="Cari bahan dapur..." value="{{ request('search2') }}">
                                             </form>
                                         </div>
 
@@ -277,7 +277,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Bar</h1>
+                    <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Tambah Data Bar</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -292,12 +292,12 @@
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Bahan Baku</label>
                             <input type="text" required class="form-control" id="name" name="name"
-                                placeholder="Contoh: Kopi Arabica" autocomplete="off">
+                                placeholder="Contoh: Mango Concentrate..." autocomplete="off">
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
                             <textarea class="form-control" required autocomplete="off" id="description" name="description"
-                                rows="4" placeholder="Deskripsi bahan baku"></textarea>
+                                rows="4" placeholder="Deskripsi bahan baku..."></textarea>
 
                         </div>
                         <div class="mb-3 d-flex align-items-center">
@@ -334,7 +334,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Data Kitchen</h1>
+                    <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Tambah Data Kitchen</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -349,7 +349,7 @@
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Bahan Baku</label>
                             <input type="text" required class="form-control" id="name2" name="name"
-                                placeholder="Contoh: Kopi Arabica" autocomplete="off">
+                                placeholder="Contoh: Cabe pedas..." autocomplete="off">
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
