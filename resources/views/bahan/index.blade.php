@@ -419,7 +419,7 @@
 
     <!-- Input bahan awal dan akhir dengandouble click -->
     <div class="modal fade" id="modalEditJumlah" tabindex="-1" aria-labelledby="modalEditJumlahLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5 text-primary fw-bold" id="modalEditJumlahLabel">Edit Jumlah</h1>
@@ -437,17 +437,13 @@
                             <input type="number" step="0.001" min="0" id="jumlah_input" name="jumlah" max="99999999999.999"
                                 class="form-control number0" required>
                         </div>
-
-                        <div class="modal-footer d-flex justify-content-between">
-                            <!-- Tombol Reset -->
-                            <button type="button" class="btn btn-danger" id="resetJumlahBtn">Reset</button>
-
-                            <!-- Tombol Simpan -->
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
-                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-danger" id="resetJumlahBtn">Reset</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </div>
+            </form>
         </div>
     </div>
 
@@ -456,7 +452,7 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Bahan Masuk</h1>
+                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Bahan Masuk</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -476,8 +472,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Jumlah</label>
-                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0" max="99999999999.999"
-                                required>
+                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0"
+                                max="99999999999.999" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Satuan</label>
@@ -588,18 +584,7 @@
 
 
     @push('addScript')
-        <script>
-
-            const checkbox = document.getElementById('toggleImageColumn');
-            const imageColumns = document.querySelectorAll('.column-gambar');
-
-            checkbox.addEventListener('change', function () {
-                imageColumns.forEach(col => {
-                    col.style.display = this.checked ? '' : 'none';
-                });
-            });
-
-        </script>
+        
         <script>
             function editJumlah(bahan_id, date, type, currentJumlah) {
                 var formattedJumlah = currentJumlah % 1 === 0 ? parseInt(currentJumlah) : currentJumlah;
@@ -609,8 +594,7 @@
                 document.getElementById('type').value = type;
                 document.getElementById('jumlah_input').value = formattedJumlah;
 
-                var myModal = new bootstrap.Modal(document.getElementById('modalEditJumlah'));
-                myModal.show();
+                $("#modalEditJumlah").modal("show");
             }
 
 
