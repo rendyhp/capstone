@@ -59,14 +59,16 @@
             </div>
         @endif
 
-        <div class="d-flex align-items-center mb-3">
-            <div class="mb-3 row">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <div class="mb-3 row mb-0">
                 <label for="tanggalbahan" class="col-sm-3 col-form-label me-2">Tanggal</label>
                 <div class="col-sm-8">
                     <input type="date" class="form-control" id="tanggalbahan" name="date" value="{{ $date }}">
                 </div>
             </div>
+
         </div>
+
 
         <div>
             <a href="/bahan/manajemen-bahan"
@@ -89,6 +91,10 @@
                 <div class="card custom-card">
                     <div class="card-header">
                         <div class="card-title fs-5 fw-bold mt-2"> Tabel Bar </div>
+                        <div>
+                            <span id="tanggal-terformat"
+                                class="badge bg-primary text-white ms-3">{{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</span>
+                        </div>
                     </div>
 
                     <div class="card-body">
@@ -109,7 +115,8 @@
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search1" placeholder="Cari bahan bar..." value="{{ request('search1') }}">
+                                                    name="search1" placeholder="Cari bahan bar..."
+                                                    value="{{ request('search1') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -275,7 +282,8 @@
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search2" placeholder="Cari bahan dapur..." value="{{ request('search2') }}">
+                                                    name="search2" placeholder="Cari bahan dapur..."
+                                                    value="{{ request('search2') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -584,7 +592,7 @@
 
 
     @push('addScript')
-        
+
         <script>
             function editJumlah(bahan_id, date, type, currentJumlah) {
                 var formattedJumlah = currentJumlah % 1 === 0 ? parseInt(currentJumlah) : currentJumlah;
@@ -670,14 +678,33 @@
             });
         </script>
         <script>
-            document.getElementById('tanggalbahan').addEventListener('change', function () {
+            const tanggalInput = document.getElementById('tanggalbahan');
+            const tanggalTerformat = document.getElementById('tanggal-terformat');
+
+            function formatTanggalIndo(tanggalStr) {
+                const bulanIndo = [
+                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                ];
+
+                const dateObj = new Date(tanggalStr);
+                const tanggal = dateObj.getDate();
+                const bulan = bulanIndo[dateObj.getMonth()];
+                const tahun = dateObj.getFullYear();
+
+                return `${tanggal} ${bulan} ${tahun}`;
+            }
+
+            tanggalInput.addEventListener('change', function () {
                 const selectedDate = this.value;
                 if (selectedDate) {
+                    tanggalTerformat.textContent = formatTanggalIndo(selectedDate);
                     const baseUrl = "{{ url('/bahan/manajemen-bahan') }}";
                     window.location.href = `${baseUrl}?date=${selectedDate}`;
                 }
             });
         </script>
+
     @endpush
 
 @endsection

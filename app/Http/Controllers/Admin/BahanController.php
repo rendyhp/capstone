@@ -47,9 +47,15 @@ class BahanController extends Controller
         }
         // Data Bar
         $query1 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'BAR');
+        $query2 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'KITCHEN');
 
         if ($search1 = $request->input('search1')) {
             $query1->where('name', 'like', '%' . $search1 . '%');
+            $query2->whereNull('name');
+        }
+        if ($search2 = $request->input('search2')) {
+            $query2->where('name', 'like', '%' . $search2 . '%');
+            $query1->whereNull('name');
         }
 
         $bahan_bars = $query1->paginate($paginationBar)->appends($request->query());
@@ -115,12 +121,6 @@ class BahanController extends Controller
         $allowedPagination = [5, 20, 50, 100];
         if (!in_array($paginationKitchen, $allowedPagination)) {
             $paginationKitchen = 20;
-        }
-
-        $query2 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'KITCHEN');
-
-        if ($search2 = $request->input('search2')) {
-            $query2->where('name', 'like', '%' . $search2 . '%');
         }
 
         $bahan_kitchens = $query2->paginate($paginationKitchen)->appends($request->query());
@@ -453,23 +453,28 @@ class BahanController extends Controller
 
         $query1 = Bahan::with('satuan')
             ->whereNull('deleted_at')->where('section', 'BAR');
-        $query1->orderBy($orderBy, $direction);
+        
+        $query2 = Bahan::with('satuan')
+            ->whereNull('deleted_at')->where('section', 'KITCHEN');
+        
 
         $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
         if ($search1 = $request->input('search1')) {
             $query1->where('name', 'like', '%' . $search1 . '%');
+            $query2->whereNull('name');
+        }
+        if ($search2 = $request->input('search2')) {
+            $query2->where('name', 'like', '%' . $search2 . '%');
+            $query1->whereNull('name');
         }
 
-        $query2 = Bahan::with('satuan')
-            ->whereNull('deleted_at')->where('section', 'KITCHEN');
+        $query1->orderBy($orderBy, $direction);
         $query2->orderBy($orderBy, $direction);
 
         $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
-        if ($search2 = $request->input('search2')) {
-            $query2->where('name', 'like', '%' . $search2 . '%');
-        }
+
 
         if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
             $bahan_bars = $query1->paginate($paginationBar2);

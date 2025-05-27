@@ -58,6 +58,10 @@
                 <div class="card custom-card">
                     <div class="card-header">
                         <div class="card-title fs-5 fw-bold mt-2"> Tabel Transaksi</div>
+                        <div>
+                            <span id="tanggal-terformat"
+                                class="badge bg-primary text-white ms-3">{{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</span>
+                        </div>
                     </div>
 
                     <div class="card-body">
@@ -79,7 +83,8 @@
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Cari transaksi..." value="{{ request('search') }}">
+                                                    name="search" placeholder="Cari transaksi..."
+                                                    value="{{ request('search') }}">
                                             </form>
                                         </div>
                                         <div>
@@ -258,7 +263,8 @@
                             <label for="menu_name" class="form-label">Nama Menu</label>
                             <input type="text" readonly name="menu_name" id="txtname" class="form-control">
                             <label for="jumlah" class="form-label">Jumlah</label>
-                            <input type="number" name="jumlah" id="txtjumlahMenu" class="form-control" required max="999999999">
+                            <input type="number" name="jumlah" id="txtjumlahMenu" class="form-control" required
+                                max="999999999">
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Ubah</button>
@@ -304,12 +310,12 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                                        <td>${i}</td>
-                                        <td class="nama-menu">${namaMenuExcel}</td>
-                                        <td class="check-cell">⏳</td>
-                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
-                                        <td>${jumlahBaru}</td>
-                                    `;
+                                                        <td>${i}</td>
+                                                        <td class="nama-menu">${namaMenuExcel}</td>
+                                                        <td class="check-cell">⏳</td>
+                                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
+                                                        <td>${jumlahBaru}</td>
+                                                    `;
                             tbody.appendChild(tr);
 
                             pendingFetches++; // Sebelum fetch
@@ -437,9 +443,27 @@
             });
         </script>
         <script>
-            document.getElementById('tanggalbahan').addEventListener('change', function () {
+            const tanggalInput = document.getElementById('tanggalbahan');
+            const tanggalTerformat = document.getElementById('tanggal-terformat');
+
+            function formatTanggalIndo(tanggalStr) {
+                const bulanIndo = [
+                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                ];
+
+                const dateObj = new Date(tanggalStr);
+                const tanggal = dateObj.getDate();
+                const bulan = bulanIndo[dateObj.getMonth()];
+                const tahun = dateObj.getFullYear();
+
+                return `${tanggal} ${bulan} ${tahun}`;
+            }
+
+            tanggalInput.addEventListener('change', function () {
                 const selectedDate = this.value;
                 if (selectedDate) {
+                    tanggalTerformat.textContent = formatTanggalIndo(selectedDate);
                     const baseUrl = "{{ url('/transaksi') }}";
                     window.location.href = `${baseUrl}?date=${selectedDate}`;
                 }
