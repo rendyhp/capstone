@@ -122,7 +122,7 @@
                                                 @if ($settings['show_sisaB'] ?? true)
                                                     <th class="text-center">Sisa</th>
                                                 @endif
-                                                @if ($settings['show_minimumB'] ?? true)
+                                                @if ($settings['show_minimumB'] ?? false)
                                                     <th class="text-center">Minimum</th>
                                                 @endif
                                                 <th class="text-center">Satuan</th>
@@ -170,7 +170,7 @@
                                                             {{ rtrim(rtrim(number_format($barang->sisa, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
-                                                    @if ($settings['show_minimumB'] ?? true)
+                                                    @if ($settings['show_minimumB'] ?? false)
                                                         <td class="text-center">
                                                             {{ rtrim(rtrim(number_format($barang->minimum, 3, ',', '.'), '0'), ',') }}
                                                         </td>

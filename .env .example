@@ -38,7 +38,7 @@ MAIL_USERNAME=rendi45hp@gmail.com
 MAIL_PASSWORD=uphnktejvwhuhiym
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=rendi45hp@gmail.com
-MAIL_FROM_NAME="Bdim Stock"
+MAIL_FROM_NAME="Bdim’s Stock"
 
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
