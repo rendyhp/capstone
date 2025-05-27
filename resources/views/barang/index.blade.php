@@ -224,8 +224,11 @@
                                                                         method="post">
                                                                         @method('PUT')
                                                                         @csrf
-                                                                        <input type="hidden" name="id" value="{{ $barang->id }}">
-                                                                        <button class="btn btn-danger btn-sm dropdown-item text-danger" type="submit"
+                                                                        <input type="hidden" name="id"
+                                                                            value="{{ $barang->id }}">
+                                                                        <button
+                                                                            class="btn btn-danger btn-sm dropdown-item text-danger"
+                                                                            type="submit"
                                                                             onclick="return confirm('Yakin akan Mendelete Data?')">
                                                                             <i class="fa fa-trash me-2"></i>Hapus
                                                                         </button>
@@ -277,6 +280,7 @@
                         <div class="mb-3">
                             <label for="image" class="form-label text-dark fw-bold">Gambar</label>
                             <input type="file" class="form-control" id="image" name="image" onchange="previewImage(this)">
+                            <small class="form-text text-danger">*Format: jpeg,jpg,png,webp | max:3 MB</small>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
@@ -428,6 +432,7 @@
                             <label for="image" class="form-label text-dark fw-bold">Gambar</label>
                             <input type="file" class="form-control @error('image') is-invalid @enderror" id="txtimage"
                                 name="image">
+                            <small class="form-text text-danger">*Format: jpeg,jpg,png,webp | max:3 MB</small>
                             @error('image') <div class="alert alert-danger">{{ $message }}</div> @enderror
                         </div>
 

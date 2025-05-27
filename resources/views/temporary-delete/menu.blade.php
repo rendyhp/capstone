@@ -17,7 +17,7 @@
 
     <div class="container">
         <div class="page-header">
-            <h2 class="pageheader-title ">Manajemen Menu</h2>
+            <h2 class="pageheader-title ">Menu Terhapus</h2>
             <div class="page-breadcrumb">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">

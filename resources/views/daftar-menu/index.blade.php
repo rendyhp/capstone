@@ -179,6 +179,7 @@
                             <div class="mb-3">
                                 <label for="image" class="form-label text-dark fw-bold">Gambar</label>
                                 <input type="file" class="form-control" id="image" name="image">
+                                <small class="form-text text-danger">*Format: jpeg,jpg,png,webp | max:3 MB</small>
                             </div>
                             <div class="mb-3">
                                 <label for="name" class="form-label text-dark fw-bold">Nama Menu</label>
@@ -224,6 +225,7 @@
                             <div class="mb-3">
                                 <label for="image" class="form-label text-dark fw-bold">Gambar</label>
                                 <input type="file" class="form-control" id="image" name="image">
+                                <small class="form-text text-danger">*Format: jpeg,jpg,png,webp | max:3 MB</small>
                             </div>
 
                             <div class="mb-3" id="previewGambar" style="display:none;">

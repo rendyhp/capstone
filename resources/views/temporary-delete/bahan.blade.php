@@ -23,12 +23,12 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Manajemen Bahan</h2>
+                    <h2 class="pageheader-title ">Bahan Terhapus</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a class="" href="/dashboard">Dashboard</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Stok Bahan - Manajemen Bahan</li>
+                                <li class="breadcrumb-item active" aria-current="page">Manajemen Bahan Terhapus</li>
                             </ol>
                         </nav>
                     </div>
@@ -95,6 +95,7 @@
                                     <tr>
                                         <th>No.</th>
                                         <th>Nama Bahan</th>
+                                        <th>Bagian</th>
                                         <th>Satuan</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -104,6 +105,7 @@
                                         <tr>
                                             <td>{{ ($bahans->currentPage() - 1) * $bahans->perPage() + $loop->iteration }}</td>
                                             <td>{{ $bahan->name }}</td>
+                                            <td>{{ $bahan->section }}</td>
                                             <td>{{ $bahan->satuan->name ?? '-' }}</td>
                                             <td>
                                                 <form action="{{ route('temporary-delete.bahan.restore', $bahan->id) }}"
