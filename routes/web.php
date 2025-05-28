@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\BahanController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
