@@ -1,5 +1,5 @@
 @extends('layouts.main')
-@section('StokBarang', 'active')
+@section('StokBahan', 'active')
 @section('container')
 @section('title', "Satuan Bahan | BdiM’s Stock")
 
