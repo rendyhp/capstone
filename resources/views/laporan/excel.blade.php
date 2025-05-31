@@ -35,8 +35,6 @@
             padding-left: 20px;
         }
 
-        /* Atur lebar kolom */
-        /* Kolom pertama (A) */
         th:first-child,
         td:first-child {
             width: 204px;
@@ -44,7 +42,6 @@
             min-width: 204px;
         }
 
-        /* Kolom kedua sampai terakhir (B - Z) */
         th:not(:first-child),
         td:not(:first-child) {
             width: 100px;
@@ -131,14 +128,11 @@
 
                     </tr>
                 @endforeach
-
-
-
+                
                 {{-- Baris kosong --}}
                 <tr class="no-border">
                     <td colspan="{{ $daysInMonth + 1 }}">&nbsp;</td>
                 </tr>
-
 
                 {{-- Baris Akhir dan Terbuang --}}
                 @php

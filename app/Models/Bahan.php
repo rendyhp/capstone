@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Bahan extends Model
 {
@@ -25,7 +24,6 @@ class Bahan extends Model
         'image',
     ];
 
-    // Relasi ke tabel satuan
     public function satuan()
     {
         return $this->belongsTo(SatuanBahan::class, 'satuan_id');

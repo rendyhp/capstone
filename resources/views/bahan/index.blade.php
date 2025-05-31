@@ -630,7 +630,7 @@
                     .then(data => {
                         if (data.success) {
                             alert('Data berhasil disimpan!');
-                            location.reload(); // refresh page supaya update data muncul
+                            location.reload();
                         } else if (data.error2) {
                             alert('Hanya bisa edit Bahan Awal pada Tanggal 01')
                         } else {

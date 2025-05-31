@@ -4,15 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bahan;
-use App\Models\Barang;
 use App\Models\KomposisiMenu;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-
-use App\Helpers\LogActivity;
 
 class MenuController extends Controller
 {
@@ -99,11 +95,6 @@ class MenuController extends Controller
             ->with('success', 'Data "' . $menu->name . '" berhasil ditambahkan');
     }
 
-
-    public function show($slug)
-    {
-    }
-
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -165,7 +156,7 @@ class MenuController extends Controller
         $menu = Menu::findOrFail($id);
 
         $menuName = $menu->name;
-        $menu->deleted_at = now(); // soft delete manual
+        $menu->deleted_at = now();
         $menu->save();
 
         return redirect()->back()->with('success', 'Menu "' . $menuName . '" Berhasil Dihapus');

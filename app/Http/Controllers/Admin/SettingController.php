@@ -21,8 +21,8 @@ class SettingController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $profile = $user->profile; // relasi: user hasOne UserProfile
-        $settings = $user->settings; // relasi: user hasOne UserSetting
+        $profile = $user->profile;
+        $settings = $user->settings;
 
         return view('setting.index', compact('user', 'profile', 'settings'));
     }
@@ -160,8 +160,6 @@ class SettingController extends Controller
         return back()->with('success', 'Token berhasil diperbarui dan disinkronkan ke semua pengguna.');
     }
 
-
-
     public function updateFilterSetting(Request $request)
     {
         $user = Auth::user();
@@ -183,7 +181,4 @@ class SettingController extends Controller
 
         return redirect()->back()->with('status', 'Pengaturan diperbarui.');
     }
-
-
-
 }

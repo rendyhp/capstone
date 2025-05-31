@@ -7,23 +7,16 @@ use App\Models\Bahan;
 use App\Models\BahanAkhir;
 use App\Models\BahanAwal;
 use App\Models\BahanMasuk;
-use App\Models\Barang;
-use App\Models\HistoryInput;
 use App\Models\SatuanBahan;
-use App\Models\User;
 use App\Services\StockAlertService;
 use App\Services\StockDataService;
 use Carbon\Carbon;
 use Hashids\Hashids;
-use Http;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
-
-use App\Helpers\LogActivity;
 
 class BahanController extends Controller
 {
@@ -40,7 +33,7 @@ class BahanController extends Controller
         $paginationBar = $settings['pagination_bahanBar'] ?? 20;
         $paginationKitchen = $settings['pagination_bahanKitchen'] ?? 20;
 
-        // Validasi pagination supaya aman
+        // Validasi pagination
         $allowedPagination = [5, 20, 50, 100];
         if (!in_array($paginationBar, $allowedPagination)) {
             $paginationBar = 20;
@@ -117,7 +110,7 @@ class BahanController extends Controller
 
 
         // Data Kitchen
-        // Validasi pagination supaya aman
+        // Validasi pagination
         $allowedPagination = [5, 20, 50, 100];
         if (!in_array($paginationKitchen, $allowedPagination)) {
             $paginationKitchen = 20;
@@ -212,12 +205,10 @@ class BahanController extends Controller
         $dateParam = $request->input('date');
 
         if ($dateParam) {
-            // Jika ada, parsing tanggalnya
             $date = Carbon::parse($dateParam);
             $month = $date->month;
             $year = $date->year;
         } else {
-            // Default sekarang
             $month = $request->input('month') ?? now()->month;
             $year = $request->input('year') ?? now()->year;
         }
@@ -252,7 +243,6 @@ class BahanController extends Controller
             $masuk = $masukData[$dateString] ?? 0;
             $akhir = $akhirData[$dateString] ?? null;
 
-            // Hitung terpakai dari transaksi_details join transaksis di tanggal ini
             $terpakai = DB::table('transaksi_details')
                 ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
                 ->where('transaksi_details.bahan_id', $bahanId)
@@ -412,7 +402,6 @@ class BahanController extends Controller
                 ];
             });
 
-        // Gabungkan dan urutkan semua transaksi
         $merged = $bahanMasuks->sortByDesc('created_at')->values();
 
         // Paginate secara manual
@@ -443,7 +432,6 @@ class BahanController extends Controller
         $orderBy = $request->input('orderBy', 'name');
         $direction = $request->input('direction', 'asc');
 
-        // Ambil settings dari user
         // Ambil settings dari user
         $settings = json_decode($user->setting->settings ?? '[]', true);
 
@@ -570,8 +558,6 @@ class BahanController extends Controller
         $Satuan->name = $request->input('name');
         $Satuan->save();
 
-        // LogActivity::addToLog('Create Satuan "' . $Satuan->name . '"');
-
         return redirect('/bahan/satuan?page=' . $lastPage . '&order=id&sort=asc')
             ->with('success', 'Satuan "' . $Satuan->name . '" Berhasil Ditambahkan');
     }
@@ -653,14 +639,6 @@ class BahanController extends Controller
 
         return redirect('/bahan/data-bahan?page=' . $lastPage . '&orderBy=id&sort=asc')
             ->with('success', 'Data "' . $Bahan->name . '" Berhasil Ditambahkan');
-    }
-
-
-
-
-    public function show($slug)
-    {
-
     }
 
     public function updateDataBahan(Request $request, Bahan $bahans)
