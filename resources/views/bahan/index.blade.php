@@ -262,6 +262,10 @@
                 <div class="card custom-card">
                     <div class="card-header">
                         <div class="card-title fs-5 fw-bold mt-2"> Tabel Kitchen </div>
+                        <div>
+                            <span id="tanggal-terformat"
+                                class="badge bg-primary text-white ms-3">{{ \Carbon\Carbon::parse($date)->translatedFormat('d F Y') }}</span>
+                        </div>
                     </div>
 
                     <div class="card-body">

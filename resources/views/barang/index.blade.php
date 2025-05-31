@@ -50,7 +50,7 @@
         <div>
             <a href="/barang/manajemen-barang"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/manajemen-barang') ? 'active' : '' }}">
-                Master
+                Manajemen Barang
             </a>
 
             <a href="/barang/masuk-keluar"
