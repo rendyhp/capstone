@@ -34,7 +34,7 @@ class LaporanController extends Controller
             abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
-        $dateParam = $request->input('date'); // '2025-05' format
+        $dateParam = $request->input('date'); // format '2025-05'
 
         $allHistories = [];
         $allHistories2 = [];
@@ -193,7 +193,6 @@ class LaporanController extends Controller
                 }
 
             } catch (\Exception $e) {
-                // Jika format tidak valid, abaikan saja dan jangan tampilkan data
             }
         }
 
@@ -243,7 +242,6 @@ class LaporanController extends Controller
         $phpWord = new PhpWord();
         $section = $phpWord->addSection();
 
-        // Judul
         $section->addText('Laporan Stok Barang', ['bold' => true, 'size' => 14], ['alignment' => 'center']);
 
         // Tambahkan tabel
@@ -256,7 +254,7 @@ class LaporanController extends Controller
         // Header tabel
         $cellStyle = ['valign' => 'center'];
 
-        $headerCellStyle = ['valign' => 'center']; // contoh bg abu-abu header
+        $headerCellStyle = ['valign' => 'center'];
         $headerTextStyle = ['bold' => true, 'alignment' => Jc::CENTER];
 
         $textCentered = ['alignment' => Jc::CENTER];
@@ -327,7 +325,7 @@ class LaporanController extends Controller
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        return $query; // return query builder
+        return $query;
     }
 
     private function buildLaporanBarangQuery(Request $request)
@@ -428,7 +426,6 @@ class LaporanController extends Controller
                 ->groupBy(DB::raw('DATE(date)'))
                 ->pluck('total', 'tanggal');
 
-
             $history = [];
             $prevAkhir = null;
 
@@ -470,7 +467,4 @@ class LaporanController extends Controller
 
         return $allHistories;
     }
-
-
-
 }

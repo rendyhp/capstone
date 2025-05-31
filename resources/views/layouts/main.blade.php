@@ -102,9 +102,9 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
                             <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
                                 <a href="/protected/temporary-delete" class="nav-link @yield('TemporaryDelete')"><i
-                                        class="fa fa-file me-2"></i>Temporary</a>
+                                        class="fa fa-trash me-2"></i>Temporary</a>
                                 <a href="/protected/user-data" class="nav-link @yield('UserData')"><i
-                                        class="fa fa-file me-2"></i>Data User</a>
+                                        class="fa fa-users me-2"></i>Data User</a>
                             </div>
                         </div>
                     @endif
@@ -146,9 +146,9 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">Lainnya</a>
                             <div class="dropdown-menu bg-transparent border-0" id="lainnyaDropdownMenu">
                                 <a href="/protected/temporary-delete" class="nav-link @yield('TemporaryDelete')"><i
-                                        class="fa fa-file me-2"></i>Temporary</a>
+                                        class="fa fa-trash me-2"></i>Temporary</a>
                                 <a href="/protected/user-data" class="nav-link @yield('UserData')"><i
-                                        class="fa fa-file me-2"></i>Data User</a>
+                                        class="fa fa-users me-2"></i>Data User</a>
                             </div>
                         </div>
                     @endif

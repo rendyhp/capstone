@@ -608,40 +608,6 @@
                 toggleInput("txtminimum", "toggleMinimum2");
             });
         </script>
-
-        <script>
-            document.querySelectorAll('.btn_deletebarang').forEach(button => {
-                button.addEventListener('click', function () {
-                    if (!confirm('Yakin akan menghapus data barang ini?')) return;
-
-                    let id = this.dataset.id;
-                    let token = document.querySelector('input[name="_token"]').value;
-
-                    fetch('/barang/delete', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': token,
-                        },
-                        body: JSON.stringify({ id: id })
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Data barang berhasil dihapus!');
-                                const row = this.closest('tr');
-                                if (row) row.remove();
-                            } else {
-                                alert('Gagal menghapus data barang.');
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            alert('Terjadi kesalahan saat menghapus data.');
-                        });
-                });
-            });
-        </script>
     @endpush
 
 @endsection
