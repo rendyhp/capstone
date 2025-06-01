@@ -152,14 +152,14 @@
         <div class="container modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Tambah Stok Barang</h1>
+                    <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Tambah Satuan Barang</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form method="Post" action='/barang/satuan/store'>
                         @csrf
                         <div class="mb-3">
-                            <label for="name" class="form-label text-dark fw-bold">Nama Satuan</label>
+                            <label for="name" class="form-label text-dark fw-bold">Nama Satuan Barang</label>
                             <input type="text" required autocomplete="off" class="form-control" id="name" name="name"
                                 placeholder="Ketik nama satuan...">
                         </div>
@@ -177,7 +177,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Form Edit Data Barang</h1>
+                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Edit Satuan Barang</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -186,7 +186,7 @@
                         @csrf
                         <div class="mb-3">
                             <input hidden type="text" name="id" id="txtid">
-                            <label for="name" class="form-label text-dark fw-bold">Nama Barang</label>
+                            <label for="name" class="form-label text-dark fw-bold">Nama Satuan Barang</label>
                             <input type="text" required autocomplete="off"
                                 class="form-control @error('name') is-invalid @enderror" id="txtname" name="name">
                             @error('name') <div class="alert alert-danger">{{ $message }}</div> @enderror
