@@ -59,7 +59,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Tabel menu </div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Menu </div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -67,7 +67,7 @@
                                 <div class="mb-3">
                                     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
                                         data-bs-target="#barangModal">
-                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah menu
+                                        <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Menu
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
                                         <div class="d-flex gap-2">
