@@ -50,7 +50,7 @@
         <div>
             <a href="/barang/manajemen-barang"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'barang/manajemen-barang') ? 'active' : '' }}">
-                Master
+                Manajemen Barang
             </a>
 
             <a href="/barang/masuk-keluar"
@@ -419,7 +419,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Form Edit Data Barang</h1>
+                    <h1 class="modal-title fs-5 text-primary fw-bold" id="exampleModalLabel">Edit Data Barang</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -606,40 +606,6 @@
             });
             document.getElementById("toggleMinimum2").addEventListener("click", function () {
                 toggleInput("txtminimum", "toggleMinimum2");
-            });
-        </script>
-
-        <script>
-            document.querySelectorAll('.btn_deletebarang').forEach(button => {
-                button.addEventListener('click', function () {
-                    if (!confirm('Yakin akan menghapus data barang ini?')) return;
-
-                    let id = this.dataset.id;
-                    let token = document.querySelector('input[name="_token"]').value;
-
-                    fetch('/barang/delete', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': token,
-                        },
-                        body: JSON.stringify({ id: id })
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Data barang berhasil dihapus!');
-                                const row = this.closest('tr');
-                                if (row) row.remove();
-                            } else {
-                                alert('Gagal menghapus data barang.');
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            alert('Terjadi kesalahan saat menghapus data.');
-                        });
-                });
             });
         </script>
     @endpush

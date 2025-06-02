@@ -61,7 +61,6 @@ class StockAlertService
             }
         }
 
-
         // Ambil semua user yang perlu dikirimi WA
         $users = User::whereIn('role', ['OWNER', 'MANAJER'])
             ->whereNotNull('wa_api_token')
@@ -100,5 +99,4 @@ class StockAlertService
             \Log::info("Berhasil kirim WA ke $phone");
         }
     }
-
 }

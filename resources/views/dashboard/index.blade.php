@@ -22,13 +22,10 @@
 
             .table-transaksi {
                 font-size: 12px;
-                /* Ganti dengan ukuran teks yang Anda inginkan */
             }
 
-            /* Tabel Ketersediaan Stok Barang */
             .table-ketersediaan {
                 font-size: 12px;
-                /* Ganti dengan ukuran teks yang Anda inginkan */
             }
 
             .table {
@@ -39,14 +36,12 @@
 
             .rounded-card {
                 width: 100%;
-                /* Ganti dengan persentase yang diinginkan */
                 height: auto;
                 border-radius: 50px;
             }
 
             .card {
                 max-width: 100%;
-                /* Ganti dengan persentase atau nilai maksimum yang diinginkan */
             }
         </style>
     @endpush

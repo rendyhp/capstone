@@ -57,8 +57,4 @@ class ReportController extends Controller
 
         return back()->with('success', 'Laporan berhasil dikirim ke admin.');
     }
-
-
-
-
 }

@@ -35,16 +35,14 @@ Auth::routes();
 Route::redirect('/my', '/my/profile');
 Route::redirect('/laporan', '/laporan/bahan');
 Route::redirect('/protected/temporary-delete', '/protected/temporary-delete/bahan');
+
 // Reset password
 // Tampilkan form input email untuk reset password
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-
 // Kirim email reset password
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-
 // Tampilkan form reset password dengan token
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-
 // Proses simpan password baru
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 

@@ -8,18 +8,13 @@ use App\Models\BarangAwal;
 use App\Models\BarangKeluar;
 use App\Models\BarangMasuk;
 use App\Models\SatuanBarang;
-use App\Models\User;
 use App\Services\StockAlertService;
 use App\Services\StockDataService;
-use Http;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Redirect;
-
-use App\Helpers\LogActivity;
 use Hashids\Hashids;
 
 class BarangController extends Controller
@@ -36,11 +31,11 @@ class BarangController extends Controller
         // Ambil settings dari user
         $settings = json_decode($user->setting->settings ?? '[]', true);
 
-        // Default jika setting tidak ada
+        // Default jika setting kosong
         $showImage = $settings['show_image_barang'] ?? false;
         $pagination = $settings['pagination_barang'] ?? 20;
 
-        // Validasi pagination supaya aman
+        // Validasi pagination
         $allowedPagination = [20, 50, 100];
         if (!in_array($pagination, $allowedPagination)) {
             $pagination = 20;
@@ -49,7 +44,6 @@ class BarangController extends Controller
         $orderBy = in_array($request->input('orderBy'), $allowedSortColumns) ? $request->input('orderBy') : 'name';
         $sort = in_array($request->input('sort'), $allowedSortDirections) ? $request->input('sort') : 'asc';
 
-        // Barang dan satuan
         $query = Barang::with('satuanBarang')
             ->whereNull('deleted_at')
             ->orderBy($orderBy, $sort);
@@ -153,7 +147,7 @@ class BarangController extends Controller
                 ];
             })
             ->filter(function ($item) {
-                return $item['name'] !== '-'; // hilangkan barang yang tidak valid
+                return $item['name'] !== '-';
             })
             ->values();
 
@@ -176,7 +170,7 @@ class BarangController extends Controller
                 ];
             })
             ->filter(function ($item) {
-                return $item['name'] !== '-'; // hilangkan barang yang tidak valid
+                return $item['name'] !== '-';
             })
             ->values();
 

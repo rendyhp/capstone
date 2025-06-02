@@ -159,7 +159,7 @@ class TransaksiController extends Controller
                     continue;
                 }
             } else {
-                // mode tambah
+                // Mode tambah
                 $jumlahFinal = $jumlahBaru;
             }
 

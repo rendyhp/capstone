@@ -4,31 +4,21 @@
 @section('title', 'Manajemen Bahan | Bdim’s Stock')
 
     @php
-        use Carbon\Carbon;
         $currentUrl = request()->path();
-
-
-
-
         $selectedMonth = request('month', now()->format('m'));
         $selectedYear = request('year', now()->format('Y'));
     @endphp
 
     @push('addStyle')
         <style>
-            /* Atur lebar kolom tanggal di tabel */
             table.table-bordered tbody tr td,
             table.table-bordered thead tr th {
-                /* Lebar minimum dan maksimum di set supaya stabil */
                 width: 12vh;
                 max-width: 12vh;
                 min-width: 12vh;
-                /* Optional agar teks rata tengah */
                 text-align: center;
-                /* Agar teks td tanggal rata tengah */
             }
 
-            /* Tapi biarkan kolom 'Jenis' lebar otomatis */
             table.table-bordered tbody tr td:first-child,
             table.table-bordered thead tr th:first-child {
                 width: auto;
@@ -37,7 +27,6 @@
                 text-align: left;
             }
 
-            /* Kolom pertama (Jenis) */
             table.table-bordered tbody tr td:first-child,
             table.table-bordered thead tr th:first-child {
                 width: 10vh;
