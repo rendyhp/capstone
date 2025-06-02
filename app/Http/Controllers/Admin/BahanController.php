@@ -304,11 +304,11 @@ class BahanController extends Controller
             'jumlah' => $request->jumlah,
         ]);
 
-        $stockService = new StockDataService();
-        $bahan = $stockService->getSingleBahan($request->bahan_id, $request->date);
+        // $stockService = new StockDataService();
+        // $bahan = $stockService->getSingleBahan($request->bahan_id, $request->date);
 
-        $alertService = new StockAlertService();
-        $alertService->checkAndNotify(null, $bahan);
+        // $alertService = new StockAlertService();
+        // $alertService->checkAndNotify(null, $bahan);
 
         return response()->json(['success' => true]);
     }

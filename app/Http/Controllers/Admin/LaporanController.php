@@ -104,9 +104,7 @@ class LaporanController extends Controller
                             ->sum('transaksi_details.jumlah');
 
                         $akhir = $akhirData[$dateString] ?? null;
-                        if ($akhir !== null) {
-                            $prevAkhir = $akhir;
-                        }
+                        
                         $awal = $stokAwalData[$dateString] ?? $prevAkhir;
 
                         $jumlah_akhir = (!is_null($awal) && !is_null($masuk)) ? ($awal + $masuk - $terpakai) : null;

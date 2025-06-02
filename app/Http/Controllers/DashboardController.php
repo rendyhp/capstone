@@ -83,9 +83,6 @@ class DashboardController extends Controller
                     ['name', 'asc'],
                 ]);
 
-        // $stockAlert = new StockAlertService();
-        // $stockAlert->checkAndNotify($barang_data, $bahan_data);
-
         $bahans_below_minimum = $bahan_data->filter(function ($bahan) {
             return $bahan->jumlah_akhir < $bahan->minimum;
         });
