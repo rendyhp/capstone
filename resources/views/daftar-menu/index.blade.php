@@ -87,6 +87,7 @@
                                                 <th>No.</th>
                                                 <th style="width: 110px">Gambar</th>
                                                 <th>Nama Menu</th>
+                                                <th>Deskripsi</th>
                                                 <th>Bahan</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -104,6 +105,7 @@
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                         <td>{{ $menu->name }}</td>
+                                                        <td style="max-width: 30vh;">{{ $menu->description }}</td>
 
                                                         <td>
                                                             <ul>

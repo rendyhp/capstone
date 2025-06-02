@@ -178,7 +178,7 @@
                                                     </td>
 
                                                     @if ($settings['show_keterangan'] ?? false)
-                                                        <td>
+                                                        <td style="max-width: 30vh;">
                                                             {{ $bahan->description }}
                                                         </td>
                                                     @endif
@@ -364,7 +364,7 @@
                                                         </a>
                                                     </td>
                                                     @if ($settings['show_keterangan'] ?? false)
-                                                        <td>
+                                                        <td style="max-width: 30vh;">
                                                             {{ $bahan->description }}
                                                         </td>
                                                     @endif

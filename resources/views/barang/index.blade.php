@@ -106,7 +106,7 @@
                                                     Gambar</th>
                                                 <th>Nama Barang</th>
                                                 @if ($settings['show_keteranganB'] ?? true)
-                                                    <th>Deskripsi Barang</th>
+                                                    <th style="max-width: 30vh;">Deskripsi Barang</th>
                                                 @endif
                                                 @if ($settings['show_awalB'] ?? true)
                                                     <th class="text-center">Awal</th>
