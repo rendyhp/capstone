@@ -403,6 +403,7 @@ $(document).ready(function () {
                     dropdownParent: $("#editBarangModal"),
                 });
         });
+        refreshSatuan($("#editBahanContainer"));
 
         $("#editBarangModal").modal("show");
     });
