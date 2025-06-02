@@ -138,7 +138,7 @@
                                                         <td>
                                                             <form action="{{ route('bahan.deleteBahanMKbyID') }}" method="post"
                                                                 class="d-inline">
-                                                                @method('PUT')
+                                                                @method('DELETE')
                                                                 @csrf
                                                                 <input type="hidden" name="id" value="{{ $trx['id'] }}">
                                                                 <button class="btn btn-danger btn-sm" type="submit"

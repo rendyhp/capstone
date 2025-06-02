@@ -10,6 +10,7 @@ use App\Models\BarangMasuk;
 use App\Models\SatuanBarang;
 use App\Services\StockAlertService;
 use App\Services\StockDataService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -174,7 +175,12 @@ class BarangController extends Controller
             })
             ->values();
 
-        $merged = $barangMasuks->merge($barangKeluars)->merge($barangAwals)->sortByDesc('created_at')->values();
+        $merged = collect()
+            ->concat($barangMasuks)
+            ->concat($barangKeluars)
+            ->concat($barangAwals)
+            ->sortByDesc('created_at')
+            ->values();
 
         if ($search = $request->input('search')) {
             $merged = $merged->filter(function ($item) use ($search) {
@@ -357,12 +363,22 @@ class BarangController extends Controller
     public function storeM(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required',
+            'id' => 'required|exists:barangs,id',
             'date' => 'required|date',
-            'keterangan' => 'nullable',
-            'jumlah' => 'required|numeric|min:0',
-
+            'keterangan' => 'nullable|string',
+            'jumlah' => 'required|numeric|min:1',
         ]);
+
+        // Cek duplikat stok masuk Barang
+        $exists = BarangMasuk::where('barang_id', $validated['id'])
+            ->where('date', $validated['date'])
+            ->where('jumlah', $validated['jumlah'])
+            ->where('keterangan', $validated['keterangan'])
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'Data stok masuk sudah pernah disubmit sebelumnya.');
+        }
 
         BarangMasuk::create([
             'barang_id' => $validated['id'],
@@ -379,10 +395,21 @@ class BarangController extends Controller
     {
         $validated = $request->validate([
             'id' => 'required|exists:barangs,id',
-            'keterangan' => 'nullable',
-            'jumlah' => 'required|numeric|min:0',
+            'keterangan' => 'nullable|string',
+            'jumlah' => 'required|numeric|min:1',
             'date' => 'required|date',
         ]);
+
+        // Cek duplikat stok keluar Barang
+        $exists = BarangKeluar::where('barang_id', $validated['id'])
+            ->where('date', $validated['date'])
+            ->where('jumlah', $validated['jumlah'])
+            ->where('keterangan', $validated['keterangan'])
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'Data stok keluar sudah pernah disubmit sebelumnya.');
+        }
 
         BarangKeluar::create([
             'barang_id' => $validated['id'],
@@ -392,24 +419,22 @@ class BarangController extends Controller
             'date' => $validated['date'],
         ]);
 
+        // Update dan cek alert stok
         $stockService = new StockDataService();
         $barang = $stockService->getSingleBarang($validated['id']);
-
-        // Jika $barang adalah collection, ambil item pertama saja:
         if ($barang instanceof \Illuminate\Support\Collection) {
             $barang = $barang->first();
         }
-
         $barangData = collect();
         if ($barang) {
             $barangData->push($barang);
         }
-
         $alertService = new StockAlertService();
         $alertService->checkAndNotify($barangData, null);
 
         return redirect()->back()->with('success', 'Stok berhasil dikurangi.');
     }
+
 
 
     public function storeDataBarang(Request $request)
@@ -424,6 +449,10 @@ class BarangController extends Controller
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
 
+        $existing = Barang::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
+        if ($existing) {
+            return redirect()->back()->with('error', 'Barang "' . $request->input('name') . '" sudah ada');
+        }
 
         $Barang = new Barang;
         $Barang->user_id = Auth::id();
@@ -475,14 +504,20 @@ class BarangController extends Controller
         }
         $user = Auth::user()->id;
 
-        $Satuan = new SatuanBarang();
-        $Satuan->user_id = $user;
-        $Satuan->name = $request->input('name');
-        $Satuan->save();
+        $existing = SatuanBarang::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
 
         $dataPerPage = 20;
         $data = DB::table('satuan_barangs')->paginate($dataPerPage);
         $lastPage = $data->lastPage();
+
+        if ($existing) {
+            return redirect()->back()->with('error', 'Satuan "' . $request->input('name') . '" sudah ada');
+        }
+
+        $Satuan = new SatuanBarang();
+        $Satuan->user_id = $user;
+        $Satuan->name = $request->input('name');
+        $Satuan->save();
 
         return redirect('/barang/satuan?page=' . $lastPage)->with('success', 'Satuan "' . $Satuan->name . '" Berhasil Ditambahkan');
 
@@ -579,21 +614,24 @@ class BarangController extends Controller
 
     public function deleteBarangMasukByID(Request $request)
     {
+        $id = $request->id;
+        $barangs = BarangMasuk::findOrFail($id);
 
+        $formattedDate = Carbon::parse($barangs->date)->translatedFormat('j F Y');
+        $barangs->delete();
 
-        $barangMasuk = BarangMasuk::findOrFail($request->id);
-        $barangMasuk->deleted_at = now();
-        $barangMasuk->save();
-
-        return redirect()->back()->with('success', 'Data "' . $barangMasuk->name . '" Berhasil Diubah');
+        return redirect()->back()->with('success', 'Data barang masuk tanggal "' . $formattedDate . '" Berhasil Dihapus');
     }
+
     public function deleteBarangKeluarByID(Request $request)
     {
-        $barangKeluar = BarangKeluar::findOrFail($request->id);
-        $barangKeluar->deleted_at = now();
-        $barangKeluar->save();
+        $id = $request->id;
+        $barangs = BarangKeluar::findOrFail($id);
 
-        return redirect()->back()->with('success', 'Data "' . $barangKeluar->name . '" Berhasil Diubah');
+        $formattedDate = Carbon::parse($barangs->date)->translatedFormat('j F Y');
+        $barangs->delete();
+
+        return redirect()->back()->with('success', 'Data barang keluar tanggal "' . $formattedDate . '" berhasil dihapus.');
     }
 
     public function deleteSatuan(Request $request)

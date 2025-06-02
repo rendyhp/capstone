@@ -153,7 +153,7 @@
                                                             @if ($trx['tipe'] === 'MASUK')
                                                                 <form action="{{ route('barang.deleteBarangMKbyIDmasuk') }}"
                                                                     method="post" class="d-inline">
-                                                                    @method('PUT')
+                                                                    @method('DELETE')
                                                                     @csrf
                                                                     <input type="hidden" name="id" value="{{ $trx['id'] }}">
                                                                     <button class="btn btn-danger btn-sm" type="submit"
@@ -165,7 +165,7 @@
                                                             @if ($trx['tipe'] === 'KELUAR')
                                                                 <form action="{{ route('barang.deleteBarangMKbyIDkeluar') }}"
                                                                     method="post" class="d-inline">
-                                                                    @method('PUT')
+                                                                    @method('DELETE')
                                                                     @csrf
                                                                     <input type="hidden" name="id" value="{{ $trx['id'] }}">
                                                                     <button class="btn btn-danger btn-sm" type="submit"

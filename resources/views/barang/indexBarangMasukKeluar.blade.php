@@ -80,8 +80,6 @@
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                             <form action="/barang/masuk-keluar" method="get" class="form-inline d-flex">
-                                                <input type="hidden" name="date"
-                                                    value="{{ request('date', now()->toDateString()) }}">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
                                                     name="search" placeholder="Cari barang masuk/keluar..." value="{{ request('search') }}">
                                             </form>

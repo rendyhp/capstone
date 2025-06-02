@@ -51,6 +51,12 @@ class MenuController extends Controller
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
 
+        // Cek jika Menu sudah ada
+        $existing = Menu::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
+        if ($existing) {
+            return redirect()->back()->with('error', 'Menu "' . $request->input('name') . '" sudah ada');
+        }
+
         // Cek jika tidak ada bahan
         if (empty($request->bahan)) {
             return redirect()->back()->with('warning', 'Bahan tidak boleh kosong!');

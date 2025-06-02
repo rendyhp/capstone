@@ -70,8 +70,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/barang/manajemen-barang/storeK', [BarangController::class, 'storeK'])->name('barang.storeK');
     Route::get('/barang/masuk-keluar', [BarangController::class, 'indexMasukKeluar'])->name('barang.indexMasukKeluar');
     Route::get('/barang/masuk-keluar/{encryptedId}', [BarangController::class, 'indexBarangMKbyID'])->name('barang.indexBarangMKbyID');
-    Route::put('/barang/masuk-keluar/deleteM', [BarangController::class, 'deleteBarangMasukbyID'])->name('barang.deleteBarangMKbyIDmasuk');
-    Route::put('/barang/masuk-keluar/deleteK', [BarangController::class, 'deleteBarangKeluarbyID'])->name('barang.deleteBarangMKbyIDkeluar');
+    Route::delete('/barang/masuk-keluar/deleteM', [BarangController::class, 'deleteBarangMasukbyID'])->name('barang.deleteBarangMKbyIDmasuk');
+    Route::delete('/barang/masuk-keluar/deleteK', [BarangController::class, 'deleteBarangKeluarbyID'])->name('barang.deleteBarangMKbyIDkeluar');
     Route::post('/barang/masuk-keluar/store', [BarangController::class, 'storeMasukKeluar'])->name('barang.storeMasukKeluar');
     Route::put('/barang/masuk-keluar/edit', [BarangController::class, 'updateMasukKeluar'])->name('barang.updateMasukKeluar');
     Route::post('/barang/data-barang/store', [BarangController::class, 'storeDataBarang'])->name('barang.storeDataBarang');
@@ -104,7 +104,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/bahan/satuan/delete', [BahanController::class, 'deleteSatuan'])->name('bahan.deleteSatuan');
 
     Route::get('/bahan/masuk-keluar/{encryptedId}', [BahanController::class, 'indexBahanMKbyID'])->name('bahan.indexBahanMKbyID');
-    Route::put('/bahan/masuk-keluar/delete', [BahanController::class, 'deleteBahanMKbyID'])->name('bahan.deleteBahanMKbyID');
+    Route::delete('/bahan/masuk-keluar/delete', [BahanController::class, 'deleteBahanMKbyID'])->name('bahan.deleteBahanMKbyID');
     Route::post('/bahan/manajemen-bahan/storeM', [BahanController::class, 'storeM'])->name('bahan.storeM');
 
     // Menu & transaksi

@@ -67,7 +67,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Barang </div>
+                        <div class="card-title fs-5 fw-bold mt-2"> Tabel Satuan Barang</div>
                     </div>
 
                     <div class="card-body">

@@ -91,7 +91,8 @@
                                             </a>
                                             <form action="/barang/manajemen-barang" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search" placeholder="Cari barang..." value="{{ request('search') }}">
+                                                    name="search" placeholder="Cari barang..."
+                                                    value="{{ request('search') }}">
                                             </form>
                                         </div>
 
@@ -606,6 +607,20 @@
             });
             document.getElementById("toggleMinimum2").addEventListener("click", function () {
                 toggleInput("txtminimum", "toggleMinimum2");
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const form = document.querySelector('#barangModalM form');
+                const submitButton = form.querySelector('button[type="submit"]');
+
+                form.addEventListener('submit', function (e) {
+                    // Disable tombol submit supaya tidak bisa diklik lagi
+                    submitButton.disabled = true;
+                    // Optional: ubah teks tombol jadi "Mengirim..." biar user tahu sedang proses
+                    submitButton.textContent = 'Mengirim...';
+                });
             });
         </script>
     @endpush

@@ -441,10 +441,10 @@ class BahanController extends Controller
 
         $query1 = Bahan::with('satuan')
             ->whereNull('deleted_at')->where('section', 'BAR');
-        
+
         $query2 = Bahan::with('satuan')
             ->whereNull('deleted_at')->where('section', 'KITCHEN');
-        
+
 
         $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
@@ -515,9 +515,20 @@ class BahanController extends Controller
         $validated = $request->validate([
             'id' => 'required',
             'date' => 'required|date',
-            'keterangan' => 'nullable',
-            'jumlah' => 'required|numeric|min:0',
+            'keterangan' => 'nullable|string',
+            'jumlah' => 'required|numeric|min:1',
         ]);
+
+        // Cek duplikat stok masuk
+        $exists = BahanMasuk::where('bahan_id', $validated['id'])
+            ->where('date', $validated['date'])
+            ->where('jumlah', $validated['jumlah'])
+            ->where('keterangan', $validated['keterangan'])
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'Data stok masuk sudah pernah disubmit sebelumnya.');
+        }
 
         BahanMasuk::create([
             'bahan_id' => $validated['id'],
@@ -529,6 +540,7 @@ class BahanController extends Controller
 
         return redirect()->back()->with('success', 'Stok berhasil ditambahkan.');
     }
+
 
     public function storeSatuan(Request $request)
     {
@@ -542,14 +554,14 @@ class BahanController extends Controller
 
         $user = Auth::user()->id;
 
-        $existing = SatuanBahan::whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
+        $existing = SatuanBahan::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
 
         $dataPerPage = 20;
         $data = DB::table('satuan_bahans')->paginate($dataPerPage);
         $lastPage = $data->lastPage();
 
         if ($existing) {
-            return redirect('/bahan/satuan?page=' . $lastPage . '&order=id&sort=asc')
+            return redirect()->back()
                 ->with('error', 'Satuan "' . $request->input('name') . '" sudah ada');
         }
 
@@ -602,15 +614,9 @@ class BahanController extends Controller
         $paginationBar2 = $settings['pagination_bahanBar2'] ?? 20;
         $paginationKitchen2 = $settings['pagination_bahanKitchen2'] ?? 20;
 
-        // Cek apakah nama bahan (case insensitive) sudah ada
         $existing = Bahan::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
         if ($existing) {
-            $dataPerPage = 20;
-            $data = DB::table('bahans')->paginate($dataPerPage);
-            $lastPage = $data->lastPage();
-
-            return redirect('/bahan/data-bahan?page=' . $lastPage . '&orderBy=id&sort=asc')
-                ->with('error', 'Bahan "' . $request->input('name') . '" sudah ada.');
+            return redirect()->back()->with('error', 'Bahan "' . $request->input('name') . '" sudah ada');
         }
 
         $user = Auth::user()->id;
@@ -704,10 +710,10 @@ class BahanController extends Controller
         $id = $request->id;
         $barang = BahanMasuk::findOrFail($id);
 
-        $barang->deleted_at = now();
-        $barang->save();
-
-        return redirect()->back()->with('success', 'Data "' . $barang->bahan->name . '" Berhasil Dihapus');
+        $formattedDate = Carbon::parse($barang->date)->translatedFormat('j F Y');
+        $barang->delete();
+        
+        return redirect()->back()->with('success', 'Data bahan masuk tanggal "' . $formattedDate . '" Berhasil Dihapus');
     }
 
     public function deleteDataBahan(Request $request)
