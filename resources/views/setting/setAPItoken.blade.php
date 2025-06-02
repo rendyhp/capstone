@@ -46,16 +46,16 @@
                 @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Token</h5>
+                        <h5 class="modal-title fs-5 text-primary fw-bold">Edit Token</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-2">
-                            <label>Nama perangkat tersambung</label>
+                            <label class="form-label text-dark fw-bold">Nama perangkat tersambung</label>
                             <input name="name" class="form-control" value="{{ $setApiToken->name ?? '-' }}">
                         </div>
                         <div class="mb-2">
-                            <label>No. HP (WA) tersambung</label>
+                            <label class="form-label text-dark fw-bold">No. HP (WA) tersambung</label>
                             <div class="input-group">
                                 <span class="input-group-text">+62</span>
                                 <input name="phone" class="form-control" value="{{ substr($setApiToken->phone, 2)}}"
@@ -64,7 +64,7 @@
                             <small class="form-text text-danger">*Dimulai dari 08xxxx atau 8xxxx</small>
                         </div>
                         <div class="mb-2">
-                            <label>Token API (Fonnte)</label>
+                            <label class="form-label text-dark fw-bold">Token API (Fonnte)</label>
                             <input type="text" name="token_name" class="form-control"
                                 value="{{ $setApiToken->token_name ?? '' }}" placeholder="Masukkan token API...">
                         </div>

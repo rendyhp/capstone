@@ -76,9 +76,14 @@
 
                                     <div class="col-sm-3 float-end">
                                         <div class="d-flex gap-2 mb-2">
-                                            <a href="/transaksi" class="btn btn-outline-secondary btn-sm" title="Refresh">
-                                                <i class="fa fa-refresh"></i>
-                                            </a>
+                                             <form action="/transaksi" method="GET" class="d-inline">
+                                                <input type="hidden" name="date"
+                                                    value="{{ request('date', now()->toDateString()) }}">
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm"
+                                                    title="Refresh">
+                                                    <i class="fa fa-refresh"></i>
+                                                </button>
+                                            </form>
                                             <form action="/transaksi" method="get" class="form-inline d-flex">
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">

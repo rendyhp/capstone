@@ -98,16 +98,15 @@ class BahanController extends Controller
                 $bahan->bahan_akhir = null;
                 $bahan->akhir_manual = false;
             }
-
-            $bahan->bahan_terbuang = $bahan->bahan_akhir !== null
-                ? ($bahan->jumlah_akhir - $bahan->bahan_akhir)
-                : null;
+            $bahan->bahan_terbuang = (
+                !is_null($bahan->jumlah_akhir) && $bahan->jumlah_akhir !== 0 &&
+                !is_null($bahan->bahan_akhir) && $bahan->bahan_akhir !== 0
+            ) ? ($bahan->jumlah_akhir - $bahan->bahan_akhir) : null;
         }
 
         if ($request->ajax()) {
             return response()->json($bahan_bars);
         }
-
 
         // Data Kitchen
         // Validasi pagination
@@ -164,9 +163,10 @@ class BahanController extends Controller
                 $bahan->akhir_manual = false;
             }
 
-            $bahan->bahan_terbuang = $bahan->bahan_akhir !== null
-                ? ($bahan->jumlah_akhir - $bahan->bahan_akhir)
-                : null;
+            $bahan->bahan_terbuang = (
+                !is_null($bahan->jumlah_akhir) && $bahan->jumlah_akhir !== 0 &&
+                !is_null($bahan->bahan_akhir) && $bahan->bahan_akhir !== 0
+            ) ? ($bahan->jumlah_akhir - $bahan->bahan_akhir) : null;
         }
 
         if ($request->ajax()) {
@@ -219,19 +219,26 @@ class BahanController extends Controller
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->whereNull('deleted_at')
-            ->pluck('jumlah', 'date');
+            ->get()
+            ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
+            ->map(fn($group) => $group->sum('jumlah'));
 
         $masukData = BahanMasuk::where('bahan_id', $bahanId)
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->whereNull('deleted_at')
-            ->pluck('jumlah', 'date');
+            ->get()
+            ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
+            ->map(fn($group) => $group->sum('jumlah'));
 
         $akhirData = BahanAkhir::where('bahan_id', $bahanId)
             ->whereMonth('date', $month)
             ->whereYear('date', $year)
             ->whereNull('deleted_at')
-            ->pluck('jumlah', 'date');
+            ->get()
+            ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
+            ->map(fn($group) => $group->sum('jumlah'));
+
 
         $history = [];
         $prevAkhir = null;
@@ -272,10 +279,6 @@ class BahanController extends Controller
 
         return view('bahan.indexById', compact('bahan', 'history', 'month', 'year', 'dateParam', 'bahanId', 'previousUrl'));
     }
-
-
-
-
 
     public function saveBahanAwal(Request $request)
     {
@@ -712,7 +715,7 @@ class BahanController extends Controller
 
         $formattedDate = Carbon::parse($barang->date)->translatedFormat('j F Y');
         $barang->delete();
-        
+
         return redirect()->back()->with('success', 'Data bahan masuk tanggal "' . $formattedDate . '" Berhasil Dihapus');
     }
 

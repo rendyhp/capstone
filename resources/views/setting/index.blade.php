@@ -74,16 +74,16 @@
                 @method('PUT')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Profil</h5>
+                        <h5 class="modal-title fs-5 text-primary fw-bold">Edit Profil</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-2">
-                            <label>Nama</label>
+                            <label class="form-label text-dark fw-bold">Nama</label>
                             <input name="name" class="form-control" value="{{ $user->name }}">
                         </div>
                         <div class="mb-2">
-                            <label>No. HP (WA)</label>
+                            <label class="form-label text-dark fw-bold">No. HP (WA)</label>
                             <div class="input-group">
                                 <span class="input-group-text">+62</span>
                                 <input name="phone" class="form-control" value="{{ substr($profile->phone, 2) }}"
@@ -92,16 +92,16 @@
                             <small class="form-text text-danger">*Dimulai dari 08xxxx atau 8xxxx</small>
                         </div>
                         <div class="mb-2">
-                            <label>Alamat</label>
+                            <label class="form-label text-dark fw-bold">Alamat</label>
                             <textarea type="text" name="address" class="form-control" rows="4" autocomplete="off"
                                 value="{{ $profile->address }}" placeholder="Masukkan alamat..."></textarea>
                         </div>
                         <div class="mb-2">
-                            <label>Tanggal Lahir</label>
+                            <label class="form-label text-dark fw-bold">Tanggal Lahir</label>
                             <input type="date" name="birth_date" class="form-control" value="{{ $profile->birth_date }}">
                         </div>
                         <div class="mb-2">
-                            <label>Jenis Kelamin</label>
+                            <label class="form-label text-dark fw-bold">Jenis Kelamin</label>
                             <select name="gender" class="form-control select2">
                                 <option value="L" @selected($profile->gender == 'L')>Laki-laki</option>
                                 <option value="P" @selected($profile->gender == 'P')>Perempuan</option>

@@ -5,33 +5,19 @@
 
     @push('addStyle')
         <style>
-            /* Atur lebar kolom tanggal di tabel */
             table.table-bordered tbody tr td,
             table.table-bordered thead tr th {
-                /* Lebar minimum dan maksimum di set supaya stabil */
                 width: 12vh;
                 max-width: 12vh;
                 min-width: 12vh;
-                /* Optional agar teks rata tengah */
                 text-align: center;
-                /* Agar teks td tanggal rata tengah */
             }
 
-            /* Tapi biarkan kolom 'Jenis' lebar otomatis */
             table.table-bordered tbody tr td:first-child,
             table.table-bordered thead tr th:first-child {
-                width: auto;
-                max-width: none;
-                min-width: auto;
-                text-align: left;
-            }
-
-            /* Kolom pertama (Jenis) */
-            table.table-bordered tbody tr td:first-child,
-            table.table-bordered thead tr th:first-child {
-                width: 10vh;
-                max-width: 10vh;
-                min-width: 10vh;
+                width: 12vh;
+                max-width: 12vh;
+                min-width: 12vh;
                 text-align: left;
             }
 
@@ -191,8 +177,23 @@
                                     <tr>
                                         <td><strong>Terbuang</strong></td>
                                         @foreach ($history as $day)
+                                            @php
+                                                $value = $day['terbuang'];
+                                                $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
+                                            @endphp
+
                                             <td class="text-center">
-                                                {{ rtrim(rtrim(number_format($day['terbuang'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                                @if ($value > 0)
+                                                    <span class="text-danger fw-bold">
+                                                        &#8595; {{ $formatted }}
+                                                    </span>
+                                                @elseif ($value < 0)
+                                                    <span class="text-success fw-bold">
+                                                        &#8593; {{ $formatted }}
+                                                    </span>
+                                                @else
+                                                    <span>0</span>
+                                                @endif
                                             </td>
                                         @endforeach
                                     </tr>

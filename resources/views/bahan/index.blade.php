@@ -107,10 +107,14 @@
                                                 data-bs-target="#filterModal">
                                                 <i class="fa fa-filter"></i>
                                             </button>
-                                            <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm"
-                                                title="Refresh">
-                                                <i class="fa fa-refresh"></i>
-                                            </a>
+                                            <form action="/bahan/manajemen-bahan" method="GET" class="d-inline">
+                                                <input type="hidden" name="date"
+                                                    value="{{ request('date', now()->toDateString()) }}">
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm"
+                                                    title="Refresh">
+                                                    <i class="fa fa-refresh"></i>
+                                                </button>
+                                            </form>
                                             <form action="/bahan/manajemen-bahan" method="get" class="form-inline d-flex">
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
@@ -129,7 +133,7 @@
                                                     Gambar</th>
                                                 <th>Nama Bahan</th>
                                                 @if ($settings['show_keterangan'] ?? false)
-                                                    <th class="widthKolom8">Keterangan</th>
+                                                    <th class="widthKolom8">Deskripsi</th>
                                                 @endif
                                                 @if ($settings['show_awal'] ?? true)
                                                     <th class="widthKolom8">Awal</th>
@@ -175,7 +179,7 @@
 
                                                     @if ($settings['show_keterangan'] ?? false)
                                                         <td>
-                                                            {{ $bahan->keterangan }}
+                                                            {{ $bahan->description }}
                                                         </td>
                                                     @endif
 
@@ -212,11 +216,23 @@
                                                     @endif
 
                                                     @if ($settings['show_terbuang'] ?? true)
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
+                                                        @php
+                                                            $value = $bahan->bahan_terbuang;
+                                                            $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
+                                                        @endphp <td class="text-end">
+                                                            @if ($value > 0)
+                                                                <span class="text-danger fw-bold">
+                                                                    &#8595; {{ $formatted }}
+                                                                </span>
+                                                            @elseif ($value < 0)
+                                                                <span class="text-success fw-bold">
+                                                                    &#8593; {{ $formatted }}
+                                                                </span>
+                                                            @else
+                                                                <span>0</span>
+                                                            @endif
                                                         </td>
                                                     @endif
-
                                                     @if ($settings['show_minimum'] ?? false)
                                                         <td class="text-end">
                                                             {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
@@ -278,10 +294,14 @@
                                                 data-bs-target="#filterModal">
                                                 <i class="fa fa-filter"></i>
                                             </button>
-                                            <a href="/bahan/manajemen-bahan" class="btn btn-outline-secondary btn-sm"
-                                                title="Refresh">
-                                                <i class="fa fa-refresh"></i>
-                                            </a>
+                                            <form action="/bahan/manajemen-bahan" method="GET" class="d-inline">
+                                                <input type="hidden" name="date"
+                                                    value="{{ request('date', now()->toDateString()) }}">
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm"
+                                                    title="Refresh">
+                                                    <i class="fa fa-refresh"></i>
+                                                </button>
+                                            </form>
                                             <form action="/bahan/manajemen-bahan" method="get" class="form-inline d-flex">
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
@@ -300,7 +320,7 @@
                                                     Gambar</th>
                                                 <th>Nama Bahan</th>
                                                 @if ($settings['show_keterangan'] ?? false)
-                                                    <th class="widthKolom8">Keterangan</th>
+                                                    <th class="widthKolom8">Deskripsi</th>
                                                 @endif
                                                 @if ($settings['show_awal'] ?? true)
                                                     <th class="widthKolom8">Awal</th>
@@ -345,7 +365,7 @@
                                                     </td>
                                                     @if ($settings['show_keterangan'] ?? false)
                                                         <td>
-                                                            {{ $bahan->keterangan }}
+                                                            {{ $bahan->description }}
                                                         </td>
                                                     @endif
 
@@ -383,8 +403,21 @@
                                                     @endif
 
                                                     @if ($settings['show_terbuang'] ?? true)
-                                                        <td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($bahan->bahan_terbuang, 3, ',', '.'), '0'), ',') }}
+                                                        @php
+                                                            $value = $bahan->bahan_terbuang;
+                                                            $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
+                                                        @endphp <td class="text-end">
+                                                            @if ($value > 0)
+                                                                <span class="text-danger fw-bold">
+                                                                    &#8595; {{ $formatted }}
+                                                                </span>
+                                                            @elseif ($value < 0)
+                                                                <span class="text-success fw-bold">
+                                                                    &#8593; {{ $formatted }}
+                                                                </span>
+                                                            @else
+                                                                <span>0</span>
+                                                            @endif
                                                         </td>
                                                     @endif
 
@@ -470,7 +503,6 @@
                 <div class="modal-body">
                     <form method="Post" action='/bahan/manajemen-bahan/storeM'>
                         @csrf
-
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
                             <label class="form-label text-dark fw-bold">Tanggal</label>

@@ -62,30 +62,29 @@ class LaporanController extends Controller
                 foreach ($bahans as $bahan) {
                     $bahanId = $bahan->id;
 
-                    $stokAwalData = BahanAwal::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
-                        ->where('bahan_id', $bahanId)
+                    $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
                         ->whereMonth('date', $selectedMonth)
                         ->whereYear('date', $selectedYear)
                         ->whereNull('deleted_at')
-                        ->groupBy(DB::raw('DATE(date)'))
-                        ->pluck('total', 'tanggal');
+                        ->get()
+                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
+                        ->map(fn($group) => $group->sum('jumlah'));
 
-                    $masukData = BahanMasuk::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
-                        ->where('bahan_id', $bahanId)
+                    $masukData = BahanMasuk::where('bahan_id', $bahanId)
                         ->whereMonth('date', $selectedMonth)
                         ->whereYear('date', $selectedYear)
                         ->whereNull('deleted_at')
-                        ->groupBy(DB::raw('DATE(date)'))
-                        ->pluck('total', 'tanggal');
+                        ->get()
+                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
+                        ->map(fn($group) => $group->sum('jumlah'));
 
-                    $akhirData = BahanAkhir::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
-                        ->where('bahan_id', $bahanId)
+                    $akhirData = BahanAkhir::where('bahan_id', $bahanId)
                         ->whereMonth('date', $selectedMonth)
                         ->whereYear('date', $selectedYear)
                         ->whereNull('deleted_at')
-                        ->groupBy(DB::raw('DATE(date)'))
-                        ->pluck('total', 'tanggal');
-
+                        ->get()
+                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
+                        ->map(fn($group) => $group->sum('jumlah'));
 
                     $history = [];
                     $prevAkhir = null;
@@ -93,8 +92,9 @@ class LaporanController extends Controller
                     for ($day = 1; $day <= $daysInMonth; $day++) {
                         $dateString = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->toDateString();
 
-                        $awal = $stokAwalData[$dateString] ?? $prevAkhir;
+                        
                         $masuk = $masukData[$dateString] ?? 0;
+                        
 
                         $terpakai = DB::table('transaksi_details')
                             ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
@@ -104,6 +104,11 @@ class LaporanController extends Controller
                             ->sum('transaksi_details.jumlah');
 
                         $akhir = $akhirData[$dateString] ?? null;
+                        if ($akhir !== null) {
+                            $prevAkhir = $akhir;
+                        }
+                        $awal = $stokAwalData[$dateString] ?? $prevAkhir;
+
                         $jumlah_akhir = (!is_null($awal) && !is_null($masuk)) ? ($awal + $masuk - $terpakai) : null;
                         $terbuang = (!is_null($jumlah_akhir) && !is_null($akhir)) ? ($jumlah_akhir - $akhir) : null;
 
@@ -139,19 +144,25 @@ class LaporanController extends Controller
                         ->whereMonth('date', $selectedMonth)
                         ->whereYear('date', $selectedYear)
                         ->whereNull('deleted_at')
-                        ->pluck('jumlah', 'date');
+                        ->get()
+                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
+                        ->map(fn($group) => $group->sum('jumlah'));
 
                     $masukData = BahanMasuk::where('bahan_id', $bahanId)
                         ->whereMonth('date', $selectedMonth)
                         ->whereYear('date', $selectedYear)
                         ->whereNull('deleted_at')
-                        ->pluck('jumlah', 'date');
+                        ->get()
+                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
+                        ->map(fn($group) => $group->sum('jumlah'));
 
                     $akhirData = BahanAkhir::where('bahan_id', $bahanId)
                         ->whereMonth('date', $selectedMonth)
                         ->whereYear('date', $selectedYear)
                         ->whereNull('deleted_at')
-                        ->pluck('jumlah', 'date');
+                        ->get()
+                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
+                        ->map(fn($group) => $group->sum('jumlah'));
 
                     $history = [];
                     $prevAkhir = null;
