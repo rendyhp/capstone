@@ -78,15 +78,25 @@ class StockDataService
             ->whereNull('deleted_at')
             ->sum('jumlah');
 
-        $terpakai = DB::table('transaksi_details')
+        $transaksiTerpakai = DB::table('transaksi_details')
             ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
             ->where('transaksi_details.bahan_id', $bahan->id)
             ->whereDate('transaksis.date', $date)
             ->whereNull('transaksis.deleted_at')
-            ->sum('transaksi_details.jumlah');
+            ->orderBy('transaksi_details.id')
+            ->select('transaksi_details.jumlah')
+            ->get();
 
-        $bahan->jumlah_akhir = ($awal + $masuk) - $terpakai;
-        $bahan->sisa_sebelumnya = ($awal + $masuk);
+        $transaksiKini = $transaksiTerpakai->sum('jumlah');
+
+        if ($transaksiTerpakai->count() > 1) {
+            $totalTerpakaiSebelumnya = $transaksiTerpakai->slice(0, -1)->sum('jumlah');
+        } else {
+            $totalTerpakaiSebelumnya = 0; 
+        }
+
+        $bahan->jumlah_akhir = ($awal + $masuk) - $transaksiKini;
+        $bahan->sisa_sebelumnya = ($awal + $masuk) - $totalTerpakaiSebelumnya;
 
         $bahan->akhir_sebenarnya = BahanAkhir::where('bahan_id', $bahan->id)
             ->whereDate('date', $date)
