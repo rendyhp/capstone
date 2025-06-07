@@ -163,7 +163,7 @@
                                                 <tr>
                                                     <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
                                                     </td>
-                                                    <td
+                                                    <td class="text-center"
                                                         style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
                                                         <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
                                                             style="width: 100px; max-height: 100px;" alt="Img">

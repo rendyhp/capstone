@@ -433,7 +433,7 @@ class BarangController extends Controller
             $barangData->push($barang);
         }
         $alertService = new StockAlertService();
-        $alertService->checkAndNotify($barangData, null);
+        $alertService->checkAndNotify($barangData);
 
         return redirect()->back()->with('success', 'Stok berhasil dikurangi.');
     }

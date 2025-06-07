@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 26, 2025 at 10:06 AM
+-- Generation Time: Jun 07, 2025 at 08:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -270,7 +270,8 @@ CREATE TABLE `barang_keluars` (
 --
 
 INSERT INTO `barang_keluars` (`id`, `user_id`, `date`, `barang_id`, `keterangan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 2, '2025-05-24', 1, 'Rusak', 15, '2025-05-24 04:27:05', '2025-05-24 04:27:05', NULL);
+(1, 2, '2025-05-24', 1, 'Rusak', 15, '2025-05-24 04:27:05', '2025-05-24 04:27:05', NULL),
+(2, 2, '2025-06-08', 3, 'r', 2, '2025-06-07 18:39:55', '2025-06-07 18:39:55', NULL);
 
 -- --------------------------------------------------------
 
@@ -549,33 +550,6 @@ CREATE TABLE `set_api_tokens` (
 
 INSERT INTO `set_api_tokens` (`id`, `name`, `token_name`, `phone`, `created_at`, `updated_at`) VALUES
 (1, 'NotificationApi', '49zbRGa16VLm8S44vT5E', '6281226077106', NULL, '2025-05-26 06:57:22');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `stock_alert_logs`
---
-
-CREATE TABLE `stock_alert_logs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `stockable_id` bigint(20) UNSIGNED NOT NULL,
-  `stockable_type` varchar(255) NOT NULL,
-  `alert_date` date NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `stock_alert_logs`
---
-
-INSERT INTO `stock_alert_logs` (`id`, `stockable_id`, `stockable_type`, `alert_date`, `created_at`, `updated_at`) VALUES
-(1, 1, 'App\\Models\\Barang', '2025-05-24', '2025-05-24 04:27:05', '2025-05-24 04:27:05'),
-(2, 3, 'App\\Models\\Bahan', '2025-05-24', '2025-05-24 05:00:41', '2025-05-24 05:00:41'),
-(3, 8, 'App\\Models\\Bahan', '2025-05-24', '2025-05-24 05:00:41', '2025-05-24 05:00:41'),
-(4, 1, 'App\\Models\\Bahan', '2025-05-24', '2025-05-24 05:06:46', '2025-05-24 05:06:46'),
-(5, 10, 'App\\Models\\Bahan', '2025-05-24', '2025-05-24 05:06:46', '2025-05-24 05:06:46'),
-(6, 11, 'App\\Models\\Bahan', '2025-05-24', '2025-05-24 05:06:46', '2025-05-24 05:06:46');
 
 -- --------------------------------------------------------
 
@@ -909,12 +883,6 @@ ALTER TABLE `set_api_tokens`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `stock_alert_logs`
---
-ALTER TABLE `stock_alert_logs`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `transaksis`
 --
 ALTER TABLE `transaksis`
@@ -1002,7 +970,7 @@ ALTER TABLE `barang_awals`
 -- AUTO_INCREMENT for table `barang_keluars`
 --
 ALTER TABLE `barang_keluars`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `barang_masuks`
@@ -1057,12 +1025,6 @@ ALTER TABLE `satuan_barangs`
 --
 ALTER TABLE `set_api_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `stock_alert_logs`
---
-ALTER TABLE `stock_alert_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `transaksis`

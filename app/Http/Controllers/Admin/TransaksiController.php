@@ -190,7 +190,7 @@ class TransaksiController extends Controller
         }
 
         $alertService = new StockAlertService();
-        $alertService->checkAndNotify(null, $bahanData);
+        $alertService->checkAndNotify2($bahanData);
 
         return redirect()->route('transaksi.index', ['date' => $tanggal])
             ->with('success', 'Import transaksi berhasil.');

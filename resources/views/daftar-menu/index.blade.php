@@ -97,7 +97,7 @@
                                                     <tr>
                                                         <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
                                                         </td>
-                                                        <td>
+                                                        <td class="text-center">
                                                             <img src="{{ asset($menu->image ?? 'img/dummy/ss_menu.png') }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>

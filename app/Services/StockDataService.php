@@ -86,15 +86,21 @@ class StockDataService
             ->sum('transaksi_details.jumlah');
 
         $bahan->jumlah_akhir = ($awal + $masuk) - $terpakai;
+        $bahan->sisa_sebelumnya = ($awal + $masuk);
 
-        return collect([$bahan]); // dibungkus collect biar bisa langsung pakai di checkAndNotify
+        $bahan->akhir_sebenarnya = BahanAkhir::where('bahan_id', $bahan->id)
+            ->whereDate('date', $date)
+            ->whereNull('deleted_at')
+            ->first();
+
+        return collect([$bahan]);
     }
     public function getSingleBarang($barangId)
     {
         $barang = Barang::with('satuanBarang')->find($barangId);
 
         if (!$barang) {
-            return collect(); // Jika tidak ditemukan, kembalikan koleksi kosong
+            return collect();
         }
 
         $awal = BarangAwal::where('barang_id', $barang->id)
@@ -105,14 +111,20 @@ class StockDataService
             ->whereNull('deleted_at')
             ->sum('jumlah');
 
-        $keluar = BarangKeluar::where('barang_id', $barang->id)
+        $keluarSemua = BarangKeluar::where('barang_id', $barang->id)
             ->whereNull('deleted_at')
-            ->sum('jumlah');
+            ->orderBy('id')
+            ->get();
 
+        $keluar = $keluarSemua->sum('jumlah');
+
+        $keluar_sebelumnya = $keluarSemua->count() > 1
+            ? $keluarSemua->slice(0, -1)->sum('jumlah')
+            : 0;
+
+        $barang->total_sebelumnya = ($awal + $masuk) - $keluar_sebelumnya;
         $barang->sisa = ($awal + $masuk) - $keluar;
 
-        return collect([$barang]); // bungkus dalam koleksi supaya bisa langsung dipakai di checkAndNotify
+        return collect([$barang]);
     }
-
-
 }

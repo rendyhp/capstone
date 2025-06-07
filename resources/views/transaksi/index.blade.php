@@ -97,7 +97,7 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th style="width: 110px;">Gambar</th>
+                                                <th style="width: 110px;" class="text-center">Gambar</th>
                                                 <th>Nama Menu</th>
                                                 <th>Jumlah</th>
                                                 <th>Bahan</th>

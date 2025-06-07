@@ -135,7 +135,7 @@
                                                 <tr>
                                                     <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
                                                     </td>
-                                                    <td
+                                                    <td class="text-center"
                                                         style="{{ ($settings['show_image_barang'] ?? false) ? '' : 'display: none;' }}">
                                                         <img src="{{ asset($barang->image ?? 'img/dummy/ss_barang.png') }}"
                                                             style="width: 100px; max-height: 100px;" alt="Img">
