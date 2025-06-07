@@ -66,9 +66,7 @@
                     <input type="date" class="form-control" id="tanggalbahan" name="date" value="{{ $date }}">
                 </div>
             </div>
-
         </div>
-
 
         <div>
             <a href="/bahan/manajemen-bahan"
@@ -185,7 +183,7 @@
 
                                                     @if ($settings['show_awal'] ?? true)
                                                         <td class="text-end editable {{ optional($bahan)->awal_manual ? 'bg-khaki' : '' }}"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -210,7 +208,7 @@
 
                                                     @if ($settings['show_akhir'] ?? true)
                                                         <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -372,7 +370,7 @@
 
                                                     @if ($settings['show_awal'] ?? true)
                                                         <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}')">
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -397,7 +395,7 @@
 
                                                     @if ($settings['show_akhir'] ?? true)
                                                         <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}')">
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -476,11 +474,16 @@
                         <input type="hidden" name="bahan_id" id="bahan_id">
                         <input type="hidden" name="date" id="date">
                         <input type="hidden" name="type" id="type">
-
+	
+			<div class="mb-2">
+    				<small id="infoJumlahDetail" class="badge text-white border p-2 me-2" style="background-color: #0d6efd;"></small>
+    				<small id="infoJumlahType" class="badge text-white border p-2" style="background-color: #198754;"></small>
+			</div>
                         <div class="mb-3">
-                            <label for="jumlah_input" class="form-label text-dark fw-bold">Jumlah:</label>
-                            <input type="number" step="0.001" min="0" id="jumlah_input" name="jumlah" max="99999999999.999"
+                            <label for="jumlah_input" class="form-label text-dark fw-bold">Jumlah <small id="satuanBahanText" class="text-muted ms-1"></small>:</label>
+                            <input type="number" step="0.001" id="jumlah_input" name="jumlah" max="99999999999.999"
                                 class="form-control number0" required>
+			    
                         </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
@@ -630,13 +633,17 @@
     @push('addScript')
 
         <script>
-            function editJumlah(bahan_id, date, type, currentJumlah) {
+            function editJumlah(bahan_id, date, type, currentJumlah, bahan_name, satuan) {
                 var formattedJumlah = currentJumlah % 1 === 0 ? parseInt(currentJumlah) : currentJumlah;
 
                 document.getElementById('bahan_id').value = bahan_id;
                 document.getElementById('date').value = date;
                 document.getElementById('type').value = type;
                 document.getElementById('jumlah_input').value = formattedJumlah;
+		document.getElementById('modalEditJumlahLabel').innerText = `Edit Jumlah (${bahan_name})`;
+		document.getElementById('infoJumlahDetail').innerText = formatTanggalIndo(date);
+		document.getElementById('infoJumlahType').innerText = type === 'awal' ? 'Bahan Awal' : 'Akhir Sebenarnya';
+		document.getElementById('satuanBahanText').innerText = `(${satuan})`;
 
                 $("#modalEditJumlah").modal("show");
             }

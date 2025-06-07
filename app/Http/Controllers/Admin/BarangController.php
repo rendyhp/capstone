@@ -50,8 +50,11 @@ class BarangController extends Controller
             ->orderBy($orderBy, $sort);
 
         if ($search = $request->input('search')) {
-            $query->where('name', 'like', '%' . $search . '%');
-        }
+   	 	$query->where(function ($q) use ($search) {
+        		$q->where('name', 'like', '%' . $search . '%')
+          		->orWhere('description', 'like', '%' . $search . '%');
+    		});
+	}
 
         $barangs = $query->paginate($pagination)->appends($request->query());
 

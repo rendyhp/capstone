@@ -22,12 +22,17 @@ class MenuController extends Controller
 
         $bahans = Bahan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
 
-        $query = Menu::with('komposisi.bahan.satuan')
-            ->whereNull('deleted_at');
+	$query = Menu::with('komposisi.bahan.satuan')
+    		->whereNull('deleted_at');
 
         if ($search = $request->input('search')) {
-            $query->where('name', 'like', '%' . $search . '%');
-        }
+    	    $query->where(function ($q) use ($search) {
+       		$q->where('name', 'like', '%' . $search . '%')
+          	    ->orWhereHas('komposisi.bahan', function ($q2) use ($search) {
+                $q2->where('name', 'like', '%' . $search . '%');
+          		});
+    		});
+	}
         $query->orderBy($orderBy, $direction);
 
         if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {

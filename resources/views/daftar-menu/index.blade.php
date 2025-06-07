@@ -93,10 +93,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($menus->isEmpty())
-                                                <p>Tidak ada data yang ditemukan.</p>
-                                            @else
-                                                @foreach ($menus as $menu)
+                                                @forelse ($menus as $menu)
                                                     <tr>
                                                         <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
                                                         </td>
@@ -141,8 +138,12 @@
 
                                                         </td>
                                                     </tr>
-                                                @endforeach
-                                            @endif
+						@empty
+                                                <tr>
+                                                    <td colspan="6" class="text-center text-muted">Tidak ada data yang
+                                                        ditemukan.</td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                             </table>
                             {{ $menus->onEachSide(0.5)->links('pagination::bootstrap-5') }}

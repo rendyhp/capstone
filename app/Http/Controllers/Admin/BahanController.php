@@ -43,13 +43,20 @@ class BahanController extends Controller
         $query2 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'KITCHEN');
 
         if ($search1 = $request->input('search1')) {
-            $query1->where('name', 'like', '%' . $search1 . '%');
-            $query2->whereNull('name');
-        }
-        if ($search2 = $request->input('search2')) {
-            $query2->where('name', 'like', '%' . $search2 . '%');
-            $query1->whereNull('name');
-        }
+    $query1->where(function ($q) use ($search1) {
+        $q->where('name', 'like', '%' . $search1 . '%')
+          ->orWhere('description', 'like', '%' . $search1 . '%');
+    });
+    $query2->whereNull('name'); // optional, untuk clear query2 saat search1 aktif
+	}
+
+	if ($search2 = $request->input('search2')) {
+    $query2->where(function ($q) use ($search2) {
+        $q->where('name', 'like', '%' . $search2 . '%')
+          ->orWhere('description', 'like', '%' . $search2 . '%');
+    });
+    $query1->whereNull('name'); // optional, untuk clear query1 saat search2 aktif
+	}
 
         $bahan_bars = $query1->paginate($paginationBar)->appends($request->query());
 
@@ -290,7 +297,7 @@ class BahanController extends Controller
         $request->validate([
             'bahan_id' => 'required|integer|exists:bahans,id',
             'date' => 'required|date',
-            'jumlah' => 'required|numeric|min:0',
+            'jumlah' => 'required|numeric',
         ]);
 
         BahanAwal::where('bahan_id', $request->bahan_id)
@@ -318,7 +325,7 @@ class BahanController extends Controller
         $request->validate([
             'bahan_id' => 'required|integer|exists:bahans,id',
             'date' => 'required|date',
-            'jumlah' => 'required|numeric|min:0',
+            'jumlah' => 'required|numeric',
         ]);
 
         BahanAkhir::where('bahan_id', $request->bahan_id)
