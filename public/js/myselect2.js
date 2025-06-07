@@ -37,6 +37,11 @@ $("#editEditModal").on("shown.bs.modal", function () {
     initSelect2("#txtsatuan_id", "#editBahanModal .modal-content");
 });
 
+// Modal Edit Bahan (Kitchen)
+$("#editBarangModal2").on("shown.bs.modal", function () {
+    initSelect2("#txtsatuan_id2", "#editBarangModal2 .modal-content");
+});
+
 // Modal Tambah Barang (Bar)
 $("#barangModal1").on("shown.bs.modal", function () {
     initSelect2("#satuan_id_bar", "#barangModal1 .modal-content");
@@ -46,3 +51,4 @@ $("#barangModal1").on("shown.bs.modal", function () {
 $("#barangModal2").on("shown.bs.modal", function () {
     initSelect2("#satuan_id_kitchen", "#barangModal2 .modal-content");
 });
+

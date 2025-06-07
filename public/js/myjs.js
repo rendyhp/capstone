@@ -67,7 +67,6 @@ inputIds.forEach(function (id) {
     }
 });
 
-
 //////////////////////////////////////////
 
 document
@@ -105,15 +104,13 @@ $(document).on("click", ".btn_editbarang", function (e) {
     $("#txtstok_awal").val(stok_awal);
     $("#txtsatuan_id").val(satuan_id);
 
-    if (image && image !== 'NULL') {
-        $("#previewGambar")
-            .show();
+    if (image && image !== "NULL") {
+        $("#previewGambar").show();
         $("#previewImage")
             .attr("src", "/" + image) // pastikan path benar, misal "upload/barang/xxx.jpg"
             .show();
     } else {
-        $("#previewGambar")
-            .hide();
+        $("#previewGambar").hide();
         $("#previewImage").hide();
     }
 
@@ -125,8 +122,6 @@ $(document).on("click", ".btn_editbarang", function (e) {
 $(document).on("click", "#barangModal2", function (e) {
     $("#barangModal2").modal("show");
 });
-
-
 
 //////////////////////////////////////////////
 
@@ -208,15 +203,13 @@ $(document).on("click", ".btn_editbahan", function (e) {
     $("#txtminimum").val(formattedMinimum);
     $("#txtsatuan_id").val(satuan_id);
 
-    if (image && image !== 'NULL') {
-        $("#previewGambar")
-            .show();
+    if (image && image !== "NULL") {
+        $("#previewGambar").show();
         $("#previewImage")
             .attr("src", "/" + image) // pastikan path benar, misal "upload/bahan/xxx.jpg"
             .show();
     } else {
-        $("#previewGambar")
-            .hide();
+        $("#previewGambar").hide();
         $("#previewImage").hide();
     }
 
@@ -247,15 +240,13 @@ $(document).on("click", ".btn_editbahan2", function (e) {
     $("#txtminimum2").val(formattedMinimum2);
     $("#txtsatuan_id2").val(satuan_id2);
 
-    if (image2 && image2 !== 'NULL') {
-        $("#previewGambar2")
-            .show();
+    if (image2 && image2 !== "NULL") {
+        $("#previewGambar2").show();
         $("#previewImage2")
             .attr("src", "/" + image2) // pastikan path benar, misal "upload/bahan/xxx.jpg"
             .show();
     } else {
-        $("#previewGambar2")
-            .hide();
+        $("#previewGambar2").hide();
         $("#previewImage2").hide();
     }
 
@@ -372,15 +363,13 @@ $(document).ready(function () {
         $("#editMenuName").val(name);
         $("#editMenuDescription").val(description);
 
-        if (image && image !== 'NULL') {
-            $("#previewGambar")
-                .show();
+        if (image && image !== "NULL") {
+            $("#previewGambar").show();
             $("#previewImage")
                 .attr("src", "/" + image) // pastikan path benar, misal "upload/bahan/xxx.jpg"
                 .show();
         } else {
-            $("#previewGambar")
-                .hide();
+            $("#previewGambar").hide();
             $("#previewImage").hide();
         }
 
@@ -433,9 +422,6 @@ $(document).ready(function () {
 
         refreshSatuan($("#editBahanContainer"));
     });
-
-    
-    
 });
 
 ////////////////////////////////////////////////////////

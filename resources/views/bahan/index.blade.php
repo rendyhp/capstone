@@ -480,7 +480,7 @@
     				<small id="infoJumlahType" class="badge text-white border p-2" style="background-color: #198754;"></small>
 			</div>
                         <div class="mb-3">
-                            <label for="jumlah_input" class="form-label text-dark fw-bold">Jumlah <small id="satuanBahanText" class="text-muted ms-1"></small>:</label>
+                            <label for="jumlah_input" class="form-label text-dark fw-bold">Jumlah<small id="satuanBahanText" class="text-muted ms-1"></small>:</label>
                             <input type="number" step="0.001" id="jumlah_input" name="jumlah" max="99999999999.999"
                                 class="form-control number0" required>
 			    
