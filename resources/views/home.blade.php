@@ -16,7 +16,7 @@
         @auth
       <form action="/logout" method="post">
         @csrf
-        <button class="btn btn-dark" type="submit"><i class="fas fa-sign-out-alt"></i>
+        <button class="nav-link" type="submit"><i class="fas fa-sign-out-alt"></i>
         Logout</button>
       </form>
       @else

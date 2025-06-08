@@ -23,8 +23,11 @@ class ReportController extends Controller
         $sender = auth()->user()->name;
 
         $template = <<<EOT
+                     🚩 *Report dari Staf*
+
                     *Lapor*  : {$kategori}
                     *Alasan* : {$alasan}
+
                     *Pesan*  : {$keterangan}
 
                     _- Dikirim oleh:_ {$sender}
@@ -55,6 +58,6 @@ class ReportController extends Controller
             }
         }
 
-        return back()->with('success', 'Laporan berhasil dikirim ke admin.');
+        return back()->with('success', 'Laporan berhasil dikirim ke Manajer dan Owner.');
     }
 }

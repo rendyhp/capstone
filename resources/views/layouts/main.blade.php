@@ -260,13 +260,13 @@
                     @csrf
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Form Laporan ke Admin</h5>
+                            <h5 class="modal-title fs-5 fw-bold text-danger">Lapor ke Manajer dan Owner</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                         </div>
                         <div class="modal-body">
 
                             <!-- Kategori -->
-                            <label class="form-label">Lapor</label>
+                            <label class="form-label text-dark fw-bold">Lapor</label>
                             <div class="mb-3 d-flex gap-3">
                                 <div>
                                     <input type="radio" name="kategori" value="Barang" id="kategori_barang" required>
@@ -283,15 +283,23 @@
                             </div>
                             <div class="mb-3" id="input_kategori_lainnya" style="display: none;">
                                 <input type="text" name="kategori_lainnya" class="form-control"
-                                    placeholder="Isi kategori lainnya" autocomplete="off">
+                                    placeholder="Isi kategori lainnya..." autocomplete="off">
                             </div>
 
                             <!-- Alasan -->
-                            <label class="form-label">Alasan</label>
+                            <label class="form-label fw-bold text-dark">Alasan</label>
                             <div class="mb-3 d-flex gap-3">
                                 <div>
                                     <input type="radio" name="alasan" value="Rusak" id="alasan_rusak" required>
                                     <label for="alasan_rusak">Rusak</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="alasan" value="Rusak" id="alasan_salahinput" required>
+                                    <label for="alasan_salahinput">Salah Input</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="alasan" value="Rusak" id="alasan_salahhapus" required>
+                                    <label for="alasan_salahhapus">Salah Hapus</label>
                                 </div>
                                 <div>
                                     <input type="radio" name="alasan" value="Lainnya" id="alasan_lainnya">
@@ -300,12 +308,12 @@
                             </div>
                             <div class="mb-3" id="input_alasan_lainnya" style="display: none;">
                                 <input type="text" name="alasan_lainnya" class="form-control"
-                                    placeholder="Isi alasan lainnya" autocomplete="off">
+                                    placeholder="Isi alasan lainnya..." autocomplete="off">
                             </div>
 
                             <!-- Keterangan -->
                             <div class="mb-3">
-                                <label class="form-label">Keterangan</label>
+                                <label class="form-label fw-bold text-dark">Keterangan</label>
                                 <textarea name="keterangan" class="form-control" rows="4"
                                     placeholder="Masukkan detail laporan..." required></textarea>
                             </div>

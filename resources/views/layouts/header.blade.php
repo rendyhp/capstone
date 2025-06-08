@@ -52,10 +52,12 @@
         <div class="container d-flex align-items-center justify-content-between">
 
             <div class="logo">
-                <h1 class="text-primary"><img src="/img/logo-bdim.png" style="width: 40px; height: 40px;" class="me-2"
-                        alt="Logo"> BdiM's Stock</a></h1>
-                <!-- Uncomment below if you prefer to use an image logo -->
-                <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>
+                <h1>
+                    <a href="/" class="text-decoration-none text-primary d-flex align-items-center">
+                        <img src="/img/logo-bdim.png" style="width: 40px; height: 40px;" class="img-fluid me-2" alt="Logo">
+                        BdiM's Stock
+                    </a>
+                </h1>
             </div>
 
             <nav id="navbar" class="navbar">
@@ -82,8 +84,9 @@
                                     </a>
                                 @endauth
 
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                                        document.getElementById('logout-form').submit();">
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                                            document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
 
