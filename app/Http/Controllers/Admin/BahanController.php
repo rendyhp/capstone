@@ -43,20 +43,20 @@ class BahanController extends Controller
         $query2 = Bahan::with('satuan')->orderBy('name')->whereNull('deleted_at')->where('section', 'KITCHEN');
 
         if ($search1 = $request->input('search1')) {
-    $query1->where(function ($q) use ($search1) {
-        $q->where('name', 'like', '%' . $search1 . '%')
-          ->orWhere('description', 'like', '%' . $search1 . '%');
-    });
-    $query2->whereNull('name'); // optional, untuk clear query2 saat search1 aktif
-	}
+            $query1->where(function ($q) use ($search1) {
+                $q->where('name', 'like', '%' . $search1 . '%')
+                    ->orWhere('description', 'like', '%' . $search1 . '%');
+            });
+            $query2->whereNull('name'); // optional, untuk clear query2 saat search1 aktif
+        }
 
-	if ($search2 = $request->input('search2')) {
-    $query2->where(function ($q) use ($search2) {
-        $q->where('name', 'like', '%' . $search2 . '%')
-          ->orWhere('description', 'like', '%' . $search2 . '%');
-    });
-    $query1->whereNull('name'); // optional, untuk clear query1 saat search2 aktif
-	}
+        if ($search2 = $request->input('search2')) {
+            $query2->where(function ($q) use ($search2) {
+                $q->where('name', 'like', '%' . $search2 . '%')
+                    ->orWhere('description', 'like', '%' . $search2 . '%');
+            });
+            $query1->whereNull('name'); // optional, untuk clear query1 saat search2 aktif
+        }
 
         $bahan_bars = $query1->paginate($paginationBar)->appends($request->query());
 
@@ -283,8 +283,11 @@ class BahanController extends Controller
             $prevAkhir = $akhir ?? $prevAkhir;
         }
 
-
-        return view('bahan.indexById', compact('bahan', 'history', 'month', 'year', 'dateParam', 'bahanId', 'previousUrl'));
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            return view('bahan.indexById', compact('bahan', 'history', 'month', 'year', 'dateParam', 'bahanId', 'previousUrl'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
 
     public function saveBahanAwal(Request $request)
@@ -466,9 +469,7 @@ class BahanController extends Controller
 
         $satuans = SatuanBahan::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
-
-
-        if ($role === 'OWNER' || $role === 'MANAJER' || $role === 'STAF') {
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
             $bahan_bars = $query1->paginate($paginationBar2);
             $bahan_kitchens = $query2->paginate($paginationKitchen2);
 
@@ -503,11 +504,7 @@ class BahanController extends Controller
 
         $satuans = $query->paginate(20)->appends($request->query());
 
-        if ($role === 'OWNER') {
-            return view('bahan.indexSatuan', compact('satuans'));
-        } elseif ($role === 'MANAJER') {
-            return view('bahan.indexSatuan', compact('satuans'));
-        } elseif ($role === 'STAF') {
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
             return view('bahan.indexSatuan', compact('satuans'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -612,11 +609,6 @@ class BahanController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $settings = json_decode($user->setting->settings ?? '[]', true);
-
-        $showImage = $settings['show_image_bahan2'] ?? false;
-        $paginationBar2 = $settings['pagination_bahanBar2'] ?? 20;
-        $paginationKitchen2 = $settings['pagination_bahanKitchen2'] ?? 20;
 
         $existing = Bahan::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
         if ($existing) {
@@ -643,9 +635,28 @@ class BahanController extends Controller
 
         $Bahan->save();
 
-        $dataPerPage = 20;
-        $data = DB::table('bahans')->paginate($dataPerPage);
-        $lastPage = $data->lastPage();
+        $user = Auth::user();
+        $settings = json_decode($user->setting->settings ?? '[]', true);
+        $paginationBar = $settings['pagination_bahanBar2'] ?? 20;
+        $paginationKitchen = $settings['pagination_bahanKitchen2'] ?? 20;
+        $allowedPagination = [5, 20, 50, 100];
+        if (!in_array($paginationBar, $allowedPagination)) {
+            $paginationBar = 20;
+        }
+        if ($request->input('section') === 'BAR') {
+            $pagination = $paginationBar;
+            $query = Bahan::with('satuan')
+                ->orderBy('name')
+                ->whereNull('deleted_at')
+                ->where('section', 'BAR');
+        } else {
+            $pagination = $paginationKitchen;
+            $query = Bahan::with('satuan')
+                ->orderBy('name')
+                ->whereNull('deleted_at')
+                ->where('section', 'KITCHEN');
+        }
+        $lastPage = $query->paginate($pagination)->lastPage();
 
         return redirect('/bahan/data-bahan?page=' . $lastPage . '&orderBy=id&sort=asc')
             ->with('success', 'Data "' . $Bahan->name . '" Berhasil Ditambahkan');

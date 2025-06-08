@@ -101,12 +101,12 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th
-                                                    style="{{ ($settings['show_image_barang'] ?? false) ? '' : 'display: none;' }}">
-                                                    Gambar</th>
+                                                @if ($settings['show_image_barang'] ?? false)
+                                                    <th style="width: 110px;">Gambar</th>
+                                                @endif
                                                 <th>Nama Barang</th>
                                                 @if ($settings['show_keteranganB'] ?? true)
-                                                    <th style="max-width: 30vh;">Deskripsi Barang</th>
+                                                    <th style="max-width: 30vh;">Deskripsi</th>
                                                 @endif
                                                 @if ($settings['show_awalB'] ?? true)
                                                     <th class="text-center">Awal</th>
@@ -135,16 +135,17 @@
                                                 <tr>
                                                     <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
                                                     </td>
-                                                    <td class="text-center"
-                                                        style="{{ ($settings['show_image_barang'] ?? false) ? '' : 'display: none;' }}">
-                                                        <img src="{{ asset($barang->image ?? 'img/dummy/ss_barang.png') }}"
-                                                            style="width: 100px; max-height: 100px;" alt="Img">
-                                                    </td>
+                                                    @if ($settings['show_image_barang'] ?? false)
+                                                        <td class="text-center">
+                                                            <img src="{{ asset($barang->image ?? 'img/dummy/ss_barang.png') }}"
+                                                                style="width: 100px; max-height: 100px;" alt="Img">
+                                                        </td>
+                                                    @endif
                                                     <td>
                                                         {{ $barang->name ?? '-' }}
                                                     </td>
                                                     @if ($settings['show_keteranganB'] ?? true)
-                                                        <td>{{ $barang->description }}</td>
+                                                        <td style="max-width: 30vh;">{{ $barang->description }}</td>
                                                     @endif
                                                     @if ($settings['show_awalB'] ?? true)
                                                         <td class="text-center">
@@ -276,7 +277,7 @@
                         @csrf
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" required id="date">
+                            <input type="date" style="width: initial;" class="form-control" name="date" required id="date">
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label text-dark fw-bold">Gambar</label>
@@ -338,7 +339,7 @@
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
                             <label class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="stokDateM" required>
+                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateM" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Nama Barang</label>
@@ -384,7 +385,7 @@
                         <input type="hidden" name="id" id="stokBarangIdK">
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="stokDateK" required>
+                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateK" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Nama Barang</label>
@@ -498,25 +499,15 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="filterModalLabel">Filter Tampilan</h5>
+                        <h5 class="modal-title fs-5 fw-bold text-primary" id="filterModalLabel">Filter Tampilan</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
 
                     <div class="modal-body">
-                        {{-- Checkbox Gambar --}}
-                        <div class="form-check mb-3">
-                            <input type="hidden" name="show_image_barang" value="0">
-                            <input class="form-check-input" type="checkbox" name="show_image_barang" value="1"
-                                id="toggleImageColumnModal" {{ ($settings['show_image_barang'] ?? false) ? 'checked' : '' }}>
-
-                            <label class="form-check-label" for="toggleImageColumnModal">
-                                Tampilkan Gambar
-                            </label>
-                        </div>
-
                         {{-- Checkbox Kolom --}}
                         @php
                             $columns = [
+                                'show_image_barang' => ['label' => 'Gambar', 'default' => false],
                                 'show_keteranganB' => ['label' => 'Deskripsi barang', 'default' => true],
                                 'show_awalB' => ['label' => 'Awal', 'default' => true],
                                 'show_masukB' => ['label' => 'Masuk', 'default' => true],
@@ -527,7 +518,7 @@
                             ];
                         @endphp
 
-                        <label class="form-label">Tampilkan Kolom:</label>
+                        <label class="form-label fw-bold text-dark">Tampilan Kolom:</label>
                         @foreach ($columns as $key => $column)
                             <div class="form-check">
                                 <input type="hidden" name="{{ $key }}" value="0">
@@ -541,7 +532,7 @@
 
                         {{-- Select Pagination --}}
                         <div class="mb-3">
-                            <label for="paginationSelect" class="form-label">Jumlah Per Halaman</label>
+                            <label for="paginationSelect" class="form-label fw-bold text-dark">Jumlah Per Halaman:</label>
                             <select class="form-select" name="pagination_barang" id="paginationSelect">
                                 <option value="20" {{ ($settings['pagination_barang'] ?? 20) == 20 ? 'selected' : '' }}>20
                                 </option>

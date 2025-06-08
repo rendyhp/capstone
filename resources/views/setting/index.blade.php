@@ -34,36 +34,54 @@
         <h2 class="mt-3 text-uppercase fs-2">Profil</h2>
 
         <div class="row mt-4">
-            <div class="col-md-6">
-                <p><strong>Nama:</strong> {{ $user->name }}</p>
-                <p><strong>Email:</strong> {{ $user->email }}
-                </p>
-
-                <p><strong>Role:</strong> {{ $user->role }}</p>
+            <div class="col-md-4">
+                <div class="row mb-2">
+                    <div class="col-2 fw-bold">Nama</div>
+                    <div class="col-8">: {{ $user->name }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-2 fw-bold">Email</div>
+                    <div class="col-8">: {{ $user->email }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-2 fw-bold">Role</div>
+                    <div class="col-8">: {{ $user->role }}</div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <p><strong>No. HP (WA):</strong>
-                    {{ isset($profile->phone) && $profile->phone !== '62' ? '+' . $profile->phone : '-' }}
-                </p>
-                <p><strong>Alamat:</strong> {{ $profile->address ?? '-' }}</p>
-                <p><strong>Tanggal Lahir:</strong>
-                    {{ $profile->birth_date ? \Carbon\Carbon::parse($profile->birth_date)->translatedFormat('j F Y') : '-' }}
-                </p>
-                <p><strong>Jenis Kelamin:</strong>
-                    @if($profile->gender == 'L')
-                        Laki-laki
-                    @elseif($profile->gender == 'P')
-                        Perempuan
-                    @else
-                        -
-                    @endif
-                </p>
-
+            <div class="col-md-8">
+                <div class="row mb-2">
+                    <div class="col-3 fw-bold">No. HP (WA)</div>
+                    <div class="col-8">
+                        : {{ isset($profile->phone) && $profile->phone !== '62' ? '+' . $profile->phone : '-' }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-3 fw-bold">Tanggal Lahir</div>
+                    <div class="col-8">
+                        : {{ $profile->birth_date ? \Carbon\Carbon::parse($profile->birth_date)->translatedFormat('j F Y') : '-' }}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-3 fw-bold">Jenis Kelamin</div>
+                    <div class="col-8">: 
+                        @if($profile->gender == 'L')
+                            Laki-laki
+                        @elseif($profile->gender == 'P')
+                            Perempuan
+                        @else
+                            -
+                        @endif
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-3 fw-bold">Alamat</div>
+                    <div class="col-8">: {{ $profile->address ?? '-' }}</div>
+                </div>
             </div>
         </div>
 
-        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit
-            Profil</button>
+        <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+            Edit Profil
+        </button>
     </div>
 
     <!-- Modal -->
@@ -92,22 +110,23 @@
                             <small class="form-text text-danger">*Dimulai dari 08xxxx atau 8xxxx</small>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label text-dark fw-bold">Alamat</label>
-                            <textarea type="text" name="address" class="form-control" rows="4" autocomplete="off"
-                                value="{{ $profile->address }}" placeholder="Masukkan alamat..."></textarea>
-                        </div>
-                        <div class="mb-2">
                             <label class="form-label text-dark fw-bold">Tanggal Lahir</label>
-                            <input type="date" name="birth_date" class="form-control" value="{{ $profile->birth_date }}">
+                            <input type="date" style="width: initial;" name="birth_date" class="form-control" value="{{ $profile->birth_date }}">
                         </div>
                         <div class="mb-2">
                             <label class="form-label text-dark fw-bold">Jenis Kelamin</label>
-                            <select name="gender" class="form-control select2">
+                            <select name="gender" class="form-select">
+                                <option value="" disabled selected style="background-color: #e9ecef; color: #6c757d;">Pilih
+                                    Jenis Kelamin</option>
                                 <option value="L" @selected($profile->gender == 'L')>Laki-laki</option>
                                 <option value="P" @selected($profile->gender == 'P')>Perempuan</option>
                             </select>
                         </div>
-
+                        <div class="mb-2">
+                            <label class="form-label text-dark fw-bold">Alamat</label>
+                            <textarea type="text" name="address" class="form-control" rows="4" autocomplete="off"
+                                value="{{ $profile->address }}" placeholder="Masukkan alamat..."></textarea>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

@@ -17,30 +17,44 @@ class MenuController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
+        // Ambil settings dari user
+        $settings = json_decode($user->setting->settings ?? '[]', true);
+
+        // Default jika setting kosong
+        $showImage = $settings['show_image_menu'] ?? true;
+        $pagination = $settings['pagination_menu'] ?? 20;
+
+        // Validasi pagination
+        $allowedPagination = [20, 50, 100];
+        if (!in_array($pagination, $allowedPagination)) {
+            $pagination = 20;
+        }
+
         $orderBy = $request->input('orderBy', 'name');
         $direction = $request->input('direction', 'asc');
 
         $bahans = Bahan::whereNull('deleted_at')->orderBy('name', 'asc')->get();
 
-	$query = Menu::with('komposisi.bahan.satuan')
-    		->whereNull('deleted_at');
+        $query = Menu::with('komposisi.bahan.satuan')
+            ->whereNull('deleted_at')
+            ->orderBy($orderBy, $direction);
 
         if ($search = $request->input('search')) {
-    	    $query->where(function ($q) use ($search) {
-       		$q->where('name', 'like', '%' . $search . '%')
-          	    ->orWhereHas('komposisi.bahan', function ($q2) use ($search) {
-                $q2->where('name', 'like', '%' . $search . '%');
-          		});
-    		});
-	}
-        $query->orderBy($orderBy, $direction);
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhereHas('komposisi.bahan', function ($q2) use ($search) {
+                        $q2->where('name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        $menus = $query->paginate($pagination)->appends($request->query());
 
         if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
-            $menus = $query->paginate(20)->withQueryString();
-
             return view('daftar-menu.index', [
                 'menus' => $menus,
-                'bahans' => $bahans
+                'bahans' => $bahans,
+                'settings' => $settings
             ]);
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -100,7 +114,16 @@ class MenuController extends Controller
             ]);
         }
 
-        $lastPage = DB::table('menus')->paginate(20)->lastPage();
+        $user = Auth::user();
+        $settings = json_decode($user->setting->settings ?? '[]', true);
+        $showImage = $settings['show_image_menu'] ?? true;
+        $pagination = $settings['pagination_menu'] ?? 20;
+        $allowedPagination = [20, 50, 100];
+        if (!in_array($pagination, $allowedPagination)) {
+            $pagination = 20;
+        }
+        $query = Menu::whereNull('deleted_at');
+        $lastPage = $query->paginate($pagination)->lastPage();
 
         return redirect('/daftar-menu?page=' . $lastPage . '&orderBy=id&direction=asc')
             ->with('success', 'Data "' . $menu->name . '" berhasil ditambahkan');
@@ -124,7 +147,6 @@ class MenuController extends Controller
                 return redirect()->back()->with('warning', 'Bahan tidak boleh kosong!');
             }
         }
-
 
         if ($request->has('image')) {
             $file = $request->file('image');

@@ -182,7 +182,7 @@
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
                             <label class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="stokDateM" required>
+                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateM" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Nama Bahan</label>

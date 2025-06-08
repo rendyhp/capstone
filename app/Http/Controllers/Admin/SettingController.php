@@ -20,16 +20,21 @@ class SettingController extends Controller
 
     public function index()
     {
-        $user = auth()->user();
+        $user = Auth::user();
+        $role = $user->role;
         $profile = $user->profile;
         $settings = $user->settings;
 
-        return view('setting.index', compact('user', 'profile', 'settings'));
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            return view('setting.index', compact('user', 'profile', 'settings'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
 
     public function update(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         $user->update([
             'name' => $request->name,
@@ -51,7 +56,14 @@ class SettingController extends Controller
 
     public function indexPassword()
     {
-        return view('setting.password');
+        $user = Auth::user();
+        $role = $user->role;
+
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            return view('setting.password');
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
 
     public function updatePassword(Request $request)
@@ -76,9 +88,17 @@ class SettingController extends Controller
     public function indexNotifikasiApi()
     {
         $user = auth()->user()->load('profile');
-        return view('setting.notifapi', [
-            'user' => $user,
-        ]);
+
+        $usere = Auth::user();
+        $role = $usere->role;
+        if (in_array($role, ['OWNER', 'MANAJER'])) {
+            return view('setting.notifapi', [
+                'user' => $user,
+            ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
+
     }
 
     public function disconnectNotifikasiApi(Request $request)
@@ -128,10 +148,17 @@ class SettingController extends Controller
     {
         $setApiToken = SetApiToken::first();
         $user = auth()->user()->load('profile');
-        return view('setting.setAPItoken', [
-            'user' => $user,
-            'setApiToken' => $setApiToken,
-        ]);
+
+        $usere = Auth::user();
+        $role = $usere->role;
+        if (in_array($role, ['OWNER'])) {
+            return view('setting.setAPItoken', [
+                'user' => $user,
+                'setApiToken' => $setApiToken,
+            ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
 
     public function updateSetAPItoken(Request $request)

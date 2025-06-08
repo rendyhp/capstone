@@ -92,9 +92,9 @@ class LaporanController extends Controller
                     for ($day = 1; $day <= $daysInMonth; $day++) {
                         $dateString = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->toDateString();
 
-                        
+
                         $masuk = $masukData[$dateString] ?? 0;
-                        
+
 
                         $terpakai = DB::table('transaksi_details')
                             ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
@@ -104,7 +104,7 @@ class LaporanController extends Controller
                             ->sum('transaksi_details.jumlah');
 
                         $akhir = $akhirData[$dateString] ?? null;
-                        
+
                         $awal = $stokAwalData[$dateString] ?? $prevAkhir;
 
                         $jumlah_akhir = (!is_null($awal) && !is_null($masuk)) ? ($awal + $masuk - $terpakai) : null;
@@ -205,7 +205,11 @@ class LaporanController extends Controller
             }
         }
 
-        return view('laporan.index', compact('allHistories', 'allHistories2', 'dateParam', 'bulanNama', 'tahunNama'));
+        if (in_array($role, ['OWNER', 'MANAJER'])) {
+            return view('laporan.index', compact('allHistories', 'allHistories2', 'dateParam', 'bulanNama', 'tahunNama'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
 
     public function indexLaporanBarang(Request $request)
@@ -225,10 +229,14 @@ class LaporanController extends Controller
 
         $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
-        return view('laporan.indexLaporanBarang', [
-            'barangs' => $paginated,
-            'satuanBarangs' => $satuanBarangs,
-        ]);
+        if (in_array($role, ['OWNER', 'MANAJER'])) {
+            return view('laporan.indexLaporanBarang', [
+                'barangs' => $paginated,
+                'satuanBarangs' => $satuanBarangs,
+            ]);
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
 
 

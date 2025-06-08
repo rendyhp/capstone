@@ -69,8 +69,12 @@
                                         data-bs-target="#barangModal">
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Menu
                                     </button>
-                                    <div class="col-sm-3 float-end mt-3">
+                                    <div class="col-sm-4 float-end mt-3">
                                         <div class="d-flex gap-2">
+                                            <button class="btn btn-secondary filterCustom" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal">
+                                                <i class="fa fa-filter"></i>
+                                            </button>
                                             <a href="/daftar-menu" class="btn btn-outline-secondary btn-sm" title="Refresh">
                                                 <i class="fa fa-refresh"></i>
                                             </a>
@@ -85,60 +89,67 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th style="width: 110px">Gambar</th>
+                                                @if ($settings['show_image_menu'] ?? true)
+                                                    <th style="width: 110px;">Gambar</th>
+                                                @endif
                                                 <th>Nama Menu</th>
-                                                <th>Deskripsi</th>
+                                                @if ($settings['show_keteranganM'] ?? true)
+                                                    <th style="max-width: 30vh;">Deskripsi</th>
+                                                @endif
                                                 <th>Bahan</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                @forelse ($menus as $menu)
-                                                    <tr>
-                                                        <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
-                                                        </td>
+                                            @forelse ($menus as $menu)
+                                                <tr>
+                                                    <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
+                                                    </td>
+                                                    @if ($settings['show_image_menu'] ?? true)
                                                         <td class="text-center">
                                                             <img src="{{ asset($menu->image ?? 'img/dummy/ss_menu.png') }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
-                                                        <td>{{ $menu->name }}</td>
+                                                    @endif
+                                                    <td>{{ $menu->name }}</td>
+                                                    @if ($settings['show_keteranganM'] ?? true)
                                                         <td style="max-width: 30vh;">{{ $menu->description }}</td>
+                                                    @endif
+                                                    <td>
+                                                        <ul>
+                                                            @foreach($menu->komposisi as $komposisi)<li
+                                                                class="{{ $komposisi->bahan->deleted_at ? 'text-danger' : '' }}">
+                                                                {{ $komposisi->bahan->name }} -
+                                                                {{ rtrim(rtrim(number_format($komposisi->jumlah, 3, ',', '.'), '0'), ',') }}
+                                                                {{ $komposisi->bahan->satuan->name }}
+                                                            </li>@endforeach
+                                                        </ul>
+                                                    </td>
 
-                                                        <td>
-                                                            <ul>
-                                                                @foreach($menu->komposisi as $komposisi)<li
-                                                                    class="{{ $komposisi->bahan->deleted_at ? 'text-danger' : '' }}">
-                                                                    {{ $komposisi->bahan->name }} -
-                                                                    {{ rtrim(rtrim(number_format($komposisi->jumlah, 3, ',', '.'), '0'), ',') }}
-                                                                    {{ $komposisi->bahan->satuan->name }}
-                                                                </li>@endforeach
-                                                            </ul>
-                                                        </td>
-
-                                                        <td>
+                                                    <td>
 
 
-                                                            <button type="button" class="btn btn-primary btn-sm btn_editmenu"
-                                                                data-id="{{ $menu->id }}" data-name="{{ $menu->name }}"
-                                                                data-description="{{ $menu->description }}"
-                                                                data-image="{{ $menu->image }}"
-                                                                data-komposisi='@json($menu->komposisi)'>
-                                                                <i class="fa fa-edit" aria-hidden="true"></i>
+                                                        <button type="button" class="btn btn-primary btn-sm btn_editmenu"
+                                                            data-id="{{ $menu->id }}" data-name="{{ $menu->name }}"
+                                                            data-description="{{ $menu->description }}"
+                                                            data-image="{{ $menu->image }}"
+                                                            data-komposisi='@json($menu->komposisi)'>
+                                                            <i class="fa fa-edit" aria-hidden="true"></i>
+                                                        </button>
+                                                        <form action="{{ route('daftar-menu.delete') }}" method="POST"
+                                                            class="d-inline">
+                                                            @method('PUT')
+                                                            @csrf
+                                                            <input type="hidden" name="id" value="{{ $menu->id }}">
+                                                            <button class="btn btn-danger btn-sm" type="submit"
+                                                                onclick="return confirm('Yakin ingin Mendelete Menu?')">
+                                                                <i class="fa fa-trash"></i>
                                                             </button>
-                                                            <form action="{{ route('daftar-menu.delete') }}" method="POST"
-                                                                class="d-inline">
-                                                                @method('PUT')
-                                                                @csrf
-                                                                <input type="hidden" name="id" value="{{ $menu->id }}">
-                                                                <button class="btn btn-danger btn-sm" type="submit"
-                                                                    onclick="return confirm('Yakin ingin Mendelete Menu?')">
-                                                                    <i class="fa fa-trash"></i>
-                                                                </button>
-                                                            </form>
+                                                        </form>
 
-                                                        </td>
-                                                    </tr>
-						@empty
+                                                    </td>
+                                                </tr>
+                                            @empty
                                                 <tr>
                                                     <td colspan="6" class="text-center text-muted">Tidak ada data yang
                                                         ditemukan.</td>
@@ -157,7 +168,7 @@
         <!-- Hidden HTML untuk bahan dropdown -->
         <div id="bahanOptions" class="d-none">
             <select class="form-select form-control select2">
-                <option value="">-- Pilih Satuan --</option>
+                <option value="">-- Pilih Bahan --</option>
                 @foreach($bahans as $bahan)
                     <option value="{{ $bahan->id }}" data-satuan="{{ $bahan->satuan->name }}">
                         {{ $bahan->name }}
@@ -171,7 +182,6 @@
 
         <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 90%; width: 600px;">
-
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Tambah Menu</h1>
@@ -188,12 +198,12 @@
                             <div class="mb-3">
                                 <label for="name" class="form-label text-dark fw-bold">Nama Menu</label>
                                 <input type="text" required class="form-control" id="name" name="name"
-                                    placeholder="Input Nama Menu" autocomplete="off">
+                                    placeholder="Masukkan nama menu..." autocomplete="off">
                             </div>
                             <div class="mb-3">
                                 <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
                                 <textarea class="form-control" required autocomplete="off" id="description"
-                                    name="description" rows="4" placeholder="Deskripsi menu"></textarea>
+                                    name="description" rows="4" placeholder="Deskripsi menu..."></textarea>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label text-dark fw-bold">Bahan</label>
@@ -213,7 +223,7 @@
         </div>
 
         <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 90%; width: 600px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title text-primary fw-bold fs-5" id="exampleModalLabel">Edit Menu</h5>
@@ -244,13 +254,13 @@
                             <div class="mb-3">
                                 <label for="editMenuName" class="form-label text-dark fw-bold">Nama Menu</label>
                                 <input type="text" class="form-control" id="editMenuName" name="name" required
-                                    autocomplete="off">
+                                    autocomplete="off" placeholder="Masukkan nama menu...">
                             </div>
 
                             <div class="mb-3">
                                 <label for="editMenuDescription" class="form-label text-dark fw-bold">Deskripsi</label>
                                 <textarea class="form-control" id="editMenuDescription" name="description" required
-                                    autocomplete="off"></textarea>
+                                    autocomplete="off" rows="4" placeholder="Deskripsi menu..."></textarea>
                             </div>
 
                             <div class="mb-3">
@@ -268,6 +278,59 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('user.setting.update') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold fs-5 text-primary" id="filterModalLabel">Filter Tampilan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        {{-- Checkbox Kolom --}}
+                        @php
+                            $columns = [
+                                'show_image_menu' => ['label' => 'Gambar', 'default' => true],
+                                'show_keteranganM' => ['label' => 'Deskripsi menu', 'default' => true],
+                            ];
+                        @endphp
+
+                        <label class="form-label fw-bold text-dark">Tampilan Kolom:</label>
+                        @foreach ($columns as $key => $column)
+                            <div class="form-check">
+                                <input type="hidden" name="{{ $key }}" value="0">
+                                <input class="form-check-input" type="checkbox" name="{{ $key }}" value="1" id="{{ $key }}" {{ ($settings[$key] ?? $column['default']) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="{{ $key }}">
+                                    {{ $column['label'] }}
+                                </label>
+                            </div>
+                        @endforeach
+                        <hr>
+
+                        {{-- Select Pagination --}}
+                        <div class="mb-3">
+                            <label for="paginationSelect" class="form-label fw-bold text-dark">Jumlah Per Halaman</label>
+                            <select class="form-select" name="pagination_menu" id="paginationSelect">
+                                <option value="20" {{ ($settings['pagination_menu'] ?? 20) == 20 ? 'selected' : '' }}>20
+                                </option>
+                                <option value="50" {{ ($settings['pagination_menu'] ?? 20) == 50 ? 'selected' : '' }}>50
+                                </option>
+                                <option value="100" {{ ($settings['pagination_menu'] ?? 20) == 100 ? 'selected' : '' }}>100
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

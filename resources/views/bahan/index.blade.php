@@ -130,7 +130,7 @@
                                                     style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
                                                     Gambar</th>
                                                 <th>Nama Bahan</th>
-                                                @if ($settings['show_keterangan'] ?? false)
+                                                @if ($settings['show_keterangan'] ?? true)
                                                     <th class="widthKolom8">Deskripsi</th>
                                                 @endif
                                                 @if ($settings['show_awal'] ?? true)
@@ -175,7 +175,7 @@
                                                         </a>
                                                     </td>
 
-                                                    @if ($settings['show_keterangan'] ?? false)
+                                                    @if ($settings['show_keterangan'] ?? true)
                                                         <td style="max-width: 30vh;">
                                                             {{ $bahan->description }}
                                                         </td>
@@ -317,7 +317,7 @@
                                                     style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
                                                     Gambar</th>
                                                 <th>Nama Bahan</th>
-                                                @if ($settings['show_keterangan'] ?? false)
+                                                @if ($settings['show_keterangan'] ?? true)
                                                     <th class="widthKolom8">Deskripsi</th>
                                                 @endif
                                                 @if ($settings['show_awal'] ?? true)
@@ -361,7 +361,7 @@
                                                             {{ $bahan->name }}
                                                         </a>
                                                     </td>
-                                                    @if ($settings['show_keterangan'] ?? false)
+                                                    @if ($settings['show_keterangan'] ?? true)
                                                         <td style="max-width: 30vh;">
                                                             {{ $bahan->description }}
                                                         </td>
@@ -474,16 +474,19 @@
                         <input type="hidden" name="bahan_id" id="bahan_id">
                         <input type="hidden" name="date" id="date">
                         <input type="hidden" name="type" id="type">
-	
-			<div class="mb-2">
-    				<small id="infoJumlahDetail" class="badge text-white border p-2 me-2" style="background-color: #0d6efd;"></small>
-    				<small id="infoJumlahType" class="badge text-white border p-2" style="background-color: #198754;"></small>
-			</div>
+
+                        <div class="mb-2">
+                            <small id="infoJumlahDetail" class="badge text-white border p-2 me-2"
+                                style="background-color: #0d6efd;"></small>
+                            <small id="infoJumlahType" class="badge text-white border p-2"
+                                style="background-color: #198754;"></small>
+                        </div>
                         <div class="mb-3">
-                            <label for="jumlah_input" class="form-label text-dark fw-bold">Jumlah<small id="satuanBahanText" class="text-muted ms-1"></small>:</label>
+                            <label for="jumlah_input" class="form-label text-dark fw-bold">Jumlah<small id="satuanBahanText"
+                                    class="text-muted ms-1"></small>:</label>
                             <input type="number" step="0.001" id="jumlah_input" name="jumlah" max="99999999999.999"
                                 class="form-control number0" required>
-			    
+
                         </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
@@ -509,7 +512,7 @@
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
                             <label class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" class="form-control" name="date" id="stokDateM" value="{{ $date }}" required>
+                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateM" value="{{ $date }}" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Nama Barang</label>
@@ -549,26 +552,16 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="filterModalLabel">Filter Tampilan</h5>
+                        <h5 class="modal-title fw-bold fs-5 text-primary" id="filterModalLabel">Filter Tampilan</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
 
                     <div class="modal-body">
-
-                        {{-- Checkbox Gambar --}}
-                        <div class="form-check mb-3">
-                            <input type="hidden" name="show_image_bahan" value="0">
-                            <input class="form-check-input" type="checkbox" name="show_image_bahan" value="1"
-                                id="toggleImageColumnModal" {{ ($settings['show_image_bahan'] ?? false) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="toggleImageColumnModal">
-                                Tampilkan Gambar
-                            </label>
-                        </div>
-
                         {{-- Checkbox Kolom --}}
                         @php
                             $columns = [
-                                'show_keterangan' => ['label' => 'Keterangan', 'default' => false],
+                                'show_image_bahan' => ['label' => 'Gambar', 'default' => false],
+                                'show_keterangan' => ['label' => 'Deskripsi bahan', 'default' => true],
                                 'show_awal' => ['label' => 'Awal', 'default' => true],
                                 'show_masuk' => ['label' => 'Masuk', 'default' => true],
                                 'show_terpakai' => ['label' => 'Terpakai', 'default' => true],
@@ -579,7 +572,7 @@
                             ];
                         @endphp
 
-                        <label class="form-label">Tampilkan Kolom:</label>
+                        <label class="form-label fw-bold text-dark">Tampilan Kolom:</label>
                         @foreach ($columns as $key => $column)
                             <div class="form-check">
                                 <input type="hidden" name="{{ $key }}" value="0">
@@ -593,7 +586,7 @@
 
                         {{-- Select Pagination --}}
                         <div class="mb-3">
-                            <label for="paginationSelectBar" class="form-label">Jumlah Per Halaman (BAR)</label>
+                            <label for="paginationSelectBar" class="form-label fw-bold text-dark">Jumlah Per Halaman (BAR):</label>
                             <select class="form-select" name="pagination_bahanBar" id="paginationSelectBar">
                                 <option value="5" {{ ($settings['pagination_bahanBar'] ?? 20) == 5 ? 'selected' : '' }}>5
                                 </option>
@@ -607,7 +600,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="paginationSelectKitchen" class="form-label">Jumlah Per Halaman (KITCHEN)</label>
+                            <label for="paginationSelectKitchen" class="form-label fw-bold text-dark">Jumlah Per Halaman (KITCHEN):</label>
                             <select class="form-select" name="pagination_bahanKitchen" id="paginationSelectKitchen">
                                 <option value="5" {{ ($settings['pagination_bahanKitchen'] ?? 20) == 5 ? 'selected' : '' }}>5
                                 </option>
@@ -640,10 +633,10 @@
                 document.getElementById('date').value = date;
                 document.getElementById('type').value = type;
                 document.getElementById('jumlah_input').value = formattedJumlah;
-		document.getElementById('modalEditJumlahLabel').innerText = `Edit Jumlah (${bahan_name})`;
-		document.getElementById('infoJumlahDetail').innerText = formatTanggalIndo(date);
-		document.getElementById('infoJumlahType').innerText = type === 'awal' ? 'Bahan Awal' : 'Akhir Sebenarnya';
-		document.getElementById('satuanBahanText').innerText = `(${satuan})`;
+                document.getElementById('modalEditJumlahLabel').innerText = `Edit Jumlah (${bahan_name})`;
+                document.getElementById('infoJumlahDetail').innerText = formatTanggalIndo(date);
+                document.getElementById('infoJumlahType').innerText = type === 'awal' ? 'Bahan Awal' : 'Akhir Sebenarnya';
+                document.getElementById('satuanBahanText').innerText = `(${satuan})`;
 
                 $("#modalEditJumlah").modal("show");
             }

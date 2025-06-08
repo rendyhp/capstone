@@ -90,7 +90,8 @@
                                             </a>
                                             <form action="/bahan/data-bahan" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search1" placeholder="Cari bahan bar..." value="{{ request('search1') }}">
+                                                    name="search1" placeholder="Cari bahan bar..."
+                                                    value="{{ request('search1') }}">
                                             </form>
                                         </div>
 
@@ -103,7 +104,7 @@
                                                     style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
                                                     Gambar</th>
                                                 <th>Nama Bahan</th>
-                                                <th>Deskripsi Bahan</th>
+                                                <th>Deskripsi</th>
                                                 <th>Pengingat Stok Minimum</th>
                                                 <th>Satuan</th>
                                                 <th>Aksi</th>
@@ -194,7 +195,8 @@
                                             </a>
                                             <form action="/bahan/data-bahan" method="get" class="form-inline d-flex">
                                                 <input class="form-control form-control-sm" autocomplete="off" type="text"
-                                                    name="search2" placeholder="Cari bahan dapur..." value="{{ request('search2') }}">
+                                                    name="search2" placeholder="Cari bahan dapur..."
+                                                    value="{{ request('search2') }}">
                                             </form>
                                         </div>
 
@@ -207,7 +209,7 @@
                                                     style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
                                                     Gambar</th>
                                                 <th>Nama Bahan</th>
-                                                <th>Deskripsi Bahan</th>
+                                                <th>Deskripsi</th>
                                                 <th>Pengingat Stok Minimum</th>
                                                 <th>Satuan</th>
                                                 <th>Aksi</th>
@@ -354,7 +356,7 @@
                         <div class="mb-3">
                             <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
                             <textarea class="form-control" required autocomplete="off" id="description2" name="description"
-                                rows="4" placeholder="Deskripsi bahan baku"></textarea>
+                                rows="4" placeholder="Deskripsi bahan baku..."></textarea>
 
                         </div>
                         <div class="mb-3 d-flex align-items-center">
@@ -430,7 +432,7 @@
                             <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="txtdescription"
                                 name="description" rows="4" autocomplete="off" required
-                                placeholder="Deskripsi bahan baku"></textarea>
+                                placeholder="Deskripsi bahan baku..."></textarea>
                             @error('description')
                                 <div class="alert alert-danger">
                                     {{ $message }}
@@ -516,7 +518,7 @@
                             <label for="description" class="form-label text-dark fw-bold">Deskripsi</label>
                             <textarea class="form-control @error('description') is-invalid @enderror" id="txtdescription2"
                                 name="description" rows="4" autocomplete="off" required
-                                placeholder="Deskripsi bahan baku"></textarea>
+                                placeholder="Deskripsi bahan baku..."></textarea>
                             @error('description')
                                 <div class="alert alert-danger">
                                     {{ $message }}
@@ -564,22 +566,34 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="filterModalLabel">Filter Tampilan</h5>
+                        <h5 class="modal-title fw-bold fs-5 text-primary" id="filterModalLabel">Filter Tampilan</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                     </div>
 
                     <div class="modal-body">
 
-                        {{-- Checkbox Gambar --}}
-                        <div class="form-check mb-3">
-                            <input type="hidden" name="show_image_bahan2" value="0">
-                            <input class="form-check-input" type="checkbox" name="show_image_bahan2" value="1"
-                                id="toggleImageColumnModal2" {{ ($settings['show_image_bahan2'] ?? false) ? 'checked' : '' }}><label class="form-check-label" for="toggleImageColumnModal2">Tampilkan Gambar</label>
-                        </div>
+                        {{-- Checkbox Kolom --}}
+                        @php
+                            $columns = [
+                                'show_image_bahan2' => ['label' => 'Gambar', 'default' => false],
+                            ];
+                        @endphp
+
+                        <label class="form-label fw-bold text-dark">Tampilan Kolom:</label>
+                        @foreach ($columns as $key => $column)
+                            <div class="form-check">
+                                <input type="hidden" name="{{ $key }}" value="0">
+                                <input class="form-check-input" type="checkbox" name="{{ $key }}" value="1" id="{{ $key }}" {{ ($settings[$key] ?? $column['default']) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="{{ $key }}">
+                                    {{ $column['label'] }}
+                                </label>
+                            </div>
+                        @endforeach
+                        <hr>
 
                         {{-- Select Pagination --}}
                         <div class="mb-3">
-                            <label for="paginationSelectBar2" class="form-label">Jumlah Per Halaman (BAR)</label>
+                            <label for="paginationSelectBar2" class="form-label fw-bold text-dark">Jumlah Per Halaman (BAR):</label>
                             <select class="form-select" name="pagination_bahanBar2" id="paginationSelectBar2">
                                 <option value="5" {{ ($settings['pagination_bahanBar2'] ?? 20) == 5 ? 'selected' : '' }}>5
                                 </option>
@@ -593,7 +607,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="paginationSelectKitchen2" class="form-label">Jumlah Per Halaman (KITCHEN)</label>
+                            <label for="paginationSelectKitchen2" class="form-label fw-bold text-dark">Jumlah Per Halaman (KITCHEN):</label>
                             <select class="form-select" name="pagination_bahanKitchen2" id="paginationSelectKitchen2">
                                 <option value="5" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 5 ? 'selected' : '' }}>5
                                 </option>

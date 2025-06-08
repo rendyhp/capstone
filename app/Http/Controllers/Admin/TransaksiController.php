@@ -85,18 +85,35 @@ class TransaksiController extends Controller
             ];
         })->values();
 
-        // Pagination manual
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $perPage = 20;
-        $currentItems = $transaksis->slice(($currentPage - 1) * $perPage, $perPage)->values();
-        $paginated = new LengthAwarePaginator($currentItems, $transaksis->count(), $perPage);
-        $paginated->appends($request->query());
+        // Ambil settings dari user
+        $settings = json_decode($user->setting->settings ?? '[]', true);
+        $showImage = $settings['show_image_transaksi'] ?? true;
+        $pagination = $settings['pagination_transaksi'] ?? 20;
+
+        // Validasi pagination
+        $allowedPagination = [20, 50, 100];
+        if (!in_array($pagination, $allowedPagination)) {
+            $pagination = 20;
+        }
 
         // Ambil semua menu untuk modal/edit
         $menus = Menu::with('komposisi.bahan.satuan')->whereNull('deleted_at')->orderBy('name', 'asc')->get();
 
-        return view('transaksi.index', compact('paginated', 'date', 'menus'));
+        // Paginasi manual
+        $page = LengthAwarePaginator::resolveCurrentPage();
+        $paginated = new LengthAwarePaginator(
+            $transaksis->forPage($page, $pagination),
+            $transaksis->count(),
+            $pagination,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
 
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
+            return view('transaksi.index', compact('paginated', 'date', 'menus', 'settings'));
+        } else {
+            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
+        }
     }
 
     public function importTransaksi(Request $request)

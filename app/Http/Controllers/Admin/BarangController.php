@@ -50,11 +50,11 @@ class BarangController extends Controller
             ->orderBy($orderBy, $sort);
 
         if ($search = $request->input('search')) {
-   	 	$query->where(function ($q) use ($search) {
-        		$q->where('name', 'like', '%' . $search . '%')
-          		->orWhere('description', 'like', '%' . $search . '%');
-    		});
-	}
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            });
+        }
 
         $barangs = $query->paginate($pagination)->appends($request->query());
 
@@ -327,11 +327,7 @@ class BarangController extends Controller
 
         $barangs = $query->paginate(20)->appends($request->query());
 
-        if ($role === 'OWNER') {
-            return view('barang.indexDataBarang', compact('barangs', 'satuanBarangs'));
-        } elseif ($role === 'MANAJER') {
-            return view('barang.indexDataBarang', compact('barangs', 'satuanBarangs'));
-        } elseif ($role === 'STAF') {
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
             return view('barang.indexDataBarang', compact('barangs', 'satuanBarangs'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -352,11 +348,7 @@ class BarangController extends Controller
 
         $satuans = $query->paginate(20)->appends($request->query());
 
-        if ($role === 'OWNER') {
-            return view('barang.indexSatuan', compact('satuans'));
-        } elseif ($role === 'MANAJER') {
-            return view('barang.indexSatuan', compact('satuans'));
-        } elseif ($role === 'STAF') {
+        if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
             return view('barang.indexSatuan', compact('satuans'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -438,8 +430,6 @@ class BarangController extends Controller
         return redirect()->back()->with('success', 'Stok berhasil dikurangi.');
     }
 
-
-
     public function storeDataBarang(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -477,7 +467,6 @@ class BarangController extends Controller
 
         $Barang->save();
 
-
         BarangAwal::create([
             'barang_id' => $Barang->id,
             'keterangan' => 'Stok awal ' . $request->name,
@@ -486,10 +475,16 @@ class BarangController extends Controller
             'date' => $request->date,
         ]);
 
-
-        $dataPerPage = 20;
-        $data = DB::table('barangs')->paginate($dataPerPage);
-        $lastPage = $data->lastPage();
+        $user = Auth::user();
+        $settings = json_decode($user->setting->settings ?? '[]', true);
+        $showImage = $settings['show_image_barang'] ?? true;
+        $pagination = $settings['pagination_barang'] ?? 20;
+        $allowedPagination = [20, 50, 100];
+        if (!in_array($pagination, $allowedPagination)) {
+            $pagination = 20;
+        }
+        $query = Barang::whereNull('deleted_at');
+        $lastPage = $query->paginate($pagination)->lastPage();
 
         return redirect('/barang/manajemen-barang?page=' . $lastPage . '&orderBy=id&sort=asc')
             ->with('success', 'Barang "' . $Barang->name . '" Berhasil Ditambahkan');

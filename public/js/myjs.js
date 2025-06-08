@@ -308,10 +308,10 @@ $(document).ready(function () {
         const jumlahInput = document.createElement("input");
         jumlahInput.type = "number";
         jumlahInput.name = `bahan[${index}][jumlah]`;
-        jumlahInput.placeholder = "Jumlah";
+        jumlahInput.placeholder = "Jumlah...";
         jumlahInput.required = true;
         jumlahInput.step = "0.001";
-        jumlahInput.className = "form-control";
+        jumlahInput.className = "form-control number0";
         jumlahInput.value = formatJumlah(jumlah);
 
         const satuanInput = document.createElement("input");
@@ -383,14 +383,11 @@ $(document).ready(function () {
 
             const row = renderBahanRow(index, selectedBahanId, jumlah, satuan);
             container.append(row);
-
-            $(row)
-                .find("select")
-                .select2({
+            $(row).find("select").select2({
                     placeholder: "Cari bahan...",
                     allowClear: true,
-                    dropdownParent: $("#editBarangModal"),
-                });
+                    dropdownParent: $("#editBahanContainer"),
+            });
         });
         refreshSatuan($("#editBahanContainer"));
 

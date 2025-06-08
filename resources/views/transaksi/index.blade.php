@@ -74,9 +74,13 @@
                                         <i class="fa fa-upload me-2" aria-hidden="true"></i>Import Transaksi
                                     </button>
 
-                                    <div class="col-sm-3 float-end">
+                                    <div class="col-sm-4 float-end">
                                         <div class="d-flex gap-2 mb-2">
-                                             <form action="/transaksi" method="GET" class="d-inline">
+                                            <button class="btn btn-secondary filterCustom" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal">
+                                                <i class="fa fa-filter"></i>
+                                            </button>
+                                            <form action="/transaksi" method="GET" class="d-inline">
                                                 <input type="hidden" name="date"
                                                     value="{{ request('date', now()->toDateString()) }}">
                                                 <button type="submit" class="btn btn-outline-secondary btn-sm"
@@ -97,24 +101,28 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th>No.</th>
-                                                <th style="width: 110px;" class="text-center">Gambar</th>
+                                                @if ($settings['show_image_transaksi'] ?? true)
+                                                    <th style="width: 110px;">Gambar</th>
+                                                @endif
                                                 <th>Nama Menu</th>
-                                                <th>Jumlah</th>
+                                                <th class="text-center">Jumlah</th>
                                                 <th>Bahan</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
-                                            @forelse ($paginated as $key => $transaksi)
+                                            @foreach ($paginated as $key => $transaksi)
                                                 <tr>
-                                                    <td>{{ $key + 1 }}</td>
-                                                    <td>
-                                                        <img src="{{ asset($transaksi['menu_image'] ?? 'img/dummy/ss_menu.png') }}"
-                                                            style="width: 100px; max-height: 100px;" alt="Img">
+                                                    <td>{{ ($paginated->currentPage() - 1) * $paginated->perPage() + $loop->iteration }}
                                                     </td>
+                                                    @if ($settings['show_image_transaksi'] ?? true)
+                                                        <td class="text-center"><img
+                                                                src="{{ asset($transaksi['menu_image'] ?? 'img/dummy/ss_menu.png') }}"
+                                                                style="width: 100px; max-height: 100px;" alt="Img">
+                                                        </td>
+                                                    @endif
                                                     <td>{{ $transaksi['menu_name'] }}</td>
-                                                    <td class="text-end">
+                                                    <td class="text-center">
                                                         {{ rtrim(rtrim(number_format($transaksi['total_jumlah'], 3, ',', '.'), '0'), ',') }}
                                                     </td>
                                                     <td>
@@ -150,20 +158,17 @@
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
                                                         </form>
-
-
                                                     </td>
-
-
                                                 </tr>
-                                            @empty
+                                            @endforeach
+                                            @if($paginated->isEmpty())
                                                 <tr>
-                                                    <td colspan="6" class="text-center text-muted">Tidak ada data yang
+                                                    <td colspan="100%" class="text-center text-muted py-3">Tidak ada data yang
                                                         ditemukan.</td>
                                                 </tr>
-                                            @endforelse
-
+                                            @endif
                                         </tbody>
+                                    </div>
                             </table>
                             {{ $paginated->onEachSide(0.5)->links('pagination::bootstrap-5') }}
                         </div>
@@ -179,22 +184,22 @@
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="importModalLabel">Import Transaksi</h5>
+                        <h5 class="modal-title fs-5 fw-bold text-primary" id="importModalLabel">Import Transaksi</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
 
                         <div class="mb-3">
-                            <label for="file">File Excel</label>
+                            <label class="form-label text-dark fw-bold" for="file">File Excel</label>
                             <input type="file" name="file" id="fileInput" class="form-control" accept=".xlsx,.csv" required>
                             <small class="form-text text-danger ml-2">*Format .xlsx, .xls, .csv</small>
                         </div>
                         <div class="mb-3">
-                            <label for="date">Tanggal Transaksi</label>
-                            <input type="date" name="date" class="form-control" required value="{{ $date }}">
+                            <label class="form-label text-dark fw-bold" for="date">Tanggal Transaksi</label>
+                            <input type="date" name="date" style="width: initial;" class="form-control" required value="{{ $date }}">
                         </div>
                         <div class="mb-3">
-                            <label>Mode Import</label><br>
+                            <label class="form-label text-dark fw-bold">Mode Import</label><br>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="mode" id="modeTambah" value="tambah"
                                     checked>
@@ -211,13 +216,14 @@
                         </div>
 
                         <div id="rangeDateFields" style="display: none;">
-                            <div class="mb-2">
-                                <label>Dari Tanggal</label>
-                                <input type="date" name="range_start" class="form-control">
+                            <div class="mb-2 row">
+                                <label class="col-sm-3 col-form-label" style="width: 140px;">Dari Tanggal</label>
+                                <input type="date" style="width: initial;" name="range_start" class="form-control col-sm-8">
+                                <label class="col-sm-3 col-form-label" style="width: 50px;">s/d</label>
+                                <input type="date" style="width: initial;" name="range_end" class="form-control col-sm-8">
                             </div>
                             <div class="mb-2">
-                                <label>Sampai Tanggal</label>
-                                <input type="date" name="range_end" class="form-control">
+                                
                             </div>
                         </div>
 
@@ -225,9 +231,9 @@
                         <!-- Preview -->
                         <div class="table-responsive">
                             <table class="table table-bordered mt-3" id="previewTable" style="display: none;">
-                                <thead>
+                                <thead class="table-light">
                                     <tr>
-                                        <th>No</th>
+                                        <th>No.</th>
                                         <th>Nama Menu</th>
                                         <th>Check</th>
                                         <th class="preview-update-column">Jumlah Sebelumnya</th>
@@ -280,6 +286,58 @@
         </div>
     </div>
 
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('user.setting.update') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold fs-5 text-primary" id="filterModalLabel">Filter Tampilan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        {{-- Checkbox Kolom --}}
+                        @php
+                            $columns = [
+                                'show_image_transaksi' => ['label' => 'Gambar', 'default' => true],
+                            ];
+                        @endphp
+
+                        <label class="form-label fw-bold text-dark">Tampilan Kolom:</label>
+                        @foreach ($columns as $key => $column)
+                            <div class="form-check">
+                                <input type="hidden" name="{{ $key }}" value="0">
+                                <input class="form-check-input" type="checkbox" name="{{ $key }}" value="1" id="{{ $key }}" {{ ($settings[$key] ?? $column['default']) ? 'checked' : '' }}>
+                                <label class="form-check-label" for="{{ $key }}">
+                                    {{ $column['label'] }}
+                                </label>
+                            </div>
+                        @endforeach
+                        <hr>
+
+                        {{-- Select Pagination --}}
+                        <div class="mb-3">
+                            <label for="paginationSelect" class="form-label fw-bold text-dark">Jumlah Per Halaman</label>
+                            <select class="form-select" name="pagination_transaksi" id="paginationSelect">
+                                <option value="20" {{ ($settings['pagination_transaksi'] ?? 20) == 20 ? 'selected' : '' }}>20
+                                </option>
+                                <option value="50" {{ ($settings['pagination_transaksi'] ?? 20) == 50 ? 'selected' : '' }}>50
+                                </option>
+                                <option value="100" {{ ($settings['pagination_transaksi'] ?? 20) == 100 ? 'selected' : '' }}>100
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     @push('addScript')
         <script>
             document.getElementById('fileInput').addEventListener('change', handleFile, false);
@@ -315,12 +373,12 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                                                        <td>${i}</td>
-                                                        <td class="nama-menu">${namaMenuExcel}</td>
-                                                        <td class="check-cell">⏳</td>
-                                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
-                                                        <td>${jumlahBaru}</td>
-                                                    `;
+                                <td>${i}</td>
+                                <td class="nama-menu">${namaMenuExcel}</td>
+                                <td class="check-cell text-center">⏳</td>
+                                <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
+                                <td>${jumlahBaru}</td>
+                            `;
                             tbody.appendChild(tr);
 
                             pendingFetches++; // Sebelum fetch
@@ -367,11 +425,11 @@
                 const previewCols = document.querySelectorAll('.preview-update-column');
                 const rangeFields = document.getElementById('rangeDateFields');
 
-                if (mode === 'update') {
-                    previewCols.forEach(col => col.style.display = '');
-                } else {
-                    previewCols.forEach(col => col.style.display = 'none');
-                }
+                // if (mode === 'update') {
+                //     previewCols.forEach(col => col.style.display = '');
+                // } else {
+                //     previewCols.forEach(col => col.style.display = 'none');
+                // }
 
                 rangeFields.style.display = (mode === 'range') ? 'block' : 'none';
             }

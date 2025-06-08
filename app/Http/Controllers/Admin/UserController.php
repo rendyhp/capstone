@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Helpers\LogActivity;
 use App\Http\Controllers\Controller;
 use App\Models\UserProfile;
 use App\Models\UserSetting;
@@ -11,12 +10,7 @@ use Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-use App\Models\LogActivity as LogActivityModel;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\File;
-use Str;
 
 class UserController extends Controller
 {
@@ -45,7 +39,6 @@ class UserController extends Controller
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
-
 
     private function maskEmail($email)
     {
@@ -168,8 +161,6 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', 'User ' . $targetUser->name . ' berhasil dihapus.');
     }
-
-
 
     public function clearTmp()
     {

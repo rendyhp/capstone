@@ -28,13 +28,13 @@
             @csrf
             <div class="mb-3 mt-4">
                 <label for="current_password" class="form-label">Password Lama</label>
-                <input type="password" class="form-control" name="current_password" required>
+                <input style="width: 500px" type="password" class="form-control" name="current_password" required>
                 @error('current_password') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
 
             <div class="mb-3">
                 <label for="new_password" class="form-label">Password Baru</label>
-                <input type="password" class="form-control" name="new_password" minlength="8" maxlength="20" required>
+                <input style="width: 500px" type="password" class="form-control" name="new_password" minlength="8" maxlength="20" required>
                 <small class="form-text text-muted">*Minimal 8 dan maksimal 20 karakter.</small>
                 <p>
                     @error('new_password') <small class="text-danger">{{ $message }}</small> @enderror
@@ -44,7 +44,7 @@
 
             <div class="mb-3">
                 <label for="new_password_confirmation" class="form-label">Konfirmasi Password Baru</label>
-                <input type="password" class="form-control" name="new_password_confirmation" minlength="8" maxlength="20"
+                <input style="width: 500px" type="password" class="form-control" name="new_password_confirmation" minlength="8" maxlength="20"
                     required>
                 <small class="form-text text-muted">*Harus sama persis dengan password baru.</small>
             </div>
