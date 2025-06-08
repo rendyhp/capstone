@@ -176,9 +176,7 @@
                                                     </td>
 
                                                     @if ($settings['show_keterangan'] ?? true)
-                                                        <td style="max-width: 30vh;">
-                                                            {{ $bahan->description }}
-                                                        </td>
+                                                        <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
                                                     @endif
 
                                                     @if ($settings['show_awal'] ?? true)
@@ -362,9 +360,7 @@
                                                         </a>
                                                     </td>
                                                     @if ($settings['show_keterangan'] ?? true)
-                                                        <td style="max-width: 30vh;">
-                                                            {{ $bahan->description }}
-                                                        </td>
+                                                        <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
                                                     @endif
 
 

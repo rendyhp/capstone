@@ -122,3 +122,23 @@
 .filterCustom {
     padding: 5px 5px 0px 5px;
 }
+
+.back-to-top2 {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+    right: 40px;
+    width: 40px;
+    height: 40px;
+    background: #0d6efd;
+    color: white;
+    border-radius: 0;
+    z-index: 999;
+    cursor: pointer;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.back-to-top2:hover {
+    background: #093e8d;
+    color: white;
+}

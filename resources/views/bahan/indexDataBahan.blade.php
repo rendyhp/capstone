@@ -120,7 +120,7 @@
                                                             style="width: 100px; max-height: 100px;" alt="Img">
                                                     </td>
                                                     <td>{{ $bahan->name }}</td>
-                                                    <td style="max-width: 150px">{{ $bahan->description }}</td>
+                                                    <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
                                                     <td class="text-end">
                                                         {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
                                                     </td>
@@ -226,7 +226,7 @@
                                                             style="width: 100px; max-height: 100px;" alt="Img">
                                                     </td>
                                                     <td>{{ $bahan->name }}</td>
-                                                    <td style="max-width: 150px">{{ $bahan->description }}</td>
+                                                    <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
                                                     <td class="text-end">
                                                         {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
                                                     </td>
@@ -593,7 +593,8 @@
 
                         {{-- Select Pagination --}}
                         <div class="mb-3">
-                            <label for="paginationSelectBar2" class="form-label fw-bold text-dark">Jumlah Per Halaman (BAR):</label>
+                            <label for="paginationSelectBar2" class="form-label fw-bold text-dark">Jumlah Per Halaman
+                                (BAR):</label>
                             <select class="form-select" name="pagination_bahanBar2" id="paginationSelectBar2">
                                 <option value="5" {{ ($settings['pagination_bahanBar2'] ?? 20) == 5 ? 'selected' : '' }}>5
                                 </option>
@@ -607,7 +608,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="paginationSelectKitchen2" class="form-label fw-bold text-dark">Jumlah Per Halaman (KITCHEN):</label>
+                            <label for="paginationSelectKitchen2" class="form-label fw-bold text-dark">Jumlah Per Halaman
+                                (KITCHEN):</label>
                             <select class="form-select" name="pagination_bahanKitchen2" id="paginationSelectKitchen2">
                                 <option value="5" {{ ($settings['pagination_bahanKitchen2'] ?? 20) == 5 ? 'selected' : '' }}>5
                                 </option>

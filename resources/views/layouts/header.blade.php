@@ -101,7 +101,7 @@
         </div>
     </header>
     <footer class="bg-gray-200 py-4">
-        <p class="text-center text-gray-700 text-sm">
+        <p class="text-center text-gray-700 text-sm mb-4">
             &copy;2025 B.di.M Cafe & Chill Mulawarman
         </p>
     </footer>

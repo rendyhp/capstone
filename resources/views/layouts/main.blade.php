@@ -243,7 +243,7 @@
                 </div>
             </div>
             <!-- Widgets End -->
-            <footer class="bg-gray-200 py-4 me-5">
+            <footer class="bg-gray-200 py-4 me-5 mb-4">
                 <p class="text-end text-gray-700 text-sm">
                     &copy;2025 B.di.M Cafe & Chill Mulawarman
                 </p>
@@ -251,6 +251,9 @@
         </div>
         <!-- Content End -->
     </div>
+
+    <a href="#" class="back-to-top2 align-items-center justify-content-center"><i
+            class="fa-solid fa-arrow-up"></i></a>
 
     @if(Auth::check() && Auth::user()->role == 'STAF')
         <!-- Modal Report -->
@@ -327,8 +330,6 @@
                 </form>
             </div>
         </div>
-
-
         <script>
             const kategoriRadios = document.querySelectorAll('input[name="kategori"]');
             const alasanRadios = document.querySelectorAll('input[name="alasan"]');
@@ -349,6 +350,16 @@
         </script>
     @endif
 
+    <script>
+            window.addEventListener('scroll', function () {
+                const btn = document.querySelector('.back-to-top2');
+                if (window.scrollY > 200) {
+                    btn.style.display = 'flex';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+        </script>
     @stack('addScript')
 
     <!-- JavaScript Libraries -->

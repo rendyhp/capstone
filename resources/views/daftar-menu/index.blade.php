@@ -113,7 +113,7 @@
                                                     @endif
                                                     <td>{{ $menu->name }}</td>
                                                     @if ($settings['show_keteranganM'] ?? true)
-                                                        <td style="max-width: 30vh;">{{ $menu->description }}</td>
+                                                        <td style="max-width: 150px">{!! nl2br(e($menu->description)) !!}</td>
                                                     @endif
                                                     <td>
                                                         <ul>

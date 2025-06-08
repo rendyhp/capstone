@@ -145,7 +145,7 @@
                                                         {{ $barang->name ?? '-' }}
                                                     </td>
                                                     @if ($settings['show_keteranganB'] ?? true)
-                                                        <td style="max-width: 30vh;">{{ $barang->description }}</td>
+                                                        <td style="max-width: 150px">{!! nl2br(e($barang->description)) !!}</td>
                                                     @endif
                                                     @if ($settings['show_awalB'] ?? true)
                                                         <td class="text-center">
