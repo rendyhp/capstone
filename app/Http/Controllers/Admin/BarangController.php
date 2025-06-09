@@ -444,7 +444,7 @@ class BarangController extends Controller
 
         $existing = Barang::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
         if ($existing) {
-            return redirect()->back()->with('error', 'Barang "' . $request->input('name') . '" sudah ada');
+            return redirect()->back()->with('error', 'Barang "' . $request->input('name') . '" sudah ada.');
         }
 
         $Barang = new Barang;
@@ -487,7 +487,7 @@ class BarangController extends Controller
         $lastPage = $query->paginate($pagination)->lastPage();
 
         return redirect('/barang/manajemen-barang?page=' . $lastPage . '&orderBy=id&sort=asc')
-            ->with('success', 'Barang "' . $Barang->name . '" Berhasil Ditambahkan');
+            ->with('success', 'Barang "' . $Barang->name . '" berhasil ditambahkan.');
     }
 
     public function storeSatuan(Request $request)
@@ -517,7 +517,7 @@ class BarangController extends Controller
         $Satuan->name = $request->input('name');
         $Satuan->save();
 
-        return redirect('/barang/satuan?page=' . $lastPage)->with('success', 'Satuan "' . $Satuan->name . '" Berhasil Ditambahkan');
+        return redirect('/barang/satuan?page=' . $lastPage)->with('success', 'Satuan "' . $Satuan->name . '" berhasil ditambahkan.');
 
     }
 
@@ -537,6 +537,16 @@ class BarangController extends Controller
             'satuan_id' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
+
+        $id = $request->input('id');
+        $existing = Barang::whereNull('deleted_at')
+            ->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])
+            ->where('id', '!=', $id)
+            ->first();
+
+        if ($existing) {
+            return redirect()->back()->with('error', 'Barang "' . $request->input('name') . '" sudah ada.');
+        }
 
         $Barang = Barang::findOrFail($request->input('id'));
         $Barang->user_id = Auth::id();
@@ -560,7 +570,7 @@ class BarangController extends Controller
 
         $Barang->save();
 
-        return redirect()->back()->with('success', 'Data "' . $Barang->name . '" Berhasil Diubah');
+        return redirect()->back()->with('success', 'Barang "' . $Barang->name . '" berhasil diperbarui.');
     }
 
     public function deleteImageBarang($id)
@@ -574,11 +584,8 @@ class BarangController extends Controller
         $barang->image = null; // Kosongkan di database
         $barang->save();
 
-        return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
+        return redirect()->back()->with('success', 'Gambar berhasil di hapus.');
     }
-
-
-
 
     public function updateSatuan(Request $request, SatuanBarang $satuans)
     {
@@ -589,6 +596,17 @@ class BarangController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
+        $id = $request->input('id');
+        $existing = SatuanBarang::whereNull('deleted_at')
+            ->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])
+            ->where('id', '!=', $id)
+            ->first();
+
+        if ($existing) {
+            return redirect()->back()->with('error', 'Satuan "' . $request->input('name') . '" sudah ada.');
+        }
+
         $user = Auth::user()->id;
 
         $Satuan = SatuanBarang::findOrFail($request->input('id'));
@@ -596,7 +614,7 @@ class BarangController extends Controller
         $Satuan->name = $request->input('name');
         $Satuan->save();
 
-        return redirect()->back()->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
+        return redirect()->back()->with('success', 'Satuan "' . $Satuan->name . '" berhasil diperbarui.');
     }
 
     public function deleteDataBarang(Request $request)
@@ -607,7 +625,7 @@ class BarangController extends Controller
         $barang->deleted_at = now();
         $barang->save();
 
-        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Barang "' . $barang->name . '" berhasil di hapus.');
     }
 
     public function deleteBarangMasukByID(Request $request)
@@ -618,7 +636,7 @@ class BarangController extends Controller
         $formattedDate = Carbon::parse($barangs->date)->translatedFormat('j F Y');
         $barangs->delete();
 
-        return redirect()->back()->with('success', 'Data barang masuk tanggal "' . $formattedDate . '" Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Data barang masuk tanggal "' . $formattedDate . '" berhasil di hapus.');
     }
 
     public function deleteBarangKeluarByID(Request $request)
@@ -640,6 +658,6 @@ class BarangController extends Controller
         $barang->deleted_at = now();
         $barang->save();
 
-        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Satuan "' . $barang->name . '" berhasil di hapus.');
     }
 }

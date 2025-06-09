@@ -563,7 +563,7 @@ class BahanController extends Controller
 
         if ($existing) {
             return redirect()->back()
-                ->with('error', 'Satuan "' . $request->input('name') . '" sudah ada');
+                ->with('error', 'Satuan "' . $request->input('name') . '" sudah ada.');
         }
 
         $Satuan = new SatuanBahan();
@@ -572,7 +572,7 @@ class BahanController extends Controller
         $Satuan->save();
 
         return redirect('/bahan/satuan?page=' . $lastPage . '&order=id&sort=asc')
-            ->with('success', 'Satuan "' . $Satuan->name . '" Berhasil Ditambahkan');
+            ->with('success', 'Satuan "' . $Satuan->name . '" berhasil ditambahkan.');
     }
 
     public function updateSatuan(Request $request, SatuanBahan $satuans)
@@ -586,12 +586,22 @@ class BahanController extends Controller
         }
         $user = Auth::user()->id;
 
+        $existing = SatuanBahan::whereNull('deleted_at')
+            ->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])
+            ->where('id', '!=', $request->input('id'))
+            ->first();
+
+        if ($existing) {
+            return redirect()->back()
+                ->with('error', 'Satuan "' . $request->input('name') . '" sudah ada.');
+        }
+
         $Satuan = SatuanBahan::findOrFail($request->input('id'));
         $Satuan->user_id = $user;
         $Satuan->name = $request->input('name');
         $Satuan->save();
 
-        return redirect()->back()->with('success', 'Data "' . $Satuan->name . '" Berhasil Diubah');
+        return redirect()->back()->with('success', 'Satuan "' . $Satuan->name . '" berhasil diperbarui.');
     }
 
 
@@ -612,7 +622,7 @@ class BahanController extends Controller
 
         $existing = Bahan::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
         if ($existing) {
-            return redirect()->back()->with('error', 'Bahan "' . $request->input('name') . '" sudah ada');
+            return redirect()->back()->with('error', 'Bahan "' . $request->input('name') . '" sudah ada.');
         }
 
         $user = Auth::user()->id;
@@ -659,7 +669,7 @@ class BahanController extends Controller
         $lastPage = $query->paginate($pagination)->lastPage();
 
         return redirect('/bahan/data-bahan?page=' . $lastPage . '&orderBy=id&sort=asc')
-            ->with('success', 'Data "' . $Bahan->name . '" Berhasil Ditambahkan');
+            ->with('success', 'Bahan "' . $Bahan->name . '" berhasil ditambahkan.');
     }
 
     public function updateDataBahan(Request $request, Bahan $bahans)
@@ -673,10 +683,23 @@ class BahanController extends Controller
             'section' => 'required',
         ]);
 
+        $id = $request->input('id');
+        $name = strtolower($request->input('name'));
+
+        // Cek apakah nama bahan sudah digunakan bahan lain (case-insensitive)
+        $existing = Bahan::whereNull('deleted_at')
+            ->whereRaw('LOWER(name) = ?', [$name])
+            ->where('id', '!=', $id)
+            ->first();
+
+        if ($existing) {
+            return redirect()->back()
+                ->with('error', 'Bahan "' . $request->input('name') . '" sudah ada.');
+        }
+
         $user = Auth::user()->id;
 
         $Bahan = Bahan::findOrFail($request->input('id'));
-
         $Bahan->user_id = $user;
         $Bahan->name = $request->input('name');
         $Bahan->description = $request->input('description' ?: '-');
@@ -702,7 +725,7 @@ class BahanController extends Controller
 
         $Bahan->save();
 
-        return redirect('/bahan/data-bahan')->with('success', 'Data Berhasil Diubah');
+        return redirect('/bahan/data-bahan')->with('success', 'Bahan "' . $Bahan->name . '" berhasil diperbarui.');
 
     }
 
@@ -717,7 +740,7 @@ class BahanController extends Controller
         $barang->image = null; // Kosongkan di database
         $barang->save();
 
-        return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
+        return redirect()->back()->with('success', 'Gambar berhasil di hapus.');
     }
 
     public function deleteBahanMKbyID(Request $request)
@@ -728,7 +751,7 @@ class BahanController extends Controller
         $formattedDate = Carbon::parse($barang->date)->translatedFormat('j F Y');
         $barang->delete();
 
-        return redirect()->back()->with('success', 'Data bahan masuk tanggal "' . $formattedDate . '" Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Data bahan masuk tanggal "' . $formattedDate . '" berhasil di hapus.');
     }
 
     public function deleteDataBahan(Request $request)
@@ -739,7 +762,7 @@ class BahanController extends Controller
         $barang->deleted_at = now();
         $barang->save();
 
-        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Bahan "' . $barang->name . '" berhasil di hapus.');
     }
 
     public function deleteSatuan(Request $request)
@@ -750,7 +773,7 @@ class BahanController extends Controller
         $barang->deleted_at = now();
         $barang->save();
 
-        return redirect()->back()->with('success', 'Data "' . $barang->name . '" Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Satuan "' . $barang->name . '" berhasil di hapus.');
     }
 
 

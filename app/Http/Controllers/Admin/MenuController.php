@@ -73,7 +73,7 @@ class MenuController extends Controller
         // Cek jika Menu sudah ada
         $existing = Menu::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
         if ($existing) {
-            return redirect()->back()->with('error', 'Menu "' . $request->input('name') . '" sudah ada');
+            return redirect()->back()->with('error', 'Menu "' . $request->input('name') . '" sudah ada.');
         }
 
         // Cek jika tidak ada bahan
@@ -126,7 +126,7 @@ class MenuController extends Controller
         $lastPage = $query->paginate($pagination)->lastPage();
 
         return redirect('/daftar-menu?page=' . $lastPage . '&orderBy=id&direction=asc')
-            ->with('success', 'Data "' . $menu->name . '" berhasil ditambahkan');
+            ->with('success', 'Menu "' . $menu->name . '" berhasil ditambahkan.');
     }
 
     public function update(Request $request, $id)
@@ -138,6 +138,15 @@ class MenuController extends Controller
         ]);
 
         $menu = Menu::findOrFail($id);
+
+        $existing = Menu::whereNull('deleted_at')
+            ->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])
+            ->where('id', '!=', $id) // Pastikan bukan menu yang sedang diedit
+            ->first();
+
+        if ($existing) {
+            return redirect()->back()->with('error', 'Menu "' . $request->input('name') . '" sudah ada.');
+        }
 
         if (empty($request->bahan)) {
             return redirect()->back()->with('warning', 'Bahan tidak boleh kosong!');
@@ -192,7 +201,7 @@ class MenuController extends Controller
         $menu->deleted_at = now();
         $menu->save();
 
-        return redirect()->back()->with('success', 'Menu "' . $menuName . '" Berhasil Dihapus');
+        return redirect()->back()->with('success', 'Menu "' . $menuName . '" berhasil di hapus.');
     }
 
     public function deleteImageMenu($id)
@@ -206,7 +215,7 @@ class MenuController extends Controller
         $barang->image = null; // Kosongkan di database
         $barang->save();
 
-        return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
+        return redirect()->back()->with('success', 'Gambar berhasil di hapus.');
     }
 
 }
