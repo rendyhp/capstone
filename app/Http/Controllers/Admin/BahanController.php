@@ -531,7 +531,7 @@ class BahanController extends Controller
             return redirect()->back()->with('error', 'Data stok masuk sudah pernah di submit sebelumnya.');
         }
 
-        BahanMasuk::create([
+        $bahanMasuk = BahanMasuk::create([
             'bahan_id' => $validated['id'],
             'keterangan' => $validated['keterangan'],
             'jumlah' => $validated['jumlah'],
@@ -539,9 +539,10 @@ class BahanController extends Controller
             'date' => $validated['date'],
         ]);
 
-        return redirect()->back()->with('success', 'Stok berhasil ditambahkan.');
-    }
+        $bahanMasuk->load('bahan');
 
+        return redirect()->back()->with('success', 'Stok "' . $bahanMasuk->bahan->name . '" berhasil ditambahkan sebanyak ' . number_format($bahanMasuk->jumlah, 0, ',', '.') . ' ' . $bahanMasuk->bahan->satuan->name .'.');
+    }
 
     public function storeSatuan(Request $request)
     {

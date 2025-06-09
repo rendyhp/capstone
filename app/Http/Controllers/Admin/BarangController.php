@@ -375,7 +375,7 @@ class BarangController extends Controller
             return redirect()->back()->with('error', 'Data stok masuk sudah pernah di submit sebelumnya.');
         }
 
-        BarangMasuk::create([
+        $barangMasuk = BarangMasuk::create([
             'barang_id' => $validated['id'],
             'keterangan' => $validated['keterangan'],
             'jumlah' => $validated['jumlah'],
@@ -383,7 +383,9 @@ class BarangController extends Controller
             'date' => $validated['date'],
         ]);
 
-        return redirect()->back()->with('success', 'Stok berhasil ditambahkan.');
+        $barangMasuk->load('barang');
+
+       return redirect()->back()->with('success', 'Stok "' . $barangMasuk->barang->name . '" berhasil ditambahkan sebanyak ' . number_format($barangMasuk->jumlah, 0, ',', '.') . ' ' . $barangMasuk->barang->satuanBarang->name .'.');
     }
 
     public function storeK(Request $request)
@@ -406,13 +408,15 @@ class BarangController extends Controller
             return redirect()->back()->with('error', 'Data stok keluar sudah pernah di submit sebelumnya.');
         }
 
-        BarangKeluar::create([
+        $barangKeluar = BarangKeluar::create([
             'barang_id' => $validated['id'],
             'keterangan' => $validated['keterangan'],
             'jumlah' => $validated['jumlah'],
             'user_id' => Auth::id(),
             'date' => $validated['date'],
         ]);
+
+        $barangKeluar->load('barang');
 
         // Update dan cek alert stok
         $stockService = new StockDataService();
@@ -427,7 +431,7 @@ class BarangController extends Controller
         $alertService = new StockAlertService();
         $alertService->checkAndNotify($barangData);
 
-        return redirect()->back()->with('success', 'Stok berhasil dikurangi.');
+        return redirect()->back()->with('success', 'Stok "' . $barangKeluar->barang->name . '" berhasil dikurangi sebanyak ' . number_format($barangKeluar->jumlah, 0, ',', '.') . ' ' . $barangKeluar->barang->satuanBarang->name .'.');
     }
 
     public function storeDataBarang(Request $request)
