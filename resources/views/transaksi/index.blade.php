@@ -49,6 +49,10 @@
                                         data-bs-target="#importModal">
                                         <i class="fa fa-upload me-2" aria-hidden="true"></i>Import Transaksi
                                     </button>
+                                    <button class="btn btn-outline-success" data-bs-toggle="modal"
+                                        data-bs-target="#tambahTransaksiModal">
+                                        <i class="fa fa-plus me-2"></i>Manual
+                                    </button>
 
                                     <div class="col-sm-4 float-end">
                                         <div class="d-flex gap-2 mb-2">
@@ -229,6 +233,44 @@
             </form>
         </div>
     </div>
+    <!-- Modal Tambah Transaksi -->
+    <div class="modal fade" id="tambahTransaksiModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('transaksi.storeTransaksi') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary fw-bold" id="tambahModalLabel">Tambah Transaksi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="date" class="form-label fw-bold text-dark">Tanggal Transaksi</label>
+                            <input type="date" name="date" style="width: initial;" class="form-control" required
+                                value="{{ $date }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="menu_id" class="form-label text-dark fw-bold">Nama Menu</label>
+                            <select class="form-select" required autocomplete="off" id="menu_id" name="menu_id">
+                                <option value="">-- Pilih Menu --</option>
+                                @foreach ($menus as $menu)
+                                    <option value="{{ $menu->id }}">{{ $menu->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jumlah" class="form-label fw-bold text-dark">Jumlah</label>
+                            <input type="number" name="jumlah" class="form-control number0" value="0" required min="1"
+                                max="999999999">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Modal Edit Barang-->
     <div class="modal fade" id="editBarangModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -245,12 +287,15 @@
                         <div class="mb-3">
                             <input type="text" name="id" id="txtid" hidden>
                             <input type="hidden" name="menu_id" id="txtmenuId">
-
-
-                            <input type="date" name="date" id="txtdate" class="form-control">
-                            <label for="menu_name" class="form-label">Nama Menu</label>
+                            <label for="date" class="form-label fw-bold text-dark">Tanggal Transaksi</label>
+                            <input type="date" readonly name="date" id="txtdate" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="menu_name" class="form-label fw-bold text-dark">Nama Menu</label>
                             <input type="text" readonly name="menu_name" id="txtname" class="form-control">
-                            <label for="jumlah" class="form-label">Jumlah</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jumlah" class="form-label fw-bold text-dark">Jumlah</label>
                             <input type="number" name="jumlah" id="txtjumlahMenu" class="form-control" required
                                 max="999999999">
                         </div>
@@ -351,12 +396,12 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                                        <td>${i}</td>
-                                        <td class="nama-menu">${namaMenuExcel}</td>
-                                        <td class="check-cell text-center">⏳</td>
-                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
-                                        <td>${jumlahBaru}</td>
-                                    `;
+                                                                                <td>${i}</td>
+                                                                                <td class="nama-menu">${namaMenuExcel}</td>
+                                                                                <td class="check-cell text-center">⏳</td>
+                                                                                <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
+                                                                                <td>${jumlahBaru}</td>
+                                                                            `;
                             tbody.appendChild(tr);
 
                             pendingFetches++; // Sebelum fetch

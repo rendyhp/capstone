@@ -7,7 +7,6 @@ use App\Models\Bahan;
 use App\Models\KomposisiMenu;
 use App\Models\Menu;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class MenuController extends Controller

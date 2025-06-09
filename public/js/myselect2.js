@@ -52,3 +52,8 @@ $("#barangModal2").on("shown.bs.modal", function () {
     initSelect2("#satuan_id_kitchen", "#barangModal2 .modal-content");
 });
 
+// Modal Tambah Transaksi
+$("#tambahTransaksiModal").on("shown.bs.modal", function () {
+    initSelect2("#menu_id", "#tambahTransaksiModal .modal-content");
+});
+

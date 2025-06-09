@@ -277,6 +277,26 @@ class TransaksiController extends Controller
         }
     }
 
+    public function storeTransaksi(Request $request)
+    {
+        $request->validate([
+            'menu_id' => 'required|exists:menus,id',
+            'jumlah' => 'required|numeric|min:1',
+            'date' => 'required|date',
+        ]);
+
+        $transaksi = new Transaksi();
+        $transaksi->menu_id = $request->menu_id;
+        $transaksi->jumlah = $request->jumlah;
+        $transaksi->date = $request->date;
+        $transaksi->user_id = auth()->id(); // jika kamu pakai user login
+        $transaksi->save();
+
+        $this->hitungBahanTerpakai($transaksi);
+
+        return redirect()->back()->with('success', 'Transaksi "' . $transaksi->menu->name . '" berhasil ditambahkan.');
+    }
+
     public function updateTransaksi(Request $request, $id)
     {
 
@@ -305,7 +325,7 @@ class TransaksiController extends Controller
 
         $this->hitungBahanTerpakai($transaksi);
 
-        return redirect()->back()->with('success', 'Transaksi berhasil diubah');
+        return redirect()->back()->with('success', 'Transaksi "' . $transaksi->menu->name . '" berhasil di ubah.');
     }
 
     public function destroy(Request $request)
@@ -326,6 +346,6 @@ class TransaksiController extends Controller
             ->whereDate('date', $tanggal)
             ->delete();
 
-        return redirect()->back()->with('success', 'Transaksi "' . $menuName . '" berhasil dihapus.');
+        return redirect()->back()->with('success', 'Transaksi "' . $menuName . '" berhasil di hapus.');
     }
 }

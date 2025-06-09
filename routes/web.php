@@ -115,6 +115,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi');
     Route::post('/transaksi/import', [TransaksiController::class, 'importTransaksi'])->name('transaksi.import');
     Route::get('/transaksi/jumlah-sebelumnya', [TransaksiController::class, 'jumlahSebelumnya']);
+    Route::post('/transaksi/store', [TransaksiController::class, 'storeTransaksi'])->name('transaksi.storeTransaksi');
     Route::delete('/transaksi/delete', [TransaksiController::class, 'destroy'])->name('transaksi.delete');
     Route::put('/transaksi/updateTransaksi/{id}', [TransaksiController::class, 'updateTransaksi'])->name('transaksi.updateTransaksi');
 
