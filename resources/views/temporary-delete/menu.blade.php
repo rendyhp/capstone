@@ -110,7 +110,7 @@
 
                                                     <form action="{{ route('temporary-delete.menu.force-delete') }}"
                                                         method="POST"
-                                                        onsubmit="return confirm('Yakin ingin menghapus menu ini secara permanen dari tampilan?')">
+                                                        onsubmit="return confirm('Yakin ingin menghapus menu ini secara permanen?')">
                                                         @csrf
                                                         @method('PUT')
                                                         <input type="hidden" name="id" value="{{ $menu->id }}">

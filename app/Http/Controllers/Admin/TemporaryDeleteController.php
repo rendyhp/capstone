@@ -128,7 +128,7 @@ class TemporaryDeleteController extends Controller
         $bahan = Bahan::findOrFail($request->id);
         $bahan->deleted_at = Carbon::parse('2015-05-15');
         $bahan->save();
-        return redirect()->back()->with('success', 'Bahan "' . $bahan->name . '". dihapus permanen.');
+        return redirect()->back()->with('success', 'Bahan "' . $bahan->name . '" berhasil dihapus permanen.');
     }
 
     public function forceDeleteBarang(Request $request)
@@ -137,7 +137,7 @@ class TemporaryDeleteController extends Controller
         $barang = Barang::findOrFail($request->id);
         $barang->deleted_at = Carbon::parse('2015-05-15');
         $barang->save();
-        return redirect()->back()->with('success', 'Barang "' . $barang->name . '". dihapus permanen.');
+        return redirect()->back()->with('success', 'Barang "' . $barang->name . '" berhasil dihapus permanen.');
     }
 
     public function forceDeleteMenu(Request $request)
@@ -146,6 +146,6 @@ class TemporaryDeleteController extends Controller
         $menu = Menu::findOrFail($request->id);
         $menu->deleted_at = Carbon::parse('2015-05-15');
         $menu->save();
-        return redirect()->back()->with('success', 'Menu "' . $menu->name . '". dihapus permanen.');
+        return redirect()->back()->with('success', 'Menu "' . $menu->name . '" berhasil dihapus permanen.');
     }
 }

@@ -92,7 +92,7 @@
                                                     </form>
                                                     <form action="{{ route('temporary-delete.barang.force-delete') }}"
                                                         method="POST"
-                                                        onsubmit="return confirm('Yakin ingin menghapus barang ini secara permanen dari tampilan?')">
+                                                        onsubmit="return confirm('Yakin ingin menghapus barang ini secara permanen?')">
                                                         @csrf
                                                         @method('PUT')
                                                         <input type="hidden" name="id" value="{{ $barang->id }}">
