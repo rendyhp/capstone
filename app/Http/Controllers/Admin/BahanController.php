@@ -542,7 +542,7 @@ class BahanController extends Controller
         $bahanMasuk->load('bahan');
         $jumlah = rtrim(rtrim(number_format($bahanMasuk->jumlah, 3, ',', '.'), '0'), ',');
 
-        return redirect()->back()->with('success', 'Stok "' . $bahanMasuk->bahan->name . '" berhasil ditambahkan sebanyak ' . number_format($bahanMasuk->jumlah, 0, ',', '.') . ' ' . $bahanMasuk->bahan->satuan->name . '.');
+        return redirect()->back()->with('success', 'Stok "' . $bahanMasuk->bahan->name . '" berhasil ditambahkan sebanyak ' . $jumlah . ' ' . $bahanMasuk->bahan->satuan->name . '.');
     }
 
     public function storeSatuan(Request $request)
