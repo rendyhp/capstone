@@ -164,6 +164,10 @@ $(document).on("click", ".btnTambahStok", function () {
 
     $("#stokBarangIdM").val(id);
     $("#stokBarangNameM").val(name);
+    $("#stokKeteranganM").attr(
+        "placeholder",
+        "Misal: Beli " + name.toLowerCase() + " dengan cash atau transfer..."
+    );
     $("#stokBarangSatuanM").val(satuan);
 });
 
@@ -174,10 +178,23 @@ $(document).on("click", ".btnKurangStok", function () {
 
     console.log(id, name, satuan);
 
+    const formattedName = formatPlaceholderName(name);
+
     $("#stokBarangIdK").val(id);
     $("#stokBarangNameK").val(name);
+    $("#stokKeteranganK").attr(
+        "placeholder",
+        "Misal: " + formattedName + " rusak karena..."
+    );
     $("#stokBarangSatuanK").val(satuan);
 });
+
+function formatPlaceholderName(name) {
+    const words = name.toLowerCase().split(" ");
+    if (words.length === 0) return "";
+    words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+    return words.join(" ");
+}
 
 ///////////////////////////////////////////////
 
@@ -383,11 +400,13 @@ $(document).ready(function () {
 
             const row = renderBahanRow(index, selectedBahanId, jumlah, satuan);
             container.append(row);
-            $(row).find("select").select2({
+            $(row)
+                .find("select")
+                .select2({
                     placeholder: "Cari bahan...",
                     allowClear: true,
                     dropdownParent: $("#editBahanContainer"),
-            });
+                });
         });
         refreshSatuan($("#editBahanContainer"));
 

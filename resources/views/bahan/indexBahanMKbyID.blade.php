@@ -184,7 +184,7 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Misal: Cash..."></textarea>
+                                name="keterangan" rows="4" placeholder="Misal: Beli {{ $bahans->name ?? '' }} baru atau Beli cash..."></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
