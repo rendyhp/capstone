@@ -495,7 +495,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0"
+                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0" autocomplete="off"
                                 max="99999999999.999" required>
                         </div>
                         <div class="mb-3">

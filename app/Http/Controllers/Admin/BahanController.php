@@ -540,8 +540,9 @@ class BahanController extends Controller
         ]);
 
         $bahanMasuk->load('bahan');
+        $jumlah = rtrim(rtrim(number_format($bahanMasuk->jumlah, 3, ',', '.'), '0'), ',');
 
-        return redirect()->back()->with('success', 'Stok "' . $bahanMasuk->bahan->name . '" berhasil ditambahkan sebanyak ' . number_format($bahanMasuk->jumlah, 0, ',', '.') . ' ' . $bahanMasuk->bahan->satuan->name .'.');
+        return redirect()->back()->with('success', 'Stok "' . $bahanMasuk->bahan->name . '" berhasil ditambahkan sebanyak ' . number_format($bahanMasuk->jumlah, 0, ',', '.') . ' ' . $bahanMasuk->bahan->satuan->name . '.');
     }
 
     public function storeSatuan(Request $request)
@@ -752,7 +753,9 @@ class BahanController extends Controller
         $formattedDate = Carbon::parse($barang->date)->translatedFormat('j F Y');
         $barang->delete();
 
-        return redirect()->back()->with('success', 'Data bahan masuk tanggal "' . $formattedDate . '" berhasil di hapus.');
+        $jumlah = rtrim(rtrim(number_format($barang->jumlah, 3, ',', '.'), '0'), ',');
+
+        return redirect()->back()->with('success', 'Data bahan masuk tanggal "' . $formattedDate . '"  sebanyak ' . $jumlah . ' ' . $barang->bahan->satuan->name . ' berhasil di hapus.');
     }
 
     public function deleteDataBahan(Request $request)

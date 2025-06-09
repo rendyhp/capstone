@@ -3,7 +3,7 @@
         position: fixed;
         top: 60px;
         right: 5%;
-        width: 50%;
+        max-width: 50%;
         z-index: 100;
         animation: slideIn 0.5s ease, fadeOut 0.5s ease 9.5s forwards;
     }
@@ -41,10 +41,6 @@
         to {
             width: 0%;
         }
-    }
-
-    .custom-alert .btn-close {
-        transition: opacity 0.5s ease, transform 0.5s ease;
     }
 </style>
 

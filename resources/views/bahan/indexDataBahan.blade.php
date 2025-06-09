@@ -97,7 +97,7 @@
                                                         <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
                                                             style="width: 100px; max-height: 100px;" alt="Img">
                                                     </td>
-                                                    <td>{{ $bahan->name }}</td>
+                                                    <td style="max-width: 150px">{{ $bahan->name }}</td>
                                                     <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
                                                     <td class="text-end">
                                                         {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
@@ -203,7 +203,7 @@
                                                         <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
                                                             style="width: 100px; max-height: 100px;" alt="Img">
                                                     </td>
-                                                    <td>{{ $bahan->name }}</td>
+                                                    <td style="max-width: 150px">{{ $bahan->name }}</td>
                                                     <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
                                                     <td class="text-end">
                                                         {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}

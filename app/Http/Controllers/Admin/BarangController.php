@@ -640,7 +640,7 @@ class BarangController extends Controller
         $formattedDate = Carbon::parse($barangs->date)->translatedFormat('j F Y');
         $barangs->delete();
 
-        return redirect()->back()->with('success', 'Data barang masuk tanggal "' . $formattedDate . '" berhasil di hapus.');
+        return redirect()->back()->with('success', 'Data barang masuk tanggal "' . $formattedDate . '"  sebanyak ' . number_format($barangs->jumlah, 0, ',', '.') . ' ' . $barangs->barang->satuanBarang->name .' berhasil di hapus.');
     }
 
     public function deleteBarangKeluarByID(Request $request)
@@ -651,7 +651,7 @@ class BarangController extends Controller
         $formattedDate = Carbon::parse($barangs->date)->translatedFormat('j F Y');
         $barangs->delete();
 
-        return redirect()->back()->with('success', 'Data barang keluar tanggal "' . $formattedDate . '" berhasil dihapus.');
+        return redirect()->back()->with('success', 'Data barang keluar tanggal "' . $formattedDate . '"  sebanyak ' . number_format($barangs->jumlah, 0, ',', '.') . ' ' . $barangs->barang->satuanBarang->name .' berhasil di hapus.');
     }
 
     public function deleteSatuan(Request $request)
