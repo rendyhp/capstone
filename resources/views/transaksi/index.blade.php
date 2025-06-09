@@ -19,31 +19,7 @@
                 </div>
             </div>
         </div>
-
-        @if (session()->has('success'))
-            <div class="alert alert-success alert-dismissible" role="alert">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fa fa-check me-2" aria-hidden="true"></i>
-                        {{ session('success') }}
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>
-        @endif
-
-        @if (session()->has('error'))
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"></i>
-                        &nbsp{{ session()->get('error') }}
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>
-        @endif
-
+        @include('layouts.components.alert-flash-messages')
         <div class="d-flex align-items-center mb-3">
             <div class="mb-3 row">
                 <label for="tanggalbahan" class="col-sm-3 col-form-label me-2">Tanggal</label>
@@ -196,7 +172,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold" for="date">Tanggal Transaksi</label>
-                            <input type="date" name="date" style="width: initial;" class="form-control" required value="{{ $date }}">
+                            <input type="date" name="date" style="width: initial;" class="form-control" required
+                                value="{{ $date }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Mode Import</label><br>
@@ -223,7 +200,7 @@
                                 <input type="date" style="width: initial;" name="range_end" class="form-control col-sm-8">
                             </div>
                             <div class="mb-2">
-                                
+
                             </div>
                         </div>
 
@@ -324,7 +301,8 @@
                                 </option>
                                 <option value="50" {{ ($settings['pagination_transaksi'] ?? 20) == 50 ? 'selected' : '' }}>50
                                 </option>
-                                <option value="100" {{ ($settings['pagination_transaksi'] ?? 20) == 100 ? 'selected' : '' }}>100
+                                <option value="100" {{ ($settings['pagination_transaksi'] ?? 20) == 100 ? 'selected' : '' }}>
+                                    100
                                 </option>
                             </select>
                         </div>
@@ -373,12 +351,12 @@
 
                             const tr = document.createElement('tr');
                             tr.innerHTML = `
-                                <td>${i}</td>
-                                <td class="nama-menu">${namaMenuExcel}</td>
-                                <td class="check-cell text-center">⏳</td>
-                                <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
-                                <td>${jumlahBaru}</td>
-                            `;
+                                        <td>${i}</td>
+                                        <td class="nama-menu">${namaMenuExcel}</td>
+                                        <td class="check-cell text-center">⏳</td>
+                                        <td class="jumlah-sebelumnya preview-update-column">Memuat...</td>
+                                        <td>${jumlahBaru}</td>
+                                    `;
                             tbody.appendChild(tr);
 
                             pendingFetches++; // Sebelum fetch

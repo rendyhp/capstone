@@ -21,13 +21,8 @@
             color: #555;
         }
     </style>
-
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible">{{ session('success') }}</div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible">{{ session('error') }}</div>
-    @endif
+    
+    @include('layouts.components.alert-flash-messages')
 
     <div class="container cards">
         <a href="{{ url('/dashboard') }}"><i class="fa fa-angle-double-left me-2 mb-3"></i>Kembali | Ke dashboard</a>

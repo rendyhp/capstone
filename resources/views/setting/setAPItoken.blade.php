@@ -12,15 +12,7 @@
         }
     </style>
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible">{{ session('success') }}</div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-danger text-sm alert-dismissible">
-            {!! session('error') !!}
-        </div>
-    @endif
-
+    @include('layouts.components.alert-flash-messages')
 
     <div class="container cards">
         <a href="{{ url('/dashboard') }}">
