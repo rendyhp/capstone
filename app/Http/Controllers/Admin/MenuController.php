@@ -188,7 +188,7 @@ class MenuController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Menu "' . $request->name . '" berhasil diperbarui');
+        return redirect()->back()->with('success', 'Menu "' . $request->name . '" berhasil diperbarui.');
     }
 
     public function delete(Request $request)
