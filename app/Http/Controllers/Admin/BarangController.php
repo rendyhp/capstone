@@ -372,7 +372,7 @@ class BarangController extends Controller
             ->exists();
 
         if ($exists) {
-            return redirect()->back()->with('error', 'Data stok masuk sudah pernah disubmit sebelumnya.');
+            return redirect()->back()->with('error', 'Data stok masuk sudah pernah di submit sebelumnya.');
         }
 
         BarangMasuk::create([
@@ -403,7 +403,7 @@ class BarangController extends Controller
             ->exists();
 
         if ($exists) {
-            return redirect()->back()->with('error', 'Data stok keluar sudah pernah disubmit sebelumnya.');
+            return redirect()->back()->with('error', 'Data stok keluar sudah pernah di submit sebelumnya.');
         }
 
         BarangKeluar::create([
