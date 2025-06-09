@@ -69,7 +69,7 @@
                                                 <th>No.</th>
                                                 <th>Tanggal</th>
                                                 <th>Nama Barang</th>
-                                                <th>Tipe</th>
+                                                <th class="text-center">Tipe</th>
                                                 <th>Jumlah</th>
                                                 <th>Satuan</th>
                                                 <th>Keterangan</th>
@@ -99,7 +99,9 @@
 
                                                     <td class="text-end">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
                                                     <td>{{ $trx['satuan'] }}</td>
-                                                    <td>{{ $trx['keterangan'] }}</td>
+                                                    <td>
+                                                        {!! nl2br(e($trx['keterangan'])) !!}
+                                                    </td>
                                                     <td>{{ $trx['user'] }}</td>
                                                 </tr>
                                             @endforeach

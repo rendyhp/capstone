@@ -25,7 +25,7 @@
                 </div>
             </div>
         </div>
-       @include('layouts.components.alert-flash-messages')
+        @include('layouts.components.alert-flash-messages')
         <div>
             <a href="/bahan/manajemen-bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/masuk-keluar') ? 'active' : '' }}">
@@ -82,7 +82,7 @@
                                                 <th>No.</th>
                                                 <th>Tanggal</th>
                                                 <th>Nama Barang</th>
-                                                <th>Tipe</th>
+                                                <th class="text-center">Tipe</th>
                                                 <th>Jumlah</th>
                                                 <th>Satuan</th>
                                                 <th>Keterangan</th>
@@ -109,7 +109,9 @@
 
                                                     <td class="text-end">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
                                                     <td>{{ $trx['satuan'] }}</td>
-                                                    <td>{{ $trx['keterangan'] }}</td>
+                                                    <td>
+                                                        {!! nl2br(e($trx['keterangan'])) !!}
+                                                    </td>
                                                     <td>{{ $trx['user'] }}</td>
                                                     @if (auth()->user()->role === 'OWNER' || auth()->user()->role === 'MANAJER')
                                                         <td>
@@ -159,7 +161,8 @@
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
                             <label class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateM" required>
+                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateM"
+                                required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Nama Bahan</label>
@@ -169,8 +172,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="number" min="1" class="form-control number0" value="0" autocomplete="off" max="99999999999.999"
-                                name="jumlah" required>
+                            <input type="number" min="1" class="form-control number0" value="0" autocomplete="off"
+                                max="99999999999.999" name="jumlah" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Satuan</label>
