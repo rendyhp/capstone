@@ -106,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/bahan/masuk-keluar/{encryptedId}', [BahanController::class, 'indexBahanMKbyID'])->name('bahan.indexBahanMKbyID');
     Route::delete('/bahan/masuk-keluar/delete', [BahanController::class, 'deleteBahanMKbyID'])->name('bahan.deleteBahanMKbyID');
     Route::post('/bahan/manajemen-bahan/storeM', [BahanController::class, 'storeM'])->name('bahan.storeM');
+    Route::post('/bahan/catatan/update', [BahanController::class, 'updateCatatan']);
 
     // Menu & transaksi
     Route::get('/daftar-menu', [MenuController::class, 'index'])->name('datftar-menu');

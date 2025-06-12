@@ -132,6 +132,9 @@
                                                     <th class="widthKolom8">Minimum</th>
                                                 @endif
                                                 <th>Satuan</th>
+                                                @if ($settings['show_catatan'] ?? true)
+                                                    <th class="widthKolom8">Catatan</th>
+                                                @endif
                                                 <th class="widthKolom18">Aksi</th>
                                             </tr>
                                         </thead>
@@ -214,6 +217,14 @@
 
                                                     <td>{{ $bahan->satuan->name ?? '-' }}</td>
 
+                                                    @if ($settings['show_catatan'] ?? true)
+                                                        <td class="editable" ondblclick="editCatatan(this)"
+                                                            data-id="{{ $bahan->id }}" data-date="{{ $date }}"
+                                                            data-catatan="{{ htmlentities($bahan->catatanBA->catatan ?? '', ENT_QUOTES) }}"
+                                                            style="max-width: 150px; white-space: pre-line;">
+                                                            {!! nl2br(e($bahan->catatanBA->catatan ?? '-')) !!}
+                                                        </td>
+                                                    @endif
                                                     <td>
                                                         <!-- Tombol Tambah -->
                                                         <button type="button" class="btn btn-outline-success btnTambahStok"
@@ -317,6 +328,9 @@
                                                     <th class="widthKolom8">Minimum</th>
                                                 @endif
                                                 <th>Satuan</th>
+                                                @if ($settings['show_catatan'] ?? true)
+                                                    <th class="widthKolom8">Catatan</th>
+                                                @endif
                                                 <th class="widthKolom18">Aksi</th>
                                             </tr>
                                         </thead>
@@ -398,7 +412,14 @@
                                                         </td>
                                                     @endif
                                                     <td>{{ $bahan->satuan->name ?? '-' }}</td>
-
+                                                    @if ($settings['show_catatan'] ?? true)
+                                                        <td class="editable" ondblclick="editCatatan(this)"
+                                                            data-id="{{ $bahan->id }}" data-date="{{ $date }}"
+                                                            data-catatan="{{ htmlentities($bahan->catatanBA->catatan ?? '', ENT_QUOTES) }}"
+                                                            style="max-width: 150px; white-space: pre-line;">
+                                                            {!! nl2br(e($bahan->catatanBA->catatan ?? '-')) !!}
+                                                        </td>
+                                                    @endif
                                                     <td>
                                                         <button type="button" class="btn btn-outline-success btnTambahStok"
                                                             data-id="{{ $bahan->id ?? 'NULL' }}"
@@ -471,6 +492,31 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalEditCatatan" tabindex="-1" aria-labelledby="modalEditCatatanLabel" aria-hidden="true">
+        <div class="container modal-dialog">
+            <div class="modal-content">
+                <form id="formEditCatatan">
+                    @csrf
+                    <input type="hidden" name="catatan_bahan_id" id="catatan_bahan_id">
+                    <input type="hidden" name="catatan_date" id="catatan_date">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditCatatanLabel">Edit Catatan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea name="catatan_input" id="catatan_input" class="form-control" rows="5"
+                            placeholder="Tulis catatan..."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Bahan Masuk -->
     <div class="modal fade" id="barangModalM" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="container modal-dialog">
@@ -485,7 +531,8 @@
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
                             <label class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateM" value="{{ $date }}" required>
+                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateM"
+                                value="{{ $date }}" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Nama Barang</label>
@@ -495,8 +542,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0" autocomplete="off"
-                                max="99999999999.999" required>
+                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0"
+                                autocomplete="off" max="99999999999.999" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Satuan</label>
@@ -507,7 +554,8 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Misal: Beli {{ $bahan->name ?? '' }} baru atau Beli cash..."></textarea>
+                                name="keterangan" rows="4"
+                                placeholder="Misal: Beli {{ $bahan->name ?? '' }} baru atau Beli cash..."></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -542,6 +590,7 @@
                                 'show_akhir' => ['label' => 'Akhir Sebenarnya', 'default' => true],
                                 'show_terbuang' => ['label' => 'Terbuang', 'default' => true],
                                 'show_minimum' => ['label' => 'Minimum', 'default' => false],
+                                'show_catatan' => ['label' => 'Catatan', 'default' => true],
                             ];
                         @endphp
 
@@ -559,7 +608,8 @@
 
                         {{-- Select Pagination --}}
                         <div class="mb-3">
-                            <label for="paginationSelectBar" class="form-label fw-bold text-dark">Jumlah Per Halaman (BAR):</label>
+                            <label for="paginationSelectBar" class="form-label fw-bold text-dark">Jumlah Per Halaman
+                                (BAR):</label>
                             <select class="form-select" name="pagination_bahanBar" id="paginationSelectBar">
                                 <option value="5" {{ ($settings['pagination_bahanBar'] ?? 20) == 5 ? 'selected' : '' }}>5
                                 </option>
@@ -573,7 +623,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="paginationSelectKitchen" class="form-label fw-bold text-dark">Jumlah Per Halaman (KITCHEN):</label>
+                            <label for="paginationSelectKitchen" class="form-label fw-bold text-dark">Jumlah Per Halaman
+                                (KITCHEN):</label>
                             <select class="form-select" name="pagination_bahanKitchen" id="paginationSelectKitchen">
                                 <option value="5" {{ ($settings['pagination_bahanKitchen'] ?? 20) == 5 ? 'selected' : '' }}>5
                                 </option>
@@ -597,6 +648,52 @@
 
 
     @push('addScript')
+        <script>
+            function editCatatan(el) {
+                const id = el.getAttribute('data-id');
+                const date = el.getAttribute('data-date');
+                const catatan = el.getAttribute('data-catatan');
+
+                 document.getElementById('catatan_bahan_id').value = id;
+    document.getElementById('catatan_date').value = date;
+    document.getElementById('catatan_input').value = catatan;
+
+                $("#modalEditCatatan").modal("show");
+            }
+
+            document.getElementById('formEditCatatan').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                let form = e.target;
+                let bahan_id = form.catatan_bahan_id.value;
+                let date = form.catatan_date.value;
+                let catatan = form.catatan_input.value;
+                let _token = form.querySelector('input[name="_token"]').value;
+
+                fetch('/bahan/catatan/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': _token
+                    },
+                    body: JSON.stringify({ bahan_id, date, catatan })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Catatan berhasil disimpan!');
+                            location.reload();
+                        } else {
+                            alert('Gagal menyimpan catatan');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Terjadi kesalahan.');
+                    });
+            });
+        </script>
+
 
         <script>
             function editJumlah(bahan_id, date, type, currentJumlah, bahan_name, satuan) {

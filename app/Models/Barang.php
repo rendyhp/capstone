@@ -39,4 +39,14 @@ class Barang extends Model
         return $this->hasMany(BarangAwal::class);
     }
 
+    public function catatans()
+    {
+        return $this->hasMany(BahanCatatan::class, 'barang_id');
+    }
+
+    public function catatanByDate($date)
+    {
+        return $this->catatans()->whereDate('date', $date)->first();
+    }
+
 }

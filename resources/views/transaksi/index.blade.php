@@ -49,10 +49,6 @@
                                         data-bs-target="#importModal">
                                         <i class="fa fa-upload me-2" aria-hidden="true"></i>Import Transaksi
                                     </button>
-                                    <button class="btn btn-outline-success" data-bs-toggle="modal"
-                                        data-bs-target="#tambahTransaksiModal">
-                                        <i class="fa fa-plus me-2"></i>Manual
-                                    </button>
 
                                     <div class="col-sm-4 float-end">
                                         <div class="d-flex gap-2 mb-2">

@@ -28,7 +28,7 @@ class Bahan extends Model
     {
         return $this->belongsTo(SatuanBahan::class, 'satuan_id');
     }
-    
+
 
     public function bahanAkhir()
     {
@@ -54,7 +54,18 @@ class Bahan extends Model
     {
         return $this->hasMany(TransaksiDetail::class, 'bahan_id');
     }
-    
+
+    public function catatans()
+    {
+        return $this->hasMany(BahanCatatan::class, 'bahan_id');
+    }
+
+    public function catatanByDate($date)
+    {
+        return $this->catatans()->whereDate('date', $date)->first();
+    }
+
+
 }
 
 

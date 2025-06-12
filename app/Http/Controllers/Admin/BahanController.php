@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bahan;
 use App\Models\BahanAkhir;
 use App\Models\BahanAwal;
+use App\Models\BahanCatatan;
 use App\Models\BahanMasuk;
 use App\Models\SatuanBahan;
 use App\Services\StockAlertService;
@@ -98,6 +99,12 @@ class BahanController extends Controller
                 ->whereNull('deleted_at')
                 ->first();
 
+            $bahan->catatanBA = BahanCatatan::where('bahan_id', $bahan->id)
+                ->whereDate('date', $date)
+                ->latest()
+                ->first();
+
+
             if ($bahan_akhir) {
                 $bahan->bahan_akhir = $bahan_akhir->jumlah;
                 $bahan->akhir_manual = true;
@@ -161,6 +168,12 @@ class BahanController extends Controller
                 ->whereDate('date', $date)
                 ->whereNull('deleted_at')
                 ->first();
+
+            $bahan->catatanBA = BahanCatatan::where('bahan_id', $bahan->id)
+                ->whereDate('date', $date)
+                ->latest()
+                ->first();
+
 
             if ($bahan_akhir) {
                 $bahan->bahan_akhir = $bahan_akhir->jumlah;
@@ -289,6 +302,29 @@ class BahanController extends Controller
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
     }
+
+    public function updateCatatan(Request $request)
+    {
+        $validated = $request->validate([
+            'bahan_id' => 'required|integer',
+            'date' => 'required|date',
+            'catatan' => 'nullable|string',
+        ]);
+
+        $catatan = BahanCatatan::updateOrCreate(
+            [
+                'bahan_id' => $validated['bahan_id'],
+                'date' => $validated['date'],
+            ],
+            [
+                'user_id' => auth()->id(),
+                'catatan' => $validated['catatan'],
+            ]
+        );
+
+        return response()->json(['success' => true]);
+    }
+
 
     public function saveBahanAwal(Request $request)
     {

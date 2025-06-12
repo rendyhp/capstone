@@ -106,8 +106,10 @@
                                                             {{ $trx['tipe'] }}
                                                         </span>
                                                     </td>
-
-                                                    <td class="text-end">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
+							<td class="text-end">
+                                                            {{ rtrim(rtrim(number_format($trx['jumlah'], 3, ',', '.'), '0'), ',') }}
+                                                        </td>
+                                                    
                                                     <td>{{ $trx['satuan'] }}</td>
                                                     <td>
                                                         {!! nl2br(e($trx['keterangan'])) !!}
