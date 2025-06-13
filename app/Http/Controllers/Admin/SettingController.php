@@ -38,7 +38,6 @@ class SettingController extends Controller
 
         $user->update([
             'name' => $request->name,
-            'wa_api_token' => $request->wa_api_token,
         ]);
 
         $user->profile()->updateOrCreate(
