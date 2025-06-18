@@ -492,24 +492,25 @@
         </div>
     </div>
 
+    <!-- Edit Catatan -->
     <div class="modal fade" id="modalEditCatatan" tabindex="-1" aria-labelledby="modalEditCatatanLabel" aria-hidden="true">
         <div class="container modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fs-5 fw-bold text-primary" id="modalEditCatatanLabel">Edit Catatan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
                 <form id="formEditCatatan">
                     @csrf
                     <input type="hidden" name="catatan_bahan_id" id="catatan_bahan_id">
                     <input type="hidden" name="catatan_date" id="catatan_date">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalEditCatatanLabel">Edit Catatan</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                    </div>
+
                     <div class="modal-body">
                         <textarea name="catatan_input" id="catatan_input" class="form-control" rows="5"
                             placeholder="Tulis catatan..."></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     </div>
                 </form>
             </div>
@@ -654,9 +655,9 @@
                 const date = el.getAttribute('data-date');
                 const catatan = el.getAttribute('data-catatan');
 
-                 document.getElementById('catatan_bahan_id').value = id;
-    document.getElementById('catatan_date').value = date;
-    document.getElementById('catatan_input').value = catatan;
+                document.getElementById('catatan_bahan_id').value = id;
+                document.getElementById('catatan_date').value = date;
+                document.getElementById('catatan_input').value = catatan;
 
                 $("#modalEditCatatan").modal("show");
             }

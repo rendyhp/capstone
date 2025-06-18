@@ -67,7 +67,7 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
                 $highestRow = $sheet->getHighestRow();
                 $highestColumnIndex = Coordinate::columnIndexFromString($sheet->getHighestColumn());
 
-                $daysInMonth = \Carbon\Carbon::create($this->year, $this->month, 1)->daysInMonth; // ✅ Tambahkan ini
+                $daysInMonth = \Carbon\Carbon::create($this->year, $this->month, 1)->daysInMonth;
     
                 for ($row = 1; $row <= $highestRow; $row++) {
                     $firstCellValue = $sheet->getCellByColumnAndRow(1, $row)->getValue();
