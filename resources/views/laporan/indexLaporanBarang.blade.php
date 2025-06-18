@@ -68,6 +68,10 @@
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/bahan') ? 'active' : '' }}">
                 Bahan
             </a>
+             <a href="/laporan/loss-bahan"
+                class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/loss-bahan') ? 'active' : '' }}">
+                Bahan Loss
+            </a>
             <a href="/laporan/barang"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/barang') ? 'active' : '' }}">
                 Barang

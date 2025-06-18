@@ -106,10 +106,10 @@
                                                             {{ $trx['tipe'] }}
                                                         </span>
                                                     </td>
-							<td class="text-end">
-                                                            {{ rtrim(rtrim(number_format($trx['jumlah'], 3, ',', '.'), '0'), ',') }}
-                                                        </td>
-                                                    
+                                                    <td class="text-end">
+                                                        {{ rtrim(rtrim(number_format($trx['jumlah'], 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+
                                                     <td>{{ $trx['satuan'] }}</td>
                                                     <td>
                                                         {!! nl2br(e($trx['keterangan'])) !!}
@@ -174,8 +174,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0" autocomplete="off"
-                                max="99999999999.999" required>
+                            <input type="number" min="0" class="form-control number0" name="jumlah" step="0.001" value="0"
+                                autocomplete="off" max="99999999999.999" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Satuan</label>
@@ -186,7 +186,8 @@
                         <div class="mb-3">
                             <label for="keterangan" class="form-label text-dark fw-bold">Catatan</label>
                             <textarea class="form-control" autocomplete="off" id="stokKeteranganM" required
-                                name="keterangan" rows="4" placeholder="Misal: Beli {{ $bahans->name ?? '' }} baru atau Beli cash..."></textarea>
+                                name="keterangan" rows="4"
+                                placeholder="Misal: Beli {{ $bahans->name ?? '' }} baru atau Beli cash..."></textarea>
                         </div>
                 </div>
                 <div class="modal-footer">

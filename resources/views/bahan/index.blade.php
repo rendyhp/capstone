@@ -221,7 +221,7 @@
                                                         <td class="editable" ondblclick="editCatatan(this)"
                                                             data-id="{{ $bahan->id }}" data-date="{{ $date }}"
                                                             data-catatan="{{ htmlentities($bahan->catatanBA->catatan ?? '', ENT_QUOTES) }}"
-                                                            style="max-width: 150px; white-space: pre-line;">
+                                                            data-bahan_name="{{ $bahan->name }}" style="max-width: 150px;">
                                                             {!! nl2br(e($bahan->catatanBA->catatan ?? '-')) !!}
                                                         </td>
                                                     @endif
@@ -416,7 +416,7 @@
                                                         <td class="editable" ondblclick="editCatatan(this)"
                                                             data-id="{{ $bahan->id }}" data-date="{{ $date }}"
                                                             data-catatan="{{ htmlentities($bahan->catatanBA->catatan ?? '', ENT_QUOTES) }}"
-                                                            style="max-width: 150px; white-space: pre-line;">
+                                                            data-bahan_name="{{ $bahan->name }}" style="max-width: 150px;">
                                                             {!! nl2br(e($bahan->catatanBA->catatan ?? '-')) !!}
                                                         </td>
                                                     @endif
@@ -470,7 +470,7 @@
                         <input type="hidden" name="type" id="type">
 
                         <div class="mb-2">
-                            <small id="infoJumlahDetail" class="badge text-white border p-2 me-2"
+                            <small id="infoJumlahDate" class="badge text-white border p-2 me-2"
                                 style="background-color: #0d6efd;"></small>
                             <small id="infoJumlahType" class="badge text-white border p-2"
                                 style="background-color: #198754;"></small>
@@ -500,19 +500,26 @@
                     <h5 class="modal-title fs-5 fw-bold text-primary" id="modalEditCatatanLabel">Edit Catatan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                 </div>
-                <form id="formEditCatatan">
-                    @csrf
-                    <input type="hidden" name="catatan_bahan_id" id="catatan_bahan_id">
-                    <input type="hidden" name="catatan_date" id="catatan_date">
+                <div class="modal-body">
+                    <form id="formEditCatatan">
+                        @csrf
+                        <input type="hidden" name="catatan_bahan_id" id="catatan_bahan_id">
+                        <input type="hidden" name="catatan_date" id="catatan_date">
 
-                    <div class="modal-body">
-                        <textarea name="catatan_input" id="catatan_input" class="form-control" rows="5"
-                            placeholder="Tulis catatan..."></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </form>
+                        <div class="mb-2">
+                            <small id="infoCatatanDate" class="badge text-white border p-2 me-2"
+                                style="background-color: #0d6efd;"></small>
+                        </div>
+
+                        <div class="mb-3">
+                            <textarea name="catatan_input" id="catatan_input" class="form-control" rows="5"
+                                placeholder="Tulis catatan..."></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -654,10 +661,13 @@
                 const id = el.getAttribute('data-id');
                 const date = el.getAttribute('data-date');
                 const catatan = el.getAttribute('data-catatan');
+                const bahan_name = el.getAttribute('data-bahan_name');
 
                 document.getElementById('catatan_bahan_id').value = id;
                 document.getElementById('catatan_date').value = date;
                 document.getElementById('catatan_input').value = catatan;
+                document.getElementById('modalEditCatatanLabel').innerText = `Edit Catatan (${bahan_name})`;
+                document.getElementById('infoCatatanDate').innerText = formatTanggalIndo(date);
 
                 $("#modalEditCatatan").modal("show");
             }
@@ -705,7 +715,7 @@
                 document.getElementById('type').value = type;
                 document.getElementById('jumlah_input').value = formattedJumlah;
                 document.getElementById('modalEditJumlahLabel').innerText = `Edit Jumlah (${bahan_name})`;
-                document.getElementById('infoJumlahDetail').innerText = formatTanggalIndo(date);
+                document.getElementById('infoJumlahDate').innerText = formatTanggalIndo(date);
                 document.getElementById('infoJumlahType').innerText = type === 'awal' ? 'Bahan Awal' : 'Akhir Sebenarnya';
                 document.getElementById('satuanBahanText').innerText = `(${satuan})`;
 

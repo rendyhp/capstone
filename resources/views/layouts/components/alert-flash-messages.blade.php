@@ -49,7 +49,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <i class="fa fa-check me-2" aria-hidden="true"></i>
-                {{ session('success') }}
+                {!! session('success') !!}
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -62,7 +62,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"></i>
-                {{ session('error') }}
+                {!! session('error') !!}
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -75,7 +75,7 @@
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"></i>
-                {{ session('warning') }}
+                {!! session('warning') !!}
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
