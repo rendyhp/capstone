@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Validator;
 
 
 class AuthController extends Controller
-
 {
     public function index()
     {
@@ -39,8 +38,7 @@ class AuthController extends Controller
             $this->redirectTo = route('main.index');
         } elseif (Auth::check() && Auth::user()->role == "MANAJER") {
             $this->redirectTo = route('main.index');
-        }
-        elseif (Auth::check() && Auth::user()->role == "STAF") {
+        } elseif (Auth::check() && Auth::user()->role == "STAF") {
             $this->redirectTo = route('main.index');
         }
         $this->middleware('guest')->except('logout');
@@ -72,43 +70,43 @@ class AuthController extends Controller
         } else {
             return redirect()->back()->with('error', 'Invalid username or password');
         }
-        
+
         return redirect()->route('login');
     }
 
-  public function postRegistration(Request $request)
-{
-    // Define validation rules
-    $validator = Validator::make($request->all(), [
-        'name' => ['required', 'string', 'max:50'],
-        'email' => ['nullable', 'string', 'email', 'max:60', 'unique:users'],
-        'username' => ['required', 'string', 'min:8', 'max:20', 'unique:users'],
-        'password' => ['required', 'string', 'min:8', 'max:30', 'confirmed'],
-        'confirm' => ['same:password'],
-        'role' => ['required', Rule::in(['OWNER', 'MANAJER', 'STAF'])], // Use Rule::in for enum validation
-    ]);
+    public function postRegistration(Request $request)
+    {
+        // Define validation rules
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:50'],
+            'email' => ['nullable', 'string', 'email', 'max:60', 'unique:users'],
+            'username' => ['required', 'string', 'min:8', 'max:20', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'max:30', 'confirmed'],
+            'confirm' => ['same:password'],
+            'role' => ['required', Rule::in(['OWNER', 'MANAJER', 'STAF'])], // Use Rule::in for enum validation
+        ]);
 
-    // Check if validation fails
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        // Create user
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+            'role' => $request->role
+        ]);
+
+        // Return response
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Disimpan!',
+            'data' => $user
+        ]);
     }
-
-    // Create user
-    $user = User::create([
-        'name'     => $request->name, 
-        'email'   => $request->email,
-        'username' => $request->username,
-        'password' => bcrypt($request->password), 
-        'role' => $request->role
-    ]);
-
-    // Return response
-    return response()->json([
-        'success' => true,
-        'message' => 'Data Berhasil Disimpan!',
-        'data'    => $user 
-    ]);
-}
 
     // public function dashboard()
     // {
@@ -124,7 +122,7 @@ class AuthController extends Controller
         Auth::logout();
         // Lakukan flush session jika diperlukan
         $request->session()->invalidate();
-        
+
         return redirect()->route('main.index');
     }
 }
