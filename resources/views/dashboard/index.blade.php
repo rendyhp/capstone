@@ -34,14 +34,44 @@
                 table-layout: auto;
             }
 
-            .rounded-card {
-                width: 100%;
-                height: auto;
-                border-radius: 50px;
-            }
-
             .card {
                 max-width: 100%;
+            }
+
+            .column-name {
+                width: 40%;
+            }
+
+            .column-minimum {
+                width: 20%;
+            }
+
+            .column-sisa {
+                width: 30%;
+            }
+
+            .column-satuan {
+                width: 10%;
+            }
+
+            .column-name2 {
+                width: 30%;
+            }
+
+            .column-section {
+                width: 10%;
+            }
+
+            .column-minimum2 {
+                width: 20%;
+            }
+
+            .column-sisa2 {
+                width: 30%;
+            }
+
+            .column-satuan2 {
+                width: 10%;
             }
         </style>
     @endpush
@@ -73,23 +103,23 @@
                 <table class="table table-bordered text-dark table-sm">
                     <thead class="table-primary">
                         <tr>
-                            <th>Nama Barang</th>
-                            <th>Stok Minimum</th>
-                            <th>Sisa</th>
-                            <th>Satuan</th>
+                            <th class="column-name">Nama Barang</th>
+                            <th class="column-minimum">Stok Minimum</th>
+                            <th class="column-sisa">Sisa</th>
+                            <th class="column-satuan">Satuan</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($barangs_below_minimum as $barang)
                             <tr>
-                                <td>{{ $barang->name }}</td>
-                                <td class="text-end">
+                                <td class="column-name">{{ $barang->name }}</td>
+                                <td class="text-end column-minimum">
                                     {{ rtrim(rtrim(number_format($barang->minimum, 3, ',', '.'), '0'), ',') }}
                                 </td>
-                                <td class="text-end text-danger fw-bold">
+                                <td class="text-end text-danger fw-bold column-sisa">
                                     {{ rtrim(rtrim(number_format($barang->sisa, 3, ',', '.'), '0'), ',') }}
                                 </td>
-                                <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
+                                <td class="column-satuan">{{ $barang->satuanBarang->name ?? '-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -105,25 +135,25 @@
                 <table class="table table-bordered text-dark table-sm">
                     <thead class="table-primary">
                         <tr>
-                            <th>Nama Bahan</th>
-                            <th>Bagian</th>
-                            <th>Stok Minimum</th>
-                            <th>Sisa</th>
-                            <th>Satuan</th>
+                            <th class="column-name2">Nama Bahan</th>
+                            <th class="column-section">Bagian</th>
+                            <th class="column-minimum2">Stok Minimum</th>
+                            <th class="column-sisa2">Sisa</th>
+                            <th class="column-satuan2">Satuan</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($bahans_below_minimum as $bahan)
                             <tr>
-                                <td>{{ $bahan->name }}</td>
-                                <td>{{ $bahan->section }}</td>
-                                <td class="text-end">
+                                <td class="column-name2">{{ $bahan->name }}</td>
+                                <td class="column-section">{{ $bahan->section }}</td>
+                                <td class="text-end column-minimum2">
                                     {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
                                 </td>
-                                <td class="text-end text-danger fw-bold">
+                                <td class="text-end text-danger fw-bold column-sisa2">
                                     {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
                                 </td>
-                                <td>{{ $bahan->satuan->name ?? '-' }}</td>
+                                <td class="column-satuan2">{{ $bahan->satuan->name ?? '-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -137,6 +167,114 @@
                 {{ \Carbon\Carbon::now()->format('H:i:s') }} WIB
             </div>
         </div>
+
+        <hr>
+        <div class="card-header mb-3">
+            <div class="card-title fs-5 fw-bold mt-2">Rekap Loss Bahan</div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center">
+                <label for="tanggalbahan" class="col-form-label me-2">Tanggal</label>
+                <input type="month" class="form-control" id="tanggalbahan" name="month" value="{{ $dateParam }}">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <!-- Kolom Kiri: Rekap Loss BAR -->
+            <div class="col-xl-6">
+                <div class="card custom-card">
+                    <div class="card-header">
+                        <div class="card-title fs-5 fw-bold mt-2">Bar</div>
+                    </div>
+                    <div class="card-body maxHeightTable">
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-dark table-sm">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th style="max-width: 10vh">No.</th>
+                                        <th>Nama Bahan</th>
+                                        <th class="text-center">Terbuang (Total)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($totalTerbuangBar as $index => $item)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $item['name'] }}</td>
+                                            @php
+                                                $value = $item['total_terbuang'];
+                                                $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
+                                            @endphp
+                                            <td class="text-center">
+                                                @if ($value > 0)
+                                                    <span class="text-danger fw-bold">&#8595; {{ $formatted }}</span>
+                                                @elseif ($value < 0)
+                                                    <span class="text-success fw-bold">&#8593; {{ $formatted }}</span>
+                                                @else
+                                                    <span>0</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center">Tidak ada data</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Rekap Loss KITCHEN -->
+            <div class="col-xl-6">
+                <div class="card custom-card">
+                    <div class="card-header">
+                        <div class="card-title fs-5 fw-bold mt-2">Kitchen</div>
+                    </div>
+                    <div class="card-body maxHeightTable">
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-dark table-sm">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th style="max-width: 10vh">No.</th>
+                                        <th>Nama Bahan</th>
+                                        <th class="text-center">Terbuang (Total)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($totalTerbuangKitchen as $index => $item)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $item['name'] }}</td>
+                                            @php
+                                                $value = $item['total_terbuang'];
+                                                $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
+                                            @endphp
+                                            <td class="text-center">
+                                                @if ($value > 0)
+                                                    <span class="text-danger fw-bold">&#8595; {{ $formatted }}</span>
+                                                @elseif ($value < 0)
+                                                    <span class="text-success fw-bold">&#8593; {{ $formatted }}</span>
+                                                @else
+                                                    <span>0</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-center">Tidak ada data</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
     <div class="container">
@@ -169,6 +307,16 @@
             }
 
             setInterval(updateTime, 1000);
+        </script>
+
+        <script>
+            document.getElementById('tanggalbahan').addEventListener('change', function () {
+                const selectedDate = this.value;
+                if (selectedDate) {
+                    const baseUrl = "{{ route('dashboard.index') }}";
+                    window.location.href = `${baseUrl}?month=${selectedDate}`;
+                }
+            });
         </script>
     @endpush
 @endsection

@@ -35,7 +35,8 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $role = $user->role;
-        $date = $request->input('date', Carbon::today()->toDateString());
+        $date = Carbon::today()->toDateString();
+        $dateParam = $request->input('month', Carbon::now()->format('Y-m')); // Untuk laporan loss per bulan
 
         // ---------- BARANG ----------
         $barangs = Barang::with('satuanBarang')->whereNull('deleted_at')->get();
@@ -87,11 +88,136 @@ class DashboardController extends Controller
             return $bahan->jumlah_akhir < $bahan->minimum;
         });
 
+        // ---------- PERHITUNGAN LOSS BULANAN ----------
+        $bulanNama = null;
+        $tahunNama = null;
+        $totalTerbuangBar = [];
+        $totalTerbuangKitchen = [];
+
+        if ($dateParam) {
+            try {
+                $dateCarbon = Carbon::createFromFormat('Y-m', $dateParam);
+                $bulanNama = $dateCarbon->translatedFormat('F');
+                $tahunNama = $dateCarbon->translatedFormat('Y');
+                $month = $dateCarbon->month;
+                $year = $dateCarbon->year;
+
+                // BAR
+                $totalTerbuangBar = $this->generateTotalTerbuangBySection($month, $year, 'BAR');
+                // KITCHEN
+                $totalTerbuangKitchen = $this->generateTotalTerbuangBySection($month, $year, 'KITCHEN');
+
+            } catch (\Exception $e) {
+                // log error jika diperlukan
+            }
+        }
+
         return view('dashboard.index', [
+            'user' => $user,
             'barangs_below_minimum' => $barangs_below_minimum,
             'bahans_below_minimum' => $bahans_below_minimum,
-            'user' => $user,
+            'totalTerbuangBar' => $totalTerbuangBar,
+            'totalTerbuangKitchen' => $totalTerbuangKitchen,
+            'bulanNama' => $bulanNama,
+            'tahunNama' => $tahunNama,
+            'dateParam' => $dateParam,
         ]);
+    }
+
+    private function generateTotalTerbuangBySection($month, $year, $section)
+    {
+        $results = [];
+
+        $allHistories = $this->generateAllHistories($month, $year, $section);
+        foreach ($allHistories as $item) {
+            $total = collect($item['history'])->pluck('terbuang')->filter()->sum();
+            $results[] = [
+                'name' => $item['bahan']->name,
+                'total_terbuang' => $total,
+            ];
+        }
+
+        return $results;
+    }
+
+    private function generateAllHistories($month, $year, $section)
+    {
+        $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;
+        $bahans = Bahan::with('satuan')
+            ->whereNull('deleted_at')
+            ->where('section', $section)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        $allHistories = [];
+
+        foreach ($bahans as $bahan) {
+            $bahanId = $bahan->id;
+
+            $stokAwalData = BahanAwal::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
+                ->where('bahan_id', $bahanId)
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->whereNull('deleted_at')
+                ->groupBy(DB::raw('DATE(date)'))
+                ->pluck('total', 'tanggal');
+
+            $masukData = BahanMasuk::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
+                ->where('bahan_id', $bahanId)
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->whereNull('deleted_at')
+                ->groupBy(DB::raw('DATE(date)'))
+                ->pluck('total', 'tanggal');
+
+            $akhirData = BahanAkhir::select(DB::raw('DATE(date) as tanggal'), DB::raw('SUM(jumlah) as total'))
+                ->where('bahan_id', $bahanId)
+                ->whereMonth('date', $month)
+                ->whereYear('date', $year)
+                ->whereNull('deleted_at')
+                ->groupBy(DB::raw('DATE(date)'))
+                ->pluck('total', 'tanggal');
+
+            $history = [];
+            $prevAkhir = null;
+
+            for ($day = 1; $day <= $daysInMonth; $day++) {
+                $dateString = Carbon::createFromDate($year, $month, $day)->toDateString();
+
+                $awal = $stokAwalData[$dateString] ?? $prevAkhir;
+                $masuk = $masukData[$dateString] ?? 0;
+
+                $terpakai = DB::table('transaksi_details')
+                    ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+                    ->where('transaksi_details.bahan_id', $bahanId)
+                    ->whereDate('transaksis.date', $dateString)
+                    ->whereNull('transaksis.deleted_at')
+                    ->sum('transaksi_details.jumlah');
+
+                $akhir = $akhirData[$dateString] ?? null;
+                $jumlah_akhir = (!is_null($awal) && !is_null($masuk)) ? ($awal + $masuk - $terpakai) : null;
+                $terbuang = (!is_null($jumlah_akhir) && !is_null($akhir)) ? ($jumlah_akhir - $akhir) : null;
+
+                $history[] = [
+                    'tanggal' => $day,
+                    'awal' => $awal,
+                    'masuk' => $masuk,
+                    'terpakai' => $terpakai,
+                    'sisa' => $jumlah_akhir,
+                    'akhir' => $akhir,
+                    'terbuang' => $terbuang,
+                ];
+
+                $prevAkhir = $akhir ?? $prevAkhir;
+            }
+
+            $allHistories[] = [
+                'bahan' => $bahan,
+                'history' => $history,
+            ];
+        }
+
+        return $allHistories;
     }
 
     public function laporan()
