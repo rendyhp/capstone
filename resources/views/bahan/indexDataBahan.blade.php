@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-       @include('layouts.components.alert-flash-messages')
+        @include('layouts.components.alert-flash-messages')
         <div>
             <a href="/bahan/manajemen-bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/manajemen-bahan') ? 'active' : '' }}">
@@ -77,34 +77,37 @@
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>No.</th>
-                                                <th
+                                                <th class="column-nomor-bhnMaster">No.</th>
+                                                <th class="column-image-bhnMaster"
                                                     style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
                                                     Gambar</th>
-                                                <th>Nama Bahan</th>
-                                                <th>Deskripsi</th>
-                                                <th>Pengingat Stok Minimum</th>
-                                                <th>Satuan</th>
-                                                <th>Aksi</th>
+                                                <th class="column-name-bhnMaster">Nama Bahan</th>
+                                                <th class="column-description-bhnMaster">Deskripsi</th>
+                                                <th class="column-minimum-bhnMaster text-center">Pengingat Stok Minimum</th>
+                                                <th class="column-satuan-bhnMaster">Satuan</th>
+                                                <th class="column-action-bhnMaster">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($bahan_bars as $bahan)
                                                 <tr>
-                                                    <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
-                                                    <td class="text-center"
+                                                    <td class="column-nomor-bhnMaster">
+                                                        {{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
+                                                    <td class="text-center column-image-bhnMaster"
                                                         style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
                                                         <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
                                                             style="width: 100px; max-height: 100px;" alt="Img">
                                                     </td>
-                                                    <td style="max-width: 150px">{{ $bahan->name }}</td>
-                                                    <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
-                                                    <td class="text-end">
+                                                    <td class="column-name-bhnMaster">{{ $bahan->name }}</td>
+                                                    <td class="column-description-bhnMaster">
+                                                        {!! nl2br(e($bahan->description)) !!}
+                                                    </td>
+                                                    <td class="text-end column-minimum-bhnMaster">
                                                         {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
                                                     </td>
-                                                    <td>{{ $bahan->satuan->name ?? '-' }}</td>
+                                                    <td class="column-satuan-bhnMaster">{{ $bahan->satuan->name ?? '-' }}</td>
 
-                                                    <td>
+                                                    <td class="column-action-bhnMaster">
                                                         <!-- Button trigger modal -->
                                                         <button type="button" class="btn btn-primary btn-sm btn_editbahan"
                                                             data-id="{{ $bahan->id ?? 'NULL' }}"
@@ -182,35 +185,38 @@
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>No.</th>
-                                                <th
+                                                <th class="column-nomor-bhnMaster">No.</th>
+                                                <th class="column-image-bhnMaster"
                                                     style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
                                                     Gambar</th>
-                                                <th>Nama Bahan</th>
-                                                <th>Deskripsi</th>
-                                                <th>Pengingat Stok Minimum</th>
-                                                <th>Satuan</th>
-                                                <th>Aksi</th>
+                                                <th class="column-name-bhnMaster">Nama Bahan</th>
+                                                <th class="column-description-bhnMaster">Deskripsi</th>
+                                                <th class="column-minimum-bhnMaster text-center">Pengingat Stok Minimum</th>
+                                                <th class="column-satuan-bhnMaster">Satuan</th>
+                                                <th class="column-action-bhnMaster">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
 
                                             @foreach ($bahan_kitchens as $bahan)
                                                 <tr>
-                                                    <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
-                                                    <td
+                                                    <td class="column-nomor-bhnMaster">
+                                                        {{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
+                                                    <td class="text-center column-image-bhnMaster"
                                                         style="{{ ($settings['show_image_bahan2'] ?? false) ? '' : 'display: none;' }}">
                                                         <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
                                                             style="width: 100px; max-height: 100px;" alt="Img">
                                                     </td>
-                                                    <td style="max-width: 150px">{{ $bahan->name }}</td>
-                                                    <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
-                                                    <td class="text-end">
+                                                    <td class="column-name-bhnMaster">{{ $bahan->name }}</td>
+                                                    <td class="column-description-bhnMaster">
+                                                        {!! nl2br(e($bahan->description)) !!}
+                                                    </td>
+                                                    <td class="text-end column-minimum-bhnMaster">
                                                         {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
                                                     </td>
-                                                    <td>{{ $bahan->satuan->name ?? '-' }}</td>
+                                                    <td class="column-satuan-bhnMaster">{{ $bahan->satuan->name ?? '-' }}</td>
 
-                                                    <td>
+                                                    <td class="column-action-bhnMaster">
                                                         <!-- Button trigger modal -->
                                                         <button type="button" class="btn btn-primary btn-sm btn_editbahan2"
                                                             data-id="{{ $bahan->id ?? 'NULL' }}"

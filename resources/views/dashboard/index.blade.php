@@ -37,42 +37,6 @@
             .card {
                 max-width: 100%;
             }
-
-            .column-name {
-                width: 40%;
-            }
-
-            .column-minimum {
-                width: 20%;
-            }
-
-            .column-sisa {
-                width: 30%;
-            }
-
-            .column-satuan {
-                width: 10%;
-            }
-
-            .column-name2 {
-                width: 30%;
-            }
-
-            .column-section {
-                width: 10%;
-            }
-
-            .column-minimum2 {
-                width: 20%;
-            }
-
-            .column-sisa2 {
-                width: 30%;
-            }
-
-            .column-satuan2 {
-                width: 10%;
-            }
         </style>
     @endpush
 

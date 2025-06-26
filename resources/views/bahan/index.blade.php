@@ -3,18 +3,6 @@
 @section('container')
 @section('title', 'Manajemen Bahan | Bdim’s Stock')
 
-    @push('addStyle')
-        <style>
-            .widthKolom8 {
-                min-width: 8vh;
-            }
-
-            .widthKolom18 {
-                min-width: 18vh
-            }
-        </style>
-    @endpush
-
     @php
         $currentUrl = request()->path();
     @endphp
@@ -102,53 +90,54 @@
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>No.</th>
-                                                <th
+                                                <th class="column-nomor-bhn">No.</th>
+                                                <th class="column-image-bhn"
                                                     style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
                                                     Gambar</th>
-                                                <th>Nama Bahan</th>
+                                                <th class="column-name-bhn">Nama Bahan</th>
                                                 @if ($settings['show_keterangan'] ?? true)
-                                                    <th class="widthKolom8">Deskripsi</th>
+                                                    <th class="column-description-bhn">Deskripsi</th>
                                                 @endif
                                                 @if ($settings['show_awal'] ?? true)
-                                                    <th class="widthKolom8">Awal</th>
+                                                    <th class="column-awal-bhn text-center">Awal</th>
                                                 @endif
                                                 @if ($settings['show_masuk'] ?? true)
-                                                    <th class="widthKolom8">Masuk</th>
+                                                    <th class="column-masuk-bhn text-center">Masuk</th>
                                                 @endif
                                                 @if ($settings['show_terpakai'] ?? true)
-                                                    <th class="widthKolom8">Terpakai</th>
+                                                    <th class="column-terpakai-bhn text-center">Terpakai</th>
                                                 @endif
                                                 @if ($settings['show_sisa'] ?? true)
-                                                    <th class="widthKolom8">Sisa</th>
+                                                    <th class="column-sisa-bhn text-center">Sisa</th>
                                                 @endif
                                                 @if ($settings['show_akhir'] ?? true)
-                                                    <th class="widthKolom8">Akhir Sebenarnya</th>
+                                                    <th class="column-akhir-bhn text-center">Akhir Sebenarnya</th>
                                                 @endif
                                                 @if ($settings['show_terbuang'] ?? true)
-                                                    <th class="widthKolom8">Terbuang</th>
+                                                    <th class="column-terbuang-bhn text-center">Terbuang</th>
                                                 @endif
                                                 @if ($settings['show_minimum'] ?? false)
-                                                    <th class="widthKolom8">Minimum</th>
+                                                    <th class="column-minimum-bhn text-center">Minimum</th>
                                                 @endif
-                                                <th>Satuan</th>
+                                                <th class="column-satuan-bhn">Satuan</th>
                                                 @if ($settings['show_catatan'] ?? true)
-                                                    <th class="widthKolom8">Catatan</th>
+                                                    <th class="column-catatan-bhn">Catatan</th>
                                                 @endif
-                                                <th class="widthKolom18">Aksi</th>
+                                                <th class="column-action-bhn">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($bahan_bars as $bahan)
                                                 <tr>
-                                                    <td>{{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
+                                                    <td class="column-nomor-bhn">
+                                                        {{ ($bahan_bars->currentPage() - 1) * $bahan_bars->perPage() + $loop->iteration }}
                                                     </td>
-                                                    <td class="text-center"
+                                                    <td class="text-center column-image-bhn"
                                                         style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
                                                         <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
                                                             style="width: 100px; max-height: 100px;" alt="Img">
                                                     </td>
-                                                    <td>
+                                                    <td class="column-name-bhn">
                                                         <a class="text-dark text-decoration-none"
                                                             href="{{ route('bahan.indexbyId', ['encryptedId' => Hashids::encode($bahan->id)]) }}">
                                                             {{ $bahan->name }}
@@ -156,36 +145,37 @@
                                                     </td>
 
                                                     @if ($settings['show_keterangan'] ?? true)
-                                                        <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
+                                                        <td class="column-description-bhn">{!! nl2br(e($bahan->description)) !!}
+                                                        </td>
                                                     @endif
 
                                                     @if ($settings['show_awal'] ?? true)
-                                                        <td class="text-end editable {{ optional($bahan)->awal_manual ? 'bg-khaki' : '' }}"
+                                                        <td class="text-end editable {{ optional($bahan)->awal_manual ? 'bg-khaki' : '' }} column-awal-bhn"
                                                             ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
 
                                                     @if ($settings['show_masuk'] ?? true)
-                                                        <td class="text-end">
+                                                        <td class="text-end column-masuk-bhn">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
 
                                                     @if ($settings['show_terpakai'] ?? true)
-                                                        <td class="text-end">
+                                                        <td class="text-end column-terpakai-bhn">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
 
                                                     @if ($settings['show_sisa'] ?? true)
-                                                        <td class="text-end">
+                                                        <td class="text-end column-sisa-bhn">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
 
                                                     @if ($settings['show_akhir'] ?? true)
-                                                        <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
+                                                        <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }} column-akhir-bhn"
                                                             ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
@@ -195,7 +185,7 @@
                                                         @php
                                                             $value = $bahan->bahan_terbuang;
                                                             $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
-                                                        @endphp <td class="text-end">
+                                                        @endphp <td class="text-end column-terbuang-bhn">
                                                             @if ($value > 0)
                                                                 <span class="text-danger fw-bold">
                                                                     &#8595; {{ $formatted }}
@@ -210,7 +200,7 @@
                                                         </td>
                                                     @endif
                                                     @if ($settings['show_minimum'] ?? false)
-                                                        <td class="text-end">
+                                                        <td class="text-end column-minimum-bhn">
                                                             {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -218,14 +208,14 @@
                                                     <td>{{ $bahan->satuan->name ?? '-' }}</td>
 
                                                     @if ($settings['show_catatan'] ?? true)
-                                                        <td class="editable" ondblclick="editCatatan(this)"
+                                                        <td class="editable column-catatan-bhn" ondblclick="editCatatan(this)"
                                                             data-id="{{ $bahan->id }}" data-date="{{ $date }}"
                                                             data-catatan="{{ htmlentities($bahan->catatanBA->catatan ?? '', ENT_QUOTES) }}"
                                                             data-bahan_name="{{ $bahan->name }}" style="max-width: 150px;">
                                                             {!! nl2br(e($bahan->catatanBA->catatan ?? '-')) !!}
                                                         </td>
                                                     @endif
-                                                    <td>
+                                                    <td class="column-action-bhn">
                                                         <!-- Tombol Tambah -->
                                                         <button type="button" class="btn btn-outline-success btnTambahStok"
                                                             data-id="{{ $bahan->id ?? 'NULL' }}"
@@ -298,90 +288,92 @@
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>No.</th>
-                                                <th
+                                                <th class="column-nomor-bhn">No.</th>
+                                                <th class="column-image-bhn"
                                                     style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
                                                     Gambar</th>
-                                                <th>Nama Bahan</th>
+                                                <th class="column-name-bhn">Nama Bahan</th>
                                                 @if ($settings['show_keterangan'] ?? true)
-                                                    <th class="widthKolom8">Deskripsi</th>
+                                                    <th class="column-description-bhn">Deskripsi</th>
                                                 @endif
                                                 @if ($settings['show_awal'] ?? true)
-                                                    <th class="widthKolom8">Awal</th>
+                                                    <th class="column-awal-bhn text-center">Awal</th>
                                                 @endif
                                                 @if ($settings['show_masuk'] ?? true)
-                                                    <th class="widthKolom8">Masuk</th>
+                                                    <th class="column-masuk-bhn text-center">Masuk</th>
                                                 @endif
                                                 @if ($settings['show_terpakai'] ?? true)
-                                                    <th class="widthKolom8">Terpakai</th>
+                                                    <th class="column-terpakai-bhn text-center">Terpakai</th>
                                                 @endif
                                                 @if ($settings['show_sisa'] ?? true)
-                                                    <th class="widthKolom8">Sisa</th>
+                                                    <th class="column-sisa-bhn text-center">Sisa</th>
                                                 @endif
                                                 @if ($settings['show_akhir'] ?? true)
-                                                    <th class="widthKolom8">Akhir Sebenarnya</th>
+                                                    <th class="column-akhir-bhn text-center">Akhir Sebenarnya</th>
                                                 @endif
                                                 @if ($settings['show_terbuang'] ?? true)
-                                                    <th class="widthKolom8">Terbuang</th>
+                                                    <th class="column-terbuang-bhn text-center">Terbuang</th>
                                                 @endif
                                                 @if ($settings['show_minimum'] ?? false)
-                                                    <th class="widthKolom8">Minimum</th>
+                                                    <th class="column-minimum-bhn text-center">Minimum</th>
                                                 @endif
                                                 <th>Satuan</th>
                                                 @if ($settings['show_catatan'] ?? true)
-                                                    <th class="widthKolom8">Catatan</th>
+                                                    <th class="column-catatan-bhn">Catatan</th>
                                                 @endif
-                                                <th class="widthKolom18">Aksi</th>
+                                                <th class="column-action-bhn">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($bahan_kitchens as $bahan)
                                                 <tr>
-                                                    <td>{{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
+                                                    <td class="column-nomor-bhn">
+                                                        {{ ($bahan_kitchens->currentPage() - 1) * $bahan_kitchens->perPage() + $loop->iteration }}
                                                     </td>
-                                                    <td
+                                                    <td class="column-image-bhn"
                                                         style="{{ ($settings['show_image_bahan'] ?? false) ? '' : 'display: none;' }}">
                                                         <img src="{{ asset($bahan->image ?? 'img/dummy/ss_bahan.png') }}"
                                                             style="width: 100px; max-height: 100px;" alt="Img">
                                                     </td>
-                                                    <td>
+                                                    <td class="column-name-bhn">
                                                         <a class="text-dark text-decoration-none"
                                                             href="{{ route('bahan.indexbyId', ['encryptedId' => Hashids::encode($bahan->id)]) }}">
                                                             {{ $bahan->name }}
                                                         </a>
                                                     </td>
                                                     @if ($settings['show_keterangan'] ?? true)
-                                                        <td style="max-width: 150px">{!! nl2br(e($bahan->description)) !!}</td>
+                                                        <td class="column-description-bhn">{!! nl2br(e($bahan->description)) !!}
+                                                        </td>
                                                     @endif
 
 
                                                     @if ($settings['show_awal'] ?? true)
-                                                        <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }}"
+                                                        <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }} column-awal-bhn"
                                                             ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
 
                                                     @if ($settings['show_masuk'] ?? true)
-                                                        <td class="text-end">
+                                                        <td class="text-end column-masuk-bhn">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_masuk, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
 
                                                     @if ($settings['show_terpakai'] ?? true)
-                                                        <td class="text-end">
+                                                        <td class="text-end column-terpakai-bhn">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_terpakai, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
 
                                                     @if ($settings['show_sisa'] ?? true)
-                                                        <td class="text-end">
+                                                        <td class="text-end column-sisa-bhn">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
 
                                                     @if ($settings['show_akhir'] ?? true)
-                                                        <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }}"
+                                                        <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }} column-akhir-bhn"
                                                             ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
@@ -391,7 +383,7 @@
                                                         @php
                                                             $value = $bahan->bahan_terbuang;
                                                             $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
-                                                        @endphp <td class="text-end">
+                                                        @endphp <td class="text-end column-terbuang-bhn">
                                                             @if ($value > 0)
                                                                 <span class="text-danger fw-bold">
                                                                     &#8595; {{ $formatted }}
@@ -407,20 +399,20 @@
                                                     @endif
 
                                                     @if ($settings['show_minimum'] ?? false)
-                                                        <td class="text-end">
+                                                        <td class="text-end column-minimum-bhn">
                                                             {{ rtrim(rtrim(number_format($bahan->minimum, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
-                                                    <td>{{ $bahan->satuan->name ?? '-' }}</td>
+                                                    <td class="column-satuan-bhn">{{ $bahan->satuan->name ?? '-' }}</td>
                                                     @if ($settings['show_catatan'] ?? true)
-                                                        <td class="editable" ondblclick="editCatatan(this)"
+                                                        <td class="editable column-catatan-bhn" ondblclick="editCatatan(this)"
                                                             data-id="{{ $bahan->id }}" data-date="{{ $date }}"
                                                             data-catatan="{{ htmlentities($bahan->catatanBA->catatan ?? '', ENT_QUOTES) }}"
                                                             data-bahan_name="{{ $bahan->name }}" style="max-width: 150px;">
                                                             {!! nl2br(e($bahan->catatanBA->catatan ?? '-')) !!}
                                                         </td>
                                                     @endif
-                                                    <td>
+                                                    <td class="column-action-bhn">
                                                         <button type="button" class="btn btn-outline-success btnTambahStok"
                                                             data-id="{{ $bahan->id ?? 'NULL' }}"
                                                             data-name="{{ $bahan->name ?? 'NULL'}}"

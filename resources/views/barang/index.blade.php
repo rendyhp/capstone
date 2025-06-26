@@ -77,43 +77,44 @@
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>No.</th>
+                                                <th class="column-nomor-brg">No.</th>
                                                 @if ($settings['show_image_barang'] ?? false)
-                                                    <th style="width: 110px;">Gambar</th>
+                                                    <th class="column-image-brg">Gambar</th>
                                                 @endif
-                                                <th>Nama Barang</th>
+                                                <th class="column-name-brg">Nama Barang</th>
                                                 @if ($settings['show_keteranganB'] ?? true)
-                                                    <th style="max-width: 30vh;">Deskripsi</th>
+                                                    <th class="column-description-brg">Deskripsi</th>
                                                 @endif
                                                 @if ($settings['show_awalB'] ?? true)
-                                                    <th class="text-center">Awal</th>
+                                                    <th class="text-center column-awal-brg">Awal</th>
                                                 @endif
                                                 @if ($settings['show_masukB'] ?? true)
-                                                    <th class="text-center">Stok Masuk</th>
+                                                    <th class="text-center column-masuk-brg">Stok Masuk</th>
                                                 @endif
                                                 @if ($settings['show_total_beliB'] ?? true)
-                                                    <th class="text-center">Total Beli</th>
+                                                    <th class="text-center column-totalB-brg">Total Beli</th>
                                                 @endif
                                                 @if ($settings['show_keluarB'] ?? true)
-                                                    <th class="text-center">Keluar</th>
+                                                    <th class="text-center column-keluar-brg">Keluar</th>
                                                 @endif
                                                 @if ($settings['show_sisaB'] ?? true)
-                                                    <th class="text-center">Sisa</th>
+                                                    <th class="text-center column-sisa-brg">Sisa</th>
                                                 @endif
                                                 @if ($settings['show_minimumB'] ?? false)
-                                                    <th class="text-center">Minimum</th>
+                                                    <th class="text-center column-minimum-brg">Minimum</th>
                                                 @endif
-                                                <th class="text-center">Satuan</th>
-                                                <th>Aksi</th>
+                                                <th class="column-satuan-brg">Satuan</th>
+                                                <th class="column-action-brg">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($barangs as $barang)
                                                 <tr>
-                                                    <td>{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
+                                                    <td class="column-nomor-brg">
+                                                        {{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}
                                                     </td>
                                                     @if ($settings['show_image_barang'] ?? false)
-                                                        <td class="text-center">
+                                                        <td class="text-center column-image-brg">
                                                             <img src="{{ asset($barang->image ?? 'img/dummy/ss_barang.png') }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
@@ -122,41 +123,41 @@
                                                         {{ $barang->name ?? '-' }}
                                                     </td>
                                                     @if ($settings['show_keteranganB'] ?? true)
-                                                        <td style="max-width: 150px">{!! nl2br(e($barang->description)) !!}</td>
+                                                        <td class="column-description-brg">{!! nl2br(e($barang->description)) !!}
+                                                        </td>
                                                     @endif
                                                     @if ($settings['show_awalB'] ?? true)
-                                                        <td class="text-center">
+                                                        <td class="text-center column-awal-brg">
                                                             {{ rtrim(rtrim(number_format($barang->awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
                                                     @if ($settings['show_masukB'] ?? true)
-                                                        <td class="text-center">
+                                                        <td class="text-center column-masuk-brg">
                                                             {{ rtrim(rtrim(number_format($barang->masuk, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
                                                     @if ($settings['show_total_beliB'] ?? true)
-                                                        <td class="text-center">
+                                                        <td class="text-center column-totalB-brg">
                                                             {{ rtrim(rtrim(number_format($barang->total_beli, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
                                                     @if ($settings['show_keluarB'] ?? true)
-                                                        <td class="text-center">
+                                                        <td class="text-center column-keluar-brg">
                                                             {{ rtrim(rtrim(number_format($barang->keluar, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
                                                     @if ($settings['show_sisaB'] ?? true)
-                                                        <td class="text-center">
+                                                        <td class="text-center column-sisa-brg">
                                                             {{ rtrim(rtrim(number_format($barang->sisa, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
                                                     @if ($settings['show_minimumB'] ?? false)
-                                                        <td class="text-center">
+                                                        <td class="text-center column-minimum-brg">
                                                             {{ rtrim(rtrim(number_format($barang->minimum, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
-                                                    <td>{{ $barang->satuanBarang->name ?? '-' }}</td>
-
-                                                    <td>
+                                                    <td class="column-satuan-brg">{{ $barang->satuanBarang->name ?? '-' }}</td>
+                                                    <td class="column-action-brg">
                                                         <!-- Tombol Tambah -->
                                                         <button type="button" class="btn btn-outline-success btnTambahStok"
                                                             data-id="{{ $barang->id ?? 'NULL' }}"
@@ -316,7 +317,8 @@
                         <div class="mb-3">
                             <input type="text" hidden name="id" id="stokBarangIdM">
                             <label class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateM" required>
+                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateM"
+                                required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Nama Barang</label>
@@ -362,7 +364,8 @@
                         <input type="hidden" name="id" id="stokBarangIdK">
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Tanggal</label>
-                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateK" required>
+                            <input type="date" style="width: initial;" class="form-control" name="date" id="stokDateK"
+                                required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Nama Barang</label>

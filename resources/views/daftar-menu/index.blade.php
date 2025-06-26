@@ -53,34 +53,34 @@
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>No.</th>
+                                                <th class="column-nomor-menuT">No.</th>
                                                 @if ($settings['show_image_menu'] ?? true)
-                                                    <th style="width: 110px;">Gambar</th>
+                                                    <th class="column-image-menuT">Gambar</th>
                                                 @endif
-                                                <th>Nama Menu</th>
+                                                <th class="column-name-menuT">Nama Menu</th>
                                                 @if ($settings['show_keteranganM'] ?? true)
-                                                    <th style="max-width: 30vh;">Deskripsi</th>
+                                                    <th class="column-description-menuT">Deskripsi</th>
                                                 @endif
-                                                <th>Bahan</th>
-                                                <th>Aksi</th>
+                                                <th class="column-bahan-menuT">Bahan</th>
+                                                <th class="column-action-menuT">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @forelse ($menus as $menu)
                                                 <tr>
-                                                    <td>{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
+                                                    <td class="column-nomor-menuT">{{ ($menus->currentPage() - 1) * $menus->perPage() + $loop->iteration }}
                                                     </td>
                                                     @if ($settings['show_image_menu'] ?? true)
-                                                        <td class="text-center">
+                                                        <td class="text-center column-image-menuT">
                                                             <img src="{{ asset($menu->image ?? 'img/dummy/ss_menu.png') }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                     @endif
-                                                    <td>{{ $menu->name }}</td>
+                                                    <td class="column-name-menuT">{{ $menu->name }}</td>
                                                     @if ($settings['show_keteranganM'] ?? true)
-                                                        <td style="max-width: 150px">{!! nl2br(e($menu->description)) !!}</td>
+                                                        <td class="column-description-menuT">{!! nl2br(e($menu->description)) !!}</td>
                                                     @endif
-                                                    <td>
+                                                    <td class="column-bahan-menuT">
                                                         <ul>
                                                             @foreach($menu->komposisi as $komposisi)<li
                                                                 class="{{ $komposisi->bahan->deleted_at ? 'text-danger' : '' }}">
@@ -91,9 +91,7 @@
                                                         </ul>
                                                     </td>
 
-                                                    <td>
-
-
+                                                    <td class="column-action-menuT">
                                                         <button type="button" class="btn btn-primary btn-sm btn_editmenu"
                                                             data-id="{{ $menu->id }}" data-name="{{ $menu->name }}"
                                                             data-description="{{ $menu->description }}"

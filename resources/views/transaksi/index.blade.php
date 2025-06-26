@@ -76,32 +76,32 @@
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>No.</th>
+                                                <th class="column-nomor-menuT">No.</th>
                                                 @if ($settings['show_image_transaksi'] ?? true)
-                                                    <th style="width: 110px;">Gambar</th>
+                                                    <th class="column-image-menuT">Gambar</th>
                                                 @endif
-                                                <th>Nama Menu</th>
-                                                <th class="text-center">Jumlah</th>
-                                                <th>Bahan</th>
-                                                <th>Aksi</th>
+                                                <th class="column-name-menuT">Nama Menu</th>
+                                                <th class="text-center column-jumlah-menuT">Jumlah</th>
+                                                <th class="column-bahan-menuT">Bahan</th>
+                                                <th class="column-action-menuT">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($paginated as $key => $transaksi)
                                                 <tr>
-                                                    <td>{{ ($paginated->currentPage() - 1) * $paginated->perPage() + $loop->iteration }}
+                                                    <td class="column-nomor-menuT">{{ ($paginated->currentPage() - 1) * $paginated->perPage() + $loop->iteration }}
                                                     </td>
                                                     @if ($settings['show_image_transaksi'] ?? true)
-                                                        <td class="text-center"><img
+                                                        <td class="text-center column-image-menuT"><img
                                                                 src="{{ asset($transaksi['menu_image'] ?? 'img/dummy/ss_menu.png') }}"
                                                                 style="width: 100px; max-height: 100px;" alt="Img">
                                                         </td>
                                                     @endif
                                                     <td>{{ $transaksi['menu_name'] }}</td>
-                                                    <td class="text-center">
+                                                    <td class="text-center column-jumlah-menuT">
                                                         {{ rtrim(rtrim(number_format($transaksi['total_jumlah'], 3, ',', '.'), '0'), ',') }}
                                                     </td>
-                                                    <td>
+                                                    <td class="column-bahan-menuT"> 
                                                         <ul>
                                                             @foreach($transaksi['bahans'] as $bahan)
                                                                 <li>{{ $bahan['bahan_name'] }} -
@@ -111,7 +111,7 @@
                                                             @endforeach
                                                         </ul>
                                                     </td>
-                                                    <td>
+                                                    <td class="column-action-menuT">
                                                         <!-- Button trigger modal -->
                                                         <button type="button" class="btn btn-primary btn-sm btn_edittransaksi"
                                                             data-id="{{ $transaksi['transaksi_id'] }}"

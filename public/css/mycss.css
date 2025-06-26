@@ -142,3 +142,199 @@
     background: #093e8d;
     color: white;
 }
+
+/* Ukuran Kolom */
+/* Dashboard */
+.column-name {
+    width: 40%;
+}
+
+.column-minimum {
+    width: 20%;
+}
+
+.column-sisa {
+    width: 20%;
+}
+
+.column-satuan {
+    width: 10%;
+}
+
+.column-name2 {
+    width: 30%;
+}
+
+.column-section {
+    width: 10%;
+}
+
+.column-minimum2 {
+    width: 20%;
+}
+
+.column-sisa2 {
+    width: 20%;
+}
+
+.column-satuan2 {
+    width: 10%;
+}
+
+/* Barang */
+.column-nomor-brg {
+    width: 3%;
+}
+
+.column-image-brg {
+    width: 5%;
+}
+.column-name-brg {
+    width: 10%;
+}
+
+.column-description-brg {
+    width: 10%;
+}
+
+.column-awal-brg {
+    width: 5%;
+}
+
+.column-masuk-brg {
+    width: 5%;
+}
+
+.column-totalB-brg {
+    width: 5%;
+}
+
+.column-keluar-brg {
+    width: 5%;
+}
+
+.column-sisa-brg {
+    width: 5%;
+}
+
+.column-minimum-brg {
+    width: 5%;
+}
+
+.column-satuan-brg {
+    width: 5%;
+}
+
+.column-action-brg {
+    width: 10%;
+}
+
+/* Bahan */
+.column-nomor-bhn {
+    width: 3%;
+}
+
+.column-image-bhn {
+    width: 5%;
+}
+
+.column-name-bhn {
+    width: 10%;
+}
+
+.column-description-bhn {
+    width: 10%;
+}
+
+.column-awal-bhn {
+    width: 5%;
+}
+
+.column-masuk-bhn {
+    width: 5%;
+}
+
+.column-terpakai-bhn {
+    width: 5%;
+}
+
+.column-sisa-bhn {
+    width: 5%;
+}
+
+.column-akhir-bhn {
+    width: 5%;
+}
+
+.column-terbuang-bhn {
+    width: 5%;
+}
+
+.column-minimum-bhn {
+    width: 5%;
+}
+
+.column-satuan-bhn {
+    width: 5%;
+}
+
+.column-catatan-bhn {
+    width: 10%;
+}
+
+.column-action-bhn {
+    width: 10%;
+}
+
+/* Master Bahan */
+.column-nomor-bhnMaster {
+    width: 3%;
+}
+
+.column-image-bhnMaster {
+    width: 5%;
+}
+
+.column-name-bhnMaster {
+    width: 10%;
+}
+
+.column-description-bhnMaster {
+    width: 10%;
+}
+
+.column-minimum-bhnMaster {
+    width: 5%;
+}
+
+.column-satuan-bhnMaster {
+    width: 5%;
+}
+
+.column-action-bhnMaster {
+    width: 4%;
+}
+
+/* Menu & Transaksi */
+.column-nomor-menuT {
+    width: 3%;
+}
+.column-image-menuT {
+    width: 5%;
+}
+.column-name-menuT {
+    width: 10%;
+}
+.column-description-menuT {
+    width: 10%;
+}
+.column-bahan-menuT {
+    width: 20%;
+}
+.column-action-menuT {
+    width: 4%;
+}
+.column-jumlah-menuT{
+    width: 5%;
+}
+/* End Ukuran Kolom */
