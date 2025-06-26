@@ -40,8 +40,6 @@ class LaporanController extends Controller
         $allHistories2 = [];
         $bulanNama = null;
         $tahunNama = null;
-        $selectedMonth = null;
-        $selectedYear = null;
 
         if ($dateParam) {
             try {
@@ -51,166 +49,17 @@ class LaporanController extends Controller
                 $bulanNama = $date->translatedFormat('F');
                 $tahunNama = $date->translatedFormat('Y');
 
-                $daysInMonth = $date->daysInMonth;
-
-                $bahans = Bahan::with('satuan')
-                    ->whereNull('deleted_at')
-                    ->where('section', 'BAR')
-                    ->orderBy('name', 'asc')
-                    ->get();
-
-                foreach ($bahans as $bahan) {
-                    $bahanId = $bahan->id;
-
-                    $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
-                        ->whereMonth('date', $selectedMonth)
-                        ->whereYear('date', $selectedYear)
-                        ->whereNull('deleted_at')
-                        ->get()
-                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
-                        ->map(fn($group) => $group->sum('jumlah'));
-
-                    $masukData = BahanMasuk::where('bahan_id', $bahanId)
-                        ->whereMonth('date', $selectedMonth)
-                        ->whereYear('date', $selectedYear)
-                        ->whereNull('deleted_at')
-                        ->get()
-                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
-                        ->map(fn($group) => $group->sum('jumlah'));
-
-                    $akhirData = BahanAkhir::where('bahan_id', $bahanId)
-                        ->whereMonth('date', $selectedMonth)
-                        ->whereYear('date', $selectedYear)
-                        ->whereNull('deleted_at')
-                        ->get()
-                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
-                        ->map(fn($group) => $group->sum('jumlah'));
-
-                    $history = [];
-                    $prevAkhir = null;
-
-                    for ($day = 1; $day <= $daysInMonth; $day++) {
-                        $dateString = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->toDateString();
-
-
-                        $masuk = $masukData[$dateString] ?? 0;
-
-
-                        $terpakai = DB::table('transaksi_details')
-                            ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
-                            ->where('transaksi_details.bahan_id', $bahanId)
-                            ->whereDate('transaksis.date', $dateString)
-                            ->whereNull('transaksis.deleted_at')
-                            ->sum('transaksi_details.jumlah');
-
-                        $akhir = $akhirData[$dateString] ?? null;
-
-                        $awal = $stokAwalData[$dateString] ?? $prevAkhir;
-
-                        $jumlah_akhir = (!is_null($awal) && !is_null($masuk)) ? ($awal + $masuk - $terpakai) : null;
-                        $terbuang = (!is_null($jumlah_akhir) && !is_null($akhir)) ? ($jumlah_akhir - $akhir) : null;
-
-                        $history[] = [
-                            'tanggal' => $day,
-                            'awal' => $awal,
-                            'masuk' => $masuk,
-                            'terpakai' => $terpakai,
-                            'sisa' => $jumlah_akhir,
-                            'akhir' => $akhir,
-                            'terbuang' => $terbuang,
-                        ];
-
-                        $prevAkhir = $akhir ?? $prevAkhir;
-                    }
-
-                    $allHistories[] = [
-                        'bahan' => $bahan,
-                        'history' => $history,
-                    ];
-                }
-
-                $bahans2 = Bahan::with('satuan')
-                    ->whereNull('deleted_at')
-                    ->where('section', 'KITCHEN')
-                    ->orderBy('name', 'asc')
-                    ->get();
-
-                foreach ($bahans2 as $bahan) {
-                    $bahanId = $bahan->id;
-
-                    $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
-                        ->whereMonth('date', $selectedMonth)
-                        ->whereYear('date', $selectedYear)
-                        ->whereNull('deleted_at')
-                        ->get()
-                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
-                        ->map(fn($group) => $group->sum('jumlah'));
-
-                    $masukData = BahanMasuk::where('bahan_id', $bahanId)
-                        ->whereMonth('date', $selectedMonth)
-                        ->whereYear('date', $selectedYear)
-                        ->whereNull('deleted_at')
-                        ->get()
-                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
-                        ->map(fn($group) => $group->sum('jumlah'));
-
-                    $akhirData = BahanAkhir::where('bahan_id', $bahanId)
-                        ->whereMonth('date', $selectedMonth)
-                        ->whereYear('date', $selectedYear)
-                        ->whereNull('deleted_at')
-                        ->get()
-                        ->groupBy(fn($item) => Carbon::parse($item->date)->toDateString())
-                        ->map(fn($group) => $group->sum('jumlah'));
-
-                    $history = [];
-                    $prevAkhir = null;
-
-                    for ($day = 1; $day <= $daysInMonth; $day++) {
-                        $dateString = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->toDateString();
-
-                        $awal = $stokAwalData[$dateString] ?? $prevAkhir;
-                        $masuk = $masukData[$dateString] ?? 0;
-
-                        $terpakai = DB::table('transaksi_details')
-                            ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
-                            ->where('transaksi_details.bahan_id', $bahanId)
-                            ->whereDate('transaksis.date', $dateString)
-                            ->whereNull('transaksis.deleted_at')
-                            ->sum('transaksi_details.jumlah');
-
-                        $akhir = $akhirData[$dateString] ?? null;
-                        $jumlah_akhir = (!is_null($awal) && !is_null($masuk)) ? ($awal + $masuk - $terpakai) : null;
-                        $terbuang = (!is_null($jumlah_akhir) && !is_null($akhir)) ? ($jumlah_akhir - $akhir) : null;
-
-                        $history[] = [
-                            'tanggal' => $day,
-                            'awal' => $awal,
-                            'masuk' => $masuk,
-                            'terpakai' => $terpakai,
-                            'sisa' => $jumlah_akhir,
-                            'akhir' => $akhir,
-                            'terbuang' => $terbuang,
-                        ];
-
-                        $prevAkhir = $akhir ?? $prevAkhir;
-                    }
-
-                    $allHistories2[] = [
-                        'bahan' => $bahan,
-                        'history' => $history,
-                    ];
-                }
+                // Gunakan fungsi reusable
+                $allHistories = $this->generateAllHistories($selectedMonth, $selectedYear, 'BAR');
+                $allHistories2 = $this->generateAllHistories($selectedMonth, $selectedYear, 'KITCHEN');
 
             } catch (\Exception $e) {
             }
         }
 
-        if (in_array($role, ['OWNER', 'MANAJER'])) {
-            return view('laporan.index', compact('allHistories', 'allHistories2', 'dateParam', 'bulanNama', 'tahunNama'));
-        } else {
-            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
+        return view('laporan.index', compact('allHistories', 'allHistories2', 'dateParam', 'bulanNama', 'tahunNama'));
     }
+
 
     public function indexLaporanBarang(Request $request)
     {
@@ -229,14 +78,10 @@ class LaporanController extends Controller
 
         $satuanBarangs = SatuanBarang::orderBy('name', 'asc')->whereNull('deleted_at')->get();
 
-        if (in_array($role, ['OWNER', 'MANAJER'])) {
-            return view('laporan.indexLaporanBarang', [
-                'barangs' => $paginated,
-                'satuanBarangs' => $satuanBarangs,
-            ]);
-        } else {
-            return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
-        }
+        return view('laporan.indexLaporanBarang', [
+            'barangs' => $paginated,
+            'satuanBarangs' => $satuanBarangs,
+        ]);
     }
 
 

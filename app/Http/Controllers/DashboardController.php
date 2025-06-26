@@ -133,6 +133,7 @@ class DashboardController extends Controller
             $total = collect($item['history'])->pluck('terbuang')->filter()->sum();
             $results[] = [
                 'name' => $item['bahan']->name,
+                'satuan' => $item['bahan']->satuan->name,
                 'total_terbuang' => $total,
             ];
         }

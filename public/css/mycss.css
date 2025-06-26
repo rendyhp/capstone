@@ -145,6 +145,9 @@
 
 /* Ukuran Kolom */
 /* Dashboard */
+.column-nomor {
+    width: 3%;
+}
 .column-name {
     width: 40%;
 }
@@ -160,7 +163,9 @@
 .column-satuan {
     width: 10%;
 }
-
+.column-nomor2 {
+    width: 3%;
+}
 .column-name2 {
     width: 30%;
 }
@@ -334,7 +339,7 @@
 .column-action-menuT {
     width: 4%;
 }
-.column-jumlah-menuT{
+.column-jumlah-menuT {
     width: 5%;
 }
 /* End Ukuran Kolom */

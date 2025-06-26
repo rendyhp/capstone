@@ -28,15 +28,11 @@
     <link href="{{ url('css/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- Tambahanku -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link href="vendor/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="{{ url('css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ url('css/flatpickr.min.css') }}" rel="stylesheet">
 
     <!-- Template Stylesheet -->
     <link href="{{url('css/style.css')}}" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <link href="{{ url('css/mycss.css') }}" rel="stylesheet">
     @stack('addStyle')
@@ -156,7 +152,7 @@
         <!-- Content End -->
 
         <a href="#" class="back-to-top2 align-items-center justify-content-center"><i
-            class="fa-solid fa-arrow-up"></i></a>
+                class="fa-solid fa-arrow-up"></i></a>
 
         @if(Auth::check() && Auth::user()->role == 'STAF')
             <!-- Modal Report -->
@@ -236,20 +232,16 @@
     <script src="{{ url('js/bootstrap.min.js')}}"></script>
 
     <!-- tambahanku -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="vendor/select2/dist/js/select2.min.js"></script>
+    <script src="{{ url('js/select2.min.js') }} "></script>
+    <script src="{{ url('js/flatpickr.js') }} "></script>
     <!-- Template Javascript -->
     <script src="{{ url('js/main.js')}}"></script>
     <!-- ... (other script tags) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="{{ url('js/jquery-3.6.0.min.js')}}"></script>
+    <script src="{{ url('js/xlsx.full.min.js') }}"></script>
 
     <!-- My Select2 script-->
     <script src="{{ url('js/myselect2.js')}}"></script>
-
-    <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script src="{{ url('js/myjs.js')}}"></script>
 </body>
