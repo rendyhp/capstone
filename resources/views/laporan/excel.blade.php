@@ -104,12 +104,12 @@
                     <tr>
                         <td class="indent">{{ $type }}</td>
                         @foreach ($history as $dayData)
-                            <td>{{ number_format($dayData[$lower] ?? 0, 2, ',', '.') }}</td>
+                            <td>{{ $dayData[$lower] }}</td>
                         @endforeach
                         <td></td>
                         <td>
                             @if (in_array($type, ['Masuk', 'Terpakai']))
-                                {{ number_format($total, 2, ',', '.') }}
+                                {{ $total }}
                             @endif
                         </td>
                         <td>
@@ -136,12 +136,12 @@
                     <tr>
                         <td class="indent">{{ $type }}</td>
                         @foreach ($history as $dayData)
-                            <td>{{ number_format($dayData[$lower] ?? 0, 2, ',', '.') }}</td>
+                            <td>{{ $dayData[$lower] }}</td>
                         @endforeach
                         <td></td>
                         <td>
                             @if ($type === 'Terbuang')
-                                {{ number_format($total, 2, ',', '.') }}
+                                {{ $total }}
                             @endif
                         </td>
                         <td>

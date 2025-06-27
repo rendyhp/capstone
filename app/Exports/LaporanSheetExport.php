@@ -54,6 +54,7 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
             $this->endDate->format('Y-m-d') === \Carbon\Carbon::create($this->endDate->year, 12, 31)->format('Y-m-d');
 
 
+
         $widths = ['A' => 30];
 
         if ($isYear) {
@@ -89,8 +90,11 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
                 $highestRow = $sheet->getHighestRow();
                 $highestColumnIndex = Coordinate::columnIndexFromString($sheet->getHighestColumn());
 
-                $range = CarbonPeriod::create($this->startDate, $this->endDate);
-                $daysCount = iterator_count($range);
+                $isYear = $this->startDate->format('Y-m-d') === \Carbon\Carbon::create($this->startDate->year, 1, 1)->format('Y-m-d') &&
+                    $this->endDate->format('Y-m-d') === \Carbon\Carbon::create($this->endDate->year, 12, 31)->format('Y-m-d');
+
+                $daysCount = $isYear ? 12 : iterator_count(CarbonPeriod::create($this->startDate, $this->endDate));
+
 
                 for ($row = 1; $row <= $highestRow; $row++) {
                     $firstCellValue = $sheet->getCellByColumnAndRow(1, $row)->getValue();
@@ -127,14 +131,16 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
                         }
                     }
 
-                    // Formula untuk baris tertentu
                     if (in_array($firstCellValue, ['Masuk', 'Terpakai', 'Terbuang'])) {
                         $startCol = Coordinate::stringFromColumnIndex(2);
                         $endCol = Coordinate::stringFromColumnIndex($daysCount + 1);
                         $totalCol = Coordinate::stringFromColumnIndex($daysCount + 3);
+
+                        // SUM formula untuk kolom B sampai kolom terakhir tanggal
                         $sumFormula = "=SUM({$startCol}{$row}:{$endCol}{$row})";
                         $sheet->setCellValue("{$totalCol}{$row}", $sumFormula);
                     }
+
                 }
             },
         ];

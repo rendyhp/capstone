@@ -208,8 +208,12 @@ class BahanController extends Controller
 
     public function indexById(Request $request, $encryptedId)
     {
+        $user = Auth::user();
         $hashids = new Hashids(env('HASHIDS_SALT', 'cafebdim_Salty'), 32);
         $decoded = $hashids->decode($encryptedId);
+
+        // Ambil settings dari user
+        $settings = json_decode($user->setting->settings ?? '[]', true);
 
         if (empty($decoded)) {
             abort(404, 'ID tidak valid');
@@ -222,7 +226,7 @@ class BahanController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        $dateParam = $request->input('date');
+        $dateParam = $request->input('date', Carbon::today()->toDateString());
 
         if ($dateParam) {
             $date = Carbon::parse($dateParam);
@@ -297,7 +301,7 @@ class BahanController extends Controller
         }
 
         if (in_array($role, ['OWNER', 'MANAJER', 'STAF'])) {
-            return view('bahan.indexById', compact('bahan', 'history', 'month', 'year', 'dateParam', 'bahanId', 'previousUrl'));
+            return view('bahan.indexById', compact('bahan', 'history', 'month', 'year', 'dateParam', 'bahanId', 'previousUrl', 'settings'));
         } else {
             return abort(403, 'Anda tidak memiliki izin untuk mengakses halaman ini.');
         }

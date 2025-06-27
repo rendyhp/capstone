@@ -101,7 +101,7 @@
                                             </a>
                                         </div>
 
-                                        <canvas id="lossChart" height="100" class="mb-3"></canvas>
+                                        <canvas id="lossChart" height="50" class="mb-3"></canvas>
                                         <div class="mt-3">
                                             <h6 class="fw-bold">Total Terbuang:
                                             </h6>
@@ -122,7 +122,11 @@
                                         <thead class="table-primary">
                                             <tr>
                                                 <th style="width: 10%">No.</th>
-                                                <th>Tanggal</th>
+                                                @if ($type === 'year')
+                                                    <th>Bulan</th>
+                                                @else
+                                                    <th>Tanggal</th>
+                                                @endif
                                                 <th class="text-center">Terbuang</th>
                                             </tr>
                                         </thead>
@@ -133,7 +137,7 @@
                                                     @php
                                                         $totalPerBulan = collect($rows)->sum('terbuang');
                                                     @endphp
-                                                    <tr>
+                                                    <tr id="row-{{ $month }}">
                                                         <td>{{ $rowNumber++ }}</td>
                                                         <td>{{ $month }}</td>
                                                         <td class="text-center">
@@ -202,7 +206,15 @@
                 });
             });
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            function formatNumberID(value) {
+                const parts = value.toFixed(3).split('.');
+                const decimal = parts[1].replace(/0+$/, '');
+                const formatted = Number(parts[0]).toLocaleString('id-ID');
+                return decimal ? `${formatted},${decimal}` : formatted;
+            }
+        </script>
+        <script src="{{ url('js/chart.js') }} "></script>
         <script>
             const type = "{{ $type }}";
             let labels = [];
@@ -243,16 +255,23 @@
                 },
                 options: {
                     responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     onClick: function (evt, activeElements) {
                         if (activeElements.length > 0) {
                             const index = activeElements[0].index;
                             let dateStr;
+                            let rowMonth = [];
+                            if (type === "year") {
+                                rowMonth = Object.keys({!! json_encode($history) !!}); // ['Januari', 'Februari', ...]
+                            }
 
                             if (type === "year") {
-                                // Ambil nama bulan (misal: 'Januari') dari labels
-                                dateStr = labels[index];
+                                const rawLabels = rowMonth;
+                                dateStr = rawLabels[index];
                             } else {
-                                // Ambil tanggal dari rawLabels (format YYYY-MM-DD)
                                 const rawLabels = {!! json_encode(array_column($history, 'tanggal')) !!};
                                 dateStr = rawLabels[index];
                             }
@@ -265,11 +284,29 @@
                             }
                         }
                     },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    let value = context.parsed.y;
+                                    let label = context.dataset.label;
+                                    let direction = (label === 'Jumlah Terbuang' && value !== 0)
+                                        ? (value > 0 ? '↓ ' : '↑ ')
+                                        : '';
+                                    return `${label}: ${direction}${formatNumberID(Math.abs(value))}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
                     scales: {
                         y: {
-                            beginAtZero: true,
                             ticks: {
-                                stepSize: 0.5
+                                callback: function (value) {
+                                    return formatNumberID(value);
+                                }
                             }
                         }
                     }

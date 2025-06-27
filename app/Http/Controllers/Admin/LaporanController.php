@@ -33,8 +33,8 @@ class LaporanController extends Controller
             abort(403);
         }
 
-        $type = $request->input('type', 'month'); // default ke bulan
-        $dateInput = $request->input('date', now()->toDateString());
+        $type = $request->input('type'); // default ke bulan
+        $dateInput = $request->input('date');
         $date = Carbon::parse($dateInput);
 
         switch ($type) {
@@ -67,7 +67,7 @@ class LaporanController extends Controller
             'week' => 'Minggu ke ' . $startDate->format('W') . ' (' . $startDate->translatedFormat('j M') . ' - ' . $endDate->translatedFormat('j M Y') . ')',
             'month' => $date->translatedFormat('F Y'),
             'year' => $date->translatedFormat('Y'),
-            default => $date->translatedFormat('d F Y'),
+            default => '',
         };
 
         return view('laporan.index', [
@@ -112,7 +112,8 @@ class LaporanController extends Controller
 
         $pdf = PDF::loadView('laporan.export-pdf', compact('barangs'))
             ->setPaper('a4', 'portrait');
-        return $pdf->download('laporan-stok-barang.pdf');
+        $timestamp = now()->format('Ymd_His');
+        return $pdf->download("{$timestamp}_Laporan-stok-barang.pdf");
     }
 
 
@@ -169,7 +170,8 @@ class LaporanController extends Controller
         }
 
         // Simpan ke file sementara
-        $filePath = storage_path('app/public/laporan-stok-barang.docx');
+        $timestamp = now()->format('Ymd_His');
+        $filePath = storage_path("app/public/{$timestamp}_Laporan-stok-barang.docx");
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save($filePath);
 
@@ -203,8 +205,8 @@ class LaporanController extends Controller
 
         // Ambil data sesuai jenis laporan
         if ($type === 'year') {
-            $barHistories = $this->generateAllHistoriesByMonthInYear($startDate, $endDate, 'BAR');
-            $kitchenHistories = $this->generateAllHistoriesByMonthInYear($startDate, $endDate, 'KITCHEN');
+            $barHistories = $this->generateAllHistoriesByMonthInYearExport($startDate, $endDate, 'BAR');
+            $kitchenHistories = $this->generateAllHistoriesByMonthInYearExport($startDate, $endDate, 'KITCHEN');
         } else {
             $barHistories = $this->generateAllHistoriesByRange($startDate, $endDate, 'BAR');
             $kitchenHistories = $this->generateAllHistoriesByRange($startDate, $endDate, 'KITCHEN');
@@ -212,17 +214,17 @@ class LaporanController extends Controller
 
         // Buat label periode untuk nama file
         $periodeLabel = match ($type) {
-            'week' => 'Week_' . $startDate->format('W'),
-            'month' => $date->translatedFormat('F_Y'),
+            'week' => 'Minggu ke ' . $startDate->format('W') . ' (' . $startDate->translatedFormat('j M') . ' - ' . $endDate->translatedFormat('j M Y') . ')',
+            'month' => $date->translatedFormat('F Y'),
             'year' => $date->translatedFormat('Y'),
-            default => $date->translatedFormat('d_F_Y'),
+            default => '',
         };
 
         $timestamp = now()->format('Ymd_His');
 
         return Excel::download(
             new LaporanExport($barHistories, $kitchenHistories, $startDate, $endDate, $periodeLabel),
-            "Laporan_Bahan_{$periodeLabel}_{$timestamp}.xlsx"
+            "{$timestamp}_Laporan Bahan_{$periodeLabel}.xlsx"
         );
     }
 
@@ -547,6 +549,108 @@ class LaporanController extends Controller
                     'akhir' => $akhir,
                     'terbuang' => $terbuang,
                 ];
+            }
+
+            $allHistories[] = [
+                'bahan' => $bahan,
+                'history' => $historyPerMonth,
+            ];
+        }
+
+        return $allHistories;
+    }
+
+    private function generateAllHistoriesByMonthInYearExport(Carbon $startDate, Carbon $endDate, $section)
+    {
+        $range = CarbonPeriod::create($startDate, $endDate);
+
+        $bahans = Bahan::with('satuan')
+            ->where('section', $section)
+            ->whereNull('deleted_at')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        $allHistories = [];
+
+        foreach ($bahans as $bahan) {
+            $bahanId = $bahan->id;
+
+            // Preload semua data dalam 1x query (efisien)
+            $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->whereNull('deleted_at')
+                ->selectRaw('DATE(date) as tanggal, SUM(jumlah) as total')
+                ->groupBy('tanggal')
+                ->pluck('total', 'tanggal');
+
+            $masukData = BahanMasuk::where('bahan_id', $bahanId)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->whereNull('deleted_at')
+                ->selectRaw('DATE(date) as tanggal, SUM(jumlah) as total')
+                ->groupBy('tanggal')
+                ->pluck('total', 'tanggal');
+
+            $akhirData = BahanAkhir::where('bahan_id', $bahanId)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->whereNull('deleted_at')
+                ->selectRaw('DATE(date) as tanggal, SUM(jumlah) as total')
+                ->groupBy('tanggal')
+                ->pluck('total', 'tanggal');
+
+            $historyPerMonth = [];
+            $prevAkhir = null;
+
+            foreach ($range as $date) {
+                $dateString = $date->toDateString();
+
+                $isTanggalSatu = $date->day === 1;
+
+                // Logika awal:
+                // tgl 1 = stok awal manual (bisa null)
+                // tgl >1 = dari bahan akhir tgl sebelumnya
+                $awal = null;
+                if ($isTanggalSatu) {
+                    $awal = $stokAwalData[$dateString] ?? null;
+                } else {
+                    $yesterday = $date->copy()->subDay()->toDateString();
+                    $awal = $akhirData[$yesterday] ?? null;
+                }
+
+                $masuk = $masukData[$dateString] ?? 0;
+
+                $terpakai = DB::table('transaksi_details')
+                    ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+                    ->where('transaksi_details.bahan_id', $bahanId)
+                    ->whereDate('transaksis.date', $dateString)
+                    ->whereNull('transaksis.deleted_at')
+                    ->sum('transaksi_details.jumlah');
+
+                $akhir = $akhirData[$dateString] ?? null;
+
+                $jumlah_akhir = (!is_null($awal)) ? ($awal + $masuk - $terpakai) : null;
+                $terbuang = (!is_null($jumlah_akhir) && !is_null($akhir)) ? ($jumlah_akhir - $akhir) : null;
+
+                $monthName = $date->translatedFormat('F');
+
+                if (!isset($historyPerMonth[$monthName])) {
+                    $historyPerMonth[$monthName] = [
+                        'awal' => 0,
+                        'masuk' => 0,
+                        'terpakai' => 0,
+                        'sisa' => 0,
+                        'akhir' => 0,
+                        'terbuang' => 0,
+                    ];
+                }
+
+                // Jumlahkan semua nilai yang tidak null
+                $historyPerMonth[$monthName]['awal'] += $awal ?? 0;
+                $historyPerMonth[$monthName]['masuk'] += $masuk ?? 0;
+                $historyPerMonth[$monthName]['terpakai'] += $terpakai ?? 0;
+                $historyPerMonth[$monthName]['sisa'] += $jumlah_akhir ?? 0;
+                $historyPerMonth[$monthName]['akhir'] += $akhir ?? 0;
+                $historyPerMonth[$monthName]['terbuang'] += $terbuang ?? 0;
+
             }
 
             $allHistories[] = [

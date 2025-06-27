@@ -645,8 +645,6 @@
         </div>
     </div>
 
-
-
     @push('addScript')
         <script>
             function editCatatan(el) {
