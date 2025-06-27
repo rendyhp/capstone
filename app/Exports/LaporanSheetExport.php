@@ -13,19 +13,22 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\AfterSheet;
+use Carbon\CarbonPeriod;
 
 class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithEvents, WithStyles
 {
     protected $allHistories;
-    protected $month;
-    protected $year;
+    protected $startDate;
+    protected $endDate;
+    protected $periodeLabel;
     protected $sectionName;
 
-    public function __construct($allHistories, $month, $year, $sectionName)
+    public function __construct($allHistories, $startDate, $endDate, $periodeLabel, $sectionName)
     {
         $this->allHistories = $allHistories;
-        $this->month = $month;
-        $this->year = $year;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->periodeLabel = $periodeLabel;
         $this->sectionName = $sectionName;
     }
 
@@ -33,8 +36,10 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
     {
         return view('laporan.excel', [
             'allHistories' => $this->allHistories,
-            'month' => $this->month,
-            'year' => $this->year,
+            'startDate' => $this->startDate,
+            'endDate' => $this->endDate,
+            'periodeLabel' => $this->periodeLabel,
+            'section' => $this->sectionName
         ]);
     }
 
@@ -45,30 +50,48 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
 
     public function columnWidths(): array
     {
-        $daysInMonth = \Carbon\Carbon::create($this->year, $this->month, 1)->daysInMonth;
+        $isYear = $this->startDate->format('Y-m-d') === \Carbon\Carbon::create($this->startDate->year, 1, 1)->format('Y-m-d') &&
+            $this->endDate->format('Y-m-d') === \Carbon\Carbon::create($this->endDate->year, 12, 31)->format('Y-m-d');
+
 
         $widths = ['A' => 30];
-        for ($i = 1; $i <= $daysInMonth; $i++) {
-            $col = Coordinate::stringFromColumnIndex($i + 1);
-            $widths[$col] = 14;
+
+        if ($isYear) {
+            // 12 kolom untuk bulan
+            for ($i = 1; $i <= 12; $i++) {
+                $col = Coordinate::stringFromColumnIndex($i + 1);
+                $widths[$col] = 14;
+            }
+            $totalCol = Coordinate::stringFromColumnIndex(15); // 12 bulan + 2 (judul + kosong) + 1 (total)
+        } else {
+            // Rentang harian biasa
+            $range = CarbonPeriod::create($this->startDate, $this->endDate);
+            $daysCount = iterator_count($range);
+
+            for ($i = 1; $i <= $daysCount; $i++) {
+                $col = Coordinate::stringFromColumnIndex($i + 1);
+                $widths[$col] = 14;
+            }
+            $totalCol = Coordinate::stringFromColumnIndex($daysCount + 3);
         }
 
-        $totalCol = Coordinate::stringFromColumnIndex($daysInMonth + 3);
         $widths[$totalCol] = 30;
 
         return $widths;
     }
 
+
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function (AfterSheet $event) {
+            \Maatwebsite\Excel\Events\AfterSheet::class => function (\Maatwebsite\Excel\Events\AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
                 $highestRow = $sheet->getHighestRow();
                 $highestColumnIndex = Coordinate::columnIndexFromString($sheet->getHighestColumn());
 
-                $daysInMonth = \Carbon\Carbon::create($this->year, $this->month, 1)->daysInMonth;
-    
+                $range = CarbonPeriod::create($this->startDate, $this->endDate);
+                $daysCount = iterator_count($range);
+
                 for ($row = 1; $row <= $highestRow; $row++) {
                     $firstCellValue = $sheet->getCellByColumnAndRow(1, $row)->getValue();
                     for ($col = 1; $col <= $highestColumnIndex; $col++) {
@@ -103,30 +126,27 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
                             }
                         }
                     }
-                }
-                for ($row = 1; $row <= $highestRow; $row++) {
-                    $firstCellValue = $sheet->getCellByColumnAndRow(1, $row)->getValue();
 
-                    // Tambahkan formula hanya untuk baris Masuk, Terpakai, dan Terbuang
+                    // Formula untuk baris tertentu
                     if (in_array($firstCellValue, ['Masuk', 'Terpakai', 'Terbuang'])) {
                         $startCol = Coordinate::stringFromColumnIndex(2);
-                        $endCol = Coordinate::stringFromColumnIndex($daysInMonth + 1);
-                        $totalCol = Coordinate::stringFromColumnIndex($daysInMonth + 3);
+                        $endCol = Coordinate::stringFromColumnIndex($daysCount + 1);
+                        $totalCol = Coordinate::stringFromColumnIndex($daysCount + 3);
                         $sumFormula = "=SUM({$startCol}{$row}:{$endCol}{$row})";
                         $sheet->setCellValue("{$totalCol}{$row}", $sumFormula);
                     }
                 }
-
             },
         ];
     }
 
-
     public function styles(Worksheet $sheet)
     {
-        $daysInMonth = \Carbon\Carbon::create($this->year, $this->month, 1)->daysInMonth;
+        $range = CarbonPeriod::create($this->startDate, $this->endDate);
+        $daysCount = iterator_count($range);
+
         $startColIndex = 2;
-        $endColIndex = $daysInMonth + 2;
+        $endColIndex = $daysCount + 2;
 
         for ($colIndex = $startColIndex; $colIndex <= $endColIndex; $colIndex++) {
             $colLetter = Coordinate::stringFromColumnIndex($colIndex);
@@ -137,10 +157,10 @@ class LaporanSheetExport implements FromView, WithTitle, WithColumnWidths, WithE
         }
 
         $highestRow = $sheet->getHighestRow();
-        $totalColIndex = $daysInMonth + 3;
+        $totalColIndex = $daysCount + 3;
         $totalCol = Coordinate::stringFromColumnIndex($totalColIndex);
-        $range = $totalCol . '3:' . $totalCol . $highestRow;
-        $sheet->getStyle($range)->getNumberFormat()->setFormatCode('#,##0');
+        $rangeTotal = $totalCol . '3:' . $totalCol . $highestRow;
+        $sheet->getStyle($rangeTotal)->getNumberFormat()->setFormatCode('#,##0');
 
         return [];
     }

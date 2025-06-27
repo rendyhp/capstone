@@ -8,22 +8,25 @@ class LaporanExport implements WithMultipleSheets
 {
     protected $barHistories;
     protected $kitchenHistories;
-    protected $month;
-    protected $year;
+    protected $startDate;
+    protected $endDate;
+    protected $periodeLabel;
 
-    public function __construct($barHistories, $kitchenHistories, $month, $year)
+    public function __construct($barHistories, $kitchenHistories, $startDate, $endDate, $periodeLabel)
     {
         $this->barHistories = $barHistories;
         $this->kitchenHistories = $kitchenHistories;
-        $this->month = $month;
-        $this->year = $year;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->periodeLabel = $periodeLabel;
     }
 
     public function sheets(): array
     {
         return [
-            new LaporanSheetExport($this->barHistories, $this->month, $this->year, 'BAR'),
-            new LaporanSheetExport($this->kitchenHistories, $this->month, $this->year, 'KITCHEN'),
+            new LaporanSheetExport($this->barHistories, $this->startDate, $this->endDate, $this->periodeLabel, 'BAR'),
+            new LaporanSheetExport($this->kitchenHistories, $this->startDate, $this->endDate, $this->periodeLabel, 'KITCHEN'),
         ];
     }
 }
+

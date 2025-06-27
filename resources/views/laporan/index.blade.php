@@ -1,13 +1,15 @@
 @extends('layouts.main')
 @section('Laporan', 'active')
 @section('container')
-@section('title', 'Manajemen Bahan | Bdim’s Stock')
+@section('title', 'Manajemen Bahan | BdiM’s Stock')
 
     @php
         $currentUrl = request()->path();
         $selectedMonth = request('month', now()->format('m'));
         $selectedYear = request('year', now()->format('Y'));
+        $isYear = $type === 'year';
     @endphp
+
 
     @push('addStyle')
         <style>
@@ -58,21 +60,33 @@
                 </div>
             </div>
         </div>
-       @include('layouts.components.alert-flash-messages')
+        @include('layouts.components.alert-flash-messages')
 
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="d-flex align-items-center">
-                <label for="tanggalbahan" class="col-form-label me-2">Tanggal</label>
-                <input type="month" class="form-control" id="tanggalbahan" name="date" value="{{ $dateParam }}">
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <div>
+                <label for="filterDate" class="form-label mb-1">Tanggal</label>
+                <input type="date" class="form-control" id="filterDate" name="filterDate"
+                    value="{{ $dateInput ?? now()->toDateString() }}">
             </div>
 
-            @if (!empty($dateParam))
-                <a href="{{ route('laporan.export', ['date' => $dateParam]) }}" class="btn btn-success">
+            <div>
+                <label for="filterType" class="form-label mb-1">Tipe Periode</label>
+                <select id="filterType" class="form-select" name="filterType">
+                    <option value="week" {{ $type === 'week' ? 'selected' : '' }}>Minggu</option>
+                    <option value="month" {{ $type === 'month' ? 'selected' : '' }}>Bulan</option>
+                    <option value="year" {{ $type === 'year' ? 'selected' : '' }}>Tahun</option>
+                </select>
+
+            </div>
+            @if (!empty($dateInput))
+                <a href="{{ route('laporan.export', ['type' => $type, 'date' => $dateInput]) }}" class="btn btn-success">
                     <i class="fas fa-file-excel"></i> Export Excel
                 </a>
             @endif
         </div>
+
+
         <div>
             <a href="/laporan/bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/bahan') ? 'active' : '' }}">
@@ -88,8 +102,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Bar ({{ $bulanNama }}
-                            {{ $tahunNama }})
+                        <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Bar ()
                         </div>
                     </div>
 
@@ -102,74 +115,66 @@
                                     <thead class="table-primary">
                                         <tr>
                                             <th>Jenis</th>
-                                            @foreach ($item['history'] as $day)
-                                                <th class="text-center">{{ $day['tanggal'] }}</th>
+                                            @foreach ($item['history'] as $key => $value)
+                                                <th class="text-center">{{ $isYear ? $key : $value['tanggal'] }}</th>
                                             @endforeach
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><strong>Data Awal</strong></td>
-                                            @foreach ($item['history'] as $day)
-                                                <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['awal'] ?? 0, 3, ',', '.'), '0'), ',') }}
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Stok Masuk</strong></td>
-                                            @foreach ($item['history'] as $day)
-                                                <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['masuk'] ?? 0, 3, ',', '.'), '0'), ',') }}
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Terpakai</strong></td>
-                                            @foreach ($item['history'] as $day)
-                                                <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['terpakai'] ?? 0, 3, ',', '.'), '0'), ',') }}
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Sisa</strong></td>
-                                            @foreach ($item['history'] as $day)
-                                                <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['sisa'] ?? 0, 3, ',', '.'), '0'), ',') }}
-                                                </td>
-                                            @endforeach
-                                        </tr>
+                                        @foreach (['awal' => 'Data Awal', 'masuk' => 'Stok Masuk', 'terpakai' => 'Terpakai', 'sisa' => 'Sisa'] as $field => $label)
+                                            <tr>
+                                                <td><strong>{{ $label }}</strong></td>
+                                                @foreach ($item['history'] as $key => $value)
+                                                    @php
+                                                        $val = $isYear
+                                                            ? collect($value)->pluck($field)->filter()->sum()
+                                                            : $value[$field] ?? 0;
+                                                    @endphp
+                                                    <td class="text-center">
+                                                        {{ rtrim(rtrim(number_format($val, 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+
+                                        {{-- Spacer --}}
                                         <tr>
                                             <td style="border: none !important; height: 3vh;"></td>
-                                            @foreach ($item['history'] as $day)
+                                            @foreach ($item['history'] as $key => $value)
                                                 <td style="border: none !important;"></td>
                                             @endforeach
                                         </tr>
+
+                                        {{-- Data Akhir --}}
                                         <tr>
                                             <td><strong>Data Akhir</strong></td>
-                                            @foreach ($item['history'] as $day)
+                                            @foreach ($item['history'] as $key => $value)
+                                                @php
+                                                    $val = $isYear
+                                                        ? collect($value)->pluck('akhir')->filter()->last()
+                                                        : $value['akhir'] ?? 0;
+                                                @endphp
                                                 <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['akhir'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                                    {{ rtrim(rtrim(number_format($val, 3, ',', '.'), '0'), ',') }}
                                                 </td>
                                             @endforeach
                                         </tr>
+
+                                        {{-- Terbuang --}}
                                         <tr>
                                             <td><strong>Terbuang</strong></td>
-                                            @foreach ($item['history'] as $day)
+                                            @foreach ($item['history'] as $key => $value)
                                                 @php
-                                                    $value = $day['terbuang'];
-                                                    $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
+                                                    $val = $isYear
+                                                        ? collect($value)->pluck('terbuang')->sum()
+                                                        : $value['terbuang'] ?? 0;
+                                                    $formatted = rtrim(rtrim(number_format(abs($val), 3, ',', '.'), '0'), ',');
                                                 @endphp
                                                 <td class="text-center">
-                                                    @if ($value > 0)
-                                                        <span class="text-danger fw-bold">
-                                                            &#8595; {{ $formatted }}
-                                                        </span>
-                                                    @elseif ($value < 0)
-                                                        <span class="text-success fw-bold">
-                                                            &#8593; {{ $formatted }}
-                                                        </span>
+                                                    @if ($val > 0)
+                                                        <span class="text-danger fw-bold">&#8595; {{ $formatted }}</span>
+                                                    @elseif ($val < 0)
+                                                        <span class="text-success fw-bold">&#8593; {{ $formatted }}</span>
                                                     @else
                                                         <span>0</span>
                                                     @endif
@@ -189,8 +194,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Kitchen ({{ $bulanNama }}
-                            {{ $tahunNama }})
+                        <div class="card-title fs-5 fw-bold mt-2"> Laporan Bulanan Kitchen ()
                         </div>
                     </div>
 
@@ -203,74 +207,66 @@
                                     <thead class="table-primary">
                                         <tr>
                                             <th>Jenis</th>
-                                            @foreach ($item['history'] as $day)
-                                                <th class="text-center">{{ $day['tanggal'] }}</th>
+                                            @foreach ($item['history'] as $key => $value)
+                                                <th class="text-center">{{ $isYear ? $key : $value['tanggal'] }}</th>
                                             @endforeach
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><strong>Data Awal</strong></td>
-                                            @foreach ($item['history'] as $day)
-                                                <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['awal'] ?? 0, 3, ',', '.'), '0'), ',') }}
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Input</strong></td>
-                                            @foreach ($item['history'] as $day)
-                                                <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['masuk'] ?? 0, 3, ',', '.'), '0'), ',') }}
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Terpakai</strong></td>
-                                            @foreach ($item['history'] as $day)
-                                                <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['terpakai'] ?? 0, 3, ',', '.'), '0'), ',') }}
-                                                </td>
-                                            @endforeach
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Sisa</strong></td>
-                                            @foreach ($item['history'] as $day)
-                                                <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['sisa'] ?? 0, 3, ',', '.'), '0'), ',') }}
-                                                </td>
-                                            @endforeach
-                                        </tr>
+                                        @foreach (['awal' => 'Data Awal', 'masuk' => 'Stok Masuk', 'terpakai' => 'Terpakai', 'sisa' => 'Sisa'] as $field => $label)
+                                            <tr>
+                                                <td><strong>{{ $label }}</strong></td>
+                                                @foreach ($item['history'] as $key => $value)
+                                                    @php
+                                                        $val = $isYear
+                                                            ? collect($value)->pluck($field)->filter()->sum()
+                                                            : $value[$field] ?? 0;
+                                                    @endphp
+                                                    <td class="text-center">
+                                                        {{ rtrim(rtrim(number_format($val, 3, ',', '.'), '0'), ',') }}
+                                                    </td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+
+                                        {{-- Spacer --}}
                                         <tr>
                                             <td style="border: none !important; height: 3vh;"></td>
-                                            @foreach ($item['history'] as $day)
+                                            @foreach ($item['history'] as $key => $value)
                                                 <td style="border: none !important;"></td>
                                             @endforeach
                                         </tr>
+
+                                        {{-- Data Akhir --}}
                                         <tr>
                                             <td><strong>Data Akhir</strong></td>
-                                            @foreach ($item['history'] as $day)
+                                            @foreach ($item['history'] as $key => $value)
+                                                @php
+                                                    $val = $isYear
+                                                        ? collect($value)->pluck('akhir')->filter()->last()
+                                                        : $value['akhir'] ?? 0;
+                                                @endphp
                                                 <td class="text-center">
-                                                    {{ rtrim(rtrim(number_format($day['akhir'] ?? 0, 3, ',', '.'), '0'), ',') }}
+                                                    {{ rtrim(rtrim(number_format($val, 3, ',', '.'), '0'), ',') }}
                                                 </td>
                                             @endforeach
                                         </tr>
+
+                                        {{-- Terbuang --}}
                                         <tr>
                                             <td><strong>Terbuang</strong></td>
-                                            @foreach ($item['history'] as $day)
+                                            @foreach ($item['history'] as $key => $value)
                                                 @php
-                                                    $value = $day['terbuang'];
-                                                    $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
+                                                    $val = $isYear
+                                                        ? collect($value)->pluck('terbuang')->sum()
+                                                        : $value['terbuang'] ?? 0;
+                                                    $formatted = rtrim(rtrim(number_format(abs($val), 3, ',', '.'), '0'), ',');
                                                 @endphp
                                                 <td class="text-center">
-                                                    @if ($value > 0)
-                                                        <span class="text-danger fw-bold">
-                                                            &#8595; {{ $formatted }}
-                                                        </span>
-                                                    @elseif ($value < 0)
-                                                        <span class="text-success fw-bold">
-                                                            &#8593; {{ $formatted }}
-                                                        </span>
+                                                    @if ($val > 0)
+                                                        <span class="text-danger fw-bold">&#8595; {{ $formatted }}</span>
+                                                    @elseif ($val < 0)
+                                                        <span class="text-success fw-bold">&#8593; {{ $formatted }}</span>
                                                     @else
                                                         <span>0</span>
                                                     @endif
@@ -289,14 +285,18 @@
 
     @push('addScript')
         <script>
-            document.getElementById('tanggalbahan').addEventListener('change', function () {
-                const selectedDate = this.value;
-                if (selectedDate) {
-                    const baseUrl = "{{ route('laporan.index') }}";
-                    window.location.href = `${baseUrl}?date=${selectedDate}`;
-                }
+            document.querySelectorAll('#filterDate, #filterType').forEach(el => {
+                el.addEventListener('change', () => {
+                    const date = document.getElementById('filterDate').value;
+                    const type = document.getElementById('filterType').value;
+                    if (date && type) {
+                        const baseUrl = "{{ route('laporan.index') }}";
+                        window.location.href = `${baseUrl}?type=${type}&date=${date}`;
+                    }
+                });
             });
         </script>
     @endpush
+
 
 @endsection

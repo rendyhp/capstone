@@ -54,6 +54,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Dasbor
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard/bahan-loss/{encryptedId}', [DashboardController::class, 'detailLossBahan'])->name('dashboard.bahanLossDetail');
+
 
     // Laporan
     Route::get('/laporan/bahan', [LaporanController::class, 'index'])->name('laporan.index');

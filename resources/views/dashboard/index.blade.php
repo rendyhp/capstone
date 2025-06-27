@@ -146,10 +146,21 @@
                     <div class="card-title fs-5 fw-bold mt-2">Rekap Loss Bahan</div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="d-flex align-items-center">
-                        <label for="tanggalbahan" class="col-form-label me-2">Tanggal</label>
-                        <input type="month" class="form-control" id="tanggalbahan" name="month" value="{{ $dateParam }}">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div>
+                        <label for="filterDate" class="form-label mb-1">Tanggal</label>
+                        <input type="date" class="form-control" id="filterDate" name="filterDate"
+                            value="{{ $dateInput ?? now()->toDateString() }}">
+                    </div>
+
+                    <div>
+                        <label for="filterType" class="form-label mb-1">Tipe Periode</label>
+                        <select id="filterType" class="form-select" name="filterType">
+                            <option value="week" {{ $type === 'week' ? 'selected' : '' }}>Minggu</option>
+                            <option value="month" {{ $type === 'month' ? 'selected' : '' }}>Bulan</option>
+                            <option value="year" {{ $type === 'year' ? 'selected' : '' }}>Tahun</option>
+                        </select>
+
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -173,7 +184,12 @@
                                             @forelse ($totalTerbuangBar as $index => $item)
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
-                                                    <td>{{ $item['name'] }}</td>
+                                                    <td>
+                                                        <a class="text-dark"
+                                                            href="{{ route('dashboard.bahanLossDetail', ['encryptedId' => Hashids::encode($item['id']), 'date' => $dateInput, 'type' => $type]) }}">
+                                                            {{ $item['name'] }}
+                                                        </a>
+                                                    </td>
                                                     @php
                                                         $value = $item['total_terbuang'];
                                                         $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
@@ -227,7 +243,12 @@
                                             @forelse ($totalTerbuangKitchen as $index => $item)
                                                 <tr>
                                                     <td>{{ $index + 1 }}</td>
-                                                    <td>{{ $item['name'] }}</td>
+                                                    <td>
+                                                        <a class="text-dark"
+                                                            href="{{ route('dashboard.bahanLossDetail', ['encryptedId' => Hashids::encode($item['id']), 'date' => $dateInput, 'type' => $type]) }}">
+                                                            {{ $item['name'] }}
+                                                        </a>
+                                                    </td>
                                                     @php
                                                         $value = $item['total_terbuang'];
                                                         $formatted = rtrim(rtrim(number_format(abs($value), 3, ',', '.'), '0'), ',');
@@ -297,12 +318,15 @@
         </script>
 
         <script>
-            document.getElementById('tanggalbahan').addEventListener('change', function () {
-                const selectedDate = this.value;
-                if (selectedDate) {
-                    const baseUrl = "{{ route('dashboard.index') }}";
-                    window.location.href = `${baseUrl}?month=${selectedDate}`;
-                }
+            document.querySelectorAll('#filterDate, #filterType').forEach(el => {
+                el.addEventListener('change', () => {
+                    const date = document.getElementById('filterDate').value;
+                    const type = document.getElementById('filterType').value;
+                    if (date && type) {
+                        const baseUrl = "{{ route('dashboard.index') }}";
+                        window.location.href = `${baseUrl}?type=${type}&date=${date}`;
+                    }
+                });
             });
         </script>
         <script>

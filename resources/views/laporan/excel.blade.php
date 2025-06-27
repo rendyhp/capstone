@@ -2,12 +2,7 @@
 <html>
 
 <head>
-    @php
-        use Carbon\Carbon;
-        $bulanNama = Carbon::create()->month($month)->locale('id')->isoFormat('MMMM');
-    @endphp
     <meta charset="UTF-8">
-
     <style>
         table {
             border-collapse: collapse;
@@ -38,15 +33,11 @@
         th:first-child,
         td:first-child {
             width: 204px;
-            max-width: 204px;
-            min-width: 204px;
         }
 
         th:not(:first-child),
         td:not(:first-child) {
             width: 100px;
-            max-width: 100px;
-            min-width: 100px;
         }
 
         .bordered td {
@@ -57,18 +48,24 @@
             border: none !important;
         }
     </style>
-
 </head>
 
 <body>
 
-
-    <h3>Laporan Stok Bahan ({{ $bulanNama }} {{ $year }})</h3>
-
+    <h3>Laporan Stok Bahan ({{ $periodeLabel }}) - {{ $section }}</h3>
 
     @php
-        $daysInMonth = Carbon::create($year, $month, 1)->daysInMonth;
+        use Carbon\Carbon;
+        use Carbon\CarbonPeriod;
+
+        $isYearly = $startDate->format('Y-m-d') === Carbon::create($startDate->year, 1, 1)->format('Y-m-d') &&
+            $endDate->format('Y-m-d') === Carbon::create($endDate->year, 12, 31)->format('Y-m-d');
+
+        $range = $isYearly
+            ? collect(range(1, 12))->map(fn($m) => Carbon::create(null, $m, 1))
+            : CarbonPeriod::create($startDate, $endDate);
     @endphp
+
 
     @foreach($allHistories as $index => $item)
         @php
@@ -77,16 +74,17 @@
             $bahanName = $bahan->name . ' (' . ($bahan->satuan->name ?? '') . ')';
         @endphp
 
-        {{-- Nomor dan Nama bahan --}}
         <div><strong>{{ $index + 1 }}. {{ $bahanName }}</strong></div>
 
         <table>
             <thead>
                 <tr>
                     <th class="no-border"></th>
-                    @for ($i = 1; $i <= $daysInMonth; $i++)
-                        <th>{{ $i }}</th>
-                    @endfor
+                    @foreach ($range as $date)
+                        <th>
+                            {{ $isYearly ? $date->translatedFormat('F') : $date->format('j') }}
+                        </th>
+                    @endforeach
                     <th></th>
                     <th>{{ $bahan->name }}</th>
                     <th>({{ $bahan->satuan->name }})</th>
@@ -94,7 +92,6 @@
             </thead>
 
             <tbody>
-                {{-- Baris jenis Awal, Masuk, Terpakai, Sisa --}}
                 @php
                     $types1 = ['Awal', 'Masuk', 'Terpakai', 'Sisa'];
                 @endphp
@@ -104,37 +101,29 @@
                         $lower = strtolower($type);
                         $total = collect($history)->sum(fn($day) => $day[$lower] ?? 0);
                     @endphp
-                    <tr class="{{ $bahan->name === 'Brown Sugar' ? 'bordered' : '' }}">
+                    <tr>
                         <td class="indent">{{ $type }}</td>
                         @foreach ($history as $dayData)
-                            <td>{{ $dayData[$lower] ?? 0 }}</td>
+                            <td>{{ number_format($dayData[$lower] ?? 0, 2, ',', '.') }}</td>
                         @endforeach
                         <td></td>
                         <td>
-                            @if ($type === 'Masuk')
-                                {{ $total }}
-                            @elseif ($type === 'Terpakai')
-                                {{ $total }}
+                            @if (in_array($type, ['Masuk', 'Terpakai']))
+                                {{ number_format($total, 2, ',', '.') }}
                             @endif
                         </td>
                         <td>
-                            @if ($type === 'Masuk')
-                                Beli
-                            @elseif ($type === 'Terpakai')
-                                Terpakai
-
+                            @if ($type === 'Masuk') Beli
+                            @elseif ($type === 'Terpakai') Terpakai
                             @endif
                         </td>
-
                     </tr>
                 @endforeach
-                
-                {{-- Baris kosong --}}
+
                 <tr class="no-border">
-                    <td colspan="{{ $daysInMonth + 1 }}">&nbsp;</td>
+                    <td colspan="{{ count($range) + 4 }}">&nbsp;</td>
                 </tr>
 
-                {{-- Baris Akhir dan Terbuang --}}
                 @php
                     $types2 = ['Akhir', 'Terbuang'];
                 @endphp
@@ -147,23 +136,19 @@
                     <tr>
                         <td class="indent">{{ $type }}</td>
                         @foreach ($history as $dayData)
-                            <td>{{ $dayData[$lower] ?? 0 }}</td>
+                            <td>{{ number_format($dayData[$lower] ?? 0, 2, ',', '.') }}</td>
                         @endforeach
-                        <td>
-                        </td>
+                        <td></td>
                         <td>
                             @if ($type === 'Terbuang')
-                                {{ $total }}
+                                {{ number_format($total, 2, ',', '.') }}
                             @endif
                         </td>
                         <td>
-                            @if ($type === 'Terbuang')
-                                Terbuang
-                            @endif
+                            @if ($type === 'Terbuang') Terbuang @endif
                         </td>
                     </tr>
                 @endforeach
-
             </tbody>
         </table>
 
