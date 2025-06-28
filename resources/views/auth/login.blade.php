@@ -1,6 +1,6 @@
 @extends('layouts.header')
 @section('container')
-@section('title', 'Login | Bdim’s Stock')
+@section('title', 'Login | B.di.M’s Stock')
 
     @push('addStyle')
         <style>

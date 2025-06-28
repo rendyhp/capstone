@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SetApiToken;
 use App\Services\FonnteService;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SettingController extends Controller
 {
@@ -34,6 +35,20 @@ class SettingController extends Controller
 
     public function update(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|max:255',
+            'phone' => 'nullable|digits_between:1,15',
+            'address' => 'nullable|string',
+            'birth_date' => 'nullable|date',
+            'gender' => 'nullable|in:L,P',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
         $user = Auth::user();
 
         $user->update([
@@ -67,10 +82,17 @@ class SettingController extends Controller
 
     public function updatePassword(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'current_password' => 'required',
             'new_password' => 'required|string|min:8|max:20|confirmed',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $user = Auth::user();
 
@@ -162,11 +184,18 @@ class SettingController extends Controller
 
     public function updateSetAPItoken(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:13',
-            'token_name' => 'required|string|max:255',
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|max:255',
+            'phone' => 'nullable|digits_between:1,15',
+            'token_name' => 'nullable|string|max:255',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $formattedPhone = '62' . ltrim($request->phone, '0');
 

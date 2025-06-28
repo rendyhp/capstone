@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('StokBahan', 'active')
 @section('container')
-@section('title', "Rekap Bulanan | BdiM’s Stock")
+@section('title', "Rekap Bulanan | B.di.M’s Stock")
 
     @push('addStyle')
         <style>

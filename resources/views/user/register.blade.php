@@ -1,7 +1,7 @@
 @extends('layouts.header')
 @section('UserData', 'active')
 @section('container')
-@section('title', 'Register | Bdim’s Stock')
+@section('title', 'Register | B.di.M’s Stock')
 
   @push('addStyle')
     <style>

@@ -309,13 +309,26 @@ class BahanController extends Controller
 
     public function updateCatatan(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'bahan_id' => 'required|integer',
+            'date' => 'required|date',
+            'catatan' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
+
         $validated = $request->validate([
             'bahan_id' => 'required|integer',
             'date' => 'required|date',
             'catatan' => 'nullable|string',
         ]);
 
-        $catatan = BahanCatatan::updateOrCreate(
+        BahanCatatan::updateOrCreate(
             [
                 'bahan_id' => $validated['bahan_id'],
                 'date' => $validated['date'],
@@ -337,11 +350,18 @@ class BahanController extends Controller
             return response()->json(['error2' => true]);
         }
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'bahan_id' => 'required|integer|exists:bahans,id',
             'date' => 'required|date',
-            'jumlah' => 'required|numeric',
+            'jumlah' => 'required|numeric|max:99999999999.999',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         BahanAwal::where('bahan_id', $request->bahan_id)
             ->whereDate('date', $request->date)
@@ -359,11 +379,18 @@ class BahanController extends Controller
 
     public function saveBahanAkhir(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'bahan_id' => 'required|integer|exists:bahans,id',
             'date' => 'required|date',
-            'jumlah' => 'required|numeric',
+            'jumlah' => 'required|numeric|max:99999999999.999',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         BahanAkhir::where('bahan_id', $request->bahan_id)
             ->whereDate('date', $request->date)
@@ -387,10 +414,17 @@ class BahanController extends Controller
 
     public function deleteBahanAwal(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'bahan_id' => 'required|integer',
             'date' => 'required|date',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $deleted = BahanAwal::where('bahan_id', $request->bahan_id)
             ->whereDate('date', $request->date)
@@ -403,10 +437,17 @@ class BahanController extends Controller
 
     public function deleteBahanAkhir(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'bahan_id' => 'required|integer',
             'date' => 'required|date',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $deleted = BahanAkhir::where('bahan_id', $request->bahan_id)
             ->whereDate('date', $request->date)
@@ -553,6 +594,20 @@ class BahanController extends Controller
 
     public function storeM(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:barangs,id',
+            'keterangan' => 'nullable|string',
+            'jumlah' => 'required|numeric|min:1|max:99999999999.999',
+            'date' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
+
         $validated = $request->validate([
             'id' => 'required',
             'date' => 'required|date',
@@ -588,11 +643,14 @@ class BahanController extends Controller
     public function storeSatuan(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:30',
+            'name' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
         }
 
         $user = Auth::user()->id;
@@ -624,7 +682,10 @@ class BahanController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
         }
         $user = Auth::user()->id;
 
@@ -652,14 +713,17 @@ class BahanController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'minimum' => 'required|integer',
+            'minimum' => 'required|numeric|max:99999999999.999',
             'satuan_id' => 'required',
             'section' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
         }
 
         $existing = Bahan::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
@@ -716,14 +780,21 @@ class BahanController extends Controller
 
     public function updateDataBahan(Request $request, Bahan $bahans)
     {
-        Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'minimum' => 'required|integer|max:20',
+            'minimum' => 'required|numeric|max:99999999999,999',
             'satuan_id' => 'required',
-            'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
             'section' => 'required',
+            'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $id = $request->input('id');
         $name = strtolower($request->input('name'));

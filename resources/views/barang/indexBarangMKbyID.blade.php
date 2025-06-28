@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('StokBarang', 'active')
 @section('container')
-@section('title', "Masuk/Keluar $barangs->name | BdiM’s Stock")
+@section('title', "Masuk/Keluar $barangs->name | B.di.M’s Stock")
 
     @php
         $currentUrl = request()->path();
@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="page-header">
-                    <h2 class="pageheader-title ">Stok Barang</h2>
+                    <h2 class="pageheader-title ">History Masuk/Keluar {{ $barangs->name }}</h2>
                     <div class="page-breadcrumb">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
@@ -46,7 +46,7 @@
             <div class="col-xl-12">
                 <div class="card custom-card">
                     <div class="card-header">
-                        <div class="card-title fs-5 fw-bold mt-2">History Input {{ $barangs->name }}</div>
+                        <div class="card-title fs-5 fw-bold mt-2">History Masuk/Keluar {{ $barangs->name }}</div>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -93,42 +93,42 @@
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>No.</th>
-                                                <th>Tanggal</th>
-                                                <th>Nama Barang</th>
-                                                <th class="text-center">Tipe</th>
-                                                <th>Jumlah</th>
-                                                <th>Satuan</th>
-                                                <th>Keterangan</th>
-                                                <th>User</th>
+                                                <th class="column-nomor-MKall">No.</th>
+                                                <th class="column-date-MKall">Tanggal</th>
+                                                <th class="column-name-MKall">Nama Barang</th>
+                                                <th class="text-center column-type-MKall">Tipe</th>
+                                                <th class="column-jumlah-MKall">Jumlah</th>
+                                                <th class="column-satuan-MKall">Satuan</th>
+                                                <th class="column-keterangan-MKall">Keterangan</th>
+                                                <th class="column-user-MKall">User</th>
                                                 @if (auth()->user()->role === 'OWNER' || auth()->user()->role === 'MANAJER')
-                                                    <th>Aksi</th>
+                                                    <th class="column-action-MKall">Aksi</th>
                                                 @endif
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($transaksis as $index => $trx)
                                                 <tr>
-                                                    <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
+                                                    <td class="column-nomor-MKall">{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
                                                     </td>
-                                                    <td>{{ \Carbon\Carbon::parse($trx['date'])->translatedFormat('d F Y') }}
+                                                    <td class="column-date-MKall">{{ \Carbon\Carbon::parse($trx['date'])->translatedFormat('d F Y') }}
                                                     </td>
-                                                    <td>{{ $trx['name'] ?? '-' }}</td>
-                                                    <td class="text-center">
+                                                    <td class="column-name-MKall">{{ $trx['name'] ?? '-' }}</td>
+                                                    <td class="text-center column-type-MKall">
                                                         <span
                                                             class="badge {{ $trx['tipe'] === 'MASUK' ? 'bg-success' : ($trx['tipe'] === 'KELUAR' ? 'bg-danger' : ($trx['tipe'] === 'AWAL' ? 'bg-warning text-dark' : 'bg-secondary')) }}">
                                                             {{ $trx['tipe'] }}
                                                         </span>
                                                     </td>
 
-                                                    <td class="text-end">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
-                                                    <td>{{ $trx['satuan'] }}</td>
-                                                    <td>
+                                                    <td class="text-end column-jumlah-MKall">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
+                                                    <td class="column-satuan-MKall">{{ $trx['satuan'] }}</td>
+                                                    <td class="column-keterangan-MKall">
                                                         {!! nl2br(e($trx['keterangan'])) !!}
                                                     </td>
-                                                    <td>{{ $trx['user'] }}</td>
+                                                    <td class="column-user-MKall">{{ $trx['user'] }}</td>
                                                     @if (auth()->user()->role === 'OWNER' || auth()->user()->role === 'MANAJER')
-                                                        <td>
+                                                        <td class="column-action-MKall">
                                                             @if ($trx['tipe'] === 'MASUK')
                                                                 <form action="{{ route('barang.deleteBarangMKbyIDmasuk') }}"
                                                                     method="post" class="d-inline">

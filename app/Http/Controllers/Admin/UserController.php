@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\UserProfile;
 use App\Models\UserSetting;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -81,12 +82,19 @@ class UserController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'role' => 'required|in:OWNER,MANAJER,STAF',
             'password' => 'required|string|min:8|confirmed',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         if ($role == 'OWNER') {
             if (!in_array($request->role, ['OWNER', 'MANAJER', 'STAF'])) {

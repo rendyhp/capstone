@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>@yield('title', "BdiM’s Stock")</title>
+    <title>@yield('title', "B.di.M’s Stock")</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -49,7 +49,7 @@
                     <h3 class="text-primary hide-on-print">
                         <p class="fs-5">
                             <img src="/img/logo-bdim.png" style="width: 35px; height: 35px;" class="me-2"
-                                alt="Logo">BdiM's Stock
+                                alt="Logo">B.di.M’s Stock
                         </p></i>
                     </h3>
                 </a>
@@ -240,7 +240,7 @@
             <!-- Widgets End -->
             <footer class="bg-gray-200 py-4 me-5 mb-4">
                 <p class="text-end text-gray-700 text-sm">
-                    &copy;2025 B.di.M Cafe & Chill Mulawarman
+                    &copy;2025 B.di.M | Cafe & Chill Mulawarman
                 </p>
             </footer>
         </div>
@@ -357,7 +357,7 @@
     @stack('addScript')
 
     <!-- JavaScript Libraries -->
-    <script src="{{ url('js/jquery-3.4.1.min.js')}}"></script>
+    <script src="{{ url('js/jquery-3.6.0.min.js')}}"></script>
     <script src="{{ url('js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{ url('lib/chart/chart.min.js')}}"></script>
     <script src="{{ url('lib/easing/easing.min.js')}}"></script>
@@ -369,18 +369,17 @@
     <script src="{{ url('js/popper.min.js') }} "></script>
     <script src="{{ url('js/bootstrap.min.js')}}"></script>
 
-    <!-- tambahanku -->
-    <script src="{{ url('js/select2.min.js') }} "></script>
-    <script src="{{ url('js/flatpickr.js') }} "></script>
     <!-- Template Javascript -->
     <script src="{{ url('js/main.js')}}"></script>
     <!-- ... (other script tags) -->
-    <script src="{{ url('js/jquery-3.6.0.min.js')}}"></script>
     <script src="{{ url('js/xlsx.full.min.js') }}"></script>
+
+    <!-- tambahanku -->
+    <script src="{{ url('js/select2.min.js') }} "></script>
+    <script src="{{ url('js/flatpickr.js') }} "></script>
 
     <!-- My Select2 script-->
     <script src="{{ url('js/myselect2.js')}}"></script>
-
     <script src="{{ url('js/myjs.js')}}"></script>
 </body>
 

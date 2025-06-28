@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('TemporaryDelete', 'active')
 @section('container')
-@section('title', 'Deleted Barang | Bdim’s Stock')
+@section('title', 'Deleted Barang | B.di.M’s Stock')
 
     @push('addStyle')
         <style>

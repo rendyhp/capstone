@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Bahan;
 use App\Models\Barang;
 use App\Models\Menu;
+use Illuminate\Support\Facades\Validator;
 
 class TemporaryDeleteController extends Controller
 {

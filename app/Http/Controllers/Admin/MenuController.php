@@ -8,6 +8,7 @@ use App\Models\KomposisiMenu;
 use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class MenuController extends Controller
 {
@@ -64,12 +65,18 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         // Cek jika Menu sudah ada
         $existing = Menu::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
@@ -132,11 +139,18 @@ class MenuController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|mimes:jpeg,jpg,png|max:3072',
+            'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $menu = Menu::findOrFail($id);
 

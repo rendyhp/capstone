@@ -23,6 +23,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpWord\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\SimpleType\Jc;
+use Illuminate\Support\Facades\Validator;
 
 class LaporanController extends Controller
 {

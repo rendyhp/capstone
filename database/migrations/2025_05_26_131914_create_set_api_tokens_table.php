@@ -12,8 +12,8 @@ return new class extends Migration {
     {
         Schema::create('set_api_tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 30)->nullable();
-            $table->string('token_name', 50)->nullable();
+            $table->string('name')->nullable();
+            $table->string('token_name')->nullable();
             $table->string('phone', 18)->nullable();
             $table->timestamps();
         });

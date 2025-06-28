@@ -13,6 +13,7 @@ use App\Models\Menu;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\TransaksiDetail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class TransaksiController extends Controller
 {
@@ -244,11 +245,18 @@ class TransaksiController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'menu_id' => 'required|exists:menus,id',
-            'jumlah' => 'required|numeric|min:1',
+            'jumlah' => 'required|numeric|min:999999999',
             'date' => 'required|date',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $transaksi = Transaksi::create([
             'user_id' => Auth::id(),
@@ -304,12 +312,18 @@ class TransaksiController extends Controller
 
     public function updateTransaksi(Request $request, $id)
     {
-
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'menu_id' => 'required|exists:menus,id',
-            'jumlah' => 'required|numeric|min:1',
+            'jumlah' => 'required|numeric|min:999999999',
             'date' => 'required|date',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $transaksi = Transaksi::find($id);
 

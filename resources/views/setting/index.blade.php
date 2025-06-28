@@ -1,7 +1,7 @@
 @extends('layouts.setting')
 @section('Profile', 'active')
 @section('container')
-@section('title', "Profile | BdiM’s Stock")
+@section('title', "Profile | B.di.M’s Stock")
 
     <style>
         .cards {
@@ -124,7 +124,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </div>

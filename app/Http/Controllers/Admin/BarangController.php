@@ -358,6 +358,20 @@ class BarangController extends Controller
 
     public function storeM(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:barangs,id',
+            'keterangan' => 'nullable|string',
+            'jumlah' => 'required|numeric|min:1|max:999999999',
+            'date' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
+
         $validated = $request->validate([
             'id' => 'required|exists:barangs,id',
             'date' => 'required|date',
@@ -391,11 +405,25 @@ class BarangController extends Controller
 
     public function storeK(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'id' => 'required|exists:barangs,id',
             'keterangan' => 'nullable|string',
-            'jumlah' => 'required|numeric|min:1',
+            'jumlah' => 'required|numeric|min:1|max:999999999',
             'date' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
+
+        $validated = $request->validate([
+            'id' => 'required|exists:barangs,id',
+            'date' => 'required|date',
+            'keterangan' => 'nullable|string',
+            'jumlah' => 'required|numeric|min:1',
         ]);
 
         // Cek duplikat stok keluar Barang
@@ -438,14 +466,21 @@ class BarangController extends Controller
     public function storeDataBarang(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:30',
+            'name' => 'required|string|max:255',
             'date' => 'required|date',
             'description' => 'nullable|string',
-            'stok_awal' => 'required|integer|max:20',
-            'minimum' => 'required|Integer|max:20',
+            'stok_awal' => 'required|numeric|max:999999999',
+            'minimum' => 'required|numeric|max:999999999',
             'satuan_id' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $existing = Barang::whereNull('deleted_at')->whereRaw('LOWER(name) = ?', [strtolower($request->input('name'))])->first();
         if ($existing) {
@@ -498,12 +533,15 @@ class BarangController extends Controller
     public function storeSatuan(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:30',
+            'name' => 'required|string|max:255',
 
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
         }
         $user = Auth::user()->id;
 
@@ -533,15 +571,20 @@ class BarangController extends Controller
 
     public function updateDataBarang(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:30',
-            'date' => 'required|date',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'minimum' => 'required|Integer|max:20',
+            'minimum' => 'required|numeric|max:999999999',
             'satuan_id' => 'required',
             'image' => 'nullable|mimes:jpeg,jpg,png,webp|max:3072',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
+        }
 
         $id = $request->input('id');
         $existing = Barang::whereNull('deleted_at')
@@ -599,7 +642,10 @@ class BarangController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Terdapat kesalahan pada data yang dimasukkan. Silakan coba lagi!');
         }
 
         $id = $request->input('id');

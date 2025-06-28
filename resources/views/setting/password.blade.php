@@ -1,7 +1,7 @@
 @extends('layouts.setting')
 @section('Password', 'active')
 @section('container')
-@section('title', "Ubah Password | BdiM’s Stock")
+@section('title', "Ubah Password | B.di.M’s Stock")
 
     <style>
         .cards {

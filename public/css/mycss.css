@@ -342,4 +342,34 @@
 .column-jumlah-menuT {
     width: 5%;
 }
+
+/* Masuk Keluar All */
+.column-nomor-MKall{
+    width: 3%;
+}
+.column-date-MKall{
+    width: 5%;
+}
+.column-name-MKall{
+    width: 10%;
+}
+.column-type-MKall{
+    width: 3%;
+}
+.column-jumlah-MKall{
+    width: 5%;
+}
+.column-satuan-MKall{
+    width: 5%;
+}
+.column-keterangan-MKall{
+    width: 10%;
+}
+.column-user-MKall{
+    width: 10%;
+}
+.column-action-MKall{
+    width: 3%;
+}
+
 /* End Ukuran Kolom */

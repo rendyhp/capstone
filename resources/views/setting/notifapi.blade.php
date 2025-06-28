@@ -1,7 +1,7 @@
 @extends('layouts.setting')
 @section('Notifapi', 'active')
 @section('container')
-@section('title', "API Notifikasi | BdiM’s Stock")
+@section('title', "API Notifikasi | B.di.M’s Stock")
 
     <style>
         .cards {

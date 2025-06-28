@@ -1,6 +1,6 @@
 @extends('layouts.header')
 @section('container')
-@section('title', 'Home | Bdim’s Stock')
+@section('title', 'Home | B.di.M’s Stock')
 
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
@@ -9,7 +9,7 @@
     <div class="row">
       <div class="col-lg-6 pt-5 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
       <h1 data-aos="fade-up">BdiM's Stock</h1>
-      <h2 data-aos="fade-up" data-aos-delay="400">BdiM’s Stock adalah aplikasi monitoring stok
+      <h2 data-aos="fade-up" data-aos-delay="400">B.di.M’s Stock adalah aplikasi monitoring stok
         untuk memantau Stok Barang dan Bahan di Kafe BdiM.</h2>
       <div data-aos="fade-up" data-aos-delay="800">
         <ul class="btn-get-started scrollto">
@@ -55,7 +55,7 @@
       </div>
       <div class="col-lg-6 pt-4 pt-lg-0" data-aos="fade-up" data-aos-delay="300">
         <p>
-        BdiM’s Stock bertujuan untuk membandingkan jumlah fisik bahan dengan catatan pada aplikasi.
+        B.di.M’s Stock bertujuan untuk membandingkan jumlah fisik bahan dengan catatan pada aplikasi.
         </p>
         <p>
         Jl. Mulawarman Raya No.2a, Pedalangan, Kec. Banyumanik, Kota Semarang, Jawa Tengah 50268

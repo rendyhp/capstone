@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('StokBarang', 'active')
 @section('container')
-@section('title', "Barang Masuk/Keluar | BdiM’s Stock")
+@section('title', "Barang Masuk/Keluar | B.di.M’s Stock")
 
     @php
         $currentUrl = request()->path();
@@ -66,43 +66,43 @@
                                         </div>
                                         <thead class="table-primary">
                                             <tr>
-                                                <th>No.</th>
-                                                <th>Tanggal</th>
-                                                <th>Nama Barang</th>
-                                                <th class="text-center">Tipe</th>
-                                                <th>Jumlah</th>
-                                                <th>Satuan</th>
-                                                <th>Keterangan</th>
-                                                <th>User</th>
+                                                <th class="column-nomor-MKall">No.</th>
+                                                <th class="column-date-MKall">Tanggal</th>
+                                                <th class="column-name-MKall">Nama Barang</th>
+                                                <th class="text-center column-type-MKall">Tipe</th>
+                                                <th class="column-jumlah-MKall">Jumlah</th>
+                                                <th class="column-satuan-MKall">Satuan</th>
+                                                <th class="column-keterangan-MKall">Keterangan</th>
+                                                <th class="column-user-MKall">User</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($transaksis as $index => $trx)
                                                 <tr>
-                                                    <td>{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
+                                                    <td class="column-nomor-MKall">{{ ($transaksis->currentPage() - 1) * $transaksis->perPage() + $loop->iteration }}
                                                     </td>
-                                                    <td>{{ \Carbon\Carbon::parse($trx['date'])->translatedFormat('d F Y') }}
+                                                    <td class="column-date-MKall">{{ \Carbon\Carbon::parse($trx['date'])->translatedFormat('d F Y') }}
                                                     </td>
-                                                    <td>
+                                                    <td class="column-name-MKall">
                                                         <a href="/barang/masuk-keluar/{{ Hashids::encode($trx['barang_id']) }}"
                                                             class="text-decoration-none text-dark">
                                                             {{ $trx['name'] ?? '-' }}
                                                         </a>
                                                     </td>
 
-                                                    <td class="text-center">
+                                                    <td class="text-center column-type-MKall">
                                                         <span
                                                             class="badge {{ $trx['tipe'] === 'MASUK' ? 'bg-success' : ($trx['tipe'] === 'KELUAR' ? 'bg-danger' : ($trx['tipe'] === 'AWAL' ? 'bg-warning text-dark' : 'bg-secondary')) }}">
                                                             {{ $trx['tipe'] }}
                                                         </span>
                                                     </td>
 
-                                                    <td class="text-end">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
-                                                    <td>{{ $trx['satuan'] }}</td>
-                                                    <td>
+                                                    <td class="text-end column-jumlah-MKall">{{ number_format($trx['jumlah'], 0, ',', '.') }}</td>
+                                                    <td class="column-satuan-MKall">{{ $trx['satuan'] }}</td>
+                                                    <td class="column-keterangan-MKall">
                                                         {!! nl2br(e($trx['keterangan'])) !!}
                                                     </td>
-                                                    <td>{{ $trx['user'] }}</td>
+                                                    <td class="column-user-MKall">{{ $trx['user'] }}</td>
                                                 </tr>
                                             @endforeach
                                             @if($transaksis->isEmpty())

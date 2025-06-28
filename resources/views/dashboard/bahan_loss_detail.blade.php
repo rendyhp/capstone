@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('Dashboard', 'active')
 @section('container')
-@section('title', 'Dashboard | Bdim’s Stock')
+@section('title', 'Dashboard | B.di.M’s Stock')
 
     @push('spinner')
         <!-- Spinner Start -->

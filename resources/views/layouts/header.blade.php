@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>@yield('title', "BdiM’s Stock")</title>
+    <title>@yield('title', "B.di.M’s Stock")</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -54,8 +54,9 @@
             <div class="logo">
                 <h1>
                     <a href="/" class="text-decoration-none text-primary d-flex align-items-center">
-                        <img src="/img/logo-bdim.png" style="width: 40px; height: 40px;" class="img-fluid me-2" alt="Logo">
-                        BdiM's Stock
+                        <img src="/img/logo-bdim.png" style="width: 40px; height: 40px;" class="img-fluid me-2"
+                            alt="Logo">
+                        B.di.M’s Stock
                     </a>
                 </h1>
             </div>
@@ -86,7 +87,7 @@
 
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
-                                                                            document.getElementById('logout-form').submit();">
+                                                                                    document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
 
@@ -102,7 +103,7 @@
     </header>
     <footer class="bg-gray-200 py-4">
         <p class="text-center text-gray-700 text-sm mb-4">
-            &copy;2025 B.di.M Cafe & Chill Mulawarman
+            &copy;2025 B.di.M | Cafe & Chill Mulawarman
         </p>
     </footer>
 

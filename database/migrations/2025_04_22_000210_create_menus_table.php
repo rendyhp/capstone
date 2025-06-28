@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('name', 30);
+            $table->string('name');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
