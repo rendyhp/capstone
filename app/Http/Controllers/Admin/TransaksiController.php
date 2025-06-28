@@ -45,8 +45,13 @@ class TransaksiController extends Controller
             ->join('satuan_bahans', 'bahans.satuan_id', '=', 'satuan_bahans.id')
             ->whereDate('transaksis.date', $date)
             ->when($search, function ($q) use ($search) {
-                $q->where('menus.name', 'like', '%' . $search . '%');
+                $q->where(function ($sub) use ($search) {
+                    $sub->where('menus.name', 'like', '%' . $search . '%')
+                        ->orWhere('menus.description', 'like', '%' . $search . '%')
+                        ->orWhere('bahans.name', 'like', '%' . $search . '%');
+                });
             })
+
             ->groupBy(
                 'transaksis.menu_id',
                 'transaksis.date',
