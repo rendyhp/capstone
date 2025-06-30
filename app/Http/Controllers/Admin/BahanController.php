@@ -595,7 +595,7 @@ class BahanController extends Controller
     public function storeM(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id' => 'required|exists:barangs,id',
+            'id' => 'required|exists:bahans,id',
             'keterangan' => 'nullable|string',
             'jumlah' => 'required|numeric|min:1|max:99999999999.999',
             'date' => 'required|date',
