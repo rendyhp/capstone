@@ -34,10 +34,10 @@ REDIS_PORT=6379
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=rendi45hp@gmail.com
+MAIL_USERNAME=example@gmail.com
 MAIL_PASSWORD={secret}
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS=rendi45hp@gmail.com
+MAIL_FROM_ADDRESS=example@gmail.com
 MAIL_FROM_NAME="Bdim’s Stock"
 
 AWS_ACCESS_KEY_ID=
