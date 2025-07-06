@@ -8,9 +8,9 @@
     <div class="container">
     <div class="row">
       <div class="col-lg-6 pt-5 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
-      <h1 data-aos="fade-up">BdiM's Stock</h1>
+      <h1 data-aos="fade-up">B.di.M’s Stock</h1>
       <h2 data-aos="fade-up" data-aos-delay="400">B.di.M’s Stock adalah aplikasi monitoring stok
-        untuk memantau Stok Barang dan Bahan di Kafe BdiM.</h2>
+        untuk memantau Stok Barang dan Bahan di Kafe B.di.M.</h2>
       <div data-aos="fade-up" data-aos-delay="800">
         <ul class="btn-get-started scrollto">
         @auth
