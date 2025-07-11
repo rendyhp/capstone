@@ -44,7 +44,7 @@
                             <table id="tableTransaksi" class="table table-bordered text-dark table-sm">
                                 <div class="mb-3">
                                     <!-- Tombol trigger modal -->
-                                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                    <button type="button" class="btn btn-outline-success mb-2" data-bs-toggle="modal"
                                         data-bs-target="#importModal">
                                         <i class="fa fa-upload me-2" aria-hidden="true"></i>Import Transaksi
                                     </button>

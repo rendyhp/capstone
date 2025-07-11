@@ -57,7 +57,7 @@
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Satuan
                                     </button>
                                     <div class="col-sm-3 float-end mt-3">
-                                        <div class="d-flex gap-2">
+                                        <div class="d-flex gap-2 mb-2">
                                             <a href="/barang/satuan" class="btn btn-outline-secondary btn-sm"
                                                 title="Refresh">
                                                 <i class="fa fa-refresh"></i>

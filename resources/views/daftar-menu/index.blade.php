@@ -35,7 +35,7 @@
                                         <i class="fa fa-plus me-2" aria-hidden="true"></i>Tambah Menu
                                     </button>
                                     <div class="col-sm-4 float-end mt-3">
-                                        <div class="d-flex gap-2">
+                                        <div class="d-flex gap-2 mb-2">
                                             <button class="btn btn-secondary filterCustom" data-bs-toggle="modal"
                                                 data-bs-target="#filterModal">
                                                 <i class="fa fa-filter"></i>
