@@ -227,7 +227,7 @@
 
                                                         <button type="button" class="btn btn-outline-secondary"
                                                             onclick="window.location.href='{{ route('bahan.indexBahanMKbyID', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
-                                                            <i class="fa fa-info me-2"></i>History
+                                                            History
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -422,7 +422,7 @@
                                                         </button>
                                                         <button type="button" class="btn btn-outline-secondary"
                                                             onclick="window.location.href='{{ route('bahan.indexBahanMKbyID', ['encryptedId' => Hashids::encode($bahan->id)]) }}'">
-                                                            <i class="fa fa-info me-2"></i>History
+                                                            History
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -542,8 +542,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Jumlah</label>
-                            <input type="number" min="0.001" class="form-control number0" name="jumlah" step="0.001" value="0"
-                                autocomplete="off" max="99999999999.999" required>
+                            <input type="number" min="0.001" class="form-control number0" name="jumlah" step="0.001"
+                                value="0" autocomplete="off" max="99999999999.999" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-dark fw-bold">Satuan</label>

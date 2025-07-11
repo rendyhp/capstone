@@ -24,6 +24,15 @@
       @endauth
         </ul>
       </div>
+      @auth
+      <div data-aos="fade-up" data-aos-delay="800">
+        <ul class="btn-get-started scrollto">
+        <a href="/dashboard" class="nav-link">
+          <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        </ul>
+      </div>
+      @endauth
       </div>
       <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="fade-left" data-aos-delay="200">
       <img src="assets/img/hero-img.png" class="img-fluid animated" alt="">
