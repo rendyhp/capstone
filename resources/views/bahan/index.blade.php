@@ -151,7 +151,8 @@
 
                                                     @if ($settings['show_awal'] ?? true)
                                                         <td class="text-end editable {{ optional($bahan)->awal_manual ? 'bg-khaki' : '' }} column-awal-bhn"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')"
+                                                            onclick="handleClick(event, '{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -176,7 +177,8 @@
 
                                                     @if ($settings['show_akhir'] ?? true)
                                                         <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }} column-akhir-bhn"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')"
+                                                            onclick="handleClick(event, '{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -348,8 +350,9 @@
 
 
                                                     @if ($settings['show_awal'] ?? true)
-                                                        <td class="text-end editable {{ $bahan->awal_manual ? 'bg-khaki' : '' }} column-awal-bhn"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
+                                                        <td class="text-end editable {{ optional($bahan)->awal_manual ? 'bg-khaki' : '' }} column-awal-bhn"
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')"
+                                                            onclick="handleClick(event, '{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -374,7 +377,8 @@
 
                                                     @if ($settings['show_akhir'] ?? true)
                                                         <td class="text-end editable {{ $bahan->akhir_manual ? 'bg-khaki' : '' }} column-akhir-bhn"
-                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
+                                                            ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')"
+                                                            onclick="handleClick(event, '{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->bahan_akhir }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->bahan_akhir, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -750,6 +754,22 @@
                     });
             });
         </script>
+        <script>
+            let lastTap = 0;
+
+            function handleClick(event, id, date, field, value, name, satuan) {
+                const now = new Date().getTime();
+                const tapLength = now - lastTap;
+
+                if (tapLength < 500 && tapLength > 0) {
+                    // Double tap detected
+                    editJumlah(id, date, field, value, name, satuan);
+                    event.preventDefault();
+                }
+                lastTap = now;
+            }
+        </script>
+
         <script>
             document.getElementById('resetJumlahBtn').addEventListener('click', function () {
                 const bahan_id = document.getElementById('bahan_id').value;
