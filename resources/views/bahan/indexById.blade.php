@@ -58,7 +58,7 @@
         <div class="d-flex align-items-end gap-5 mb-3">
             <div class="mb-3">
                 <label for="tanggalbahan" class="col-sm-3 col-form-label me-2">Tanggal</label>
-                <div class="col-sm-8">
+                <div class="col-sm-12">
                     <input type="month" class="form-control" id="tanggalbahan" name="date" value="{{ $dateParam }}">
                 </div>
             </div>

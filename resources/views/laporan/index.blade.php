@@ -78,15 +78,17 @@
                     <option value="year" {{ $type === 'year' ? 'selected' : '' }}>Tahun</option>
                 </select>
             </div>
-
-            <div class="ms-auto">
-                @if (!empty($dateInput))
-                    <a href="{{ route('laporan.export', ['type' => $type, 'date' => $dateInput]) }}" class="btn btn-success">
-                        <i class="fas fa-file-excel"></i> Export Excel
-                    </a>
-                @endif
-            </div>
         </div>
+        @if (!empty($dateInput))
+            <div class="d-flex gap-2 mb-3 align-items-end">
+                <div class="ms-auto">
+                    <a href="{{ route('laporan.export', ['type' => $type, 'date' => $dateInput]) }}" class="btn btn-success">
+                        <i class="fas fa-file-excel me-2"></i> Export Excel
+                    </a>
+                </div>
+            </div>
+        @endif
+
         <div>
             <a href="/laporan/bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/bahan') ? 'active' : '' }}">

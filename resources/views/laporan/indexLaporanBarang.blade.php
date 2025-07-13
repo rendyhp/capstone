@@ -84,10 +84,10 @@
                     <div class="card-body maxHeightTable">
                         <div class="mb-3 d-flex justify-content-end gap-2">
                             <a href="{{ route('laporan.exportBarangPdf') }}" class="btn btn-danger btn-sm">
-                                <i class="fa fa-file-pdf"></i> Export PDF
+                                <i class="fa fa-file-pdf me-2"></i> Export PDF
                             </a>
                             <a href="{{ route('laporan.exportBarangWord') }}" class="btn btn-primary btn-sm">
-                                <i class="fa fa-file-word"></i> Export Word
+                                <i class="fa fa-file-word me-2"></i> Export Word
                             </a>
                         </div>
                         <div class="table-responsive">

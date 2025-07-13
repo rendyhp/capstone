@@ -1,7 +1,7 @@
 @extends('layouts.setting')
 @section('Profile', 'active')
 @section('container')
-@section('title', "Profile | B.di.M’s Stock")
+@section('title', "Profil | B.di.M’s Stock")
 
     <style>
         .cards {
@@ -31,15 +31,15 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="row mb-2">
-                    <div class="col-2 fw-bold">Nama</div>
+                    <div class="col-3 fw-bold">Nama</div>
                     <div class="col-8">: {{ $user->name }}</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-2 fw-bold">Email</div>
+                    <div class="col-3 fw-bold">Email</div>
                     <div class="col-8">: {{ $user->email }}</div>
                 </div>
                 <div class="row mb-2">
-                    <div class="col-2 fw-bold">Role</div>
+                    <div class="col-3 fw-bold">Role</div>
                     <div class="col-8">: {{ $user->role }}</div>
                 </div>
             </div>

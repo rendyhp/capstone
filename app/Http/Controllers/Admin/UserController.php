@@ -165,6 +165,7 @@ class UserController extends Controller
         // Update user
         $targetUser->email = $newEmail;
         $targetUser->deleted_at = now();
+        $targetUser->wa_api_token = null;
         $targetUser->save();
 
         return redirect()->back()->with('success', 'User ' . $targetUser->name . ' berhasil dihapus.');

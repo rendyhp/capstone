@@ -394,6 +394,7 @@ class DashboardController extends Controller
         $range = CarbonPeriod::create($startDate, $endDate);
         $bahan = Bahan::with('satuan')->findOrFail($bahanId);
 
+        // === Preload semua data ===
         $stokAwalData = BahanAwal::where('bahan_id', $bahanId)
             ->whereBetween('date', [$startDate, $endDate])
             ->whereNull('deleted_at')
@@ -415,6 +416,16 @@ class DashboardController extends Controller
             ->groupBy('tanggal')
             ->pluck('total', 'tanggal');
 
+        $terpakaiData = DB::table('transaksi_details')
+            ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
+            ->where('transaksi_details.bahan_id', $bahanId)
+            ->whereBetween('transaksis.date', [$startDate, $endDate])
+            ->whereNull('transaksis.deleted_at')
+            ->selectRaw('DATE(transaksis.date) as tanggal, SUM(transaksi_details.jumlah) as total')
+            ->groupBy('tanggal')
+            ->pluck('total', 'tanggal');
+
+        // === Proses harian per bulan ===
         $monthly = [];
         $prevAkhir = null;
 
@@ -431,21 +442,14 @@ class DashboardController extends Controller
             }
 
             $masuk = $masukData[$tanggal] ?? 0;
-
-            $terpakai = DB::table('transaksi_details')
-                ->join('transaksis', 'transaksi_details.transaksi_id', '=', 'transaksis.id')
-                ->where('transaksi_details.bahan_id', $bahanId)
-                ->whereDate('transaksis.date', $tanggal)
-                ->whereNull('transaksis.deleted_at')
-                ->sum('transaksi_details.jumlah');
-
+            $terpakai = $terpakaiData[$tanggal] ?? 0;
             $akhir = $akhirData[$tanggal] ?? null;
 
             $jumlah_akhir = (!is_null($awal)) ? ($awal + $masuk - $terpakai) : null;
             $terbuang = (!is_null($jumlah_akhir) && !is_null($akhir)) ? ($jumlah_akhir - $akhir) : null;
 
             $monthly[$monthName][] = [
-                'tanggal' => $date->format('Y-m-d'),
+                'tanggal' => $tanggal,
                 'awal' => round($awal ?? 0, 3),
                 'masuk' => round($masuk ?? 0, 3),
                 'terpakai' => round($terpakai ?? 0, 3),

@@ -226,7 +226,7 @@ class BahanController extends Controller
         $user = Auth::user();
         $role = $user->role;
 
-        $dateParam = $request->input('date', Carbon::today()->toDateString());
+        $dateParam = $request->input('date', Carbon::today()->format('Y-m'));
 
         if ($dateParam) {
             $date = Carbon::parse($dateParam);
