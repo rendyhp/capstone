@@ -8,6 +8,13 @@
         animation: slideIn 0.5s ease, fadeOut 0.5s ease 9.5s forwards;
     }
 
+    @media (max-width: 450px) {
+        .custom-alert {
+            max-width: 90%;
+        }
+    }
+
+
     @keyframes slideIn {
         from {
             opacity: 0;
