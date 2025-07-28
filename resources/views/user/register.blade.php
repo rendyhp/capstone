@@ -13,6 +13,33 @@
     transform: translateX(0);
     }
 
+    .custom-input {
+            border-radius: 20px;
+            width: 400px;
+        }
+
+    @media (max-width: 576px),
+    (max-height: 576px) {
+    .form-container {
+      padding: 15px;
+      width: 100%;
+    }
+
+    .custom-input {
+      width: 100%;
+    }
+
+    .btn-lg {
+      width: 100% !important;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    #moving-image {
+      display: none;
+    }
+    }
+
     #togglePassword {
     position: absolute;
     right: 15px;
@@ -110,8 +137,8 @@
       </div>
       @endif
         <div class="form-floating">
-        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
-          value="{{ old('name') }}" placeholder="Nama" style="border-radius: 20px; width: 400px;" required
+        <input type="text" class="form-control @error('name') is-invalid @enderror custom-input" name="name"
+          value="{{ old('name') }}" placeholder="Nama" required
           autocomplete="off">
         <label for="name">Nama</label>
         @error('name')
@@ -119,8 +146,8 @@
       @enderror
         </div>
         <div class="form-floating mt-3">
-        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-          value="{{ old('email') }}" placeholder="Email" style="border-radius: 20px; width: 400px;" required
+        <input type="email" class="form-control @error('email') is-invalid @enderror custom-input" name="email"
+          value="{{ old('email') }}" placeholder="Email" required
           autocomplete="off">
         <label for="email">Email</label>
         @error('email')
@@ -128,8 +155,8 @@
       @enderror
         </div>
         <div class="form-floating mt-3">
-        <select class="form-select @error('role') is-invalid @enderror" name="role"
-          style="border-radius: 20px; width: 400px;" required autocomplete="off">
+        <select class="form-select @error('role') is-invalid @enderror custom-input" name="role"
+           required autocomplete="off">
           <option value="" disabled selected>Pilih Role</option>
 
           @if (Auth::user()->role == 'OWNER')
@@ -149,8 +176,8 @@
         </div>
 
         <div class="form-floating mt-3">
-        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
-          name="password" placeholder="Password" style="border-radius: 20px; width: 400px;" required
+        <input type="password" class="form-control @error('password') is-invalid @enderror custom-input" id="password"
+          name="password" placeholder="Password"  required
           autocomplete="off">
         <label for="password">Password</label>
         @error('password')
@@ -163,14 +190,14 @@
         </div>
 
         <div class="form-floating mt-3">
-        <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm Password"
-          style="border-radius: 20px; width: 400px;" required autocomplete="off">
+        <input type="password" class="form-control custom-input" name="password_confirmation" placeholder="Confirm Password"
+           required autocomplete="off">
         <label for="password-confirm">Konfirmasi Password</label>
         </div>
 
 
-        <button type="submit" class="btn btn-primary btn-lg mt-4"
-        style="padding-left: 2.5rem; padding-right: 2.5rem; width: 400px; border-radius: 20px;">
+        <button type="submit" class="btn btn-primary btn-lg mt-4 custom-input"
+        style="padding-left: 2.5rem; padding-right: 2.5rem;">
         {{ __('Register') }}
         </button>
 

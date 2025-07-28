@@ -1,3 +1,7 @@
+.container-trapezoid{
+    display: flex;
+}
+
 .tab-trapezoid {
     clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
     padding: 3px 20px;
@@ -5,6 +9,7 @@
     background-color: rgb(223 223 223);
     color: #000000;
     text-align: center;
+    align-content: center;
     display: inline-block;
     transition: background-color 0.3s ease;
     font-weight: bolder;

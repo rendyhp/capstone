@@ -63,7 +63,7 @@
             </div>
         </div>
        @include('layouts.components.alert-flash-messages')
-        <div>
+        <div class="container-trapezoid">
             <a href="/laporan/bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/bahan') ? 'active' : '' }}">
                 Bahan

@@ -89,7 +89,7 @@
             </div>
         @endif
 
-        <div>
+        <div class="container-trapezoid">
             <a href="/laporan/bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'laporan/bahan') ? 'active' : '' }}">
                 Bahan

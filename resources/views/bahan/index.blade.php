@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <div>
+        <div class="container-trapezoid">
             <a href="/bahan/manajemen-bahan"
                 class="tab-trapezoid {{ Str::startsWith($currentUrl, 'bahan/manajemen-bahan') ? 'active' : '' }}">
                 Manajemen Bahan
@@ -152,7 +152,7 @@
                                                     @if ($settings['show_awal'] ?? true)
                                                         <td class="text-end editable {{ optional($bahan)->awal_manual ? 'bg-khaki' : '' }} column-awal-bhn"
                                                             ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')"
-                                                            onclick="handleClick(event, '{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
+                                                            onclick="handleClick(event, '{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
@@ -352,7 +352,7 @@
                                                     @if ($settings['show_awal'] ?? true)
                                                         <td class="text-end editable {{ optional($bahan)->awal_manual ? 'bg-khaki' : '' }} column-awal-bhn"
                                                             ondblclick="editJumlah('{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')"
-                                                            onclick="handleClick(event, '{{ $bahan->id }}', '{{ $date }}', 'akhir', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
+                                                            onclick="handleClick(event, '{{ $bahan->id }}', '{{ $date }}', 'awal', '{{ $bahan->jumlah_awal }}', '{{ $bahan->name }}', '{{ $bahan->satuan->name }}')">
                                                             {{ rtrim(rtrim(number_format($bahan->jumlah_awal, 3, ',', '.'), '0'), ',') }}
                                                         </td>
                                                     @endif
